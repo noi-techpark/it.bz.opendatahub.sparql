@@ -1,0 +1,28 @@
+[PrefixDeclaration]
+:		http://noi.example.org/ontology/odh#
+dc:		http://purl.org/dc/terms/
+owl:		http://www.w3.org/2002/07/owl#
+rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
+xml:		http://www.w3.org/XML/1998/namespace
+xsd:		http://www.w3.org/2001/XMLSchema#
+obda:		https://w3id.org/obda/vocabulary#
+rdfs:		http://www.w3.org/2000/01/rdf-schema#
+schema:		http://schema.org/
+
+[MappingDeclaration] @collection [[
+mappingId	Campground
+target		:data/accommodation/{id} a schema:Campground . 
+source		SELECT id
+			FROM fl_accommodation
+			WHERE accotypeid = 'Camping'
+
+mappingId	LodgingBusiness
+target		:data/accommodation/{id} a schema:LodgingBusiness . 
+source		SELECT id FROM fl_accommodation
+
+mappingId	Lodging business - geo
+target		:data/geo/accommodation/{id} schema:latitude {latitude} ; schema:longitude {longitude} . :data/accommodation/{id} schema:geo :data/geo/accommodation/{id} . 
+source		SELECT latitude, longitude, id
+			FROM fl_accommodation
+]]
+
