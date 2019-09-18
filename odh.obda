@@ -1,6 +1,7 @@
 [PrefixDeclaration]
 :		http://noi.example.org/ontology/odh#
 dc:		http://purl.org/dc/terms/
+geo:		http://www.opengis.net/ont/geosparql#
 owl:		http://www.w3.org/2002/07/owl#
 rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
 xml:		http://www.w3.org/XML/1998/namespace
@@ -17,8 +18,8 @@ source		SELECT id
 			WHERE accotypeid = 'Camping'
 
 mappingId	LodgingBusiness
-target		:data/accommodation/{id} a schema:LodgingBusiness . 
-source		SELECT id FROM fl_accommodation
+target		:data/accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral . 
+source		SELECT id, latitude, longitude FROM fl_accommodation
 
 mappingId	Lodging business - geo
 target		:data/geo/accommodation/{id} schema:latitude {latitude} ; schema:longitude {longitude} . :data/accommodation/{id} schema:geo :data/geo/accommodation/{id} . 
