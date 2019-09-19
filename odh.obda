@@ -18,12 +18,17 @@ source		SELECT id
 			WHERE accotypeid = 'Camping'
 
 mappingId	LodgingBusiness
-target		:data/accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral . 
-source		SELECT id, latitude, longitude FROM fl_accommodation
+target		:data/accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email <{email}> ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} , {de_mobile} ; schema:faxNumber {de_fax} . 
+source		SELECT id, latitude, longitude, CONCAT('mailto:', de_email) AS email, de_name, en_name, it_name, de_phone, de_mobile, de_fax FROM fl_accommodation
 
 mappingId	Lodging business - geo
-target		:data/geo/accommodation/{id} schema:latitude {latitude} ; schema:longitude {longitude} . :data/accommodation/{id} schema:geo :data/geo/accommodation/{id} . 
-source		SELECT latitude, longitude, id
+target		:data/geo/accommodation/{id} a schema:GeoCoordinates ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} . :data/accommodation/{id} schema:geo :data/geo/accommodation/{id} . 
+source		SELECT latitude, longitude, id, altitude
+			FROM fl_accommodation
+
+mappingId	LodgingBusiness - address
+target		:data/address/accommodation/{id} a schema:PostalAddress ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . :data/accommodation/{id} schema:address :data/address/accommodation/{id} . 
+source		SELECT id, de_city, de_zip, de_street, it_city, it_street, en_city, en_street
 			FROM fl_accommodation
 ]]
 
