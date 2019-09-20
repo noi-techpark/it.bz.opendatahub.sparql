@@ -46,9 +46,18 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-SELECT ?h ?pos ?posLabel WHERE {
+SELECT ?h ?pos ?posLabel ?posColor WHERE {
   ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?posLabel ; schema:address ?a .
-  # ?a schema:postalCode "39100" .
+  OPTIONAL {
+     ?h a ?c 
+    VALUES (?c ?posColor) { 
+      (schema:Campground "chlorophyll,0.5") # Green
+      (schema:BedAndBreakfast "viridis,0.1") #Purple
+      (schema:Hotel "jet,0.3") # Light blue
+      (schema:Hostel "jet,0.8") # Red
+    }
+  }
+  #?a schema:postalCode "39100" .
   FILTER (lang(?posLabel) = 'de')
 }
 LIMIT 500
