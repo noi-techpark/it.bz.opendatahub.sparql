@@ -1,7 +1,7 @@
 
-DROP VIEW IF EXISTS  "v_accommodationroomsopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_accommodationroomsopen";
 
-CREATE OR REPLACE VIEW "v_accommodationroomsopen" AS
+CREATE MATERIALIZED VIEW "v_accommodationroomsopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'A0RID' As varchar) AS "A0RID",
 CAST("data"->>'HGVId' As varchar) AS "HGVId",
@@ -22,20 +22,22 @@ CAST("data"->'AccoRoomDetail'->'it'->>'Name' As varchar) AS "AccoRoomDetail-it-N
 CAST("data"->'AccoRoomDetail'->'it'->>'Language' As varchar) AS "AccoRoomDetail-it-Language"
 FROM accommodationroomsopen;
 
-DROP VIEW IF EXISTS "v_accommodationroomsopen_Features";
+CREATE UNIQUE INDEX "v_accommodationroomsopen_pk" ON "v_accommodationroomsopen"("Id");
 
-CREATE OR REPLACE VIEW "v_accommodationroomsopen_Features" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'Features') AS "Feature"
+DROP MATERIALIZED VIEW IF EXISTS "v_accommodationroomsopen_Features";
+
+CREATE MATERIALIZED VIEW "v_accommodationroomsopen_Features" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'Features') AS "Feature"
         FROM accommodationroomsopen
         WHERE data -> 'Features' != 'null')
-    SELECT id AS "accommodationroomsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+    SELECT "Id" AS "accommodationroomsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Name' As varchar) AS "Name"
     FROM t;
 
-DROP VIEW IF EXISTS  "v_accommodationsopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_accommodationsopen";
 
-CREATE OR REPLACE VIEW "v_accommodationsopen" AS
+CREATE MATERIALIZED VIEW "v_accommodationsopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Beds' As integer) AS "Beds",
 CAST("data"->>'Units' As integer) AS "Units",
@@ -143,48 +145,50 @@ CAST("data"->'LocationInfo'->'MunicipalityInfo'->'Name'->>'pl' As varchar) AS "L
 CAST("data"->'LocationInfo'->'MunicipalityInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-MunicipalityInfo-Name-ru"
 FROM accommodationsopen;
 
-DROP VIEW IF EXISTS "v_accommodationsopen_SmgTags";
+CREATE UNIQUE INDEX "v_accommodationsopen_pk" ON "v_accommodationsopen"("Id");
 
-CREATE OR REPLACE VIEW "v_accommodationsopen_SmgTags" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_accommodationsopen_SmgTags";
+
+CREATE MATERIALIZED VIEW "v_accommodationsopen_SmgTags" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
         FROM accommodationsopen
         WHERE data -> 'SmgTags' != 'null';
  
-DROP VIEW IF EXISTS "v_accommodationsopen_ThemeIds";
+DROP MATERIALIZED VIEW IF EXISTS "v_accommodationsopen_ThemeIds";
 
-CREATE OR REPLACE VIEW "v_accommodationsopen_ThemeIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'ThemeIds') AS "data"
+CREATE MATERIALIZED VIEW "v_accommodationsopen_ThemeIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'ThemeIds') AS "data"
         FROM accommodationsopen
         WHERE data -> 'ThemeIds' != 'null';
  
-DROP VIEW IF EXISTS "v_accommodationsopen_HasLanguage";
+DROP MATERIALIZED VIEW IF EXISTS "v_accommodationsopen_HasLanguage";
 
-CREATE OR REPLACE VIEW "v_accommodationsopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+CREATE MATERIALIZED VIEW "v_accommodationsopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM accommodationsopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS "v_accommodationsopen_SpecialFeaturesIds";
+DROP MATERIALIZED VIEW IF EXISTS "v_accommodationsopen_SpecialFeaturesIds";
 
-CREATE OR REPLACE VIEW "v_accommodationsopen_SpecialFeaturesIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'SpecialFeaturesIds') AS "data"
+CREATE MATERIALIZED VIEW "v_accommodationsopen_SpecialFeaturesIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'SpecialFeaturesIds') AS "data"
         FROM accommodationsopen
         WHERE data -> 'SpecialFeaturesIds' != 'null';
  
-DROP VIEW IF EXISTS "v_accommodationsopen_Features";
+DROP MATERIALIZED VIEW IF EXISTS "v_accommodationsopen_Features";
 
-CREATE OR REPLACE VIEW "v_accommodationsopen_Features" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'Features') AS "Feature"
+CREATE MATERIALIZED VIEW "v_accommodationsopen_Features" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'Features') AS "Feature"
         FROM accommodationsopen
         WHERE data -> 'Features' != 'null')
-    SELECT id AS "accommodationsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+    SELECT "Id" AS "accommodationsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Name' As varchar) AS "Name"
     FROM t;
 
-DROP VIEW IF EXISTS  "v_activitiesopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_activitiesopen";
 
-CREATE OR REPLACE VIEW "v_activitiesopen" AS
+CREATE MATERIALIZED VIEW "v_activitiesopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Active' As bool) AS "Active",
@@ -322,49 +326,51 @@ CAST("data"->'AdditionalPoiInfos'->'it'->>'Language' As varchar) AS "AdditionalP
 CAST("data"->'AdditionalPoiInfos'->'it'->>'MainType' As varchar) AS "AdditionalPoiInfos-it-MainType"
 FROM activitiesopen;
 
-DROP VIEW IF EXISTS "v_activitiesopen_AreaId";
+CREATE UNIQUE INDEX "v_activitiesopen_pk" ON "v_activitiesopen"("Id");
 
-CREATE OR REPLACE VIEW "v_activitiesopen_AreaId" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'AreaId') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_activitiesopen_AreaId";
+
+CREATE MATERIALIZED VIEW "v_activitiesopen_AreaId" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'AreaId') AS "data"
         FROM activitiesopen
         WHERE data -> 'AreaId' != 'null';
  
-DROP VIEW IF EXISTS "v_activitiesopen_SmgTags";
+DROP MATERIALIZED VIEW IF EXISTS "v_activitiesopen_SmgTags";
 
-CREATE OR REPLACE VIEW "v_activitiesopen_SmgTags" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
+CREATE MATERIALIZED VIEW "v_activitiesopen_SmgTags" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
         FROM activitiesopen
         WHERE data -> 'SmgTags' != 'null';
  
-DROP VIEW IF EXISTS "v_activitiesopen_HasLanguage";
+DROP MATERIALIZED VIEW IF EXISTS "v_activitiesopen_HasLanguage";
 
-CREATE OR REPLACE VIEW "v_activitiesopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+CREATE MATERIALIZED VIEW "v_activitiesopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM activitiesopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS "v_activitiesopen_GpsInfo";
+DROP MATERIALIZED VIEW IF EXISTS "v_activitiesopen_GpsInfo";
 
-CREATE OR REPLACE VIEW "v_activitiesopen_GpsInfo" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'GpsInfo') AS "Feature"
+CREATE MATERIALIZED VIEW "v_activitiesopen_GpsInfo" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'GpsInfo') AS "Feature"
         FROM activitiesopen
         WHERE data -> 'GpsInfo' != 'null')
-    SELECT id AS "activitiesopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
+    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
 CAST("data"->>'Altitude' As float) AS "Altitude",
 CAST("data"->>'Latitude' As float) AS "Latitude",
 CAST("data"->>'Longitude' As float) AS "Longitude",
 CAST("data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure"
     FROM t;
 
-DROP VIEW IF EXISTS "v_activitiesopen_GpsTrack";
+DROP MATERIALIZED VIEW IF EXISTS "v_activitiesopen_GpsTrack";
 
-CREATE OR REPLACE VIEW "v_activitiesopen_GpsTrack" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'GpsTrack') AS "Feature"
+CREATE MATERIALIZED VIEW "v_activitiesopen_GpsTrack" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'GpsTrack') AS "Feature"
         FROM activitiesopen
         WHERE data -> 'GpsTrack' != 'null')
-    SELECT id AS "activitiesopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'GpxTrackUrl' As varchar) AS "GpxTrackUrl",
 CAST("data"->'GpxTrackDesc'->>'de' As varchar) AS "GpxTrackDesc-de",
@@ -372,22 +378,22 @@ CAST("data"->'GpxTrackDesc'->>'en' As varchar) AS "GpxTrackDesc-en",
 CAST("data"->'GpxTrackDesc'->>'it' As varchar) AS "GpxTrackDesc-it"
     FROM t;
 
-DROP VIEW IF EXISTS "v_activitiesopen_OperationSchedule";
+DROP MATERIALIZED VIEW IF EXISTS "v_activitiesopen_OperationSchedule";
 
-CREATE OR REPLACE VIEW "v_activitiesopen_OperationSchedule" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
+CREATE MATERIALIZED VIEW "v_activitiesopen_OperationSchedule" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
         FROM activitiesopen
         WHERE data -> 'OperationSchedule' != 'null')
-    SELECT id AS "activitiesopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
+    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Start' As varchar) AS "Start",
 CAST("data"->'OperationscheduleName'->>'de' As varchar) AS "OperationscheduleName-de"
     FROM t;
 
-DROP VIEW IF EXISTS  "v_areas";
+DROP MATERIALIZED VIEW IF EXISTS  "v_areas";
 
-CREATE OR REPLACE VIEW "v_areas" AS
+CREATE MATERIALIZED VIEW "v_areas" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'GID' As varchar) AS "GID",
 CAST("data"->>'Active' As bool) AS "Active",
@@ -398,9 +404,11 @@ CAST("data"->>'SmgActive' As bool) AS "SmgActive",
 CAST("data"->>'TourismvereinId' As varchar) AS "TourismvereinId"
 FROM areas;
 
-DROP VIEW IF EXISTS  "v_articlesopen";
+CREATE UNIQUE INDEX "v_areas_pk" ON "v_areas"("Id");
 
-CREATE OR REPLACE VIEW "v_articlesopen" AS
+DROP MATERIALIZED VIEW IF EXISTS  "v_articlesopen";
+
+CREATE MATERIALIZED VIEW "v_articlesopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Active' As bool) AS "Active",
@@ -414,16 +422,18 @@ CAST("data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
 CAST("data"->'Detail'->'de'->>'BaseText' As varchar) AS "Detail-de-BaseText"
 FROM articlesopen;
 
-DROP VIEW IF EXISTS "v_articlesopen_HasLanguage";
+CREATE UNIQUE INDEX "v_articlesopen_pk" ON "v_articlesopen"("Id");
 
-CREATE OR REPLACE VIEW "v_articlesopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_articlesopen_HasLanguage";
+
+CREATE MATERIALIZED VIEW "v_articlesopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM articlesopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS  "v_districtsopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_districtsopen";
 
-CREATE OR REPLACE VIEW "v_districtsopen" AS
+CREATE MATERIALIZED VIEW "v_districtsopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Active' As bool) AS "Active",
 CAST("data"->>'SiagId' As varchar) AS "SiagId",
@@ -458,16 +468,18 @@ CAST("data"->'Detail'->'ru'->>'Title' As varchar) AS "Detail-ru-Title",
 CAST("data"->'Detail'->'ru'->>'Language' As varchar) AS "Detail-ru-Language"
 FROM districtsopen;
 
-DROP VIEW IF EXISTS "v_districtsopen_HasLanguage";
+CREATE UNIQUE INDEX "v_districtsopen_pk" ON "v_districtsopen"("Id");
 
-CREATE OR REPLACE VIEW "v_districtsopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_districtsopen_HasLanguage";
+
+CREATE MATERIALIZED VIEW "v_districtsopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM districtsopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS  "v_eventeuracnoi";
+DROP MATERIALIZED VIEW IF EXISTS  "v_eventeuracnoi";
 
-CREATE OR REPLACE VIEW "v_eventeuracnoi" AS
+CREATE MATERIALIZED VIEW "v_eventeuracnoi" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Source' As varchar) AS "Source",
 CAST("data"->>'EndDate' As varchar) AS "EndDate",
@@ -520,14 +532,16 @@ CAST("data"->>'ContactAddressLine2' As varchar) AS "ContactAddressLine2",
 CAST("data"->>'ContactAddressLine3' As varchar) AS "ContactAddressLine3"
 FROM eventeuracnoi;
 
-DROP VIEW IF EXISTS "v_eventeuracnoi_RoomBooked";
+CREATE UNIQUE INDEX "v_eventeuracnoi_pk" ON "v_eventeuracnoi"("Id");
 
-CREATE OR REPLACE VIEW "v_eventeuracnoi_RoomBooked" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'RoomBooked') AS "Feature"
+DROP MATERIALIZED VIEW IF EXISTS "v_eventeuracnoi_RoomBooked";
+
+CREATE MATERIALIZED VIEW "v_eventeuracnoi_RoomBooked" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'RoomBooked') AS "Feature"
         FROM eventeuracnoi
         WHERE data -> 'RoomBooked' != 'null')
-    SELECT id AS "eventeuracnoi_Id", CAST("data"->>'Space' As varchar) AS "Space",
+    SELECT "Id" AS "eventeuracnoi_Id", CAST("data"->>'Space' As varchar) AS "Space",
 CAST("data"->>'Comment' As varchar) AS "Comment",
 CAST("data"->>'EndDate' As varchar) AS "EndDate",
 CAST("data"->>'Subtitle' As varchar) AS "Subtitle",
@@ -539,9 +553,9 @@ CAST("data"->>'SpaceAbbrev' As varchar) AS "SpaceAbbrev",
 CAST("data"->>'StartDateUTC' As float) AS "StartDateUTC"
     FROM t;
 
-DROP VIEW IF EXISTS  "v_experienceareasopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_experienceareasopen";
 
-CREATE OR REPLACE VIEW "v_experienceareasopen" AS
+CREATE MATERIALIZED VIEW "v_experienceareasopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Active' As bool) AS "Active",
 CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
@@ -564,16 +578,18 @@ CAST("data"->'Detail'->'pl'->>'Title' As varchar) AS "Detail-pl-Title",
 CAST("data"->'Detail'->'ru'->>'Title' As varchar) AS "Detail-ru-Title"
 FROM experienceareasopen;
 
-DROP VIEW IF EXISTS "v_experienceareasopen_TourismvereinIds";
+CREATE UNIQUE INDEX "v_experienceareasopen_pk" ON "v_experienceareasopen"("Id");
 
-CREATE OR REPLACE VIEW "v_experienceareasopen_TourismvereinIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'TourismvereinIds') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_experienceareasopen_TourismvereinIds";
+
+CREATE MATERIALIZED VIEW "v_experienceareasopen_TourismvereinIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'TourismvereinIds') AS "data"
         FROM experienceareasopen
         WHERE data -> 'TourismvereinIds' != 'null';
  
-DROP VIEW IF EXISTS  "v_ltstaggingtypes";
+DROP MATERIALIZED VIEW IF EXISTS  "v_ltstaggingtypes";
 
-CREATE OR REPLACE VIEW "v_ltstaggingtypes" AS
+CREATE MATERIALIZED VIEW "v_ltstaggingtypes" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Key' As varchar) AS "Key",
 CAST("data"->>'Level' As integer) AS "Level",
@@ -587,17 +603,21 @@ CAST("data"->'TypeDescriptions'->>'en' As varchar) AS "TypeDescriptions-en",
 CAST("data"->'TypeDescriptions'->>'it' As varchar) AS "TypeDescriptions-it"
 FROM ltstaggingtypes;
 
-DROP VIEW IF EXISTS  "v_marketinggroups";
+CREATE UNIQUE INDEX "v_ltstaggingtypes_pk" ON "v_ltstaggingtypes"("Id");
 
-CREATE OR REPLACE VIEW "v_marketinggroups" AS
+DROP MATERIALIZED VIEW IF EXISTS  "v_marketinggroups";
+
+CREATE MATERIALIZED VIEW "v_marketinggroups" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Shortname' As varchar) AS "Shortname",
 CAST("data"->>'Beschreibung' As varchar) AS "Beschreibung"
 FROM marketinggroups;
 
-DROP VIEW IF EXISTS  "v_measuringpoints";
+CREATE UNIQUE INDEX "v_marketinggroups_pk" ON "v_marketinggroups"("Id");
 
-CREATE OR REPLACE VIEW "v_measuringpoints" AS
+DROP MATERIALIZED VIEW IF EXISTS  "v_measuringpoints";
+
+CREATE MATERIALIZED VIEW "v_measuringpoints" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Active' As bool) AS "Active",
 CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
@@ -643,16 +663,18 @@ CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'pl' As varchar) AS "Locatio
 CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-RegionInfo-Name-ru"
 FROM measuringpoints;
 
-DROP VIEW IF EXISTS "v_measuringpoints_AreaIds";
+CREATE UNIQUE INDEX "v_measuringpoints_pk" ON "v_measuringpoints"("Id");
 
-CREATE OR REPLACE VIEW "v_measuringpoints_AreaIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'AreaIds') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_measuringpoints_AreaIds";
+
+CREATE MATERIALIZED VIEW "v_measuringpoints_AreaIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'AreaIds') AS "data"
         FROM measuringpoints
         WHERE data -> 'AreaIds' != 'null';
  
-DROP VIEW IF EXISTS  "v_metaregionsopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_metaregionsopen";
 
-CREATE OR REPLACE VIEW "v_metaregionsopen" AS
+CREATE MATERIALIZED VIEW "v_metaregionsopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Active' As bool) AS "Active",
 CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
@@ -934,37 +956,39 @@ CAST("data"->'DetailThemed'->'ru'->'DetailsThemed'->'Kultur und Sehenswürdigkei
 CAST("data"->'DetailThemed'->'ru'->'DetailsThemed'->'Kultur und Sehenswürdigkeiten'->>'MetaTitle' As varchar) AS "D-r-DetailsThemed-Kultur und Sehenswürdigkeiten-MetaTitle"
 FROM metaregionsopen;
 
-DROP VIEW IF EXISTS "v_metaregionsopen_RegionIds";
+CREATE UNIQUE INDEX "v_metaregionsopen_pk" ON "v_metaregionsopen"("Id");
 
-CREATE OR REPLACE VIEW "v_metaregionsopen_RegionIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'RegionIds') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_metaregionsopen_RegionIds";
+
+CREATE MATERIALIZED VIEW "v_metaregionsopen_RegionIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'RegionIds') AS "data"
         FROM metaregionsopen
         WHERE data -> 'RegionIds' != 'null';
  
-DROP VIEW IF EXISTS "v_metaregionsopen_DistrictIds";
+DROP MATERIALIZED VIEW IF EXISTS "v_metaregionsopen_DistrictIds";
 
-CREATE OR REPLACE VIEW "v_metaregionsopen_DistrictIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'DistrictIds') AS "data"
+CREATE MATERIALIZED VIEW "v_metaregionsopen_DistrictIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'DistrictIds') AS "data"
         FROM metaregionsopen
         WHERE data -> 'DistrictIds' != 'null';
  
-DROP VIEW IF EXISTS "v_metaregionsopen_HasLanguage";
+DROP MATERIALIZED VIEW IF EXISTS "v_metaregionsopen_HasLanguage";
 
-CREATE OR REPLACE VIEW "v_metaregionsopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+CREATE MATERIALIZED VIEW "v_metaregionsopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM metaregionsopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS "v_metaregionsopen_TourismvereinIds";
+DROP MATERIALIZED VIEW IF EXISTS "v_metaregionsopen_TourismvereinIds";
 
-CREATE OR REPLACE VIEW "v_metaregionsopen_TourismvereinIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'TourismvereinIds') AS "data"
+CREATE MATERIALIZED VIEW "v_metaregionsopen_TourismvereinIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'TourismvereinIds') AS "data"
         FROM metaregionsopen
         WHERE data -> 'TourismvereinIds' != 'null';
  
-DROP VIEW IF EXISTS  "v_municipalitiesopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_municipalitiesopen";
 
-CREATE OR REPLACE VIEW "v_municipalitiesopen" AS
+CREATE MATERIALIZED VIEW "v_municipalitiesopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Plz' As varchar) AS "Plz",
 CAST("data"->>'Active' As bool) AS "Active",
@@ -1001,16 +1025,18 @@ CAST("data"->'Detail'->'ru'->>'Title' As varchar) AS "Detail-ru-Title",
 CAST("data"->'Detail'->'ru'->>'Language' As varchar) AS "Detail-ru-Language"
 FROM municipalitiesopen;
 
-DROP VIEW IF EXISTS "v_municipalitiesopen_HasLanguage";
+CREATE UNIQUE INDEX "v_municipalitiesopen_pk" ON "v_municipalitiesopen"("Id");
 
-CREATE OR REPLACE VIEW "v_municipalitiesopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_municipalitiesopen_HasLanguage";
+
+CREATE MATERIALIZED VIEW "v_municipalitiesopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM municipalitiesopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS  "v_poisopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_poisopen";
 
-CREATE OR REPLACE VIEW "v_poisopen" AS
+CREATE MATERIALIZED VIEW "v_poisopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Active' As bool) AS "Active",
@@ -1145,76 +1171,78 @@ CAST("data"->'AdditionalPoiInfos'->'it'->>'Language' As varchar) AS "AdditionalP
 CAST("data"->'AdditionalPoiInfos'->'it'->>'MainType' As varchar) AS "AdditionalPoiInfos-it-MainType"
 FROM poisopen;
 
-DROP VIEW IF EXISTS "v_poisopen_AreaId";
+CREATE UNIQUE INDEX "v_poisopen_pk" ON "v_poisopen"("Id");
 
-CREATE OR REPLACE VIEW "v_poisopen_AreaId" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'AreaId') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_poisopen_AreaId";
+
+CREATE MATERIALIZED VIEW "v_poisopen_AreaId" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'AreaId') AS "data"
         FROM poisopen
         WHERE data -> 'AreaId' != 'null';
  
-DROP VIEW IF EXISTS "v_poisopen_SmgTags";
+DROP MATERIALIZED VIEW IF EXISTS "v_poisopen_SmgTags";
 
-CREATE OR REPLACE VIEW "v_poisopen_SmgTags" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
+CREATE MATERIALIZED VIEW "v_poisopen_SmgTags" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
         FROM poisopen
         WHERE data -> 'SmgTags' != 'null';
  
-DROP VIEW IF EXISTS "v_poisopen_HasLanguage";
+DROP MATERIALIZED VIEW IF EXISTS "v_poisopen_HasLanguage";
 
-CREATE OR REPLACE VIEW "v_poisopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+CREATE MATERIALIZED VIEW "v_poisopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM poisopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS "v_poisopen_GpsInfo";
+DROP MATERIALIZED VIEW IF EXISTS "v_poisopen_GpsInfo";
 
-CREATE OR REPLACE VIEW "v_poisopen_GpsInfo" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'GpsInfo') AS "Feature"
+CREATE MATERIALIZED VIEW "v_poisopen_GpsInfo" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'GpsInfo') AS "Feature"
         FROM poisopen
         WHERE data -> 'GpsInfo' != 'null')
-    SELECT id AS "poisopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
+    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
 CAST("data"->>'Altitude' As float) AS "Altitude",
 CAST("data"->>'Latitude' As float) AS "Latitude",
 CAST("data"->>'Longitude' As float) AS "Longitude",
 CAST("data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure"
     FROM t;
 
-DROP VIEW IF EXISTS "v_poisopen_LTSTags";
+DROP MATERIALIZED VIEW IF EXISTS "v_poisopen_LTSTags";
 
-CREATE OR REPLACE VIEW "v_poisopen_LTSTags" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'LTSTags') AS "Feature"
+CREATE MATERIALIZED VIEW "v_poisopen_LTSTags" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'LTSTags') AS "Feature"
         FROM poisopen
         WHERE data -> 'LTSTags' != 'null')
-    SELECT id AS "poisopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Level' As integer) AS "Level",
 CAST("data"->'TagName'->>'de' As varchar) AS "TagName-de",
 CAST("data"->'TagName'->>'en' As varchar) AS "TagName-en",
 CAST("data"->'TagName'->>'it' As varchar) AS "TagName-it"
     FROM t;
 
-DROP VIEW IF EXISTS "v_poisopen_OperationSchedule";
+DROP MATERIALIZED VIEW IF EXISTS "v_poisopen_OperationSchedule";
 
-CREATE OR REPLACE VIEW "v_poisopen_OperationSchedule" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
+CREATE MATERIALIZED VIEW "v_poisopen_OperationSchedule" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
         FROM poisopen
         WHERE data -> 'OperationSchedule' != 'null')
-    SELECT id AS "poisopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
+    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Start' As varchar) AS "Start",
 CAST("data"->'OperationscheduleName'->>'de' As varchar) AS "OperationscheduleName-de"
     FROM t;
 
-DROP VIEW IF EXISTS "v_poisopen_OperationSchedule_OperationScheduleTime";
+DROP MATERIALIZED VIEW IF EXISTS "v_poisopen_OperationSchedule_OperationScheduleTime";
 
-CREATE OR REPLACE VIEW "v_poisopen_OperationSchedule_OperationScheduleTime" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'OperationSchedule_OperationScheduleTime') AS "Feature"
+CREATE MATERIALIZED VIEW "v_poisopen_OperationSchedule_OperationScheduleTime" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'OperationSchedule_OperationScheduleTime') AS "Feature"
         FROM poisopen
         WHERE data -> 'OperationSchedule_OperationScheduleTime' != 'null')
-    SELECT id AS "poisopen_Id", CAST("data"->>'End' As varchar) AS "End",
+    SELECT "Id" AS "poisopen_Id", CAST("data"->>'End' As varchar) AS "End",
 CAST("data"->>'Start' As varchar) AS "Start",
 CAST("data"->>'State' As integer) AS "State",
 CAST("data"->>'Friday' As bool) AS "Friday",
@@ -1227,9 +1255,9 @@ CAST("data"->>'Thuresday' As bool) AS "Thuresday",
 CAST("data"->>'Wednesday' As bool) AS "Wednesday"
     FROM t;
 
-DROP VIEW IF EXISTS  "v_regionsopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_regionsopen";
 
-CREATE OR REPLACE VIEW "v_regionsopen" AS
+CREATE MATERIALIZED VIEW "v_regionsopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Active' As bool) AS "Active",
 CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
@@ -1645,23 +1673,25 @@ CAST("data"->'DetailThemed'->'ru'->'DetailsThemed'->'Kultur und Sehenswürdigkei
 CAST("data"->'DetailThemed'->'ru'->'DetailsThemed'->'Kultur und Sehenswürdigkeiten'->>'MetaTitle' As varchar) AS "D-r-DetailsThemed-Kultur und Sehenswürdigkeiten-MetaTitle"
 FROM regionsopen;
 
-DROP VIEW IF EXISTS "v_regionsopen_SkiareaIds";
+CREATE UNIQUE INDEX "v_regionsopen_pk" ON "v_regionsopen"("Id");
 
-CREATE OR REPLACE VIEW "v_regionsopen_SkiareaIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'SkiareaIds') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_regionsopen_SkiareaIds";
+
+CREATE MATERIALIZED VIEW "v_regionsopen_SkiareaIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'SkiareaIds') AS "data"
         FROM regionsopen
         WHERE data -> 'SkiareaIds' != 'null';
  
-DROP VIEW IF EXISTS "v_regionsopen_HasLanguage";
+DROP MATERIALIZED VIEW IF EXISTS "v_regionsopen_HasLanguage";
 
-CREATE OR REPLACE VIEW "v_regionsopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+CREATE MATERIALIZED VIEW "v_regionsopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM regionsopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS  "v_skiareasopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_skiareasopen";
 
-CREATE OR REPLACE VIEW "v_skiareasopen" AS
+CREATE MATERIALIZED VIEW "v_skiareasopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Active' As bool) AS "Active",
 CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
@@ -1861,49 +1891,51 @@ CAST("data"->'SkiRegionName'->>'pl' As varchar) AS "SkiRegionName-pl",
 CAST("data"->'SkiRegionName'->>'ru' As varchar) AS "SkiRegionName-ru"
 FROM skiareasopen;
 
-DROP VIEW IF EXISTS "v_skiareasopen_AreaId";
+CREATE UNIQUE INDEX "v_skiareasopen_pk" ON "v_skiareasopen"("Id");
 
-CREATE OR REPLACE VIEW "v_skiareasopen_AreaId" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'AreaId') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_skiareasopen_AreaId";
+
+CREATE MATERIALIZED VIEW "v_skiareasopen_AreaId" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'AreaId') AS "data"
         FROM skiareasopen
         WHERE data -> 'AreaId' != 'null';
  
-DROP VIEW IF EXISTS "v_skiareasopen_SmgTags";
+DROP MATERIALIZED VIEW IF EXISTS "v_skiareasopen_SmgTags";
 
-CREATE OR REPLACE VIEW "v_skiareasopen_SmgTags" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
+CREATE MATERIALIZED VIEW "v_skiareasopen_SmgTags" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
         FROM skiareasopen
         WHERE data -> 'SmgTags' != 'null';
  
-DROP VIEW IF EXISTS "v_skiareasopen_RegionIds";
+DROP MATERIALIZED VIEW IF EXISTS "v_skiareasopen_RegionIds";
 
-CREATE OR REPLACE VIEW "v_skiareasopen_RegionIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'RegionIds') AS "data"
+CREATE MATERIALIZED VIEW "v_skiareasopen_RegionIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'RegionIds') AS "data"
         FROM skiareasopen
         WHERE data -> 'RegionIds' != 'null';
  
-DROP VIEW IF EXISTS "v_skiareasopen_HasLanguage";
+DROP MATERIALIZED VIEW IF EXISTS "v_skiareasopen_HasLanguage";
 
-CREATE OR REPLACE VIEW "v_skiareasopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+CREATE MATERIALIZED VIEW "v_skiareasopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM skiareasopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS "v_skiareasopen_TourismvereinIds";
+DROP MATERIALIZED VIEW IF EXISTS "v_skiareasopen_TourismvereinIds";
 
-CREATE OR REPLACE VIEW "v_skiareasopen_TourismvereinIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'TourismvereinIds') AS "data"
+CREATE MATERIALIZED VIEW "v_skiareasopen_TourismvereinIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'TourismvereinIds') AS "data"
         FROM skiareasopen
         WHERE data -> 'TourismvereinIds' != 'null';
  
-DROP VIEW IF EXISTS "v_skiareasopen_Webcam";
+DROP MATERIALIZED VIEW IF EXISTS "v_skiareasopen_Webcam";
 
-CREATE OR REPLACE VIEW "v_skiareasopen_Webcam" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'Webcam') AS "Feature"
+CREATE MATERIALIZED VIEW "v_skiareasopen_Webcam" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'Webcam') AS "Feature"
         FROM skiareasopen
         WHERE data -> 'Webcam' != 'null')
-    SELECT id AS "skiareasopen_Id", CAST("data"->>'WebcamId' As varchar) AS "WebcamId",
+    SELECT "Id" AS "skiareasopen_Id", CAST("data"->>'WebcamId' As varchar) AS "WebcamId",
 CAST("data"->>'Webcamurl' As varchar) AS "Webcamurl",
 CAST("data"->'GpsInfo'->>'Gpstype' As varchar) AS "GpsInfo-Gpstype",
 CAST("data"->'GpsInfo'->>'Latitude' As float) AS "GpsInfo-Latitude",
@@ -1919,14 +1951,14 @@ CAST("data"->'Webcamname'->>'pl' As varchar) AS "Webcamname-pl",
 CAST("data"->'Webcamname'->>'ru' As varchar) AS "Webcamname-ru"
     FROM t;
 
-DROP VIEW IF EXISTS "v_skiareasopen_OperationSchedule";
+DROP MATERIALIZED VIEW IF EXISTS "v_skiareasopen_OperationSchedule";
 
-CREATE OR REPLACE VIEW "v_skiareasopen_OperationSchedule" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
+CREATE MATERIALIZED VIEW "v_skiareasopen_OperationSchedule" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
         FROM skiareasopen
         WHERE data -> 'OperationSchedule' != 'null')
-    SELECT id AS "skiareasopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
+    SELECT "Id" AS "skiareasopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Start' As varchar) AS "Start",
 CAST("data"->'OperationscheduleName'->>'cs' As varchar) AS "OperationscheduleName-cs",
@@ -1937,9 +1969,9 @@ CAST("data"->'OperationscheduleName'->>'nl' As varchar) AS "OperationscheduleNam
 CAST("data"->'OperationscheduleName'->>'pl' As varchar) AS "OperationscheduleName-pl"
     FROM t;
 
-DROP VIEW IF EXISTS  "v_skiregionsopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_skiregionsopen";
 
-CREATE OR REPLACE VIEW "v_skiregionsopen" AS
+CREATE MATERIALIZED VIEW "v_skiregionsopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Active' As bool) AS "Active",
 CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
@@ -2090,27 +2122,29 @@ CAST("data"->'ContactInfos'->'ru'->>'CountryName' As varchar) AS "ContactInfos-r
 CAST("data"->'ContactInfos'->'ru'->>'Phonenumber' As varchar) AS "ContactInfos-ru-Phonenumber"
 FROM skiregionsopen;
 
-DROP VIEW IF EXISTS "v_skiregionsopen_HasLanguage";
+CREATE UNIQUE INDEX "v_skiregionsopen_pk" ON "v_skiregionsopen"("Id");
 
-CREATE OR REPLACE VIEW "v_skiregionsopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_skiregionsopen_HasLanguage";
+
+CREATE MATERIALIZED VIEW "v_skiregionsopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM skiregionsopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS "v_skiregionsopen_GpsPolygon";
+DROP MATERIALIZED VIEW IF EXISTS "v_skiregionsopen_GpsPolygon";
 
-CREATE OR REPLACE VIEW "v_skiregionsopen_GpsPolygon" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'GpsPolygon') AS "Feature"
+CREATE MATERIALIZED VIEW "v_skiregionsopen_GpsPolygon" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'GpsPolygon') AS "Feature"
         FROM skiregionsopen
         WHERE data -> 'GpsPolygon' != 'null')
-    SELECT id AS "skiregionsopen_Id", CAST("data"->>'Latitude' As float) AS "Latitude",
+    SELECT "Id" AS "skiregionsopen_Id", CAST("data"->>'Latitude' As float) AS "Latitude",
 CAST("data"->>'Longitude' As float) AS "Longitude"
     FROM t;
 
-DROP VIEW IF EXISTS  "v_smgpoisopen";
+DROP MATERIALIZED VIEW IF EXISTS  "v_smgpoisopen";
 
-CREATE OR REPLACE VIEW "v_smgpoisopen" AS
+CREATE MATERIALIZED VIEW "v_smgpoisopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'AgeTo' As integer) AS "AgeTo",
@@ -2326,56 +2360,58 @@ CAST("data"->'AdditionalPoiInfos'->'ru'->>'Language' As varchar) AS "AdditionalP
 CAST("data"->'AdditionalPoiInfos'->'ru'->>'MainType' As varchar) AS "AdditionalPoiInfos-ru-MainType"
 FROM smgpoisopen;
 
-DROP VIEW IF EXISTS "v_smgpoisopen_AreaId";
+CREATE UNIQUE INDEX "v_smgpoisopen_pk" ON "v_smgpoisopen"("Id");
 
-CREATE OR REPLACE VIEW "v_smgpoisopen_AreaId" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'AreaId') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_smgpoisopen_AreaId";
+
+CREATE MATERIALIZED VIEW "v_smgpoisopen_AreaId" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'AreaId') AS "data"
         FROM smgpoisopen
         WHERE data -> 'AreaId' != 'null';
  
-DROP VIEW IF EXISTS "v_smgpoisopen_SmgTags";
+DROP MATERIALIZED VIEW IF EXISTS "v_smgpoisopen_SmgTags";
 
-CREATE OR REPLACE VIEW "v_smgpoisopen_SmgTags" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
+CREATE MATERIALIZED VIEW "v_smgpoisopen_SmgTags" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
         FROM smgpoisopen
         WHERE data -> 'SmgTags' != 'null';
  
-DROP VIEW IF EXISTS "v_smgpoisopen_Exposition";
+DROP MATERIALIZED VIEW IF EXISTS "v_smgpoisopen_Exposition";
 
-CREATE OR REPLACE VIEW "v_smgpoisopen_Exposition" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'Exposition') AS "data"
+CREATE MATERIALIZED VIEW "v_smgpoisopen_Exposition" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'Exposition') AS "data"
         FROM smgpoisopen
         WHERE data -> 'Exposition' != 'null';
  
-DROP VIEW IF EXISTS "v_smgpoisopen_HasLanguage";
+DROP MATERIALIZED VIEW IF EXISTS "v_smgpoisopen_HasLanguage";
 
-CREATE OR REPLACE VIEW "v_smgpoisopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+CREATE MATERIALIZED VIEW "v_smgpoisopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM smgpoisopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS "v_smgpoisopen_GpsInfo";
+DROP MATERIALIZED VIEW IF EXISTS "v_smgpoisopen_GpsInfo";
 
-CREATE OR REPLACE VIEW "v_smgpoisopen_GpsInfo" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'GpsInfo') AS "Feature"
+CREATE MATERIALIZED VIEW "v_smgpoisopen_GpsInfo" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'GpsInfo') AS "Feature"
         FROM smgpoisopen
         WHERE data -> 'GpsInfo' != 'null')
-    SELECT id AS "smgpoisopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
+    SELECT "Id" AS "smgpoisopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
 CAST("data"->>'Altitude' As float) AS "Altitude",
 CAST("data"->>'Latitude' As float) AS "Latitude",
 CAST("data"->>'Longitude' As float) AS "Longitude",
 CAST("data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure"
     FROM t;
 
-DROP VIEW IF EXISTS "v_smgpoisopen_GpsTrack";
+DROP MATERIALIZED VIEW IF EXISTS "v_smgpoisopen_GpsTrack";
 
-CREATE OR REPLACE VIEW "v_smgpoisopen_GpsTrack" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'GpsTrack') AS "Feature"
+CREATE MATERIALIZED VIEW "v_smgpoisopen_GpsTrack" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'GpsTrack') AS "Feature"
         FROM smgpoisopen
         WHERE data -> 'GpsTrack' != 'null')
-    SELECT id AS "smgpoisopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+    SELECT "Id" AS "smgpoisopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'GpxTrackUrl' As varchar) AS "GpxTrackUrl",
 CAST("data"->'GpxTrackDesc'->>'de' As varchar) AS "GpxTrackDesc-de",
@@ -2383,38 +2419,40 @@ CAST("data"->'GpxTrackDesc'->>'en' As varchar) AS "GpxTrackDesc-en",
 CAST("data"->'GpxTrackDesc'->>'it' As varchar) AS "GpxTrackDesc-it"
     FROM t;
 
-DROP VIEW IF EXISTS "v_smgpoisopen_OperationSchedule";
+DROP MATERIALIZED VIEW IF EXISTS "v_smgpoisopen_OperationSchedule";
 
-CREATE OR REPLACE VIEW "v_smgpoisopen_OperationSchedule" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
+CREATE MATERIALIZED VIEW "v_smgpoisopen_OperationSchedule" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
         FROM smgpoisopen
         WHERE data -> 'OperationSchedule' != 'null')
-    SELECT id AS "smgpoisopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
+    SELECT "Id" AS "smgpoisopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Start' As varchar) AS "Start",
 CAST("data"->'OperationscheduleName'->>'de' As varchar) AS "OperationscheduleName-de"
     FROM t;
 
-DROP VIEW IF EXISTS  "v_smgtags";
+DROP MATERIALIZED VIEW IF EXISTS  "v_smgtags";
 
-CREATE OR REPLACE VIEW "v_smgtags" AS
+CREATE MATERIALIZED VIEW "v_smgtags" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Shortname' As varchar) AS "Shortname",
 CAST("data"->>'MainEntity' As varchar) AS "MainEntity",
 CAST("data"->'TagName'->>'de' As varchar) AS "TagName-de"
 FROM smgtags;
 
-DROP VIEW IF EXISTS "v_smgtags_ValidForEntity";
+CREATE UNIQUE INDEX "v_smgtags_pk" ON "v_smgtags"("Id");
 
-CREATE OR REPLACE VIEW "v_smgtags_ValidForEntity" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'ValidForEntity') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_smgtags_ValidForEntity";
+
+CREATE MATERIALIZED VIEW "v_smgtags_ValidForEntity" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'ValidForEntity') AS "data"
         FROM smgtags
         WHERE data -> 'ValidForEntity' != 'null';
  
-DROP VIEW IF EXISTS  "v_suedtiroltypes";
+DROP MATERIALIZED VIEW IF EXISTS  "v_suedtiroltypes";
 
-CREATE OR REPLACE VIEW "v_suedtiroltypes" AS
+CREATE MATERIALIZED VIEW "v_suedtiroltypes" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Key' As varchar) AS "Key",
 CAST("data"->>'Level' As integer) AS "Level",
@@ -2430,9 +2468,11 @@ CAST("data"->'TypeNames'->>'pl' As varchar) AS "TypeNames-pl",
 CAST("data"->'TypeNames'->>'ru' As varchar) AS "TypeNames-ru"
 FROM suedtiroltypes;
 
-DROP VIEW IF EXISTS  "v_tvsopen";
+CREATE UNIQUE INDEX "v_suedtiroltypes_pk" ON "v_suedtiroltypes"("Id");
 
-CREATE OR REPLACE VIEW "v_tvsopen" AS
+DROP MATERIALIZED VIEW IF EXISTS  "v_tvsopen";
+
+CREATE MATERIALIZED VIEW "v_tvsopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Active' As bool) AS "Active",
 CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
@@ -2649,23 +2689,25 @@ CAST("data"->'ContactInfos'->'ru'->>'CountryName' As varchar) AS "ContactInfos-r
 CAST("data"->'ContactInfos'->'ru'->>'Phonenumber' As varchar) AS "ContactInfos-ru-Phonenumber"
 FROM tvsopen;
 
-DROP VIEW IF EXISTS "v_tvsopen_SkiareaIds";
+CREATE UNIQUE INDEX "v_tvsopen_pk" ON "v_tvsopen"("Id");
 
-CREATE OR REPLACE VIEW "v_tvsopen_SkiareaIds" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'SkiareaIds') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_tvsopen_SkiareaIds";
+
+CREATE MATERIALIZED VIEW "v_tvsopen_SkiareaIds" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'SkiareaIds') AS "data"
         FROM tvsopen
         WHERE data -> 'SkiareaIds' != 'null';
  
-DROP VIEW IF EXISTS "v_tvsopen_HasLanguage";
+DROP MATERIALIZED VIEW IF EXISTS "v_tvsopen_HasLanguage";
 
-CREATE OR REPLACE VIEW "v_tvsopen_HasLanguage" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+CREATE MATERIALIZED VIEW "v_tvsopen_HasLanguage" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM tvsopen
         WHERE data -> 'HasLanguage' != 'null';
  
-DROP VIEW IF EXISTS  "v_wines";
+DROP MATERIALIZED VIEW IF EXISTS  "v_wines";
 
-CREATE OR REPLACE VIEW "v_wines" AS
+CREATE MATERIALIZED VIEW "v_wines" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Active' As bool) AS "Active",
 CAST("data"->>'Vintage' As integer) AS "Vintage",
@@ -2687,10 +2729,12 @@ CAST("data"->'Detail'->'it'->>'Header' As varchar) AS "Detail-it-Header",
 CAST("data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language"
 FROM wines;
 
-DROP VIEW IF EXISTS "v_wines_Awards";
+CREATE UNIQUE INDEX "v_wines_pk" ON "v_wines"("Id");
 
-CREATE OR REPLACE VIEW "v_wines_Awards" AS
-        SELECT id, jsonb_array_elements_text("data" -> 'Awards') AS "data"
+DROP MATERIALIZED VIEW IF EXISTS "v_wines_Awards";
+
+CREATE MATERIALIZED VIEW "v_wines_Awards" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> 'Awards') AS "data"
         FROM wines
         WHERE data -> 'Awards' != 'null';
  

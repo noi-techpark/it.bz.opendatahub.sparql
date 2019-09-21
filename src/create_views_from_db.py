@@ -1,10 +1,7 @@
-import itertools
-from abc import abstractmethod
 from itertools import chain
+from typing import List, Any, Dict, TypeVar
 
 import psycopg2
-
-from typing import List, Any, Dict, Tuple, TypeVar, Type
 
 T = TypeVar('T')  # Declare type variable
 
@@ -186,41 +183,49 @@ def get_all_table_names(cursor):
     return table_names
 
 
-
 simple_drop_view_sql_template = """
-DROP VIEW IF EXISTS  "v_{table_name}";
+DROP MATERIALIZED VIEW IF EXISTS  "v_{table_name}";
 """
 
 simple_create_view_sql_template = """
-CREATE OR REPLACE VIEW "v_{table_name}" AS
+CREATE MATERIALIZED VIEW "v_{table_name}" AS
 SELECT {projections}
 FROM {table_name};
 """
 
 drop_view_sql_template = """
-DROP VIEW IF EXISTS "{view_name}";
+DROP MATERIALIZED VIEW IF EXISTS "{view_name}";
 """
 
 # TODO: cast is missing
 array_create_view_sql_template="""
-CREATE OR REPLACE VIEW "{view_name}" AS
-        SELECT id, jsonb_array_elements_text("data" -> '{col_name}') AS "data"
+CREATE MATERIALIZED VIEW "{view_name}" AS
+        SELECT id AS "Id", jsonb_array_elements_text("data" -> '{col_name}') AS "data"
         FROM {table_name}
         WHERE data -> '{col_name}' != 'null';
  """
 
 nested_create_view_sql_template = """
-CREATE OR REPLACE VIEW "{view_name}" AS
-    WITH t (id, "data") AS (
-        SELECT id, jsonb_array_elements("data" -> '{col_name}') AS "Feature"
+CREATE MATERIALIZED VIEW "{view_name}" AS
+    WITH t ("Id", "data") AS (
+        SELECT id AS "Id", jsonb_array_elements("data" -> '{col_name}') AS "Feature"
         FROM {table_name}
         WHERE data -> '{col_name}' != 'null')
-    SELECT id AS "{parent_Id}", {projections}
+    SELECT "Id" AS "{parent_Id}", {projections}
     FROM t;
+"""
+
+simple_create_unique_index_sql_template = """
+CREATE UNIQUE INDEX "{view_name}_pk" ON "{view_name}"("Id");
+"""
+
+nested_create_unique_index_sql_template = """
+CREATE UNIQUE INDEX "{view_name}_pk" ON "{view_name}"("{parent_Id}","Id");
 """
 
 def sql_view(table_name: str, table_path: TablePath, attr_paths: Dict[AttrPath, Any]):
     if table_path.is_empty():
+        view_name = "v_" + table_name
         projections = ",\n".join([
             cast(c.as_json_path(), v) +
             " AS \"" + c.as_column_name() + "\""
@@ -228,7 +233,8 @@ def sql_view(table_name: str, table_path: TablePath, attr_paths: Dict[AttrPath, 
         ])
         drop_view_sql = simple_drop_view_sql_template.format(table_name=table_name)
         create_view_sql = simple_create_view_sql_template.format(table_name=table_name, projections=projections)
-        return drop_view_sql + create_view_sql
+        create_unique_index_sql = simple_create_unique_index_sql_template.format(view_name=view_name)
+        return drop_view_sql + create_view_sql + create_unique_index_sql
     elif table_path._path[-1]._path[-1] == '$literal':
         real_table_path = TablePath([AttrPath(
             tp._path[:-1] if tp._path[-1] == '$literal' else tp._path)
@@ -239,9 +245,10 @@ def sql_view(table_name: str, table_path: TablePath, attr_paths: Dict[AttrPath, 
         col_name = real_table_path.as_table_name()
         create_view_sql = array_create_view_sql_template \
             .format(view_name=view_name, table_name=table_name, col_name=col_name)
+        #create_unique_index_sql = simple_create_unique_index_sql_template.format(view_name=view_name)
         return drop_view_sql + create_view_sql
     else:
-        view_name = "v_" + table_name +  "_" + table_path.as_table_name()
+        view_name = "v_" + table_name + "_" + table_path.as_table_name()
         drop_view_sql = drop_view_sql_template.format(view_name=view_name)
         projections = ",\n".join([
             cast(c.as_json_path(), v) +
@@ -252,7 +259,9 @@ def sql_view(table_name: str, table_path: TablePath, attr_paths: Dict[AttrPath, 
         ## TODO: in the multi nesting case (array of array) we need more id columns
         parent_Id = table_name + "_Id"
         create_view_sql = nested_create_view_sql_template\
-            .format(view_name=view_name, table_name=table_name, col_name=col_name, projections=projections, parent_Id=parent_Id)
+            .format(view_name=view_name, table_name=table_name, col_name=col_name,
+                    projections=projections, parent_Id=parent_Id)
+        #create_unique_index_sql = nested_create_unique_index_sql_template.format(view_name=view_name,parent_Id=parent_Id)
         return drop_view_sql + create_view_sql
 
 
@@ -286,17 +295,17 @@ if __name__ == '__main__':
     # record = cursor.fetchone()
     # print("You are connected to - ", record, "\n")
 
-
     tables = get_all_table_names(cursor)
 
     # tables = ['accommodationsopen']
 
-    with open("create_views.sql", "w+") as f:
+    create_view_file = "create_views.sql"
+    with open(create_view_file, "w+") as f:
         for table_name in tables:
             model = extract_model_from_table(cursor, table_name)
             for table_path, attrs in model.items():
                 view = sql_view(table_name, table_path, attrs)
                 if view is not None:
                     f.write(view)
-                # print(view)
-                # print()
+
+
