@@ -4,7 +4,7 @@
 
 1. Git clone or pull this repository.
 
-2. Setup database
+2. Create database views
 
 * Run the script [src/create_views.sql](src/create_views.sql) to create the materialized views. 
 
@@ -18,7 +18,7 @@
 
 * Modify the file [vkg/odh.properties](vkg/odh.properties) accordingly
 
-5. Start the Ontop endpoint
+5. Start the Ontop SPARQL endpoint
 
 ```console
 $ cd vkg
