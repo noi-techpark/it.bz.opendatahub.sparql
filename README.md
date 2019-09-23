@@ -9,4 +9,4 @@ Dumping command:
 pg_dump --schema-only --no-owner --no-privileges
 ```
 
-Views (materialized or not) are starting with the prefix `fl_` (stands for flat).
+Views (materialized or not) are starting with the prefix `v_`.
