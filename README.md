@@ -1,12 +1,12 @@
 # odh-vkg
 
-## Installation Instruction
+## Installation instructions
 
 1. Git clone or pull this repository.
 
-2. Setup databse
+2. Setup database
 
-* Run the script [src/create_views.sql](src/create_views.sql) to create views. 
+* Run the script [src/create_views.sql](src/create_views.sql) to create the materialized views. 
 
 3. Setup Ontop
 
@@ -14,7 +14,7 @@
 * Unzip it to a directory, called `$ONTOP_DIR`.
 * Download the Postgres JDBC driver (https://jdbc.postgresql.org/download/postgresql-42.2.8.jar) to `$ONTOP_DIR/jdbc`
 
-4. Change the credential of database
+4. Change the credentials of the database
 
 * Modify the file [vkg/odh.properties](vkg/odh.properties) accordingly
 
@@ -26,7 +26,7 @@ $ $ONTOP_DIR/ontop endpoint --ontology=odh.ttl --mapping=odh.obda --properties=o
 ```
 
 6. Visit the Ontop endpoint
-* Now we can open the link <http://localhost:8080> in the browser and test SPARQL queries
+* Now we can open the link <http://localhost:8080> in the browser and test some SPARQL queries
 
 
 
