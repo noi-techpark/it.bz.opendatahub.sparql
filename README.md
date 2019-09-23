@@ -27,7 +27,3 @@ $ $ONTOP_DIR/ontop endpoint --ontology=odh.ttl --mapping=odh.obda --properties=o
 
 6. Visit the Ontop endpoint
 * Now we can open the link <http://localhost:8080> in the browser and test some SPARQL queries
-
-
-
-
