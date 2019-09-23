@@ -10,7 +10,7 @@
 
 3. Setup Ontop
 
-*  Download Ontop-cli from the shared Google Drive directory, <https://drive.google.com/open?id=18Aco1k0PlpX1IAsou1OevdvMqzxn3fvo>, the current version is `ontop-cli-4.0.0-SNAPSHOT-20190923-974857e0.zip`. 
+*  Download Ontop-cli from the shared Google Drive directory, <https://drive.google.com/open?id=18Aco1k0PlpX1IAsou1OevdvMqzxn3fvo>. The current version is `ontop-cli-4.0.0-SNAPSHOT-20190923-974857e0.zip`. 
 * Unzip it to a directory, called `$ONTOP_DIR`.
 * Download the Postgres JDBC driver (https://jdbc.postgresql.org/download/postgresql-42.2.8.jar) to `$ONTOP_DIR/jdbc`
 
@@ -26,7 +26,7 @@ $ $ONTOP_DIR/ontop endpoint --ontology=odh.ttl --mapping=odh.obda --properties=o
 ```
 
 6. Visit the Ontop endpoint
-* Now we can open the <http://localhost:8080> in the browser and test SPARQL queries
+* Now we can open the link <http://localhost:8080> in the browser and test SPARQL queries
 
 
 
