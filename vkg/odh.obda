@@ -12,45 +12,57 @@ schema:		http://schema.org/
 
 [MappingDeclaration] @collection [[
 mappingId	Campground
-target		:data/accommodation/{Id} a schema:Campground .
+target		:data/accommodation/{Id} a schema:Campground . 
 source		SELECT "Id"
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'Camping'
 
 mappingId	LodgingBusiness
-target		:data/accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email <{email}> ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} , {mobile}^^xsd:string ; schema:faxNumber {de_fax} .
+target		:data/accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email <{email}> ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} , {mobile}^^xsd:string ; schema:faxNumber {de_fax} . 
 source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, CONCAT('mailto:', "AccoDetail-de-Email") AS email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Name" AS de_phone, "AccoDetail-de-Mobile"  AS mobile, "AccoDetail-de-Fax" AS  de_fax
 			FROM "v_accommodationsopen"
 
 mappingId	Lodging business - geo
-target		:data/geo/accommodation/{id} a schema:GeoCoordinates ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} . :data/accommodation/{id} schema:geo :data/geo/accommodation/{id} .
+target		:data/geo/accommodation/{id} a schema:GeoCoordinates ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} . :data/accommodation/{id} schema:geo :data/geo/accommodation/{id} . 
 source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude
 			FROM "v_accommodationsopen"
 
 mappingId	LodgingBusiness - address
-target		:data/address/accommodation/{id} a schema:PostalAddress ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . :data/accommodation/{id} schema:address :data/address/accommodation/{id} .
+target		:data/address/accommodation/{id} a schema:PostalAddress ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . :data/accommodation/{id} schema:address :data/address/accommodation/{id} . 
 source		SELECT "Id" AS id,
-            "AccoDetail-de-City" AS de_city, "AccoDetail-de-Zip" AS de_zip, "AccoDetail-de-Street" AS de_street,
-            "AccoDetail-it-City" AS it_city, "AccoDetail-it-Street" AS it_street,
-            "AccoDetail-en-City" AS en_city, "AccoDetail-en-Street" AS en_street
+			"AccoDetail-de-City" AS de_city, "AccoDetail-de-Zip" AS de_zip, "AccoDetail-de-Street" AS de_street,
+			"AccoDetail-it-City" AS it_city, "AccoDetail-it-Street" AS it_street,
+			"AccoDetail-en-City" AS en_city, "AccoDetail-en-Street" AS en_street
 			FROM "v_accommodationsopen"
 
 mappingId	PensionHotel
-target		:data/accommodation/{id} a schema:Hotel .
+target		:data/accommodation/{id} a schema:Hotel . 
 source		SELECT "Id" AS id
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'HotelPension'
 
 mappingId	Hostel
-target		:data/accommodation/{id} a schema:Hostel .
+target		:data/accommodation/{id} a schema:Hostel . 
 source		SELECT "Id" AS id
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'Youth'
 
 mappingId	BedAndBreakfast
-target		:data/accommodation/{id} a schema:BedAndBreakfast .
+target		:data/accommodation/{id} a schema:BedAndBreakfast . 
 source		SELECT "Id" AS id
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'BedBreakfast'
+
+mappingId	POI
+target		:data/poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; geo:asWKT "POINT ({GpsPoints-position-Longitude} {GpsPoints-position-Latitude})"^^geo:wktLiteral ; schema:elevation {GpsPoints-position-Altitude}^^xsd:decimal . 
+source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen
+
+mappingId	Area
+target		:data/area/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string . 
+source		SELECT "Id", "Shortname" FROM v_areas
+
+mappingId	POI_Area
+target		:data/poi/{Id} schema:isPartOf :data/area/{data} . 
+source		SELECT "Id", "data" FROM "v_poisopen_AreaId";
 ]]
 
