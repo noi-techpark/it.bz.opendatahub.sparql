@@ -54,7 +54,7 @@ source		SELECT "Id" AS id
 			WHERE "AccoTypeId" = 'BedBreakfast'
 
 mappingId	POI
-target		:data/poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; geo:asWKT "POINT ({GpsPoints-position-Longitude} {GpsPoints-position-Latitude})"^^geo:wktLiteral ; schema:elevation {GpsPoints-position-Altitude}^^xsd:decimal . 
+target		:data/poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; geo:asWKT "POINT ({GpsPoints-position-Longitude} {GpsPoints-position-Latitude})"^^geo:wktLiteral . 
 source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen
 
 mappingId	Area
@@ -64,5 +64,9 @@ source		SELECT "Id", "Shortname" FROM v_areas
 mappingId	POI_Area
 target		:data/poi/{Id} schema:isPartOf :data/area/{data} . 
 source		SELECT "Id", "data" FROM "v_poisopen_AreaId";
+
+mappingId	POI-geo
+target		:data/poi/{Id} schema:geo :data/geo/poi/{Id} . :data/geo/poi/{Id} a schema:GeoCoordinates ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} . 
+source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen
 ]]
 
