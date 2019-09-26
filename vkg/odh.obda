@@ -55,7 +55,7 @@ source		SELECT "Id" AS id
 
 mappingId	POI
 target		:data/poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; geo:asWKT "POINT ({GpsPoints-position-Longitude} {GpsPoints-position-Latitude})"^^geo:wktLiteral . 
-source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen
+source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude" FROM v_poisopen
 
 mappingId	Area
 target		:data/area/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string . 
@@ -68,5 +68,19 @@ source		SELECT "Id", "data" FROM "v_poisopen_AreaId";
 mappingId	POI-geo
 target		:data/poi/{Id} schema:geo :data/geo/poi/{Id} . :data/geo/poi/{Id} a schema:GeoCoordinates ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} . 
 source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen
+
+mappingId	Accommodation
+target		:data/room/{Id} a schema:Accommodation ; schema:containedInPlace :data/accommodation/{A0RID} ; schema:name {AccoRoomDetail-it-Name}@it , {AccoRoomDetail-en-Name}@en , {AccoRoomDetail-de-Name}@de . 
+source		SELECT "Id", "A0RID", "AccoRoomDetail-en-Name", "AccoRoomDetail-de-Name", "AccoRoomDetail-it-Name" FROM v_accommodationroomsopen
+
+mappingId	Room
+target		:data/room/{Id} a schema:Room . 
+source		SELECT "Id" FROM v_accommodationroomsopen
+			WHERE "Roomtype" = 'room'
+
+mappingId	Apartment
+target		:data/room/{Id} a schema:Apartment . 
+source		SELECT "Id" FROM v_accommodationroomsopen
+			WHERE "Roomtype" = 'apartment'
 ]]
 
