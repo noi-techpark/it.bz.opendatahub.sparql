@@ -70,8 +70,8 @@ target		:data/poi/{Id} schema:geo :data/geo/poi/{Id} . :data/geo/poi/{Id} a sche
 source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen
 
 mappingId	Accommodation
-target		:data/room/{Id} a schema:Accommodation ; schema:containedInPlace :data/accommodation/{A0RID} ; schema:name {AccoRoomDetail-it-Name}@it , {AccoRoomDetail-en-Name}@en , {AccoRoomDetail-de-Name}@de . 
-source		SELECT "Id", "A0RID", "AccoRoomDetail-en-Name", "AccoRoomDetail-de-Name", "AccoRoomDetail-it-Name" FROM v_accommodationroomsopen
+target		:data/room/{Id} a schema:Accommodation ; schema:containedInPlace :data/accommodation/{A0RID} ; schema:name {AccoRoomDetail-it-Name}@it , {AccoRoomDetail-en-Name}@en , {AccoRoomDetail-de-Name}@de ; :numberOfUnits {RoomQuantity} ; schema:occupancy :data/occupancy/room/{Id} . 
+source		SELECT "Id", "A0RID", "AccoRoomDetail-en-Name", "AccoRoomDetail-de-Name", "AccoRoomDetail-it-Name", "RoomQuantity" FROM v_accommodationroomsopen
 
 mappingId	Room
 target		:data/room/{Id} a schema:Room . 
@@ -82,5 +82,15 @@ mappingId	Apartment
 target		:data/room/{Id} a schema:Apartment . 
 source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'apartment'
+
+mappingId	Camping pitch
+target		:data/room/{Id} a schema:CampingPitch . 
+source		SELECT "Id" FROM v_accommodationroomsopen
+			WHERE "Roomtype" = 'pitch' OR "Roomtype" = 'campsite' OR "Roomtype" = 'caravan'
+
+mappingId	Room occupancy
+target		:data/occupancy/room/{Id} a schema:QuantitativeValue ; schema:minValue {Roommin} ; schema:maxValue {Roommax} . 
+source		SELECT "Id", "Roommin", "Roommax"
+			FROM v_accommodationroomsopen
 ]]
 

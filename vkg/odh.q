@@ -120,3 +120,19 @@ SELECT * WHERE {
 ?a a schema:AdministrativeArea ; rdfs:label ?name . 
 }
 ]]
+
+[QueryGroup="Quality"] @collection [[
+[QueryItem="Pitch not in Campground"]
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?b WHERE {
+  ?pitch a schema:CampingPitch ; schema:containedInPlace ?b .
+  ?b geo:asWKT ?pos .
+    MINUS {
+    ?b a schema:Campground
+  }
+}
+]]
