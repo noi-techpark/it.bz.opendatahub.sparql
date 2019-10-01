@@ -92,5 +92,9 @@ mappingId	Room occupancy
 target		:data/occupancy/room/{Id} a schema:QuantitativeValue ; schema:minValue {Roommin} ; schema:maxValue {Roommax} . 
 source		SELECT "Id", "Roommin", "Roommax"
 			FROM v_accommodationroomsopen
+
+mappingId	Event EURAC NOI
+target		:data/event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location :data/location/event/euracnoi/{Id} . 
+source		SELECT "Id", "StartDate", "EndDate", "EventDescriptionIT", "EventDescriptionEN", "EventDescriptionDE" FROM v_eventeuracnoi
 ]]
 

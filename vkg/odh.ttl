@@ -1461,6 +1461,19 @@ schema:elevation rdf:type owl:DatatypeProperty ;
                  rdfs:label "elevation"@en .
 
 
+###  http://schema.org/endDate
+schema:endDate rdf:type owl:DatatypeProperty ;
+               schema:domainIncludes schema:CreativeWorkSeason ,
+                                     schema:CreativeWorkSeries ,
+                                     schema:DatedMoneySpecification ,
+                                     schema:Event ,
+                                     schema:Role ;
+               schema:rangeIncludes schema:Date ,
+                                    schema:DateTime ;
+               rdfs:comment "The end date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601))."@en ;
+               rdfs:label "endDate"@en .
+
+
 ###  http://schema.org/faxNumber
 schema:faxNumber rdf:type owl:DatatypeProperty ;
                  schema:domainIncludes schema:ContactPoint ,
@@ -1515,6 +1528,19 @@ schema:postalCode rdf:type owl:DatatypeProperty ;
                   schema:rangeIncludes schema:Text ;
                   rdfs:comment "The postal code. For example, 94043."@en ;
                   rdfs:label "postalCode"@en .
+
+
+###  http://schema.org/startDate
+schema:startDate rdf:type owl:DatatypeProperty ;
+                 schema:domainIncludes schema:CreativeWorkSeason ,
+                                       schema:CreativeWorkSeries ,
+                                       schema:DatedMoneySpecification ,
+                                       schema:Event ,
+                                       schema:Role ;
+                 schema:rangeIncludes schema:Date ,
+                                      schema:DateTime ;
+                 rdfs:comment "The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601))."@en ;
+                 rdfs:label "startDate"@en .
 
 
 ###  http://schema.org/streetAddress
@@ -9020,17 +9046,6 @@ schema:encodings schema:domainIncludes schema:CreativeWork ;
                  rdfs:comment "A media object that encodes this CreativeWork."@en .
 
 
-schema:endDate schema:domainIncludes schema:CreativeWorkSeason ,
-                                     schema:Role ;
-               schema:rangeIncludes schema:Date ;
-               schema:domainIncludes schema:DatedMoneySpecification ;
-               schema:rangeIncludes schema:DateTime ;
-               schema:domainIncludes schema:Event ;
-               rdfs:label "endDate"@en ;
-               schema:domainIncludes schema:CreativeWorkSeries ;
-               rdfs:comment "The end date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601))."@en .
-
-
 schema:endTime rdfs:label "endTime"@en ;
                schema:domainIncludes schema:Action ;
                rdfs:comment "The endTime of something. For a reserved event or service (e.g. FoodEstablishmentReservation), the time that it is expected to end. For actions that span a period of time, when the action was performed. e.g. John wrote a book from January to *December*. For media, including audio and video, it's the time offset of the end of a clip within a larger file.\\n\\nNote that Event uses startDate/endDate instead of startTime/endTime, even when describing dates with times. This situation may be clarified in future revisions."@en ;
@@ -11845,17 +11860,6 @@ schema:starRating rdfs:comment "An official rating for a lodging business or foo
                   schema:rangeIncludes schema:Rating ;
                   rdfs:label "starRating"@en ;
                   dc:source <https://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#STI_Accommodation_Ontology> .
-
-
-schema:startDate schema:domainIncludes schema:DatedMoneySpecification ;
-                 rdfs:comment "The start date and time of the item (in [ISO 8601 date format](http://en.wikipedia.org/wiki/ISO_8601))."@en ;
-                 schema:domainIncludes schema:Event ;
-                 schema:rangeIncludes schema:Date ;
-                 schema:domainIncludes schema:Role ,
-                                       schema:CreativeWorkSeries ,
-                                       schema:CreativeWorkSeason ;
-                 rdfs:label "startDate"@en ;
-                 schema:rangeIncludes schema:DateTime .
 
 
 schema:startTime schema:rangeIncludes schema:Time ;
