@@ -203,3 +203,9 @@ fabric.properties
 !.vscode/extensions.json
 
 catalog-v001.xml
+
+# Properties file for Protègè. It is (for now) personal so it would be better to ignore it for commits
+vkg/odh.properties
+
+# Mac Desktop Services Store file
+.DS_Store
