@@ -101,5 +101,10 @@ mappingId	Event Organization
 target		:data/organization/event/euracnoi/{Id} a schema:Organization ; schema:name {CompanyName} . 
 source		select "Id", "CompanyName"
 			from v_eventeuracnoi
+
+mappingId	Event Location
+target		:data/location/event/euracnoi/{Id} a schema:MeetingRoom ; schema:name {AnchorVenue} ; schema:containedInPlace :data/place/euracnoi/{EventLocation} . 
+source		select "Id", "AnchorVenue", "EventLocation"
+			from v_eventeuracnoi
 ]]
 
