@@ -89,13 +89,14 @@ source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'pitch' OR "Roomtype" = 'campsite' OR "Roomtype" = 'caravan'
 
 mappingId	Room occupancy
-target		:data/occupancy/room/{Id} a schema:QuantitativeValue ; schema:minValue {Roommin} ; schema:maxValue {Roommax} . 
+target		:data/occupancy/room/{Id} a schema:QuantitativeValue ; schema:minValue {Roommin} ; schema:maxValue {Roommax} ; schema:unitCode "C62" . 
 source		SELECT "Id", "Roommin", "Roommax"
 			FROM v_accommodationroomsopen
 
 mappingId	Event EURAC NOI
-target		:data/event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location :data/location/event/euracnoi/{Id} ; schema:organizer :data/organization/event/euracnoi/{Id} . 
-source		SELECT "Id", "StartDate", "EndDate", "EventDescriptionIT", "EventDescriptionEN", "EventDescriptionDE" FROM v_eventeuracnoi
+target		:data/event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location :data/location/euracnoi/{EventLocation}/{AnchorVenue} ; schema:organizer :data/organization/event/euracnoi/{Id} . 
+source		SELECT "Id", "StartDate", "EndDate", "EventDescriptionIT", "EventDescriptionEN", "AnchorVenue", "EventLocation", "EventDescriptionDE"
+			FROM v_eventeuracnoi
 
 mappingId	Event Organization
 target		:data/organization/event/euracnoi/{Id} a schema:Organization ; schema:name {CompanyName} . 
@@ -103,8 +104,13 @@ source		select "Id", "CompanyName"
 			from v_eventeuracnoi
 
 mappingId	Event Location
-target		:data/location/event/euracnoi/{Id} a schema:MeetingRoom ; schema:name {AnchorVenue} ; schema:containedInPlace :data/place/euracnoi/{EventLocation} . 
+target		:data/location/euracnoi/{EventLocation}/{AnchorVenue} a schema:MeetingRoom ; schema:name {AnchorVenue} ; schema:containedInPlace :data/place/euracnoi/{EventLocation} . 
 source		select "Id", "AnchorVenue", "EventLocation"
+			from v_eventeuracnoi
+
+mappingId	Event Contact Person
+target		:data/contact/event/euracnoi/{Id} a schema:Person ; schema:familyName {ContactLastName} ; schema:givenName {ContactFirstName} ; schema:email <{email}> ; schema:telephone {ContactPhone} ; schema:worksFor :data/organization/event/euracnoi/{Id} . 
+source		select "Id", "ContactFirstName", "ContactLastName", concat('mailto:',"ContactEmail") as email, "ContactPhone"
 			from v_eventeuracnoi
 ]]
 

@@ -144,5 +144,27 @@ PREFIX schema: <http://schema.org/>
 
 SELECT * WHERE {
   ?event a schema:Event ; schema:description ?desc ; schema:location ?location .
-  ?location schema:containedInPlace ?place ; schema:name ?name.
+  ?location schema:containedInPlace ?place ; schema:name ?name .
+  FILTER(langMatches(lang(?desc), 'de'))
 }
+
+[QueryItem="Event contact person"]
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+
+SELECT * WHERE {
+  ?contactP a schema:Person ; schema:familyName ?surname ; schema:givenName ?name ; schema:email ?email ; schema:telephone ?telNr ; schema:worksFor ?company .
+  ?company schema:name ?cname .
+}
+
+[QueryItem="Meeting Rooms"]
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+
+SELECT * WHERE {
+
+  ?meetingRoom a schema:MeetingRoom ; schema:name ?name .
+}
+ORDER BY ?name

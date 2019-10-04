@@ -538,7 +538,7 @@ DROP MATERIALIZED VIEW IF EXISTS "v_eventeuracnoi_RoomBooked";
 
 CREATE MATERIALIZED VIEW "v_eventeuracnoi_RoomBooked" AS
     WITH t ("Id", "data") AS (
-        SELECT id AS "Id", jsonb_array_elements("data" -> 'RoomBooked') AS "Feature"
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'RoomBooked') AS "Feature"
         FROM eventeuracnoi
         WHERE data -> 'RoomBooked' != 'null')
     SELECT "Id" AS "eventeuracnoi_Id", CAST("data"->>'Space' As varchar) AS "Space",
