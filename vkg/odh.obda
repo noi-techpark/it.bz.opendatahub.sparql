@@ -112,5 +112,10 @@ mappingId	Event Contact Person
 target		:data/contact/event/euracnoi/{Id} a schema:Person ; schema:familyName {ContactLastName} ; schema:givenName {ContactFirstName} ; schema:email <{email}> ; schema:telephone {ContactPhone} ; schema:worksFor :data/organization/event/euracnoi/{Id} . 
 source		select "Id", "ContactFirstName", "ContactLastName", concat('mailto:',"ContactEmail") as email, "ContactPhone"
 			from v_eventeuracnoi
+
+mappingId	Event Organization - company address
+target		:data/address/organization/event/euracnoi/{Id} a schema:PostalAddress ; schema:streetAddress {CompanyAddressLine1} ; schema:postalCode {CompanyPostalCode} ; schema:addressLocality {CompanyCity} ; schema:addressCountry {CompanyCountry} . :data/organization/event/euracnoi/{Id} schema:address :data/address/organization/event/euracnoi/{Id} . 
+source		select "Id", "CompanyAddressLine1", "CompanyCity", "CompanyCountry", "CompanyPostalCode"
+			from v_eventeuracnoi
 ]]
 
