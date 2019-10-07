@@ -86,7 +86,7 @@ source		SELECT "Id" FROM v_accommodationroomsopen
 mappingId	Camping pitch
 target		:data/room/{Id} a schema:CampingPitch . 
 source		SELECT "Id" FROM v_accommodationroomsopen
-			WHERE "Roomtype" = 'pitch' OR "Roomtype" = 'campsite' OR "Roomtype" = 'caravan'
+			WHERE "Roomtype" = 'pitch' OR "Roomtype" = 'campsite'
 
 mappingId	Room occupancy
 target		:data/occupancy/room/{Id} a schema:QuantitativeValue ; schema:minValue {Roommin} ; schema:maxValue {Roommax} ; schema:unitCode "C62" . 
@@ -117,5 +117,10 @@ mappingId	Event Organization - company address
 target		:data/address/organization/event/euracnoi/{Id} a schema:PostalAddress ; schema:streetAddress {CompanyAddressLine1} ; schema:postalCode {CompanyPostalCode} ; schema:addressLocality {CompanyCity} ; schema:addressCountry {CompanyCountry} . :data/organization/event/euracnoi/{Id} schema:address :data/address/organization/event/euracnoi/{Id} . 
 source		select "Id", "CompanyAddressLine1", "CompanyCity", "CompanyCountry", "CompanyPostalCode"
 			from v_eventeuracnoi
+
+mappingId	Caravan pitch
+target		:data/room/{Id} a :CaravanPitch . 
+source		SELECT "Id" FROM v_accommodationroomsopen
+			WHERE "Roomtype" = 'caravan'
 ]]
 
