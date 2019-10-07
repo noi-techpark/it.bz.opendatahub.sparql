@@ -4,6 +4,7 @@ PREFIX schema: <http://schema.org/>
 SELECT * {
  ?s ?p ?o .
 }
+LIMIT 100
 
 [QueryItem="Lodging businesses"]
 PREFIX : <http://noi.example.org/ontology/odh#>
@@ -81,6 +82,64 @@ SELECT (COUNT(DISTINCT ?h) AS ?count) WHERE {
   ?h a schema:LodgingBusiness ; schema:address ?a .
   # ?a schema:addressLocality "Bolzano"@it .
   ?a schema:postalCode "39100" .
+}
+
+[QueryItem="lodging-st-biggest"]
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posColor ?bName
+      (SUM(?nb) AS ?countRoom) 
+      (SUM(?maxPersons) AS ?countMaxPersons) 
+      (CONCAT(?bName, ': ', str(?countRoom), ' accommodations, max ', str(?countMaxPersons), ' guests') AS ?posLabel)  WHERE {
+  ?b a schema:LodgingBusiness ; schema:name ?bName ; geo:asWKT ?pos .
+  OPTIONAL {
+     ?r schema:containedInPlace ?b .
+     ?r a schema:Accommodation ; :numberOfUnits ?nb ; schema:occupancy [ schema:maxValue ?maxOccupancyPerRoom ] .
+    BIND (?nb * ?maxOccupancyPerRoom AS ?maxPersons)
+  }
+  FILTER (lang(?bName) = 'en')
+  OPTIONAL {
+     ?b a ?c 
+    VALUES (?c ?posColor) { 
+      (schema:Campground "chlorophyll,0.5") # Green
+      (schema:BedAndBreakfast "viridis,0.1") #Purple
+      (schema:Hotel "jet,0.3") # Light blue
+      (schema:Hostel "jet,0.8") # Red
+    }
+  }
+} 
+GROUP BY ?b ?bName ?pos ?posColor
+ORDER BY DESC(?countRoom)
+LIMIT 50
+
+[QueryItem="lodging-without-accommodation"]
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posColor ?bName
+      (?bName AS ?posLabel)  WHERE {
+  ?b a schema:LodgingBusiness ; schema:name ?bName ; geo:asWKT ?pos .
+  MINUS {
+     ?r schema:containedInPlace ?b .
+     ?r a schema:Accommodation
+  }
+  FILTER (lang(?bName) = 'en')
+  OPTIONAL {
+     ?b a ?c 
+    VALUES (?c ?posColor) { 
+      (schema:Campground "chlorophyll,0.5") # Green
+      (schema:BedAndBreakfast "viridis,0.1") #Purple
+      (schema:Hotel "jet,0.3") # Light blue
+      (schema:Hostel "jet,0.8") # Red
+    }
+  }
 }
 ]]
 
@@ -168,3 +227,31 @@ SELECT * WHERE {
   ?meetingRoom a schema:MeetingRoom ; schema:name ?name .
 }
 ORDER BY ?name
+
+[QueryItem="Test"]
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+SELECT ?h ?pos ?posLabel ?posColor WHERE {
+  ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?posLabel ; schema:address ?a .
+  OPTIONAL {
+    ?h a schema:Campground .
+    BIND("chlorophyll,0.5" AS ?posColor) # Green
+  }
+    OPTIONAL {
+    ?h a schema:BedAndBreakfast .
+    BIND("viridis,0.1" AS ?posColor) # Purple
+  }
+  OPTIONAL {
+    ?h a schema:Hotel .
+    BIND("jet,0.3" AS ?posColor) # Light blue
+  }
+  OPTIONAL {
+    ?h a schema:Hostel .
+    BIND("jet,0.8" AS ?posColor) # Red
+  }
+  ?a schema:postalCode "39100" .
+  FILTER (lang(?posLabel) = 'de')
+}
+LIMIT 500
