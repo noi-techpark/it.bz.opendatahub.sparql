@@ -12,45 +12,115 @@ schema:		http://schema.org/
 
 [MappingDeclaration] @collection [[
 mappingId	Campground
-target		:data/accommodation/{Id} a schema:Campground .
+target		:data/accommodation/{Id} a schema:Campground . 
 source		SELECT "Id"
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'Camping'
 
 mappingId	LodgingBusiness
-target		:data/accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email <{email}> ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} , {mobile}^^xsd:string ; schema:faxNumber {de_fax} .
+target		:data/accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email <{email}> ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} , {mobile}^^xsd:string ; schema:faxNumber {de_fax} . 
 source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, CONCAT('mailto:', "AccoDetail-de-Email") AS email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Name" AS de_phone, "AccoDetail-de-Mobile"  AS mobile, "AccoDetail-de-Fax" AS  de_fax
 			FROM "v_accommodationsopen"
 
 mappingId	Lodging business - geo
-target		:data/geo/accommodation/{id} a schema:GeoCoordinates ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} . :data/accommodation/{id} schema:geo :data/geo/accommodation/{id} .
+target		:data/geo/accommodation/{id} a schema:GeoCoordinates ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} . :data/accommodation/{id} schema:geo :data/geo/accommodation/{id} . 
 source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude
 			FROM "v_accommodationsopen"
 
 mappingId	LodgingBusiness - address
-target		:data/address/accommodation/{id} a schema:PostalAddress ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . :data/accommodation/{id} schema:address :data/address/accommodation/{id} .
+target		:data/address/accommodation/{id} a schema:PostalAddress ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . :data/accommodation/{id} schema:address :data/address/accommodation/{id} . 
 source		SELECT "Id" AS id,
-            "AccoDetail-de-City" AS de_city, "AccoDetail-de-Zip" AS de_zip, "AccoDetail-de-Street" AS de_street,
-            "AccoDetail-it-City" AS it_city, "AccoDetail-it-Street" AS it_street,
-            "AccoDetail-en-City" AS en_city, "AccoDetail-en-Street" AS en_street
+			"AccoDetail-de-City" AS de_city, "AccoDetail-de-Zip" AS de_zip, "AccoDetail-de-Street" AS de_street,
+			"AccoDetail-it-City" AS it_city, "AccoDetail-it-Street" AS it_street,
+			"AccoDetail-en-City" AS en_city, "AccoDetail-en-Street" AS en_street
 			FROM "v_accommodationsopen"
 
 mappingId	PensionHotel
-target		:data/accommodation/{id} a schema:Hotel .
+target		:data/accommodation/{id} a schema:Hotel . 
 source		SELECT "Id" AS id
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'HotelPension'
 
 mappingId	Hostel
-target		:data/accommodation/{id} a schema:Hostel .
+target		:data/accommodation/{id} a schema:Hostel . 
 source		SELECT "Id" AS id
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'Youth'
 
 mappingId	BedAndBreakfast
-target		:data/accommodation/{id} a schema:BedAndBreakfast .
+target		:data/accommodation/{id} a schema:BedAndBreakfast . 
 source		SELECT "Id" AS id
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'BedBreakfast'
+
+mappingId	POI
+target		:data/poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; geo:asWKT "POINT ({GpsPoints-position-Longitude} {GpsPoints-position-Latitude})"^^geo:wktLiteral . 
+source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude" FROM v_poisopen
+
+mappingId	Area
+target		:data/area/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string . 
+source		SELECT "Id", "Shortname" FROM v_areas
+
+mappingId	POI_Area
+target		:data/poi/{Id} schema:isPartOf :data/area/{data} . 
+source		SELECT "Id", "data" FROM "v_poisopen_AreaId";
+
+mappingId	POI-geo
+target		:data/poi/{Id} schema:geo :data/geo/poi/{Id} . :data/geo/poi/{Id} a schema:GeoCoordinates ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} . 
+source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen
+
+mappingId	Accommodation
+target		:data/room/{Id} a schema:Accommodation ; schema:containedInPlace :data/accommodation/{A0RID} ; schema:name {AccoRoomDetail-it-Name}@it , {AccoRoomDetail-en-Name}@en , {AccoRoomDetail-de-Name}@de ; :numberOfUnits {RoomQuantity} ; schema:occupancy :data/occupancy/room/{Id} . 
+source		SELECT "Id", "A0RID", "AccoRoomDetail-en-Name", "AccoRoomDetail-de-Name", "AccoRoomDetail-it-Name", "RoomQuantity" FROM v_accommodationroomsopen
+
+mappingId	Room
+target		:data/room/{Id} a schema:Room . 
+source		SELECT "Id" FROM v_accommodationroomsopen
+			WHERE "Roomtype" = 'room'
+
+mappingId	Apartment
+target		:data/room/{Id} a schema:Apartment . 
+source		SELECT "Id" FROM v_accommodationroomsopen
+			WHERE "Roomtype" = 'apartment'
+
+mappingId	Camping pitch
+target		:data/room/{Id} a schema:CampingPitch . 
+source		SELECT "Id" FROM v_accommodationroomsopen
+			WHERE "Roomtype" = 'pitch' OR "Roomtype" = 'campsite'
+
+mappingId	Room occupancy
+target		:data/occupancy/room/{Id} a schema:QuantitativeValue ; schema:minValue {Roommin} ; schema:maxValue {Roommax} ; schema:unitCode "C62" . 
+source		SELECT "Id", "Roommin", "Roommax"
+			FROM v_accommodationroomsopen
+
+mappingId	Event EURAC NOI
+target		:data/event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location :data/location/euracnoi/{EventLocation}/{AnchorVenue} ; schema:organizer :data/organization/event/euracnoi/{Id} . 
+source		SELECT "Id", "StartDate", "EndDate", "EventDescriptionIT", "EventDescriptionEN", "AnchorVenue", "EventLocation", "EventDescriptionDE"
+			FROM v_eventeuracnoi
+
+mappingId	Event Organization
+target		:data/organization/event/euracnoi/{Id} a schema:Organization ; schema:name {CompanyName} . 
+source		select "Id", "CompanyName"
+			from v_eventeuracnoi
+
+mappingId	Event Location
+target		:data/location/euracnoi/{EventLocation}/{AnchorVenue} a schema:MeetingRoom ; schema:name {AnchorVenue} ; schema:containedInPlace :data/place/euracnoi/{EventLocation} . 
+source		select "Id", "AnchorVenue", "EventLocation"
+			from v_eventeuracnoi
+
+mappingId	Event Contact Person
+target		:data/contact/event/euracnoi/{Id} a schema:Person ; schema:familyName {ContactLastName} ; schema:givenName {ContactFirstName} ; schema:email <{email}> ; schema:telephone {ContactPhone} ; schema:worksFor :data/organization/event/euracnoi/{Id} . 
+source		select "Id", "ContactFirstName", "ContactLastName", concat('mailto:',"ContactEmail") as email, "ContactPhone"
+			from v_eventeuracnoi
+
+mappingId	Event Organization - company address
+target		:data/address/organization/event/euracnoi/{Id} a schema:PostalAddress ; schema:streetAddress {CompanyAddressLine1} ; schema:postalCode {CompanyPostalCode} ; schema:addressLocality {CompanyCity} ; schema:addressCountry {CompanyCountry} . :data/organization/event/euracnoi/{Id} schema:address :data/address/organization/event/euracnoi/{Id} . 
+source		select "Id", "CompanyAddressLine1", "CompanyCity", "CompanyCountry", "CompanyPostalCode"
+			from v_eventeuracnoi
+
+mappingId	Caravan pitch
+target		:data/room/{Id} a :CaravanPitch . 
+source		SELECT "Id" FROM v_accommodationroomsopen
+			WHERE "Roomtype" = 'caravan'
 ]]
 
