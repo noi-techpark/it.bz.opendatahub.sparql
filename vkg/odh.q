@@ -141,6 +141,33 @@ SELECT ?pos ?posColor ?bName
     }
   }
 }
+
+[QueryItem="lodging-not-in-st"]
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel WHERE {
+  ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?posLabel ; schema:address ?a .
+  ?a schema:postalCode ?zip .
+  FILTER (lang(?posLabel) = 'de').
+  FILTER regex(?zip, '^(?!39+)', 'i').
+}
+
+[QueryItem="lodging-not-in-st-clean"]
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel WHERE {
+  ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?posLabel ; schema:address ?a .
+  ?a schema:postalCode ?zip .
+  FILTER (lang(?posLabel) = 'de').
+  FILTER regex(?zip, '^(?!39+)', 'i').
+  FILTER regex(?zip, '^(?!\\s*$).+', 'i').
+}
 ]]
 
 [QueryGroup="POI"] @collection [[
@@ -255,3 +282,41 @@ SELECT ?h ?pos ?posLabel ?posColor WHERE {
   FILTER (lang(?posLabel) = 'de')
 }
 LIMIT 500
+
+[QueryItem="Outside of ST"]
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel WHERE {
+  ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?posLabel ; schema:address ?a .
+  ?a schema:postalCode ?zip .
+  FILTER (lang(?posLabel) = 'de').
+  FILTER regex(?zip, '^(?!39+)', 'i').
+}
+
+[QueryItem="Outside of ST w/ ZIP"]
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel WHERE {
+  ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?posLabel ; schema:address ?a .
+  ?a schema:postalCode ?zip .
+  FILTER (lang(?posLabel) = 'de').
+  FILTER regex(?zip, '^(?!39+)', 'i').
+  FILTER regex(?zip, '^(?!\\s*$).+', 'i').
+}
+
+[QueryItem="Outside of ST bounding box"]
+PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+
+SELECT ?h WHERE {
+  ?h a schema:LodgingBusiness ; schema:geo [ schema:latitude ?lat ; schema:longitude ?long ] .
+  FILTER (?lat < 46.2198 || ?lat > 47.0921 || ?long < 10.3818 || ?long > 12.4779) .
+}

@@ -94,7 +94,7 @@ source		SELECT "Id", "Roommin", "Roommax"
 			FROM v_accommodationroomsopen
 
 mappingId	Event EURAC NOI
-target		:data/event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location :data/location/euracnoi/{EventLocation}/{AnchorVenue} ; schema:organizer :data/organization/event/euracnoi/{Id} . 
+target		:data/event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location :data/location/euracnoi/{EventLocation}/{AnchorVenue} ; schema:organizer :data/organization/event/euracnoi/{Id} , :data/contact/event/euracnoi/{Id} . 
 source		SELECT "Id", "StartDate", "EndDate", "EventDescriptionIT", "EventDescriptionEN", "AnchorVenue", "EventLocation", "EventDescriptionDE"
 			FROM v_eventeuracnoi
 
