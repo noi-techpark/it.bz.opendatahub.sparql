@@ -23,9 +23,9 @@ PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
 SELECT ?h ?pos (CONCAT(?name, CONCAT(CONCAT('<hr/>de: ',?deCity),CONCAT('<hr/> it: ',?itCity))) AS ?posLabel) WHERE {
   ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?name ; schema:address ?a .
-  ?a schema:addressLocality ?deCity, ?itCity ; schema:postalCode "39100" . 
+  ?a schema:addressLocality ?deCity, ?itCity ; schema:postalCode "39100" .
   MINUS {
-    ?a schema:addressLocality "Bolzano"@it . 
+    ?a schema:addressLocality "Bolzano"@it .
   }
   FILTER ((lang(?name) = 'de') && (lang(?deCity) = 'de') && (lang(?itCity) = 'it'))
 }
@@ -50,8 +50,8 @@ PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 SELECT ?h ?pos ?posLabel ?posColor WHERE {
   ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?posLabel ; schema:address ?a .
   OPTIONAL {
-     ?h a ?c 
-    VALUES (?c ?posColor) { 
+     ?h a ?c
+    VALUES (?c ?posColor) {
       (schema:Campground "chlorophyll,0.5") # Green
       (schema:BedAndBreakfast "viridis,0.1") #Purple
       (schema:Hotel "jet,0.3") # Light blue
@@ -92,8 +92,8 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX : <http://noi.example.org/ontology/odh#>
 
 SELECT ?pos ?posColor ?bName
-      (SUM(?nb) AS ?countRoom) 
-      (SUM(?maxPersons) AS ?countMaxPersons) 
+      (SUM(?nb) AS ?countRoom)
+      (SUM(?maxPersons) AS ?countMaxPersons)
       (CONCAT(?bName, ': ', str(?countRoom), ' accommodations, max ', str(?countMaxPersons), ' guests') AS ?posLabel)  WHERE {
   ?b a schema:LodgingBusiness ; schema:name ?bName ; geo:asWKT ?pos .
   OPTIONAL {
@@ -103,15 +103,15 @@ SELECT ?pos ?posColor ?bName
   }
   FILTER (lang(?bName) = 'en')
   OPTIONAL {
-     ?b a ?c 
-    VALUES (?c ?posColor) { 
+     ?b a ?c
+    VALUES (?c ?posColor) {
       (schema:Campground "chlorophyll,0.5") # Green
       (schema:BedAndBreakfast "viridis,0.1") #Purple
       (schema:Hotel "jet,0.3") # Light blue
       (schema:Hostel "jet,0.8") # Red
     }
   }
-} 
+}
 GROUP BY ?b ?bName ?pos ?posColor
 ORDER BY DESC(?countRoom)
 LIMIT 50
@@ -132,8 +132,8 @@ SELECT ?pos ?posColor ?bName
   }
   FILTER (lang(?bName) = 'en')
   OPTIONAL {
-     ?b a ?c 
-    VALUES (?c ?posColor) { 
+     ?b a ?c
+    VALUES (?c ?posColor) {
       (schema:Campground "chlorophyll,0.5") # Green
       (schema:BedAndBreakfast "viridis,0.1") #Purple
       (schema:Hotel "jet,0.3") # Light blue
@@ -203,7 +203,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 
 SELECT * WHERE {
-?a a schema:AdministrativeArea ; rdfs:label ?name . 
+?a a schema:AdministrativeArea ; rdfs:label ?name .
 }
 ]]
 
@@ -320,3 +320,81 @@ SELECT ?h WHERE {
   ?h a schema:LodgingBusiness ; schema:geo [ schema:latitude ?lat ; schema:longitude ?long ] .
   FILTER (?lat < 46.2198 || ?lat > 47.0921 || ?long < 10.3818 || ?long > 12.4779) .
 }
+
+[QueryGroup="ski"] @collection [[
+[QueryItem="SkiResort"]
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX dc: <http://purl.org/dc/terms/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xml: <http://www.w3.org/XML/1998/namespace>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX obda: <https://w3id.org/obda/vocabulary#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+
+SELECT * WHERE {
+?s a schema:SkiResort ; rdfs:label ?name ; geo:asWKT ?pos ; schema:elevation ?el ; schema:image ?img ; schema:isPartOf ?skiRegion. ?skiRegion a :SkiRegion .?skiRegion rdfs:label ?regionName.
+# ?s schema:isPartOf ?area. ?area a schema:AdministrativeArea ; rdfs:label ?areaName .
+  bind(concat('<h3>',str(?name), #?regionName,
+' </h3>',
+      #        '<a href="', str(?img), '>',
+      '<img src="',str(?img), '" height="300" width="300">'
+    #  '</a>'
+    ) as ?posLabel)
+#  bind(strdt(?lex,rdf:HTML) as ?widget)
+}
+]]
+
+[QueryGroup="ActivityType"] @collection [[
+[QueryItem="activityType"]
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX dc: <http://purl.org/dc/terms/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xml: <http://www.w3.org/XML/1998/namespace>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX obda: <https://w3id.org/obda/vocabulary#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+
+SELECT * WHERE {
+?a a :Activity ; :activityType ?t .
+}
+]]
+
+[QueryGroup="Wine"] @collection [[
+[QueryItem="wine"]
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX dc: <http://purl.org/dc/terms/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xml: <http://www.w3.org/XML/1998/namespace>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX obda: <https://w3id.org/obda/vocabulary#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+
+SELECT * WHERE {
+?wine a :Wine.
+}
+
+[QueryItem="wineAward"]
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX dc: <http://purl.org/dc/terms/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xml: <http://www.w3.org/XML/1998/namespace>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX obda: <https://w3id.org/obda/vocabulary#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+
+SELECT * WHERE {
+?wine a :Wine ; :wineVintageYear ?vintage ; rdfs:label ?name ; :receivesWineAward ?aw.
+}
+]]
