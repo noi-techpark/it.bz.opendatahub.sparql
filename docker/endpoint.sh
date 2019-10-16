@@ -13,6 +13,7 @@ pg_dump --host=$ORIGINAL_POSTGRES_HOST --username=$ORIGINAL_POSTGRES_USERNAME \
     --exclude-table='public."AspNetUsers"' \
     --exclude-table='public."users"' \
     --exclude-table='public."tripplaners"' \
+    --exclude-table='public."AspNetUserClaims_Id_seq"' \
     $ORIGINAL_POSTGRES_DB > dump.sql
 
 echo "Entrypoint - Restoring new DB"
