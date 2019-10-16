@@ -98,3 +98,7 @@ More documentation can be found at [https://opendatahub.readthedocs.io/en/latest
 ### License
 
 The code in this project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3 license. See the [LICENSE.md](LICENSE.md) file for more information.
+
+### Examples of SPARQL queries
+
+Some examples of possible SPARQL queries can be found in the SPARQL Queries folder. You can take a look at some [data quality queries here](sparql_queries/dataquality.md) and at some [regular queries here](sparql_queries/regular.md)
