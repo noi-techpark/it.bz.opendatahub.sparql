@@ -45,6 +45,7 @@ cd odh-vkg/
 3. Start the Docker container (see [the dedicated section](#Start-and-stop-the-containers))
 
 4. Visit the Ontop endpoint
+
 * Now we can open the link <http://localhost:8080> in the browser and test some SPARQL queries
 
 ## Docker environment
