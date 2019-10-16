@@ -6,13 +6,13 @@ set -o pipefail
 echo "Entrypoint - Dumping old DB"
 export PGPASSWORD="$ORIGINAL_POSTGRES_PASSWORD"
 pg_dump --host=$ORIGINAL_POSTGRES_HOST --username=$ORIGINAL_POSTGRES_USERNAME \
-    --exclude-table="AspNetRoles" \
-    --exclude-table="AspNetUserClaims" \
-    --exclude-table="AspNetUserLogins" \
-    --exclude-table="AspNetUserRoles" \
-    --exclude-table="AspNetUsers" \
-    --exclude-table="users" \
-    --exclude-table="tripplaners" \
+    --exclude-table="public.AspNetRoles" \
+    --exclude-table="public.AspNetUserClaims" \
+    --exclude-table="public.AspNetUserLogins" \
+    --exclude-table="public.AspNetUserRoles" \
+    --exclude-table="public.AspNetUsers" \
+    --exclude-table="public.users" \
+    --exclude-table="public.tripplaners" \
     $ORIGINAL_POSTGRES_DB > dump.sql
 
 echo "Entrypoint - Restoring new DB"
