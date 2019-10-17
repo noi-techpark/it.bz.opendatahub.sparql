@@ -88,9 +88,20 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 
 SELECT * WHERE {
-  ?s a schema:SkiResort ; rdfs:label ?name ; geo:asWKT ?pos ; schema:geo [ schema:elevation ?el ] ; schema:image ?img ; schema:isPartOf ?skiRegion. ?skiRegion a :SkiRegion .?skiRegion rdfs:label ?regionName.
-  bind(concat('<h3>',str(?name), #?regionName,
-      ' </h3>',
+  ?s a schema:SkiResort ; 
+     rdfs:label ?name ; 
+     geo:asWKT ?pos ; 
+     schema:geo [ schema:elevation ?maxElevation ] ; 
+     schema:image ?img ; 
+     schema:isPartOf ?skiRegion. 
+  
+  ?skiRegion a :SkiRegion ; 
+     rdfs:label ?regionName.
+
+  bind(concat(
+      '<h3>',str(?name),' </h3>',
+      ?regionName,
+      ', max elevation: ', str(?maxElevation), ' m ',
       '<img src="',str(?img), '" height="300" width="300">'
     ) as ?posLabel)
 }
