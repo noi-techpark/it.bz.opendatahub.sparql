@@ -51,8 +51,11 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
-SELECT * WHERE {
-  ?h a schema:LodgingBusiness ; schema:name ?name ; schema:geo [ schema:latitude ?lat ; schema:longitude ?long ] .
+SELECT ?h ?pos ?posLabel ?box ?posColor {
+  ?h a schema:LodgingBusiness ; schema:name ?posLabel ; schema:geo [ schema:latitude ?lat ; schema:longitude ?long ] ; geo:asWKT ?pos .
   FILTER (?lat < 46.2198 || ?lat > 47.0921 || ?long < 10.3818 || ?long > 12.4779) .
+  FILTER (lang(?posLabel) = 'de') .
+  BIND("POLYGON((10.3818 46.2198, 12.4779 46.2198, 12.4779 47.0921, 10.3818 47.0921, 10.3818 46.2198))" AS ?box) .
+  BIND("jet,0.8" AS ?posColor) . # orange
 }
 ```
