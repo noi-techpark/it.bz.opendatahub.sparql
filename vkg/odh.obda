@@ -124,7 +124,7 @@ source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'caravan'
 
 mappingId	SkiResort
-target		:data/skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:elevation {AltitudeTo}^^xsd:decimal ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf :data/skiRegion/{SkiRegionId} . 
+target		:data/skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf :data/skiRegion/{SkiRegionId} ; schema:geo :data/geo/skiResort/{Id} . 
 source		SELECT "Id", "Shortname", "Detail-en-Header", "Longitude", "Latitude", "AltitudeTo", "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
 
 mappingId	SkiRegion
@@ -159,5 +159,9 @@ source		SELECT * FROM v_wines
 mappingId	WineAward
 target		:data/wine/{Id} a :Wine ; :receivesWineAward {data}^^xsd:string . 
 source		SELECT * FROM "v_wines_Awards"
+
+mappingId	Ski resort - geo
+target		:data/geo/skiResort/{Id} a schema:GeoCoordinates ; schema:latitude {Latitude} ; schema:elevation {AltitudeTo} ; schema:longitude {Longitude} . 
+source		SELECT "Id",  "Longitude", "Latitude", "AltitudeTo" FROM v_skiareasopen
 ]]
 

@@ -59,42 +59,50 @@ ORDER BY DESC(?countRoom)
 LIMIT 50
 ```
 
+### Number of lodging businesses 
+```sql
+PREFIX schema: <http://schema.org/>
+
+SELECT (COUNT(?h) AS ?count) WHERE {
+  ?h a schema:LodgingBusiness 
+}
+```
+
 ### Number of lodging businesses in Bolzano
 ```sql
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
 SELECT (COUNT(DISTINCT ?h) AS ?count) WHERE {
   ?h a schema:LodgingBusiness ; schema:address ?a .
-  #?a schema:addressLocality "Bolzano"@it .
   ?a schema:postalCode "39100" .
 }
 ```
 
 ### Ski areas in the region with a custom label
 *In this query the label of the marker for each ski area also contains an image showing the routes.
-This means that when you visualize the query results in the map, for each map marker there will be an associated image. This is done via the the bind command (last 6 lines).*
+This means that when you visualize the query results in the map, for each map marker there will be an associated image. This is done via the the bind command (last lines).*
 ```sql
 PREFIX : <http://noi.example.org/ontology/odh#>
-PREFIX dc: <http://purl.org/dc/terms/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX xml: <http://www.w3.org/XML/1998/namespace>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX obda: <https://w3id.org/obda/vocabulary#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 
 SELECT * WHERE {
-?s a schema:SkiResort ; rdfs:label ?name ; geo:asWKT ?pos ; schema:elevation ?el ; schema:image ?img ; schema:isPartOf ?skiRegion. ?skiRegion a :SkiRegion .?skiRegion rdfs:label ?regionName.
-  bind(concat('<h3>',str(?name), #?regionName,
-' </h3>',
-      #        '<a href="', str(?img), '>',
+  ?s a schema:SkiResort ; 
+     rdfs:label ?name ; 
+     geo:asWKT ?pos ; 
+     schema:geo [ schema:elevation ?maxElevation ] ; 
+     schema:image ?img ; 
+     schema:isPartOf ?skiRegion. 
+  
+  ?skiRegion a :SkiRegion ; 
+     rdfs:label ?regionName.
+
+  bind(concat(
+      '<h3>',str(?name),' </h3>',
+      ?regionName,
+      ', max elevation: ', str(?maxElevation), ' m ',
       '<img src="',str(?img), '" height="300" width="300">'
-    #  '</a>'
     ) as ?posLabel)
 }
 ```
