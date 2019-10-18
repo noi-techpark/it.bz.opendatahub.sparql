@@ -36,8 +36,5 @@ psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
     $COPY_POSTGRES_DB < /opt/ontop/src/create_views.sql
 
 echo "Entrypoint - Starting Ontop Endpoint"
-/opt/ontop/ontop.sh endpoint \
-    --ontology=$ONTOLOGY_FILE \
-    --mapping=$MAPPING_FILE \
-    --properties=$PROPERTIES_FILE \
-    --cors-allowed-origins='*'
+
+/opt/ontop/entrypoint.sh

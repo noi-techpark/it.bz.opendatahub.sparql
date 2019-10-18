@@ -9,12 +9,13 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      - ONTOLOGY_FILE=/opt/ontop/input/odh.ttl
-      - MAPPING_FILE=/opt/ontop/input/odh.obda
-      - PROPERTIES_FILE=/opt/ontop/input/odh.docker.properties
+      - ONTOP_ONTOLOGY_FILE=/opt/ontop/input/odh.ttl
+      - ONTOP_MAPPING_FILE=/opt/ontop/input/odh.obda
+      - ONTOP_PROPERTIES_FILE=/opt/ontop/input/odh.docker.properties
+      - ONTOP_CORS_ALLOWED_ORIGINS='*'
     volumes:
       - ./vkg:/opt/ontop/input
       - ./jdbc:/opt/ontop/jdbc
       - ./src:/opt/ontop/src
     ports:
-      - "${DOCKER_SERVER_PORT}:8080
+      - "${DOCKER_SERVER_PORT}:8080"
