@@ -21,13 +21,13 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
-SELECT ?h ?pos (CONCAT(?name, CONCAT(CONCAT('<hr/>de: ',?deCity),CONCAT('<hr/> it: ',?itCity))) AS ?posLabel) WHERE {
+SELECT ?h ?pos ?posLabel ("jet,0.8" AS ?posColor) WHERE {
   ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?name ; schema:address ?a .
-  ?a schema:addressLocality ?deCity, ?itCity ; schema:postalCode "39100" .
-  MINUS {
-    ?a schema:addressLocality "Bolzano"@it .
-  }
-  FILTER ((lang(?name) = 'de') && (lang(?deCity) = 'de') && (lang(?itCity) = 'it'))
+  ?a schema:addressLocality ?deCity, ?itCity ; schema:postalCode "39100" . 
+  FILTER ((lang(?name) = 'de') && (lang(?deCity) = 'de') && (lang(?itCity) = 'it') 
+    && ((lcase(str(?itCity)) != "bolzano") || (lcase(str(?deCity)) != "bozen")))
+  
+  BIND(concat(?name,'<hr/>de: ',?deCity, '<hr/> it: ',?itCity) AS ?posLabel)
 }
 
 [QueryItem="lodging-bz"]

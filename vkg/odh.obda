@@ -163,5 +163,10 @@ source		SELECT * FROM "v_wines_Awards"
 mappingId	Ski resort - geo
 target		:data/geo/skiResort/{Id} a schema:GeoCoordinates ; schema:latitude {Latitude} ; schema:elevation {AltitudeTo} ; schema:longitude {Longitude} . 
 source		SELECT "Id",  "Longitude", "Latitude", "AltitudeTo" FROM v_skiareasopen
+
+mappingId	Place EURAC NOI
+target		:data/place/euracnoi/{EventLocation} a schema:Place . 
+source		select "EventLocation"
+			from v_eventeuracnoi
 ]]
 

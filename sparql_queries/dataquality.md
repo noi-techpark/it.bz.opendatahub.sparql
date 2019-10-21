@@ -1,6 +1,8 @@
 # ODH VKG Data Quality SPARQL Queries
 
-### Lodging businesses without accomodation
+## Lodging businesses and accommodation
+
+### Lodging businesses without accommodation
 ```sql
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -44,7 +46,7 @@ SELECT ?h ?pos ?posLabel ?zip WHERE {
 ```
 
 ### Lodging businesses outside the South-Tyrolean regions' bounding box
-*The bounding box coordinates were found using [this tool](https://boundingbox.klokantech.com/)*
+*NB: The bounding box coordinates were found using [this tool](https://boundingbox.klokantech.com/)*
 ```sql
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -60,3 +62,23 @@ BIND("jet,0.8" AS ?posColor) .
 BIND("jet,0.8" AS ?boxColor) .
 }
 ```
+
+### Lodging businesses in Bolzano with the wrong German or Italian name
+```sql
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel ("jet,0.8" AS ?posColor) WHERE {
+  ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?name ; schema:address ?a .
+  ?a schema:addressLocality ?deCity, ?itCity ; schema:postalCode "39100" . 
+  FILTER ((lang(?name) = 'de') && (lang(?deCity) = 'de') && (lang(?itCity) = 'it') 
+    && ((lcase(str(?itCity)) != "bolzano") || (lcase(str(?deCity)) != "bozen")))
+  
+  BIND(concat(?name,'<hr/>de: ',?deCity, '<hr/> it: ',?itCity) AS ?posLabel)
+}
+```
+
+## Events
+
