@@ -40,11 +40,15 @@ cd odh-vkg/
 
 2. Change the credentials of the database
 
-* Modify the file [vkg/odh.docker.properties](vkg/odh.docker.properties) accordingly
+* Modify the file [vkg/odh.docker.properties](vkg/odh.docker.properties) accordingly. Note that on Linux, `host.docker.internal` currently needs to be replaced by the IP address of the machine.
 
-3. Start the Docker container (see [the dedicated section](#Start-and-stop-the-containers))
+3. Create the `.env` file in which the SPARQL endpoint port is specified
 
-4. Visit the Ontop endpoint
+* `cp .env.example .env`
+
+4. Start the Docker container (see [the dedicated section](#Start-and-stop-the-containers))
+
+5. Visit the Ontop endpoint
 
 * Now we can open the link <http://localhost:8080> in the browser and test some SPARQL queries
 
@@ -60,18 +64,25 @@ Install [Docker](https://docs.docker.com/install/) (with Docker Compose) locally
 
 ### Start and stop the containers
 
-To start the container:
+#### Option 1: On the foreground
+
+To start the container on the foreground:
 ```
-docker run --rm \
--v $PWD/vkg:/opt/ontop/input \
--v $PWD/jdbc:/opt/ontop/jdbc \
--e ONTOP_ONTOLOGY_FILE=/opt/ontop/input/odh.ttl \
--e ONTOP_MAPPING_FILE=/opt/ontop/input/odh.obda \
--e ONTOP_PROPERTIES_FILE=/opt/ontop/input/odh.docker.properties \
--p 8080:8080 ontop/ontop-endpoint:4.0-snapshot
+docker-compose pull && docker-compose up
+```
+The container is run on the foreground and can be stopped by pressing CTRL-C.
+
+#### Option 2: On the background
+
+To start the container on the background:
+```
+docker-compose pull && docker-compose up -d
 ```
 
-The container is run on the foreground and can be stopped by pressing CTRL-C.
+To stop it:
+```
+docker-compose down
+```
 
 
 ## Information
