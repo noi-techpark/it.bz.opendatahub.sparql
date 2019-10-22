@@ -6,7 +6,6 @@ import psycopg2
 T = TypeVar('T')  # Declare type variable
 
 
-
 PG_MAX_IDENTIFIER_LENGTH = 63
 
 class AttrPath:
@@ -299,7 +298,7 @@ if __name__ == '__main__':
 
     # tables = ['accommodationsopen']
 
-    create_view_file = "create_views.sql"
+    create_view_file = "create_views_gen.sql"
     with open(create_view_file, "w+") as f:
         for table_name in tables:
             model = extract_model_from_table(cursor, table_name)

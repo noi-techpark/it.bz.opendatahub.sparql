@@ -94,7 +94,7 @@ source		SELECT "Id", "Roommin", "Roommax"
 			FROM v_accommodationroomsopen
 
 mappingId	Event EURAC NOI
-target		:data/event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location :data/location/euracnoi/{EventLocation}/{AnchorVenue} ; schema:organizer :data/organization/event/euracnoi/{Id} . 
+target		:data/event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location :data/location/euracnoi/{EventLocation}/{AnchorVenue} ; schema:organizer :data/organization/event/euracnoi/{Id} , :data/contact/event/euracnoi/{Id} . 
 source		SELECT "Id", "StartDate", "EndDate", "EventDescriptionIT", "EventDescriptionEN", "AnchorVenue", "EventLocation", "EventDescriptionDE"
 			FROM v_eventeuracnoi
 
@@ -122,5 +122,51 @@ mappingId	Caravan pitch
 target		:data/room/{Id} a :CaravanPitch . 
 source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'caravan'
+
+mappingId	SkiResort
+target		:data/skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf :data/skiRegion/{SkiRegionId} ; schema:geo :data/geo/skiResort/{Id} . 
+source		SELECT "Id", "Shortname", "Detail-en-Header", "Longitude", "Latitude", "AltitudeTo", "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
+
+mappingId	SkiRegion
+target		:data/skiRegion/{Id} a :SkiRegion ; rdfs:label {Shortname}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:elevation {Altitude}^^xsd:decimal . 
+source		SELECT "Id", "Shortname", "Longitude", "Latitude", "Altitude" FROM v_skiregionsopen
+
+mappingId	SkiResort_Area
+target		:data/skiResort/{Id} schema:isPartOf :data/area/{data} . 
+source		SELECT "Id", "data" FROM "v_skiareasopen_AreaId"
+
+mappingId	EntertainmentBusiness
+target		:data/poi/{Id} a schema:EntertainmentBusiness . 
+source		SELECT * FROM v_poisopen WHERE "Type" = 'Kunsthandwerker'
+
+mappingId	MedicalOrganization
+target		:data/poi/{Id} a schema:MedicalOrganization . 
+source		SELECT * FROM v_poisopen WHERE "Type" = 'Ärzte, Apotheken'
+
+mappingId	Theater
+target		:data/poi/{Id} a :Theater . 
+source		SELECT * FROM v_poisopen WHERE "SubType" = 'Theater'
+
+mappingId	Activity
+target		:data/Activity/{SubType} a :Activity ; rdfs:label {SubType}^^xsd:string ; :activityType {Type}^^xsd:string . 
+source		SELECT "Type", "SubType"
+			FROM v_smgpoisopen
+
+mappingId	Wine
+target		:data/wine/{Id} a :Wine ; rdfs:label {Shortname} ; :wineVintageYear {Vintage} ; :wineAwardYear {Awardyear} . 
+source		SELECT * FROM v_wines
+
+mappingId	WineAward
+target		:data/wine/{Id} a :Wine ; :receivesWineAward {data}^^xsd:string . 
+source		SELECT * FROM "v_wines_Awards"
+
+mappingId	Ski resort - geo
+target		:data/geo/skiResort/{Id} a schema:GeoCoordinates ; schema:latitude {Latitude} ; schema:elevation {AltitudeTo} ; schema:longitude {Longitude} . 
+source		SELECT "Id",  "Longitude", "Latitude", "AltitudeTo" FROM v_skiareasopen
+
+mappingId	Place EURAC NOI
+target		:data/place/euracnoi/{EventLocation} a schema:Place . 
+source		select "EventLocation"
+			from v_eventeuracnoi
 ]]
 

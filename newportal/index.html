@@ -1,0 +1,51 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <title>ODH SPARQL Portal</title>
+    <script src='./lib/yasgui/yasgui.min.js'></script>
+    <script src="./lib/jquery-3.4.1.min.js"></script>
+    <link href='./index.css' rel='stylesheet' type='text/css' />
+</head>
+
+<body>
+    <header>
+        <div id="title">ODH SPARQL Portal</div>
+        <div id="info">
+            endpoint address: <span class="yasgui"
+                style="text-decoration: underline;">http://localhost:8080/sparql</span>
+            <small>|</small>
+            <span>v4.0.0-SNAPSHOT</span>
+        </div>
+    </header>
+    <script src="./index.js"></script>
+    <link href='./lib/yasgui/yasgui.min.css' rel='stylesheet' type='text/css' />
+    <div class="choice-bar" id="query-choice-bar">
+        <div class="choice-option" id="choice-option1" value="dataq" onclick="queryChoice(this)">Data Quality Queries
+        </div>
+        <div class="choice-option" id="choice-option2" value="regular" onclick="queryChoice(this)">Regular Queries</div>
+    </div>
+
+    <div id='yasgui'></div>
+    <script>
+        /*<![CDATA[*/
+        var endpointUrl = "http:\/\/localhost:8080\/sparql";
+        /*]]>*/
+    </script>
+
+    <script type="text/javascript">
+        var yasgui = YASGUI(document.getElementById("yasgui"), {
+            yasqe: {
+                sparql: { endpoint: endpointUrl },
+                persistent: null
+            }
+        });
+    </script>
+</body>
+
+</html>
