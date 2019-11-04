@@ -1,7 +1,7 @@
 # ODH VKG Regular SPARQL Queries
 
 ### Lodging businesses
-*limited to 500 results for demonstrational purposes*
+*Limited to 500 results for demonstrational purposes*
 ```sql
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -37,7 +37,7 @@ LIMIT 500
 ```
 
 ### Biggest lodging businesses
-*limited to 50 results for demonstrational purposes*
+*Limited to 50 results for demonstrational purposes*
 ```sql
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX schema: <http://schema.org/>
@@ -109,7 +109,7 @@ WHERE {
 
 ### Ski areas in the region with a custom label
 *In this query the label of the marker for each ski area also contains an image showing the routes.
-This means that when you visualize the query results in the map, for each map marker there will be an associated image. This is done via the the bind command (last lines).*
+This means that when you visualize the query results in the map, for each map marker there will be an associated image. This is done via the bind command (last lines).*
 ```sql
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
