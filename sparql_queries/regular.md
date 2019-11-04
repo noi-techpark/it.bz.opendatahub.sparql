@@ -125,7 +125,7 @@ WHERE {
      schema:isPartOf ?skiRegion. 
   
   ?skiRegion a :SkiRegion ; 
-     rdfs:label ?regionName.
+     schema:name ?regionName.
 
   BIND(concat(
       '<h3>',str(?name),' </h3>',
