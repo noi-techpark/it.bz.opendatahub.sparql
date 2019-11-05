@@ -54,11 +54,11 @@ source		SELECT "Id" AS id
 			WHERE "AccoTypeId" = 'BedBreakfast'
 
 mappingId	POI
-target		:data/poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; geo:asWKT "POINT ({GpsPoints-position-Longitude} {GpsPoints-position-Latitude})"^^geo:wktLiteral . 
+target		:data/poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string ; geo:asWKT "POINT ({GpsPoints-position-Longitude} {GpsPoints-position-Latitude})"^^geo:wktLiteral . 
 source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude" FROM v_poisopen
 
 mappingId	Area
-target		:data/area/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string . 
+target		:data/area/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string . 
 source		SELECT "Id", "Shortname" FROM v_areas
 
 mappingId	POI_Area
@@ -124,11 +124,11 @@ source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'caravan'
 
 mappingId	SkiResort
-target		:data/skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf :data/skiRegion/{SkiRegionId} ; schema:geo :data/geo/skiResort/{Id} . 
+target		:data/skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf :data/skiRegion/{SkiRegionId} ; schema:geo :data/geo/skiResort/{Id} . 
 source		SELECT "Id", "Shortname", "Detail-en-Header", "Longitude", "Latitude", "AltitudeTo", "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
 
 mappingId	SkiRegion
-target		:data/skiRegion/{Id} a :SkiRegion ; rdfs:label {Shortname}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:elevation {Altitude}^^xsd:decimal . 
+target		:data/skiRegion/{Id} a :SkiRegion ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:elevation {Altitude}^^xsd:decimal . 
 source		SELECT "Id", "Shortname", "Longitude", "Latitude", "Altitude" FROM v_skiregionsopen
 
 mappingId	SkiResort_Area
@@ -148,12 +148,12 @@ target		:data/poi/{Id} a :Theater .
 source		SELECT * FROM v_poisopen WHERE "SubType" = 'Theater'
 
 mappingId	Activity
-target		:data/Activity/{SubType} a :Activity ; rdfs:label {SubType}^^xsd:string ; :activityType {Type}^^xsd:string . 
+target		:data/Activity/{SubType} a :Activity ; rdfs:label {SubType}^^xsd:string ; schema:name {SubType}^^xsd:string ; :activityType {Type}^^xsd:string . 
 source		SELECT "Type", "SubType"
 			FROM v_smgpoisopen
 
 mappingId	Wine
-target		:data/wine/{Id} a :Wine ; rdfs:label {Shortname} ; :wineVintageYear {Vintage} ; :wineAwardYear {Awardyear} . 
+target		:data/wine/{Id} a :Wine ; rdfs:label {Shortname} ; schema:name {Shortname} ; :wineVintageYear {Vintage} ; :wineAwardYear {Awardyear} . 
 source		SELECT * FROM v_wines
 
 mappingId	WineAward

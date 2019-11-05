@@ -4,30 +4,36 @@
 
 ### Lodging businesses without accommodation
 ```sql
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX schema: <http://schema.org/>
-PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX schema: <http://schema.org/>
 
-SELECT ?pos ?posColor ?bName
-      (?bName AS ?posLabel)  WHERE {
+SELECT ?pos ?posColor ?bName (?bName AS ?posLabel)
+WHERE {
   ?b a schema:LodgingBusiness ; schema:name ?bName ; geo:asWKT ?pos .
   MINUS {
      ?r schema:containedInPlace ?b .
      ?r a schema:Accommodation
   }
   FILTER (lang(?bName) = 'en')
+
+  # Colors
   OPTIONAL {
-     ?b a ?c
-    VALUES (?c ?posColor) {
-      (schema:Campground "chlorophyll,0.5") # Green
-      (schema:BedAndBreakfast "viridis,0.1") #Purple
-      (schema:Hotel "jet,0.3") # Light blue
-      (schema:Hostel "jet,0.8") # Red
-    }
+    ?b a schema:Campground .
+    BIND("chlorophyll,0.5" AS ?posColor) # Green
   }
-}
+  OPTIONAL {
+    ?b a schema:BedAndBreakfast .
+    BIND("viridis,0.1" AS ?posColor) # Purple
+  }
+  OPTIONAL {
+    ?b a schema:Hotel .
+    BIND("jet,0.3" AS ?posColor) # Light blue
+  }
+  OPTIONAL {
+    ?b a schema:Hostel .
+    BIND("jet,0.8" AS ?posColor) # Red
+  }
+} 
 ```
 
 ### Lodging businesses with a non-South Tyrolean postal code
