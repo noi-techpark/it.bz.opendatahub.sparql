@@ -171,3 +171,23 @@ WHERE {
 }
 LIMIT 500
 ```
+
+### Restaurants above 1500m
+```sql
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?e 
+       ?pos 
+       (CONCAT(?name, " (", str(?altitude), " m)") AS ?posLabel) 
+       ?posColor 
+WHERE {
+  ?e a schema:Restaurant; 
+     geo:asWKT ?pos ; 
+     schema:name ?name ; 
+     schema:geo ?geo .
+  ?geo schema:elevation ?altitude .
+  FILTER (lang(?name) = 'de')
+  FILTER (?altitude >= 1500)
+}
+```
