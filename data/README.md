@@ -10,21 +10,14 @@ docker run --name odh_db_running -p 7777:5432 -e POSTGRES_USER=tourismuser -e PO
 
 ## Cleaning the dump file
 
-### Search path (for finding the extension)
-Change 
-```sql
-SELECT pg_catalog.set_config('search_path', '', false);
-```
-into
-```sql
-SELECT pg_catalog.set_config('search_path', 'public', false);
-```
 
-### Earth distance extension
-Add before creating the indexes
-```sql
-CREATE EXTENSION earthdistance CASCADE;
-```
+### Disable the indexes using the earthdistance extension
+Remove the lines `CREATE INDEX` involving `ll_to_earth`. They produce some warnings while creating the materialized views.
 
 ### Rights to NOI employees
-Remove the GRANT commands at the end of the file.
+Remove the `GRANT` commands at the end of the file.
+
+## Files to put in the data directory
+
+* `dump-tourism-201911121025.sql.gz` (you can use the `gzip` to create it from the SQL file)
+* `create_views.sql` from the `src` directory
