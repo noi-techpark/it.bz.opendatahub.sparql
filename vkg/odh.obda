@@ -168,5 +168,51 @@ mappingId	Place EURAC NOI
 target		:data/place/euracnoi/{EventLocation} a schema:Place . 
 source		select "EventLocation"
 			from v_eventeuracnoi
+
+mappingId	Food establishments
+target		:data/gastronomy/{Id} a schema:FoodEstablishment ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:name {Detail-de-Title}@de , {Detail-it-Title}@it , {Detail-en-Title}@en ; schema:description {Detail-de-BaseText}@de , {Detail-it-BaseText}@it , {Detail-en-BaseText}@en ; schema:geo :data/geo/gastronomy/{Id} ; schema:address :data/address/gastronomy/{Id} ; schema:telephone {ContactInfos-de-Phonenumber} . 
+source		SELECT * FROM v_gastronomiesopen
+
+mappingId	Food establishments - geo
+target		:data/geo/gastronomy/{Id} a schema:GeoCoordinates ; schema:latitude {Latitude} ; schema:elevation {Altitude} ; schema:longitude {Longitude} . 
+source		SELECT * FROM v_gastronomiesopen
+
+mappingId	Food establishments - address
+target		:data/address/gastronomy/{Id} a schema:PostalAddress ; schema:streetAddress {ContactInfos-de-Address}@de , {ContactInfos-it-Address}@it , {ContactInfos-en-Address}@en ; schema:postalCode {ContactInfos-de-ZipCode} ; schema:addressLocality {ContactInfos-de-City}@de , {ContactInfos-it-City}@it , {ContactInfos-en-City}@en . 
+source		SELECT * FROM v_gastronomiesopen
+
+mappingId	Restaurants
+target		:data/gastronomy/{gastronomiesopen_Id} a schema:Restaurant . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Restaurant' OR "Shortname" = 'Pizzeria' OR "Shortname" = 'Hofschank' OR "Shortname" = 'Buschenschank' OR "Shortname" = 'Bäuerlicher Schankbetrieb'
+
+mappingId	Bar/pub
+target		:data/gastronomy/{gastronomiesopen_Id} a schema:BarOrPub . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Bar / Coffee Shop / Bistro' OR "Shortname" = 'Pub / Disco' OR "Shortname" = 'Braugarten'  OR "Shortname" = 'Apres Ski'
+
+mappingId	Fast food
+target		:data/gastronomy/{gastronomiesopen_Id} a schema:FastFoodRestaurant . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Jausenstation' OR "Shortname" = 'Schnellimbiss'
+
+mappingId	Winery
+target		:data/gastronomy/{gastronomiesopen_Id} a schema:Winery . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Vinothek / Weinhaus / Taverne'
+
+mappingId	Ice cream shops
+target		:data/gastronomy/{gastronomiesopen_Id} a schema:IceCreamShop . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Eisdiele'
+
+mappingId	Food establishments - URL
+target		:data/gastronomy/{Id} schema:sameAs <{url}> ; schema:url <{url}> . 
+source		SELECT "Id",  NULLIF("ContactInfos-de-Url", '') AS url FROM v_gastronomiesopen
 ]]
 
