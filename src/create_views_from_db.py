@@ -199,7 +199,7 @@ DROP MATERIALIZED VIEW IF EXISTS "{view_name}";
 # TODO: cast is missing
 array_create_view_sql_template="""
 CREATE MATERIALIZED VIEW "{view_name}" AS
-        SELECT id AS "Id", jsonb_array_elements_text("data" -> '{col_name}') AS "data"
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> '{col_name}') AS "data"
         FROM {table_name}
         WHERE data -> '{col_name}' != 'null';
  """
@@ -207,7 +207,7 @@ CREATE MATERIALIZED VIEW "{view_name}" AS
 nested_create_view_sql_template = """
 CREATE MATERIALIZED VIEW "{view_name}" AS
     WITH t ("Id", "data") AS (
-        SELECT id AS "Id", jsonb_array_elements("data" -> '{col_name}') AS "Feature"
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> '{col_name}') AS "Feature"
         FROM {table_name}
         WHERE data -> '{col_name}' != 'null')
     SELECT "Id" AS "{parent_Id}", {projections}

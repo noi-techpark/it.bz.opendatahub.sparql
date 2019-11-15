@@ -135,3 +135,59 @@ WHERE {
     ) as ?posLabel)
 }
 ```
+
+### Food establishments
+*Limited to 500 results for demonstrational purposes*
+```sql
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?e ?pos ?posLabel ?posColor 
+WHERE {
+  ?e a schema:FoodEstablishment ; 
+     geo:asWKT ?pos ; 
+     schema:name ?posLabel ; 
+     schema:address ?a .
+  # ?a schema:postalCode "39100" . # Uncomment for Bolzano only
+  FILTER (lang(?posLabel) = 'de')
+  
+  # Colors (with priority)
+  OPTIONAL {
+    ?e a schema:Restaurant .
+    BIND("jet,0.3" AS ?posColor) # Light blue
+  }
+  OPTIONAL {
+    ?e a schema:BarOrPub .
+    BIND("chlorophyll,0.5" AS ?posColor) # Green
+  }
+  OPTIONAL {
+    ?e a schema:Winery .
+    BIND("viridis,0.1" AS ?posColor) # Purple
+  }
+  OPTIONAL {
+    ?e a schema:FastFoodRestaurant .
+    BIND("jet,0.8" AS ?posColor) # Red
+  }
+}
+LIMIT 500
+```
+
+### Restaurants above 1500m
+```sql
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?e 
+       ?pos 
+       (CONCAT(?name, " (", str(?altitude), " m)") AS ?posLabel) 
+       ?posColor 
+WHERE {
+  ?e a schema:Restaurant; 
+     geo:asWKT ?pos ; 
+     schema:name ?name ; 
+     schema:geo ?geo .
+  ?geo schema:elevation ?altitude .
+  FILTER (lang(?name) = 'de')
+  FILTER (?altitude >= 1500)
+}
+```
