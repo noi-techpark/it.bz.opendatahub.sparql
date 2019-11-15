@@ -114,3 +114,7 @@ The code in this project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE
 ### Examples of SPARQL queries
 
 Some examples of possible SPARQL queries can be found in the SPARQL Queries folder. You can take a look at some [data quality queries here](sparql_queries/dataquality.md) and at some [regular queries here](sparql_queries/regular.md).
+
+### Schema
+
+The schema of the VKG can be visualized [in the dedicated page](sparql_queries/schema.md).
