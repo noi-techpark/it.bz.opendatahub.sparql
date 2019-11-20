@@ -143,6 +143,63 @@ WHERE {
 }
 """
 
+[[tabGroups.tabs]]
+name="Food establishments (limit 500)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?e ?pos ?posLabel ?posColor 
+WHERE {
+  ?e a schema:FoodEstablishment ; 
+     geo:asWKT ?pos ; 
+     schema:name ?posLabel ; 
+     schema:address ?a .
+  # ?a schema:postalCode "39100" . # Uncomment for Bolzano only
+  FILTER (lang(?posLabel) = 'de')
+  
+  # Colors (with priority)
+  OPTIONAL {
+    ?e a schema:Restaurant .
+    BIND("jet,0.3" AS ?posColor) # Light blue
+  }
+  OPTIONAL {
+    ?e a schema:BarOrPub .
+    BIND("chlorophyll,0.5" AS ?posColor) # Green
+  }
+  OPTIONAL {
+    ?e a schema:Winery .
+    BIND("viridis,0.1" AS ?posColor) # Purple
+  }
+  OPTIONAL {
+    ?e a schema:FastFoodRestaurant .
+    BIND("jet,0.8" AS ?posColor) # Red
+  }
+}
+LIMIT 500
+"""
+
+[[tabGroups.tabs]]
+name="Restaurants above 1500 m"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?e 
+       ?pos 
+       (CONCAT(?name, " (", str(?altitude), " m)") AS ?posLabel) 
+       ?posColor 
+WHERE {
+  ?e a schema:Restaurant; 
+     geo:asWKT ?pos ; 
+     schema:name ?name ; 
+     schema:geo ?geo .
+  ?geo schema:elevation ?altitude .
+  FILTER (lang(?name) = 'de')
+  FILTER (?altitude >= 1500)
+}
+"""
+
 [[tabGroups]]
 
 name="Data Quality Queries"
@@ -197,5 +254,43 @@ SELECT ?h ?pos ?posLabel ?zip WHERE {
   ?a schema:postalCode ?zip .
   FILTER (lang(?posLabel)='de').
   FILTER regex(?zip, '^(?!39+)', 'i').
+}
+"""
+
+[[tabGroups.tabs]]
+
+name="Lodging businesses outside the South-Tyrolean regions' bounding box"
+query="""
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel ?box ?boxColor ?posColor {
+?h a schema:LodgingBusiness ; schema:name ?posLabel ; schema:geo [ schema:latitude ?lat ; schema:longitude ?long ] ; geo:asWKT ?pos .
+FILTER (?lat < 46.2198 || ?lat > 47.0921 || ?long < 10.3818 || ?long > 12.4779) .
+FILTER (lang(?posLabel) = 'de') .
+BIND("MULTILINESTRING((10.3818 46.2198, 12.4779 46.2198, 12.4779 47.0921, 10.3818 47.0921, 10.3818 46.2198))"^^geo:wktLiteral AS ?box) .
+BIND("jet,0.8" AS ?posColor) .
+BIND("jet,0.8" AS ?boxColor) .
+}
+"""
+
+[[tabGroups.tabs]]
+
+name="Lodging businesses in Bolzano with the wrong German or Italian name"
+query="""
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel ("jet,0.8" AS ?posColor) WHERE {
+  ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?name ; schema:address ?a .
+  ?a schema:addressLocality ?deCity, ?itCity ; schema:postalCode "39100" . 
+  FILTER ((lang(?name) = 'de') && (lang(?deCity) = 'de') && (lang(?itCity) = 'it') 
+    && ((lcase(str(?itCity)) != "bolzano") || (lcase(str(?deCity)) != "bozen")))
+  
+  BIND(concat(?name,'<hr/>de: ',?deCity, '<hr/> it: ',?itCity) AS ?posLabel)
 }
 """
