@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Test & Build') {
             steps {
-                sh "docker-compose -f docker-compose.build.yml build"
+                sh "docker-compose -f docker-compose.build.yml build --pull"
             }
         }
     }

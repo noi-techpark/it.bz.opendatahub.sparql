@@ -5,19 +5,19 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         DOCKER_IMAGE_APP = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/odh-vkg"
-        DOCKER_TAG_APP = "test-$BUILD_NUMBER"
+        DOCKER_TAG_APP = "prod-$BUILD_NUMBER"
         DOCKER_SERVICES = "app"
-        DOCKER_SERVER_IP = "63.33.73.203"
+        DOCKER_SERVER_IP = "63.33.128.18"
         DOCKER_SERVER_DIRECTORY = "/var/docker/odh-vkg"
         DOCKER_SERVER_PORT = "1008"
         ORIGINAL_POSTGRES_HOST = "prod-postgres-tourism.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
         ORIGINAL_POSTGRES_DB = "tourism"
-        ORIGINAL_POSTGRES_USERNAME = credentials('odh-vkg-test-original-postgres-username')
-        ORIGINAL_POSTGRES_PASSWORD = credentials('odh-vkg-test-original-postgres-password')
+        ORIGINAL_POSTGRES_USERNAME = credentials('odh-vkg-prod-original-postgres-username')
+        ORIGINAL_POSTGRES_PASSWORD = credentials('odh-vkg-prod-original-postgres-password')
         COPY_POSTGRES_HOST = "test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-        COPY_POSTGRES_DB = "odh_vkg"
-        COPY_POSTGRES_USERNAME = credentials('odh-vkg-test-copy-postgres-username')
-        COPY_POSTGRES_PASSWORD = credentials('odh-vkg-test-copy-postgres-password')
+        COPY_POSTGRES_DB = "odh_vkg_prod"
+        COPY_POSTGRES_USERNAME = credentials('odh-vkg-prod-copy-postgres-username')
+        COPY_POSTGRES_PASSWORD = credentials('odh-vkg-prod-copy-postgres-password')
     }
 
     stages {
