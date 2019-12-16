@@ -10,6 +10,7 @@ pipeline {
         DOCKER_SERVER_IP = "63.33.128.18"
         DOCKER_SERVER_DIRECTORY = "/var/docker/odh-vkg"
         DOCKER_SERVER_PORT = "1008"
+        ONTOP_QUERY_TIMEOUT=10
         ORIGINAL_POSTGRES_HOST = "prod-postgres-tourism.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
         ORIGINAL_POSTGRES_DB = "tourism"
         ORIGINAL_POSTGRES_USERNAME = credentials('odh-vkg-prod-original-postgres-username')
@@ -23,31 +24,36 @@ pipeline {
     stages {
         stage('Configure') {
             steps {
-                sh "cp .env.example .env"
-                sh "echo 'DOCKER_IMAGE_APP=${DOCKER_IMAGE_APP}' >> .env"
-                sh "echo 'DOCKER_TAG_APP=${DOCKER_TAG_APP}' >> .env"
+                sh '''
+                    cp .env.example .env
+                    echo 'DOCKER_IMAGE_APP=${DOCKER_IMAGE_APP}' >> .env
+                    echo 'DOCKER_TAG_APP=${DOCKER_TAG_APP}' >> .env
                 
-                sh "echo 'ORIGINAL_POSTGRES_HOST=${ORIGINAL_POSTGRES_HOST}' >> .env"
-                sh "echo 'ORIGINAL_POSTGRES_DB=${ORIGINAL_POSTGRES_DB}' >> .env"
-                sh "echo 'ORIGINAL_POSTGRES_USERNAME=${ORIGINAL_POSTGRES_USERNAME}' >> .env"
-                sh "echo 'ORIGINAL_POSTGRES_PASSWORD=${ORIGINAL_POSTGRES_PASSWORD}' >> .env"
-                sh "echo 'COPY_POSTGRES_HOST=${COPY_POSTGRES_HOST}' >> .env"
-                sh "echo 'COPY_POSTGRES_DB=${COPY_POSTGRES_DB}' >> .env"
-                sh "echo 'COPY_POSTGRES_USERNAME=${COPY_POSTGRES_USERNAME}' >> .env"
-                sh "echo 'COPY_POSTGRES_PASSWORD=${COPY_POSTGRES_PASSWORD}' >> .env"
+                    echo 'ORIGINAL_POSTGRES_HOST=${ORIGINAL_POSTGRES_HOST}' >> .env
+                    echo 'ORIGINAL_POSTGRES_DB=${ORIGINAL_POSTGRES_DB}' >> .env
+                    echo 'ORIGINAL_POSTGRES_USERNAME=${ORIGINAL_POSTGRES_USERNAME}' >> .env
+                    echo 'ORIGINAL_POSTGRES_PASSWORD=${ORIGINAL_POSTGRES_PASSWORD}' >> .env
+                    echo 'COPY_POSTGRES_HOST=${COPY_POSTGRES_HOST}' >> .env
+                    echo 'COPY_POSTGRES_DB=${COPY_POSTGRES_DB}' >> .env
+                    echo 'COPY_POSTGRES_USERNAME=${COPY_POSTGRES_USERNAME}' >> .env
+                    echo 'COPY_POSTGRES_PASSWORD=${COPY_POSTGRES_PASSWORD}' >> .env
 
-                sh 'sed -i -e "s%\\(DOCKER_SERVER_PORT\\s*=\\).*\\$%\\1${DOCKER_SERVER_PORT}%" .env'
+                    sed -i -e "s%\\(DOCKER_SERVER_PORT\\s*=\\).*\\$%\\1${DOCKER_SERVER_PORT}%" .env
 
-                sh 'sed -i -e "s%\\(jdbc.url\\s*=\\).*\\$%\\1jdbc\\\\\\\\:postgresql\\\\\\\\://${COPY_POSTGRES_HOST}/${COPY_POSTGRES_DB}%" vkg/odh.docker.properties'
-                sh 'sed -i -e "s%\\(jdbc.user\\s*=\\).*\\$%\\1${COPY_POSTGRES_USERNAME}%" vkg/odh.docker.properties'
-                sh 'sed -i -e "s%\\(jdbc.password\\s*=\\).*\\$%\\1${COPY_POSTGRES_PASSWORD}%" vkg/odh.docker.properties'
+                    sed -i -e "s%\\(jdbc.url\\s*=\\).*\\$%\\1jdbc\\\\\\\\:postgresql\\\\\\\\://${COPY_POSTGRES_HOST}/${COPY_POSTGRES_DB}%" vkg/odh.docker.properties
+                    sed -i -e "s%\\(jdbc.user\\s*=\\).*\\$%\\1${COPY_POSTGRES_USERNAME}%" vkg/odh.docker.properties
+                    sed -i -e "s%\\(jdbc.password\\s*=\\).*\\$%\\1${COPY_POSTGRES_PASSWORD}%" vkg/odh.docker.properties
+                    sed -i -e "s%\\(ontop.query.defaultTimeout\\s*=\\).*\\$%\\1${ONTOP_QUERY_TIMEOUT}%" vkg/odh.docker.properties
+                '''
             }
         }
         stage('Build & Push') {
             steps {
-                sh "aws ecr get-login --region eu-west-1 --no-include-email | bash"
-                sh "docker-compose -f docker-compose.build.yml build --pull ${DOCKER_SERVICES}"
-                sh "docker-compose -f docker-compose.build.yml push ${DOCKER_SERVICES}"
+                sh '''
+                    aws ecr get-login --region eu-west-1 --no-include-email | bash
+                    docker-compose -f docker-compose.build.yml build --pull ${DOCKER_SERVICES}
+                    docker-compose -f docker-compose.build.yml push ${DOCKER_SERVICES}
+                '''
             }
         }
         stage('Deploy') {
