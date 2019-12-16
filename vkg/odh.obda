@@ -185,7 +185,7 @@ mappingId	Restaurants
 target		:data/gastronomy/{gastronomiesopen_Id} a schema:Restaurant . 
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
-			WHERE "Shortname" = 'Restaurant' OR "Shortname" = 'Pizzeria' OR "Shortname" = 'Hofschank' OR "Shortname" = 'Buschenschank' OR "Shortname" = 'Bäuerlicher Schankbetrieb'
+			WHERE "Shortname" = 'Restaurant' OR "Shortname" = 'Gasthof'
 
 mappingId	Bar/pub
 target		:data/gastronomy/{gastronomiesopen_Id} a schema:BarOrPub . 
@@ -197,7 +197,7 @@ mappingId	Fast food
 target		:data/gastronomy/{gastronomiesopen_Id} a schema:FastFoodRestaurant . 
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
-			WHERE "Shortname" = 'Jausenstation' OR "Shortname" = 'Schnellimbiss'
+			WHERE "Shortname" = 'Schnellimbiss'
 
 mappingId	Winery
 target		:data/gastronomy/{gastronomiesopen_Id} a schema:Winery . 
@@ -214,5 +214,47 @@ source		SELECT *
 mappingId	Food establishments - URL
 target		:data/gastronomy/{Id} schema:sameAs <{url}> ; schema:url <{url}> . 
 source		SELECT "Id",  NULLIF("ContactInfos-de-Url", '') AS url FROM v_gastronomiesopen
+
+mappingId	Pizzeria
+target		:data/gastronomy/{gastronomiesopen_Id} a :Pizzeria . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Pizzeria'
+
+mappingId	Mountain restaurant
+target		:data/gastronomy/{gastronomiesopen_Id} a :MountainRestaurant . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Alm'
+
+mappingId	Skihütte
+target		:data/gastronomy/{gastronomiesopen_Id} a :SkiHütte . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Skihütte'
+
+mappingId	Mensa
+target		:data/gastronomy/{gastronomiesopen_Id} a :Canteen . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Mensa'
+
+mappingId	Après ski
+target		:data/gastronomy/{gastronomiesopen_Id} a :AprèsSki . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Apres Ski'
+
+mappingId	Jausenstation
+target		:data/gastronomy/{gastronomiesopen_Id} a :Jausenstation . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Jausenstation'
+
+mappingId	Après ski(0)
+target		:data/gastronomy/{gastronomiesopen_Id} a :BeerGarden . 
+source		SELECT *
+			FROM "v_gastronomiesopen_CategoryCodes"
+			WHERE "Shortname" = 'Braugarten'
 ]]
 
