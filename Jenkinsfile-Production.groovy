@@ -10,6 +10,7 @@ pipeline {
         DOCKER_SERVER_IP = "63.33.128.18"
         DOCKER_SERVER_DIRECTORY = "/var/docker/odh-vkg"
         DOCKER_SERVER_PORT = "1008"
+        DOCKER_SERVER_PROJECT = "odh-vkg"
         ORIGINAL_POSTGRES_HOST = "prod-postgres-tourism.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
         ORIGINAL_POSTGRES_DB = "tourism"
         ORIGINAL_POSTGRES_USERNAME = credentials('odh-vkg-prod-original-postgres-username')
@@ -65,9 +66,9 @@ pipeline {
                     sh "scp -r -o StrictHostKeyChecking=no src ${DOCKER_SERVER_IP}:${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER}/src"
                     sh "ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'cd ${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER} && docker-compose pull'"
 
-                    sh "ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} '[ -d \"${DOCKER_SERVER_DIRECTORY}/current\" ] && (cd ${DOCKER_SERVER_DIRECTORY}/current && docker-compose down) || true'"
+                    sh "ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} '[ -d \"${DOCKER_SERVER_DIRECTORY}/current\" ] && (cd ${DOCKER_SERVER_DIRECTORY}/current && docker-compose down --project-name ${DOCKER_SERVER_PROJECT}) || true'"
                     sh "ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'ln -sfn ${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER} ${DOCKER_SERVER_DIRECTORY}/current'"
-                    sh "ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'cd ${DOCKER_SERVER_DIRECTORY}/current && docker-compose up --detach'"
+                    sh "ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'cd ${DOCKER_SERVER_DIRECTORY}/current && docker-compose up --project-name ${DOCKER_SERVER_PROJECT} --detach'"
                 }
             }
 	    }
