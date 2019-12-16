@@ -27,17 +27,17 @@ pipeline {
             steps {
                 sh '''
                     cp .env.example .env
-                    echo 'DOCKER_IMAGE_APP=${DOCKER_IMAGE_APP}' >> .env
-                    echo 'DOCKER_TAG_APP=${DOCKER_TAG_APP}' >> .env
+                    echo "DOCKER_IMAGE_APP=${DOCKER_IMAGE_APP}" >> .env
+                    echo "DOCKER_TAG_APP=${DOCKER_TAG_APP}" >> .env
                 
-                    echo 'ORIGINAL_POSTGRES_HOST=${ORIGINAL_POSTGRES_HOST}' >> .env
-                    echo 'ORIGINAL_POSTGRES_DB=${ORIGINAL_POSTGRES_DB}' >> .env
-                    echo 'ORIGINAL_POSTGRES_USERNAME=${ORIGINAL_POSTGRES_USERNAME}' >> .env
-                    echo 'ORIGINAL_POSTGRES_PASSWORD=${ORIGINAL_POSTGRES_PASSWORD}' >> .env
-                    echo 'COPY_POSTGRES_HOST=${COPY_POSTGRES_HOST}' >> .env
-                    echo 'COPY_POSTGRES_DB=${COPY_POSTGRES_DB}' >> .env
-                    echo 'COPY_POSTGRES_USERNAME=${COPY_POSTGRES_USERNAME}' >> .env
-                    echo 'COPY_POSTGRES_PASSWORD=${COPY_POSTGRES_PASSWORD}' >> .env
+                    echo "ORIGINAL_POSTGRES_HOST=${ORIGINAL_POSTGRES_HOST}" >> .env
+                    echo "ORIGINAL_POSTGRES_DB=${ORIGINAL_POSTGRES_DB}" >> .env
+                    echo "ORIGINAL_POSTGRES_USERNAME=${ORIGINAL_POSTGRES_USERNAME}" >> .env
+                    echo "ORIGINAL_POSTGRES_PASSWORD=${ORIGINAL_POSTGRES_PASSWORD}" >> .env
+                    echo "COPY_POSTGRES_HOST=${COPY_POSTGRES_HOST}" >> .env
+                    echo "COPY_POSTGRES_DB=${COPY_POSTGRES_DB}" >> .env
+                    echo "COPY_POSTGRES_USERNAME=${COPY_POSTGRES_USERNAME}" >> .env
+                    echo "COPY_POSTGRES_PASSWORD=${COPY_POSTGRES_PASSWORD}" >> .env
 
                     sed -i -e "s%\\(DOCKER_SERVER_PORT\\s*=\\).*\\$%\\1${DOCKER_SERVER_PORT}%" .env
 
