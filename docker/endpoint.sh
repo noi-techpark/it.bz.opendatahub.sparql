@@ -25,9 +25,9 @@ psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
 psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
     --command="CREATE SCHEMA public;" $COPY_POSTGRES_DB
 psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
-    --command="CREATE EXTENSION cube;" $COPY_POSTGRES_DB
+    --command="DROP EXTENSION IF EXISTS cube; CREATE EXTENSION cube SCHEMA public;" $COPY_POSTGRES_DB
 psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
-    --command="CREATE EXTENSION earthdistance;" $COPY_POSTGRES_DB
+    --command="DROP EXTENSION IF EXISTS earthdistance; CREATE EXTENSION earthdistance SCHEMA public;" $COPY_POSTGRES_DB
 psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
     --command="ALTER role $COPY_POSTGRES_USERNAME SET statement_timeout TO 0;" $COPY_POSTGRES_DB
 psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
