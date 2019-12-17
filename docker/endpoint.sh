@@ -6,6 +6,8 @@ set -o pipefail
 echo "Entrypoint - Dumping old DB"
 export PGPASSWORD="$ORIGINAL_POSTGRES_PASSWORD"
 pg_dump --host=$ORIGINAL_POSTGRES_HOST --username=$ORIGINAL_POSTGRES_USERNAME \
+    --no-acl \
+    --no-owner \
     --exclude-table='public."AspNetRoles"' \
     --exclude-table='public."AspNetUserClaims"' \
     --exclude-table='public."AspNetUserLogins"' \
@@ -14,7 +16,7 @@ pg_dump --host=$ORIGINAL_POSTGRES_HOST --username=$ORIGINAL_POSTGRES_USERNAME \
     --exclude-table='public."users"' \
     --exclude-table='public."tripplaners"' \
     --exclude-table='public."AspNetUserClaims_Id_seq"' \
-    $ORIGINAL_POSTGRES_DB > dump.sql
+    $ORIGINAL_POSTGRES_DB | grep -v -E '^(CREATE\ EXTENSION|COMMENT\ ON\ EXTENSION)' > dump.sql
 
 echo "Entrypoint - Restoring new DB"
 export PGPASSWORD="$COPY_POSTGRES_PASSWORD"
