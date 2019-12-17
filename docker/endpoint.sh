@@ -16,7 +16,9 @@ pg_dump --host=$ORIGINAL_POSTGRES_HOST --username=$ORIGINAL_POSTGRES_USERNAME \
     --exclude-table='public."users"' \
     --exclude-table='public."tripplaners"' \
     --exclude-table='public."AspNetUserClaims_Id_seq"' \
-    $ORIGINAL_POSTGRES_DB | grep -v -E '^(CREATE\ EXTENSION|COMMENT\ ON\ EXTENSION)' > dump.sql
+    $ORIGINAL_POSTGRES_DB | \
+    grep -v -E 'll_to_earth' | \
+    grep -v -E '^(CREATE\ EXTENSION|COMMENT\ ON\ EXTENSION)' > dump.sql
 
 echo "Entrypoint - Restoring new DB"
 export PGPASSWORD="$COPY_POSTGRES_PASSWORD"
