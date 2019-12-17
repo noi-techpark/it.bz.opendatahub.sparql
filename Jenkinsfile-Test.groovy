@@ -11,7 +11,7 @@ pipeline {
         DOCKER_SERVER_DIRECTORY = "/var/docker/odh-vkg"
         DOCKER_SERVER_PORT = "1008"
         DOCKER_SERVER_PROJECT = "odh-vkg"
-        ONTOP_QUERY_TIMEOUT=10
+        ONTOP_QUERY_TIMEOUT = 15
         ORIGINAL_POSTGRES_HOST = "prod-postgres-tourism.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
         ORIGINAL_POSTGRES_DB = "tourism"
         ORIGINAL_POSTGRES_USERNAME = credentials('odh-vkg-test-original-postgres-username')
