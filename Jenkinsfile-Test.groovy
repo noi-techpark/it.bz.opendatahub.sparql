@@ -20,6 +20,7 @@ pipeline {
         COPY_POSTGRES_DB = "odh_vkg"
         COPY_POSTGRES_USERNAME = credentials('odh-vkg-test-copy-postgres-username')
         COPY_POSTGRES_PASSWORD = credentials('odh-vkg-test-copy-postgres-password')
+        COPY_POSTGRES_STATEMENT_TIMEOUT = 360
     }
 
     stages {
@@ -38,6 +39,7 @@ pipeline {
                     echo "COPY_POSTGRES_DB=${COPY_POSTGRES_DB}" >> .env
                     echo "COPY_POSTGRES_USERNAME=${COPY_POSTGRES_USERNAME}" >> .env
                     echo "COPY_POSTGRES_PASSWORD=${COPY_POSTGRES_PASSWORD}" >> .env
+                    echo "COPY_POSTGRES_STATEMENT_TIMEOUT=${COPY_POSTGRES_STATEMENT_TIMEOUT}" >> .env
 
                     sed -i -e "s%\\(DOCKER_SERVER_PORT\\s*=\\).*\\$%\\1${DOCKER_SERVER_PORT}%" .env
 

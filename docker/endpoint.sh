@@ -27,6 +27,8 @@ psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
 psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
     --command="CREATE EXTENSION earthdistance;" $COPY_POSTGRES_DB
 psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
+    --command="ALTER role $COPY_POSTGRES_USERNAME SET statement_timeout TO 0;" $COPY_POSTGRES_DB
+psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
     $COPY_POSTGRES_DB < dump.sql
 
 rm -rf dump.sql
@@ -34,6 +36,9 @@ rm -rf dump.sql
 echo "Entrypoint - Create views"
 psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
     $COPY_POSTGRES_DB < /opt/ontop/src/create_views.sql
+
+psql --host=$COPY_POSTGRES_HOST --username=$COPY_POSTGRES_USERNAME \
+    --command="ALTER role $COPY_POSTGRES_USERNAME SET statement_timeout TO $COPY_POSTGRES_STATEMENT_TIMEOUT;" $COPY_POSTGRES_DB
 
 echo "Entrypoint - Starting Ontop Endpoint"
 
