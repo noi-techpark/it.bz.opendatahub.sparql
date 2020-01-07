@@ -4,13 +4,13 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        DOCKER_PROJECT_NAME = "odh-vkg"
         DOCKER_IMAGE_APP = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/odh-vkg"
         DOCKER_TAG_APP = "test-$BUILD_NUMBER"
         DOCKER_SERVICES = "app"
         DOCKER_SERVER_IP = "63.33.73.203"
         DOCKER_SERVER_DIRECTORY = "/var/docker/odh-vkg"
         DOCKER_SERVER_PORT = "1008"
-        DOCKER_SERVER_PROJECT = "odh-vkg"
         ONTOP_QUERY_TIMEOUT = 15
         ORIGINAL_POSTGRES_HOST = "prod-postgres-tourism.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
         ORIGINAL_POSTGRES_DB = "tourism"
@@ -28,6 +28,7 @@ pipeline {
             steps {
                 sh '''
                     cp .env.example .env
+                    echo "COMPOSE_PROJECT_NAME=${DOCKER_PROJECT_NAME}" >> .env
                     echo "DOCKER_IMAGE_APP=${DOCKER_IMAGE_APP}" >> .env
                     echo "DOCKER_TAG_APP=${DOCKER_TAG_APP}" >> .env
                 
@@ -77,10 +78,10 @@ pipeline {
                             scp -r -o StrictHostKeyChecking=no jdbc ${DOCKER_SERVER_IP}:${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER}/jdbc
                             scp -r -o StrictHostKeyChecking=no src ${DOCKER_SERVER_IP}:${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER}/src
 
-                            ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'cd ${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER} && docker-compose --no-ansi --project-name=${DOCKER_SERVER_PROJECT} pull'
-                            ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} '[ -d \"${DOCKER_SERVER_DIRECTORY}/current\" ] && (cd ${DOCKER_SERVER_DIRECTORY}/current && docker-compose --no-ansi --project-name=${DOCKER_SERVER_PROJECT} down) || true'
+                            ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'cd ${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER} && docker-compose --no-ansi pull'
+                            ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} '[ -d \"${DOCKER_SERVER_DIRECTORY}/current\" ] && (cd ${DOCKER_SERVER_DIRECTORY}/current && docker-compose --no-ansi down) || true'
                             ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'ln -sfn ${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER} ${DOCKER_SERVER_DIRECTORY}/current'
-                            ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'cd ${DOCKER_SERVER_DIRECTORY}/current && docker-compose --no-ansi --project-name=${DOCKER_SERVER_PROJECT} up --detach'
+                            ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'cd ${DOCKER_SERVER_DIRECTORY}/current && docker-compose --no-ansi up --detach'
                         """
                     }
                 }
