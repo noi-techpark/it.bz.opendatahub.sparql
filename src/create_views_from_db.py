@@ -230,25 +230,25 @@ def sql_view(table_name: str, table_path: TablePath, attr_paths: Dict[AttrPath, 
             " AS \"" + c.as_column_name() + "\""
             for c, v in attr_paths.items()
         ])
-        drop_view_sql = simple_drop_view_sql_template.format(table_name=table_name)
+        #drop_view_sql = simple_drop_view_sql_template.format(table_name=table_name)
         create_view_sql = simple_create_view_sql_template.format(table_name=table_name, projections=projections)
         create_unique_index_sql = simple_create_unique_index_sql_template.format(view_name=view_name)
-        return drop_view_sql + create_view_sql + create_unique_index_sql
+        return create_view_sql + create_unique_index_sql
     elif table_path._path[-1]._path[-1] == '$literal':
         real_table_path = TablePath([AttrPath(
             tp._path[:-1] if tp._path[-1] == '$literal' else tp._path)
             for tp in table_path._path
         ])
         view_name = "v_" + table_name +  "_" + real_table_path.as_table_name()
-        drop_view_sql = drop_view_sql_template.format(view_name=view_name)
+        #drop_view_sql = drop_view_sql_template.format(view_name=view_name)
         col_name = real_table_path.as_table_name()
         create_view_sql = array_create_view_sql_template \
             .format(view_name=view_name, table_name=table_name, col_name=col_name)
         #create_unique_index_sql = simple_create_unique_index_sql_template.format(view_name=view_name)
-        return drop_view_sql + create_view_sql
+        return create_view_sql
     else:
         view_name = "v_" + table_name + "_" + table_path.as_table_name()
-        drop_view_sql = drop_view_sql_template.format(view_name=view_name)
+        #drop_view_sql = drop_view_sql_template.format(view_name=view_name)
         projections = ",\n".join([
             cast(c.as_json_path(), v) +
             " AS \"" + c.as_column_name() + "\""
@@ -261,7 +261,7 @@ def sql_view(table_name: str, table_path: TablePath, attr_paths: Dict[AttrPath, 
             .format(view_name=view_name, table_name=table_name, col_name=col_name,
                     projections=projections, parent_Id=parent_Id)
         #create_unique_index_sql = nested_create_unique_index_sql_template.format(view_name=view_name,parent_Id=parent_Id)
-        return drop_view_sql + create_view_sql
+        return create_view_sql
 
 
 def cast(arg0, sample_value):
@@ -279,11 +279,11 @@ def cast(arg0, sample_value):
 
 if __name__ == '__main__':
 
-    connection = psycopg2.connect(user="xiao",
-                                  password="",
+    connection = psycopg2.connect(user="tourismuser",
+                                  password="postgres2",
                                   host="127.0.0.1",
-                                  port="5432",
-                                  database="st_tourism")
+                                  port="7777",
+                                  database="tourismuser")
 
     cursor = connection.cursor()
     # Print PostgreSQL Connection properties
