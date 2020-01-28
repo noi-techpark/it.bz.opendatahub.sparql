@@ -217,6 +217,76 @@ WHERE {
 }
 """
 
+[[tabGroups.tabs]]
+name="Asian cuisine (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posLabel ?desc
+WHERE {
+  ?p a schema:FoodEstablishment ; 
+     geo:asWKT ?pos ; 
+     schema:name ?name ; 
+     schema:servesCuisine "asian"@en .
+     OPTIONAL { 
+       ?p schema:description ?desc .
+       FILTER (lang(?desc) = 'it')
+     }
+  FILTER (lang(?name) = 'it')
+  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Mediterranean cuisine (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posLabel ?desc
+WHERE {
+  ?p a schema:FoodEstablishment ; 
+     geo:asWKT ?pos ; 
+     schema:name ?name ; 
+     schema:servesCuisine "mediterranean"@en .
+     OPTIONAL { 
+       ?p schema:description ?desc .
+       FILTER (lang(?desc) = 'de')
+     }
+  FILTER (lang(?name) = 'de')
+  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Apfelstrudel (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posLabel ?desc
+WHERE {
+  ?p a schema:FoodEstablishment ; 
+     geo:asWKT ?pos ; 
+     schema:name ?name ; 
+     schema:hasMenu [
+      schema:hasMenuItem [ 
+        schema:name "Apfelstrudel"@de 
+        ]
+     ] .
+     OPTIONAL { 
+       ?p schema:description ?desc .
+       FILTER (lang(?desc) = 'de')
+     }
+  FILTER (lang(?name) = 'de')
+  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
+}
+"""
+
 [[tabGroups]]
 
 name="Data Quality Queries"

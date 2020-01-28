@@ -170,7 +170,7 @@ source		select "EventLocation"
 			from v_eventeuracnoi
 
 mappingId	Food establishments
-target		:data/gastronomy/{Id} a schema:FoodEstablishment ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:name {Detail-de-Title}@de , {Detail-it-Title}@it , {Detail-en-Title}@en ; schema:description {Detail-de-BaseText}@de , {Detail-it-BaseText}@it , {Detail-en-BaseText}@en ; schema:geo :data/geo/gastronomy/{Id} ; schema:address :data/address/gastronomy/{Id} ; schema:telephone {ContactInfos-de-Phonenumber} . 
+target		:data/gastronomy/{Id} a schema:FoodEstablishment ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:name {Detail-de-Title}@de , {Detail-it-Title}@it , {Detail-en-Title}@en ; schema:description {Detail-de-BaseText}@de , {Detail-it-BaseText}@it , {Detail-en-BaseText}@en ; schema:geo :data/geo/gastronomy/{Id} ; schema:address :data/address/gastronomy/{Id} ; schema:telephone {ContactInfos-de-Phonenumber} ; schema:hasMenu :data/menu/gastronomy/{Id} . 
 source		SELECT * FROM v_gastronomiesopen
 
 mappingId	Food establishments - geo
@@ -251,10 +251,28 @@ source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Jausenstation'
 
-mappingId	Après ski(0)
+mappingId	Beer garden
 target		:data/gastronomy/{gastronomiesopen_Id} a :BeerGarden . 
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Braugarten'
+
+mappingId	Asian cuisine
+target		:data/gastronomy/{Id} schema:servesCuisine "asian"@en , "asiatisch"@de , "asiatica"@it . 
+source		SELECT "Id", "Detail-it-BaseText", "Detail-de-BaseText"
+			FROM "v_gastronomiesopen"
+			WHERE "Detail-it-BaseText" like '%asiat%' OR "Detail-de-BaseText" like '%asiat%'
+
+mappingId	Mediterranean cuisine
+target		:data/gastronomy/{Id} schema:servesCuisine "mediterranean"@en , "mediterrane"@de , "mediterranea"@it . 
+source		SELECT "Id", "Detail-it-BaseText", "Detail-de-BaseText"
+			FROM "v_gastronomiesopen"
+			WHERE "Detail-it-BaseText" like '%mediterra%' OR "Detail-de-BaseText" like '%mediterra%'
+
+mappingId	Apfelstrudel
+target		:data/menu/gastronomy/{Id} schema:hasMenuItem :data/menuitem/apfelstrudel/{Id} . :data/menuitem/apfelstrudel/{Id} schema:name "Apfelstrudel"@de , "strudel di mela"@it , "Apfelstrudel"@en . 
+source		SELECT "Id"
+			FROM public.v_gastronomiesopen
+			WHERE "Detail-de-BaseText" ~ 'Apfelstrudel'
 ]]
 
