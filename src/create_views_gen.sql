@@ -1,40 +1,4 @@
 
-CREATE MATERIALIZED VIEW "v_accommodationroomsopen" AS
-SELECT CAST("data"->>'Id' As varchar) AS "Id",
-CAST("data"->>'A0RID' As varchar) AS "A0RID",
-CAST("data"->>'HGVId' As varchar) AS "HGVId",
-CAST("data"->>'LTSId' As varchar) AS "LTSId",
-CAST("data"->>'Source' As varchar) AS "Source",
-CAST("data"->>'Roommax' As integer) AS "Roommax",
-CAST("data"->>'Roommin' As integer) AS "Roommin",
-CAST("data"->>'Roomstd' As integer) AS "Roomstd",
-CAST("data"->>'RoomCode' As varchar) AS "RoomCode",
-CAST("data"->>'Roomtype' As varchar) AS "Roomtype",
-CAST("data"->>'Shortname' As varchar) AS "Shortname",
-CAST("data"->>'RoomQuantity' As integer) AS "RoomQuantity",
-CAST("data"->'AccoRoomDetail'->'de'->>'Name' As varchar) AS "AccoRoomDetail-de-Name",
-CAST("data"->'AccoRoomDetail'->'de'->>'Language' As varchar) AS "AccoRoomDetail-de-Language",
-CAST("data"->'AccoRoomDetail'->'de'->>'Longdesc' As varchar) AS "AccoRoomDetail-de-Longdesc",
-CAST("data"->'AccoRoomDetail'->'de'->>'Shortdesc' As varchar) AS "AccoRoomDetail-de-Shortdesc",
-CAST("data"->'AccoRoomDetail'->'en'->>'Name' As varchar) AS "AccoRoomDetail-en-Name",
-CAST("data"->'AccoRoomDetail'->'en'->>'Language' As varchar) AS "AccoRoomDetail-en-Language",
-CAST("data"->'AccoRoomDetail'->'it'->>'Name' As varchar) AS "AccoRoomDetail-it-Name",
-CAST("data"->'AccoRoomDetail'->'it'->>'Language' As varchar) AS "AccoRoomDetail-it-Language",
-CAST("data"->'AccoRoomDetail'->'it'->>'Longdesc' As varchar) AS "AccoRoomDetail-it-Longdesc",
-CAST("data"->'AccoRoomDetail'->'it'->>'Shortdesc' As varchar) AS "AccoRoomDetail-it-Shortdesc"
-FROM accommodationroomsopen;
-
-CREATE UNIQUE INDEX "v_accommodationroomsopen_pk" ON "v_accommodationroomsopen"("Id");
-
-CREATE MATERIALIZED VIEW "v_accommodationroomsopen_Features" AS
-    WITH t ("Id", "data") AS (
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'Features') AS "Feature"
-        FROM accommodationroomsopen
-        WHERE data -> 'Features' != 'null')
-    SELECT "Id" AS "accommodationroomsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
-CAST("data"->>'Name' As varchar) AS "Name"
-    FROM t;
-
 CREATE MATERIALIZED VIEW "v_accommodationsopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Beds' As integer) AS "Beds",
@@ -1280,6 +1244,38 @@ CREATE MATERIALIZED VIEW "v_metaregionsopen_TourismvereinIds" AS
         FROM metaregionsopen
         WHERE data -> 'TourismvereinIds' != 'null';
  
+CREATE MATERIALIZED VIEW "v_accommodationroomsopen" AS
+SELECT CAST("data"->>'Id' As varchar) AS "Id",
+CAST("data"->>'A0RID' As varchar) AS "A0RID",
+CAST("data"->>'HGVId' As varchar) AS "HGVId",
+CAST("data"->>'LTSId' As varchar) AS "LTSId",
+CAST("data"->>'Source' As varchar) AS "Source",
+CAST("data"->>'Roommax' As integer) AS "Roommax",
+CAST("data"->>'Roommin' As integer) AS "Roommin",
+CAST("data"->>'Roomstd' As integer) AS "Roomstd",
+CAST("data"->>'RoomCode' As varchar) AS "RoomCode",
+CAST("data"->>'Roomtype' As varchar) AS "Roomtype",
+CAST("data"->>'Shortname' As varchar) AS "Shortname",
+CAST("data"->>'RoomQuantity' As integer) AS "RoomQuantity",
+CAST("data"->'AccoRoomDetail'->'de'->>'Name' As varchar) AS "AccoRoomDetail-de-Name",
+CAST("data"->'AccoRoomDetail'->'de'->>'Language' As varchar) AS "AccoRoomDetail-de-Language",
+CAST("data"->'AccoRoomDetail'->'en'->>'Name' As varchar) AS "AccoRoomDetail-en-Name",
+CAST("data"->'AccoRoomDetail'->'en'->>'Language' As varchar) AS "AccoRoomDetail-en-Language",
+CAST("data"->'AccoRoomDetail'->'it'->>'Name' As varchar) AS "AccoRoomDetail-it-Name",
+CAST("data"->'AccoRoomDetail'->'it'->>'Language' As varchar) AS "AccoRoomDetail-it-Language"
+FROM accommodationroomsopen;
+
+CREATE UNIQUE INDEX "v_accommodationroomsopen_pk" ON "v_accommodationroomsopen"("Id");
+
+CREATE MATERIALIZED VIEW "v_accommodationroomsopen_Features" AS
+    WITH t ("Id", "data") AS (
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'Features') AS "Feature"
+        FROM accommodationroomsopen
+        WHERE data -> 'Features' != 'null')
+    SELECT "Id" AS "accommodationroomsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+CAST("data"->>'Name' As varchar) AS "Name"
+    FROM t;
+
 CREATE MATERIALIZED VIEW "v_municipalitiesopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Plz' As varchar) AS "Plz",

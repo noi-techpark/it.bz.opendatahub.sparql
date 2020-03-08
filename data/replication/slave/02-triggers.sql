@@ -27,7 +27,7 @@ CREATE FUNCTION roomsopen_fct()
 RETURNS TRIGGER
 AS $$
 BEGIN
-INSERT INTO v_accommodationroomsopen 
+INSERT INTO v_accommodationroomsopen
 SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
 CAST(NEW."data"->>'A0RID' As varchar) AS "A0RID",
 CAST(NEW."data"->>'HGVId' As varchar) AS "HGVId",
@@ -55,7 +55,11 @@ END;
 $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER t_accommodationroomsopen BEFORE INSERT ON accommodationroomsopen
-FOR EACH ROW EXECUTE PROCEDURE roomsopen_fct();
+CREATE TRIGGER t_accommodationroomsopen
+    BEFORE INSERT
+    ON accommodationroomsopen
+    FOR EACH ROW
+    EXECUTE PROCEDURE roomsopen_fct();
 
-ALTER TABLE accommodationroomsopen ENABLE ALWAYS TRIGGER t_accommodationroomsopen;
+ALTER TABLE accommodationroomsopen
+    ENABLE ALWAYS TRIGGER t_accommodationroomsopen;
