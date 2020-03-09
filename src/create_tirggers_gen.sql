@@ -1,3 +1,6 @@
+
+DROP TABLE IF EXISTS "v_accommodationsopen";
+
 CREATE TABLE "v_accommodationsopen" (
 "Id" varchar,
 "Beds" integer,
@@ -105,6 +108,8 @@ CREATE TABLE "v_accommodationsopen" (
 "LocationInfo-MunicipalityInfo-Name-pl" varchar,
 "LocationInfo-MunicipalityInfo-Name-ru" varchar
 );
+
+DROP FUNCTION IF EXISTS v_accommodationsopen_fn CASCADE;
 
 CREATE FUNCTION v_accommodationsopen_fn()
 RETURNS TRIGGER
@@ -231,10 +236,14 @@ CREATE TRIGGER t_v_accommodationsopen
 ALTER TABLE accommodationsopen
     ENABLE ALWAYS TRIGGER t_v_accommodationsopen;
 
+DROP TABLE IF EXISTS "v_accommodationsopen_SmgTags";
+
 CREATE TABLE  "v_accommodationsopen_SmgTags" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_accommodationsopen_SmgTags_fn CASCADE;
 
 CREATE FUNCTION v_accommodationsopen_SmgTags_fn()
 RETURNS TRIGGER
@@ -243,7 +252,7 @@ BEGIN
 INSERT INTO "v_accommodationsopen_SmgTags"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'SmgTags') AS "data"
-        WHERE data -> 'SmgTags' != 'null';
+        WHERE NEW."data" -> 'SmgTags' != 'null';
 RETURN NEW;
 END;
 $$
@@ -258,10 +267,14 @@ CREATE TRIGGER t_v_accommodationsopen_SmgTags
 ALTER TABLE accommodationsopen
     ENABLE ALWAYS TRIGGER t_v_accommodationsopen_SmgTags;        
  
+DROP TABLE IF EXISTS "v_accommodationsopen_ThemeIds";
+
 CREATE TABLE  "v_accommodationsopen_ThemeIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_accommodationsopen_ThemeIds_fn CASCADE;
 
 CREATE FUNCTION v_accommodationsopen_ThemeIds_fn()
 RETURNS TRIGGER
@@ -270,7 +283,7 @@ BEGIN
 INSERT INTO "v_accommodationsopen_ThemeIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'ThemeIds') AS "data"
-        WHERE data -> 'ThemeIds' != 'null';
+        WHERE NEW."data" -> 'ThemeIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -285,10 +298,14 @@ CREATE TRIGGER t_v_accommodationsopen_ThemeIds
 ALTER TABLE accommodationsopen
     ENABLE ALWAYS TRIGGER t_v_accommodationsopen_ThemeIds;        
  
+DROP TABLE IF EXISTS "v_accommodationsopen_HasLanguage";
+
 CREATE TABLE  "v_accommodationsopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_accommodationsopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_accommodationsopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -297,7 +314,7 @@ BEGIN
 INSERT INTO "v_accommodationsopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -312,10 +329,14 @@ CREATE TRIGGER t_v_accommodationsopen_HasLanguage
 ALTER TABLE accommodationsopen
     ENABLE ALWAYS TRIGGER t_v_accommodationsopen_HasLanguage;        
  
+DROP TABLE IF EXISTS "v_accommodationsopen_SpecialFeaturesIds";
+
 CREATE TABLE  "v_accommodationsopen_SpecialFeaturesIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_accommodationsopen_SpecialFeaturesIds_fn CASCADE;
 
 CREATE FUNCTION v_accommodationsopen_SpecialFeaturesIds_fn()
 RETURNS TRIGGER
@@ -324,7 +345,7 @@ BEGIN
 INSERT INTO "v_accommodationsopen_SpecialFeaturesIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'SpecialFeaturesIds') AS "data"
-        WHERE data -> 'SpecialFeaturesIds' != 'null';
+        WHERE NEW."data" -> 'SpecialFeaturesIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -339,11 +360,15 @@ CREATE TRIGGER t_v_accommodationsopen_SpecialFeaturesIds
 ALTER TABLE accommodationsopen
     ENABLE ALWAYS TRIGGER t_v_accommodationsopen_SpecialFeaturesIds;        
  
+DROP TABLE IF EXISTS "v_accommodationsopen_Features";
+
 CREATE TABLE "v_accommodationsopen_Features" (
 "accommodationsopen_Id" varchar,
 "Id" varchar,
 "Name" varchar
 );
+
+DROP FUNCTION IF EXISTS v_accommodationsopen_Features_fn CASCADE;
 
 CREATE FUNCTION v_accommodationsopen_Features_fn()
 RETURNS TRIGGER
@@ -352,8 +377,8 @@ BEGIN
 INSERT INTO "v_accommodationsopen_Features"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'Features') AS "Feature"
-        WHERE data -> 'Features' != 'null')
+            jsonb_array_elements(NEW."data" -> 'Features') AS "data"
+        WHERE NEW."data" -> 'Features' != 'null')
     SELECT "Id" AS "accommodationsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Name' As varchar) AS "Name"
     FROM t;
@@ -371,6 +396,9 @@ CREATE TRIGGER t_v_accommodationsopen_Features
 ALTER TABLE accommodationsopen
     ENABLE ALWAYS TRIGGER t_v_accommodationsopen_Features;        
     
+
+DROP TABLE IF EXISTS "v_activitiesopen";
+
 CREATE TABLE "v_activitiesopen" (
 "Id" varchar,
 "Type" varchar,
@@ -508,6 +536,8 @@ CREATE TABLE "v_activitiesopen" (
 "AdditionalPoiInfos-it-Language" varchar,
 "AdditionalPoiInfos-it-MainType" varchar
 );
+
+DROP FUNCTION IF EXISTS v_activitiesopen_fn CASCADE;
 
 CREATE FUNCTION v_activitiesopen_fn()
 RETURNS TRIGGER
@@ -664,10 +694,14 @@ CREATE TRIGGER t_v_activitiesopen
 ALTER TABLE activitiesopen
     ENABLE ALWAYS TRIGGER t_v_activitiesopen;
 
+DROP TABLE IF EXISTS "v_activitiesopen_AreaId";
+
 CREATE TABLE  "v_activitiesopen_AreaId" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_activitiesopen_AreaId_fn CASCADE;
 
 CREATE FUNCTION v_activitiesopen_AreaId_fn()
 RETURNS TRIGGER
@@ -676,7 +710,7 @@ BEGIN
 INSERT INTO "v_activitiesopen_AreaId"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
-        WHERE data -> 'AreaId' != 'null';
+        WHERE NEW."data" -> 'AreaId' != 'null';
 RETURN NEW;
 END;
 $$
@@ -691,10 +725,14 @@ CREATE TRIGGER t_v_activitiesopen_AreaId
 ALTER TABLE activitiesopen
     ENABLE ALWAYS TRIGGER t_v_activitiesopen_AreaId;        
  
+DROP TABLE IF EXISTS "v_activitiesopen_SmgTags";
+
 CREATE TABLE  "v_activitiesopen_SmgTags" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_activitiesopen_SmgTags_fn CASCADE;
 
 CREATE FUNCTION v_activitiesopen_SmgTags_fn()
 RETURNS TRIGGER
@@ -703,7 +741,7 @@ BEGIN
 INSERT INTO "v_activitiesopen_SmgTags"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'SmgTags') AS "data"
-        WHERE data -> 'SmgTags' != 'null';
+        WHERE NEW."data" -> 'SmgTags' != 'null';
 RETURN NEW;
 END;
 $$
@@ -718,10 +756,14 @@ CREATE TRIGGER t_v_activitiesopen_SmgTags
 ALTER TABLE activitiesopen
     ENABLE ALWAYS TRIGGER t_v_activitiesopen_SmgTags;        
  
+DROP TABLE IF EXISTS "v_activitiesopen_Exposition";
+
 CREATE TABLE  "v_activitiesopen_Exposition" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_activitiesopen_Exposition_fn CASCADE;
 
 CREATE FUNCTION v_activitiesopen_Exposition_fn()
 RETURNS TRIGGER
@@ -730,7 +772,7 @@ BEGIN
 INSERT INTO "v_activitiesopen_Exposition"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'Exposition') AS "data"
-        WHERE data -> 'Exposition' != 'null';
+        WHERE NEW."data" -> 'Exposition' != 'null';
 RETURN NEW;
 END;
 $$
@@ -745,10 +787,14 @@ CREATE TRIGGER t_v_activitiesopen_Exposition
 ALTER TABLE activitiesopen
     ENABLE ALWAYS TRIGGER t_v_activitiesopen_Exposition;        
  
+DROP TABLE IF EXISTS "v_activitiesopen_HasLanguage";
+
 CREATE TABLE  "v_activitiesopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_activitiesopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_activitiesopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -757,7 +803,7 @@ BEGIN
 INSERT INTO "v_activitiesopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -772,6 +818,8 @@ CREATE TRIGGER t_v_activitiesopen_HasLanguage
 ALTER TABLE activitiesopen
     ENABLE ALWAYS TRIGGER t_v_activitiesopen_HasLanguage;        
  
+DROP TABLE IF EXISTS "v_activitiesopen_GpsInfo";
+
 CREATE TABLE "v_activitiesopen_GpsInfo" (
 "activitiesopen_Id" varchar,
 "Gpstype" varchar,
@@ -781,6 +829,8 @@ CREATE TABLE "v_activitiesopen_GpsInfo" (
 "AltitudeUnitofMeasure" varchar
 );
 
+DROP FUNCTION IF EXISTS v_activitiesopen_GpsInfo_fn CASCADE;
+
 CREATE FUNCTION v_activitiesopen_GpsInfo_fn()
 RETURNS TRIGGER
 AS $$
@@ -788,8 +838,8 @@ BEGIN
 INSERT INTO "v_activitiesopen_GpsInfo"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'GpsInfo') AS "Feature"
-        WHERE data -> 'GpsInfo' != 'null')
+            jsonb_array_elements(NEW."data" -> 'GpsInfo') AS "data"
+        WHERE NEW."data" -> 'GpsInfo' != 'null')
     SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
 CAST("data"->>'Altitude' As float) AS "Altitude",
 CAST("data"->>'Latitude' As float) AS "Latitude",
@@ -811,6 +861,8 @@ ALTER TABLE activitiesopen
     ENABLE ALWAYS TRIGGER t_v_activitiesopen_GpsInfo;        
     
 
+DROP TABLE IF EXISTS "v_activitiesopen_GpsTrack";
+
 CREATE TABLE "v_activitiesopen_GpsTrack" (
 "activitiesopen_Id" varchar,
 "Id" varchar,
@@ -821,6 +873,8 @@ CREATE TABLE "v_activitiesopen_GpsTrack" (
 "GpxTrackDesc-it" varchar
 );
 
+DROP FUNCTION IF EXISTS v_activitiesopen_GpsTrack_fn CASCADE;
+
 CREATE FUNCTION v_activitiesopen_GpsTrack_fn()
 RETURNS TRIGGER
 AS $$
@@ -828,8 +882,8 @@ BEGIN
 INSERT INTO "v_activitiesopen_GpsTrack"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'GpsTrack') AS "Feature"
-        WHERE data -> 'GpsTrack' != 'null')
+            jsonb_array_elements(NEW."data" -> 'GpsTrack') AS "data"
+        WHERE NEW."data" -> 'GpsTrack' != 'null')
     SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'GpxTrackUrl' As varchar) AS "GpxTrackUrl",
@@ -852,6 +906,8 @@ ALTER TABLE activitiesopen
     ENABLE ALWAYS TRIGGER t_v_activitiesopen_GpsTrack;        
     
 
+DROP TABLE IF EXISTS "v_activitiesopen_OperationSchedule";
+
 CREATE TABLE "v_activitiesopen_OperationSchedule" (
 "activitiesopen_Id" varchar,
 "Stop" varchar,
@@ -860,6 +916,8 @@ CREATE TABLE "v_activitiesopen_OperationSchedule" (
 "OperationscheduleName-de" varchar
 );
 
+DROP FUNCTION IF EXISTS v_activitiesopen_OperationSchedule_fn CASCADE;
+
 CREATE FUNCTION v_activitiesopen_OperationSchedule_fn()
 RETURNS TRIGGER
 AS $$
@@ -867,8 +925,8 @@ BEGIN
 INSERT INTO "v_activitiesopen_OperationSchedule"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "Feature"
-        WHERE data -> 'OperationSchedule' != 'null')
+            jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "data"
+        WHERE NEW."data" -> 'OperationSchedule' != 'null')
     SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Start' As varchar) AS "Start",
@@ -888,6 +946,9 @@ CREATE TRIGGER t_v_activitiesopen_OperationSchedule
 ALTER TABLE activitiesopen
     ENABLE ALWAYS TRIGGER t_v_activitiesopen_OperationSchedule;        
     
+
+DROP TABLE IF EXISTS "v_areas";
+
 CREATE TABLE "v_areas" (
 "Id" varchar,
 "GID" varchar,
@@ -898,6 +959,8 @@ CREATE TABLE "v_areas" (
 "SmgActive" bool,
 "TourismvereinId" varchar
 );
+
+DROP FUNCTION IF EXISTS v_areas_fn CASCADE;
 
 CREATE FUNCTION v_areas_fn()
 RETURNS TRIGGER
@@ -926,6 +989,9 @@ CREATE TRIGGER t_v_areas
 
 ALTER TABLE areas
     ENABLE ALWAYS TRIGGER t_v_areas;
+
+DROP TABLE IF EXISTS "v_articlesopen";
+
 CREATE TABLE "v_articlesopen" (
 "Id" varchar,
 "Type" varchar,
@@ -939,6 +1005,8 @@ CREATE TABLE "v_articlesopen" (
 "Detail-de-Title" varchar,
 "Detail-de-BaseText" varchar
 );
+
+DROP FUNCTION IF EXISTS v_articlesopen_fn CASCADE;
 
 CREATE FUNCTION v_articlesopen_fn()
 RETURNS TRIGGER
@@ -971,10 +1039,14 @@ CREATE TRIGGER t_v_articlesopen
 ALTER TABLE articlesopen
     ENABLE ALWAYS TRIGGER t_v_articlesopen;
 
+DROP TABLE IF EXISTS "v_articlesopen_HasLanguage";
+
 CREATE TABLE  "v_articlesopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_articlesopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_articlesopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -983,7 +1055,7 @@ BEGIN
 INSERT INTO "v_articlesopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -997,7 +1069,10 @@ CREATE TRIGGER t_v_articlesopen_HasLanguage
 
 ALTER TABLE articlesopen
     ENABLE ALWAYS TRIGGER t_v_articlesopen_HasLanguage;        
- CREATE TABLE "v_districtsopen" (
+ 
+DROP TABLE IF EXISTS "v_districtsopen";
+
+CREATE TABLE "v_districtsopen" (
 "Id" varchar,
 "Active" bool,
 "SiagId" varchar,
@@ -1031,6 +1106,8 @@ ALTER TABLE articlesopen
 "Detail-ru-Title" varchar,
 "Detail-ru-Language" varchar
 );
+
+DROP FUNCTION IF EXISTS v_districtsopen_fn CASCADE;
 
 CREATE FUNCTION v_districtsopen_fn()
 RETURNS TRIGGER
@@ -1084,10 +1161,14 @@ CREATE TRIGGER t_v_districtsopen
 ALTER TABLE districtsopen
     ENABLE ALWAYS TRIGGER t_v_districtsopen;
 
+DROP TABLE IF EXISTS "v_districtsopen_HasLanguage";
+
 CREATE TABLE  "v_districtsopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_districtsopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_districtsopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -1096,7 +1177,7 @@ BEGIN
 INSERT INTO "v_districtsopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -1110,7 +1191,10 @@ CREATE TRIGGER t_v_districtsopen_HasLanguage
 
 ALTER TABLE districtsopen
     ENABLE ALWAYS TRIGGER t_v_districtsopen_HasLanguage;        
- CREATE TABLE "v_eventeuracnoi" (
+ 
+DROP TABLE IF EXISTS "v_eventeuracnoi";
+
+CREATE TABLE "v_eventeuracnoi" (
 "Id" varchar,
 "Source" varchar,
 "EndDate" varchar,
@@ -1162,6 +1246,8 @@ ALTER TABLE districtsopen
 "ContactAddressLine2" varchar,
 "ContactAddressLine3" varchar
 );
+
+DROP FUNCTION IF EXISTS v_eventeuracnoi_fn CASCADE;
 
 CREATE FUNCTION v_eventeuracnoi_fn()
 RETURNS TRIGGER
@@ -1233,6 +1319,8 @@ CREATE TRIGGER t_v_eventeuracnoi
 ALTER TABLE eventeuracnoi
     ENABLE ALWAYS TRIGGER t_v_eventeuracnoi;
 
+DROP TABLE IF EXISTS "v_eventeuracnoi_RoomBooked";
+
 CREATE TABLE "v_eventeuracnoi_RoomBooked" (
 "eventeuracnoi_Id" varchar,
 "Space" varchar,
@@ -1247,6 +1335,8 @@ CREATE TABLE "v_eventeuracnoi_RoomBooked" (
 "StartDateUTC" float
 );
 
+DROP FUNCTION IF EXISTS v_eventeuracnoi_RoomBooked_fn CASCADE;
+
 CREATE FUNCTION v_eventeuracnoi_RoomBooked_fn()
 RETURNS TRIGGER
 AS $$
@@ -1254,8 +1344,8 @@ BEGIN
 INSERT INTO "v_eventeuracnoi_RoomBooked"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'RoomBooked') AS "Feature"
-        WHERE data -> 'RoomBooked' != 'null')
+            jsonb_array_elements(NEW."data" -> 'RoomBooked') AS "data"
+        WHERE NEW."data" -> 'RoomBooked' != 'null')
     SELECT "Id" AS "eventeuracnoi_Id", CAST("data"->>'Space' As varchar) AS "Space",
 CAST("data"->>'Comment' As varchar) AS "Comment",
 CAST("data"->>'EndDate' As varchar) AS "EndDate",
@@ -1281,6 +1371,9 @@ CREATE TRIGGER t_v_eventeuracnoi_RoomBooked
 ALTER TABLE eventeuracnoi
     ENABLE ALWAYS TRIGGER t_v_eventeuracnoi_RoomBooked;        
     
+
+DROP TABLE IF EXISTS "v_eventsopen";
+
 CREATE TABLE "v_eventsopen" (
 "Id" varchar,
 "Ranc" integer,
@@ -1423,6 +1516,8 @@ CREATE TABLE "v_eventsopen" (
 "EventAdditionalInfos-it-Language" varchar,
 "EventAdditionalInfos-it-Location" varchar
 );
+
+DROP FUNCTION IF EXISTS v_eventsopen_fn CASCADE;
 
 CREATE FUNCTION v_eventsopen_fn()
 RETURNS TRIGGER
@@ -1584,10 +1679,14 @@ CREATE TRIGGER t_v_eventsopen
 ALTER TABLE eventsopen
     ENABLE ALWAYS TRIGGER t_v_eventsopen;
 
+DROP TABLE IF EXISTS "v_eventsopen_TopicRIDs";
+
 CREATE TABLE  "v_eventsopen_TopicRIDs" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_eventsopen_TopicRIDs_fn CASCADE;
 
 CREATE FUNCTION v_eventsopen_TopicRIDs_fn()
 RETURNS TRIGGER
@@ -1596,7 +1695,7 @@ BEGIN
 INSERT INTO "v_eventsopen_TopicRIDs"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'TopicRIDs') AS "data"
-        WHERE data -> 'TopicRIDs' != 'null';
+        WHERE NEW."data" -> 'TopicRIDs' != 'null';
 RETURN NEW;
 END;
 $$
@@ -1611,10 +1710,14 @@ CREATE TRIGGER t_v_eventsopen_TopicRIDs
 ALTER TABLE eventsopen
     ENABLE ALWAYS TRIGGER t_v_eventsopen_TopicRIDs;        
  
+DROP TABLE IF EXISTS "v_eventsopen_DistrictIds";
+
 CREATE TABLE  "v_eventsopen_DistrictIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_eventsopen_DistrictIds_fn CASCADE;
 
 CREATE FUNCTION v_eventsopen_DistrictIds_fn()
 RETURNS TRIGGER
@@ -1623,7 +1726,7 @@ BEGIN
 INSERT INTO "v_eventsopen_DistrictIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'DistrictIds') AS "data"
-        WHERE data -> 'DistrictIds' != 'null';
+        WHERE NEW."data" -> 'DistrictIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -1638,10 +1741,14 @@ CREATE TRIGGER t_v_eventsopen_DistrictIds
 ALTER TABLE eventsopen
     ENABLE ALWAYS TRIGGER t_v_eventsopen_DistrictIds;        
  
+DROP TABLE IF EXISTS "v_eventsopen_HasLanguage";
+
 CREATE TABLE  "v_eventsopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_eventsopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_eventsopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -1650,7 +1757,7 @@ BEGIN
 INSERT INTO "v_eventsopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -1665,10 +1772,14 @@ CREATE TRIGGER t_v_eventsopen_HasLanguage
 ALTER TABLE eventsopen
     ENABLE ALWAYS TRIGGER t_v_eventsopen_HasLanguage;        
  
+DROP TABLE IF EXISTS "v_eventsopen_EventDatesEnd";
+
 CREATE TABLE  "v_eventsopen_EventDatesEnd" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_eventsopen_EventDatesEnd_fn CASCADE;
 
 CREATE FUNCTION v_eventsopen_EventDatesEnd_fn()
 RETURNS TRIGGER
@@ -1677,7 +1788,7 @@ BEGIN
 INSERT INTO "v_eventsopen_EventDatesEnd"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'EventDatesEnd') AS "data"
-        WHERE data -> 'EventDatesEnd' != 'null';
+        WHERE NEW."data" -> 'EventDatesEnd' != 'null';
 RETURN NEW;
 END;
 $$
@@ -1692,10 +1803,14 @@ CREATE TRIGGER t_v_eventsopen_EventDatesEnd
 ALTER TABLE eventsopen
     ENABLE ALWAYS TRIGGER t_v_eventsopen_EventDatesEnd;        
  
+DROP TABLE IF EXISTS "v_eventsopen_EventDatesBegin";
+
 CREATE TABLE  "v_eventsopen_EventDatesBegin" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_eventsopen_EventDatesBegin_fn CASCADE;
 
 CREATE FUNCTION v_eventsopen_EventDatesBegin_fn()
 RETURNS TRIGGER
@@ -1704,7 +1819,7 @@ BEGIN
 INSERT INTO "v_eventsopen_EventDatesBegin"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'EventDatesBegin') AS "data"
-        WHERE data -> 'EventDatesBegin' != 'null';
+        WHERE NEW."data" -> 'EventDatesBegin' != 'null';
 RETURN NEW;
 END;
 $$
@@ -1719,11 +1834,15 @@ CREATE TRIGGER t_v_eventsopen_EventDatesBegin
 ALTER TABLE eventsopen
     ENABLE ALWAYS TRIGGER t_v_eventsopen_EventDatesBegin;        
  
+DROP TABLE IF EXISTS "v_eventsopen_Topics";
+
 CREATE TABLE "v_eventsopen_Topics" (
 "eventsopen_Id" varchar,
 "TopicRID" varchar,
 "TopicInfo" varchar
 );
+
+DROP FUNCTION IF EXISTS v_eventsopen_Topics_fn CASCADE;
 
 CREATE FUNCTION v_eventsopen_Topics_fn()
 RETURNS TRIGGER
@@ -1732,8 +1851,8 @@ BEGIN
 INSERT INTO "v_eventsopen_Topics"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'Topics') AS "Feature"
-        WHERE data -> 'Topics' != 'null')
+            jsonb_array_elements(NEW."data" -> 'Topics') AS "data"
+        WHERE NEW."data" -> 'Topics' != 'null')
     SELECT "Id" AS "eventsopen_Id", CAST("data"->>'TopicRID' As varchar) AS "TopicRID",
 CAST("data"->>'TopicInfo' As varchar) AS "TopicInfo"
     FROM t;
@@ -1752,6 +1871,8 @@ ALTER TABLE eventsopen
     ENABLE ALWAYS TRIGGER t_v_eventsopen_Topics;        
     
 
+DROP TABLE IF EXISTS "v_eventsopen_EventDate";
+
 CREATE TABLE "v_eventsopen_EventDate" (
 "eventsopen_Id" varchar,
 "To" varchar,
@@ -1767,6 +1888,8 @@ CREATE TABLE "v_eventsopen_EventDate" (
 "SingleDays" bool
 );
 
+DROP FUNCTION IF EXISTS v_eventsopen_EventDate_fn CASCADE;
+
 CREATE FUNCTION v_eventsopen_EventDate_fn()
 RETURNS TRIGGER
 AS $$
@@ -1774,8 +1897,8 @@ BEGIN
 INSERT INTO "v_eventsopen_EventDate"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'EventDate') AS "Feature"
-        WHERE data -> 'EventDate' != 'null')
+            jsonb_array_elements(NEW."data" -> 'EventDate') AS "data"
+        WHERE NEW."data" -> 'EventDate' != 'null')
     SELECT "Id" AS "eventsopen_Id", CAST("data"->>'To' As varchar) AS "To",
 CAST("data"->>'End' As varchar) AS "End",
 CAST("data"->>'From' As varchar) AS "From",
@@ -1802,6 +1925,9 @@ CREATE TRIGGER t_v_eventsopen_EventDate
 ALTER TABLE eventsopen
     ENABLE ALWAYS TRIGGER t_v_eventsopen_EventDate;        
     
+
+DROP TABLE IF EXISTS "v_experienceareas";
+
 CREATE TABLE "v_experienceareas" (
 "Id" varchar,
 "Active" bool,
@@ -1824,6 +1950,8 @@ CREATE TABLE "v_experienceareas" (
 "Detail-pl-Title" varchar,
 "Detail-ru-Title" varchar
 );
+
+DROP FUNCTION IF EXISTS v_experienceareas_fn CASCADE;
 
 CREATE FUNCTION v_experienceareas_fn()
 RETURNS TRIGGER
@@ -1865,10 +1993,14 @@ CREATE TRIGGER t_v_experienceareas
 ALTER TABLE experienceareas
     ENABLE ALWAYS TRIGGER t_v_experienceareas;
 
+DROP TABLE IF EXISTS "v_experienceareas_TourismvereinIds";
+
 CREATE TABLE  "v_experienceareas_TourismvereinIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_experienceareas_TourismvereinIds_fn CASCADE;
 
 CREATE FUNCTION v_experienceareas_TourismvereinIds_fn()
 RETURNS TRIGGER
@@ -1877,7 +2009,7 @@ BEGIN
 INSERT INTO "v_experienceareas_TourismvereinIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'TourismvereinIds') AS "data"
-        WHERE data -> 'TourismvereinIds' != 'null';
+        WHERE NEW."data" -> 'TourismvereinIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -1891,7 +2023,10 @@ CREATE TRIGGER t_v_experienceareas_TourismvereinIds
 
 ALTER TABLE experienceareas
     ENABLE ALWAYS TRIGGER t_v_experienceareas_TourismvereinIds;        
- CREATE TABLE "v_gastronomiesopen" (
+ 
+DROP TABLE IF EXISTS "v_gastronomiesopen";
+
+CREATE TABLE "v_gastronomiesopen" (
 "Id" varchar,
 "Active" bool,
 "Gpstype" varchar,
@@ -2007,6 +2142,8 @@ ALTER TABLE experienceareas
 "LocationInfo-MunicipalityInfo-Name-pl" varchar,
 "LocationInfo-MunicipalityInfo-Name-ru" varchar
 );
+
+DROP FUNCTION IF EXISTS v_gastronomiesopen_fn CASCADE;
 
 CREATE FUNCTION v_gastronomiesopen_fn()
 RETURNS TRIGGER
@@ -2142,10 +2279,14 @@ CREATE TRIGGER t_v_gastronomiesopen
 ALTER TABLE gastronomiesopen
     ENABLE ALWAYS TRIGGER t_v_gastronomiesopen;
 
+DROP TABLE IF EXISTS "v_gastronomiesopen_HasLanguage";
+
 CREATE TABLE  "v_gastronomiesopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_gastronomiesopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_gastronomiesopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -2154,7 +2295,7 @@ BEGIN
 INSERT INTO "v_gastronomiesopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -2169,11 +2310,15 @@ CREATE TRIGGER t_v_gastronomiesopen_HasLanguage
 ALTER TABLE gastronomiesopen
     ENABLE ALWAYS TRIGGER t_v_gastronomiesopen_HasLanguage;        
  
+DROP TABLE IF EXISTS "v_gastronomiesopen_CategoryCodes";
+
 CREATE TABLE "v_gastronomiesopen_CategoryCodes" (
 "gastronomiesopen_Id" varchar,
 "Id" varchar,
 "Shortname" varchar
 );
+
+DROP FUNCTION IF EXISTS v_gastronomiesopen_CategoryCodes_fn CASCADE;
 
 CREATE FUNCTION v_gastronomiesopen_CategoryCodes_fn()
 RETURNS TRIGGER
@@ -2182,8 +2327,8 @@ BEGIN
 INSERT INTO "v_gastronomiesopen_CategoryCodes"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'CategoryCodes') AS "Feature"
-        WHERE data -> 'CategoryCodes' != 'null')
+            jsonb_array_elements(NEW."data" -> 'CategoryCodes') AS "data"
+        WHERE NEW."data" -> 'CategoryCodes' != 'null')
     SELECT "Id" AS "gastronomiesopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Shortname' As varchar) AS "Shortname"
     FROM t;
@@ -2202,6 +2347,8 @@ ALTER TABLE gastronomiesopen
     ENABLE ALWAYS TRIGGER t_v_gastronomiesopen_CategoryCodes;        
     
 
+DROP TABLE IF EXISTS "v_gastronomiesopen_OperationSchedule";
+
 CREATE TABLE "v_gastronomiesopen_OperationSchedule" (
 "gastronomiesopen_Id" varchar,
 "Stop" varchar,
@@ -2210,6 +2357,8 @@ CREATE TABLE "v_gastronomiesopen_OperationSchedule" (
 "OperationscheduleName-de" varchar
 );
 
+DROP FUNCTION IF EXISTS v_gastronomiesopen_OperationSchedule_fn CASCADE;
+
 CREATE FUNCTION v_gastronomiesopen_OperationSchedule_fn()
 RETURNS TRIGGER
 AS $$
@@ -2217,8 +2366,8 @@ BEGIN
 INSERT INTO "v_gastronomiesopen_OperationSchedule"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "Feature"
-        WHERE data -> 'OperationSchedule' != 'null')
+            jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "data"
+        WHERE NEW."data" -> 'OperationSchedule' != 'null')
     SELECT "Id" AS "gastronomiesopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Start' As varchar) AS "Start",
@@ -2239,6 +2388,8 @@ ALTER TABLE gastronomiesopen
     ENABLE ALWAYS TRIGGER t_v_gastronomiesopen_OperationSchedule;        
     
 
+DROP TABLE IF EXISTS "v_gastronomiesopen_OperationSchedule_OperationScheduleTime";
+
 CREATE TABLE "v_gastronomiesopen_OperationSchedule_OperationScheduleTime" (
 "gastronomiesopen_Id" varchar,
 "End" varchar,
@@ -2254,6 +2405,8 @@ CREATE TABLE "v_gastronomiesopen_OperationSchedule_OperationScheduleTime" (
 "Wednesday" bool
 );
 
+DROP FUNCTION IF EXISTS v_gastronomiesopen_OperationSchedule_OperationScheduleTime_fn CASCADE;
+
 CREATE FUNCTION v_gastronomiesopen_OperationSchedule_OperationScheduleTime_fn()
 RETURNS TRIGGER
 AS $$
@@ -2261,8 +2414,8 @@ BEGIN
 INSERT INTO "v_gastronomiesopen_OperationSchedule_OperationScheduleTime"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'OperationSchedule_OperationScheduleTime') AS "Feature"
-        WHERE data -> 'OperationSchedule_OperationScheduleTime' != 'null')
+            jsonb_array_elements(NEW."data" -> 'OperationSchedule_OperationScheduleTime') AS "data"
+        WHERE NEW."data" -> 'OperationSchedule_OperationScheduleTime' != 'null')
     SELECT "Id" AS "gastronomiesopen_Id", CAST("data"->>'End' As varchar) AS "End",
 CAST("data"->>'Start' As varchar) AS "Start",
 CAST("data"->>'State' As integer) AS "State",
@@ -2289,6 +2442,9 @@ CREATE TRIGGER t_v_gastronomiesopen_OperationSchedule_OperationScheduleTime
 ALTER TABLE gastronomiesopen
     ENABLE ALWAYS TRIGGER t_v_gastronomiesopen_OperationSchedule_OperationScheduleTime;        
     
+
+DROP TABLE IF EXISTS "v_ltstaggingtypes";
+
 CREATE TABLE "v_ltstaggingtypes" (
 "Id" varchar,
 "Key" varchar,
@@ -2302,6 +2458,8 @@ CREATE TABLE "v_ltstaggingtypes" (
 "TypeDescriptions-en" varchar,
 "TypeDescriptions-it" varchar
 );
+
+DROP FUNCTION IF EXISTS v_ltstaggingtypes_fn CASCADE;
 
 CREATE FUNCTION v_ltstaggingtypes_fn()
 RETURNS TRIGGER
@@ -2333,6 +2491,9 @@ CREATE TRIGGER t_v_ltstaggingtypes
 
 ALTER TABLE ltstaggingtypes
     ENABLE ALWAYS TRIGGER t_v_ltstaggingtypes;
+
+DROP TABLE IF EXISTS "v_measuringpoints";
+
 CREATE TABLE "v_measuringpoints" (
 "Id" varchar,
 "Active" bool,
@@ -2378,6 +2539,8 @@ CREATE TABLE "v_measuringpoints" (
 "LocationInfo-RegionInfo-Name-pl" varchar,
 "LocationInfo-RegionInfo-Name-ru" varchar
 );
+
+DROP FUNCTION IF EXISTS v_measuringpoints_fn CASCADE;
 
 CREATE FUNCTION v_measuringpoints_fn()
 RETURNS TRIGGER
@@ -2442,10 +2605,14 @@ CREATE TRIGGER t_v_measuringpoints
 ALTER TABLE measuringpoints
     ENABLE ALWAYS TRIGGER t_v_measuringpoints;
 
+DROP TABLE IF EXISTS "v_measuringpoints_AreaIds";
+
 CREATE TABLE  "v_measuringpoints_AreaIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_measuringpoints_AreaIds_fn CASCADE;
 
 CREATE FUNCTION v_measuringpoints_AreaIds_fn()
 RETURNS TRIGGER
@@ -2454,7 +2621,7 @@ BEGIN
 INSERT INTO "v_measuringpoints_AreaIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'AreaIds') AS "data"
-        WHERE data -> 'AreaIds' != 'null';
+        WHERE NEW."data" -> 'AreaIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -2468,7 +2635,10 @@ CREATE TRIGGER t_v_measuringpoints_AreaIds
 
 ALTER TABLE measuringpoints
     ENABLE ALWAYS TRIGGER t_v_measuringpoints_AreaIds;        
- CREATE TABLE "v_metaregionsopen" (
+ 
+DROP TABLE IF EXISTS "v_metaregionsopen";
+
+CREATE TABLE "v_metaregionsopen" (
 "Id" varchar,
 "Active" bool,
 "Gpstype" varchar,
@@ -2749,6 +2919,8 @@ ALTER TABLE measuringpoints
 "D-r-DetailsThemed-Kultur und Sehenswürdigkeiten-MetaDesc" varchar,
 "D-r-DetailsThemed-Kultur und Sehenswürdigkeiten-MetaTitle" varchar
 );
+
+DROP FUNCTION IF EXISTS v_metaregionsopen_fn CASCADE;
 
 CREATE FUNCTION v_metaregionsopen_fn()
 RETURNS TRIGGER
@@ -3049,10 +3221,14 @@ CREATE TRIGGER t_v_metaregionsopen
 ALTER TABLE metaregionsopen
     ENABLE ALWAYS TRIGGER t_v_metaregionsopen;
 
+DROP TABLE IF EXISTS "v_metaregionsopen_RegionIds";
+
 CREATE TABLE  "v_metaregionsopen_RegionIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_metaregionsopen_RegionIds_fn CASCADE;
 
 CREATE FUNCTION v_metaregionsopen_RegionIds_fn()
 RETURNS TRIGGER
@@ -3061,7 +3237,7 @@ BEGIN
 INSERT INTO "v_metaregionsopen_RegionIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'RegionIds') AS "data"
-        WHERE data -> 'RegionIds' != 'null';
+        WHERE NEW."data" -> 'RegionIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -3076,10 +3252,14 @@ CREATE TRIGGER t_v_metaregionsopen_RegionIds
 ALTER TABLE metaregionsopen
     ENABLE ALWAYS TRIGGER t_v_metaregionsopen_RegionIds;        
  
+DROP TABLE IF EXISTS "v_metaregionsopen_DistrictIds";
+
 CREATE TABLE  "v_metaregionsopen_DistrictIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_metaregionsopen_DistrictIds_fn CASCADE;
 
 CREATE FUNCTION v_metaregionsopen_DistrictIds_fn()
 RETURNS TRIGGER
@@ -3088,7 +3268,7 @@ BEGIN
 INSERT INTO "v_metaregionsopen_DistrictIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'DistrictIds') AS "data"
-        WHERE data -> 'DistrictIds' != 'null';
+        WHERE NEW."data" -> 'DistrictIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -3103,10 +3283,14 @@ CREATE TRIGGER t_v_metaregionsopen_DistrictIds
 ALTER TABLE metaregionsopen
     ENABLE ALWAYS TRIGGER t_v_metaregionsopen_DistrictIds;        
  
+DROP TABLE IF EXISTS "v_metaregionsopen_HasLanguage";
+
 CREATE TABLE  "v_metaregionsopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_metaregionsopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_metaregionsopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -3115,7 +3299,7 @@ BEGIN
 INSERT INTO "v_metaregionsopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -3130,10 +3314,14 @@ CREATE TRIGGER t_v_metaregionsopen_HasLanguage
 ALTER TABLE metaregionsopen
     ENABLE ALWAYS TRIGGER t_v_metaregionsopen_HasLanguage;        
  
+DROP TABLE IF EXISTS "v_metaregionsopen_TourismvereinIds";
+
 CREATE TABLE  "v_metaregionsopen_TourismvereinIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_metaregionsopen_TourismvereinIds_fn CASCADE;
 
 CREATE FUNCTION v_metaregionsopen_TourismvereinIds_fn()
 RETURNS TRIGGER
@@ -3142,7 +3330,7 @@ BEGIN
 INSERT INTO "v_metaregionsopen_TourismvereinIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'TourismvereinIds') AS "data"
-        WHERE data -> 'TourismvereinIds' != 'null';
+        WHERE NEW."data" -> 'TourismvereinIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -3156,7 +3344,10 @@ CREATE TRIGGER t_v_metaregionsopen_TourismvereinIds
 
 ALTER TABLE metaregionsopen
     ENABLE ALWAYS TRIGGER t_v_metaregionsopen_TourismvereinIds;        
- CREATE TABLE "v_accommodationroomsopen" (
+ 
+DROP TABLE IF EXISTS "v_accommodationroomsopen";
+
+CREATE TABLE "v_accommodationroomsopen" (
 "Id" varchar,
 "A0RID" varchar,
 "HGVId" varchar,
@@ -3176,6 +3367,8 @@ ALTER TABLE metaregionsopen
 "AccoRoomDetail-it-Name" varchar,
 "AccoRoomDetail-it-Language" varchar
 );
+
+DROP FUNCTION IF EXISTS v_accommodationroomsopen_fn CASCADE;
 
 CREATE FUNCTION v_accommodationroomsopen_fn()
 RETURNS TRIGGER
@@ -3215,11 +3408,15 @@ CREATE TRIGGER t_v_accommodationroomsopen
 ALTER TABLE accommodationroomsopen
     ENABLE ALWAYS TRIGGER t_v_accommodationroomsopen;
 
+DROP TABLE IF EXISTS "v_accommodationroomsopen_Features";
+
 CREATE TABLE "v_accommodationroomsopen_Features" (
 "accommodationroomsopen_Id" varchar,
 "Id" varchar,
 "Name" varchar
 );
+
+DROP FUNCTION IF EXISTS v_accommodationroomsopen_Features_fn CASCADE;
 
 CREATE FUNCTION v_accommodationroomsopen_Features_fn()
 RETURNS TRIGGER
@@ -3228,8 +3425,8 @@ BEGIN
 INSERT INTO "v_accommodationroomsopen_Features"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'Features') AS "Feature"
-        WHERE data -> 'Features' != 'null')
+            jsonb_array_elements(NEW."data" -> 'Features') AS "data"
+        WHERE NEW."data" -> 'Features' != 'null')
     SELECT "Id" AS "accommodationroomsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Name' As varchar) AS "Name"
     FROM t;
@@ -3247,6 +3444,9 @@ CREATE TRIGGER t_v_accommodationroomsopen_Features
 ALTER TABLE accommodationroomsopen
     ENABLE ALWAYS TRIGGER t_v_accommodationroomsopen_Features;        
     
+
+DROP TABLE IF EXISTS "v_municipalitiesopen";
+
 CREATE TABLE "v_municipalitiesopen" (
 "Id" varchar,
 "Plz" varchar,
@@ -3283,6 +3483,8 @@ CREATE TABLE "v_municipalitiesopen" (
 "Detail-ru-Title" varchar,
 "Detail-ru-Language" varchar
 );
+
+DROP FUNCTION IF EXISTS v_municipalitiesopen_fn CASCADE;
 
 CREATE FUNCTION v_municipalitiesopen_fn()
 RETURNS TRIGGER
@@ -3338,10 +3540,14 @@ CREATE TRIGGER t_v_municipalitiesopen
 ALTER TABLE municipalitiesopen
     ENABLE ALWAYS TRIGGER t_v_municipalitiesopen;
 
+DROP TABLE IF EXISTS "v_municipalitiesopen_HasLanguage";
+
 CREATE TABLE  "v_municipalitiesopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_municipalitiesopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_municipalitiesopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -3350,7 +3556,7 @@ BEGIN
 INSERT INTO "v_municipalitiesopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -3364,7 +3570,10 @@ CREATE TRIGGER t_v_municipalitiesopen_HasLanguage
 
 ALTER TABLE municipalitiesopen
     ENABLE ALWAYS TRIGGER t_v_municipalitiesopen_HasLanguage;        
- CREATE TABLE "v_poisopen" (
+ 
+DROP TABLE IF EXISTS "v_poisopen";
+
+CREATE TABLE "v_poisopen" (
 "Id" varchar,
 "Type" varchar,
 "Active" bool,
@@ -3499,6 +3708,8 @@ ALTER TABLE municipalitiesopen
 "AdditionalPoiInfos-it-Language" varchar,
 "AdditionalPoiInfos-it-MainType" varchar
 );
+
+DROP FUNCTION IF EXISTS v_poisopen_fn CASCADE;
 
 CREATE FUNCTION v_poisopen_fn()
 RETURNS TRIGGER
@@ -3653,10 +3864,14 @@ CREATE TRIGGER t_v_poisopen
 ALTER TABLE poisopen
     ENABLE ALWAYS TRIGGER t_v_poisopen;
 
+DROP TABLE IF EXISTS "v_poisopen_AreaId";
+
 CREATE TABLE  "v_poisopen_AreaId" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_poisopen_AreaId_fn CASCADE;
 
 CREATE FUNCTION v_poisopen_AreaId_fn()
 RETURNS TRIGGER
@@ -3665,7 +3880,7 @@ BEGIN
 INSERT INTO "v_poisopen_AreaId"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
-        WHERE data -> 'AreaId' != 'null';
+        WHERE NEW."data" -> 'AreaId' != 'null';
 RETURN NEW;
 END;
 $$
@@ -3680,10 +3895,14 @@ CREATE TRIGGER t_v_poisopen_AreaId
 ALTER TABLE poisopen
     ENABLE ALWAYS TRIGGER t_v_poisopen_AreaId;        
  
+DROP TABLE IF EXISTS "v_poisopen_SmgTags";
+
 CREATE TABLE  "v_poisopen_SmgTags" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_poisopen_SmgTags_fn CASCADE;
 
 CREATE FUNCTION v_poisopen_SmgTags_fn()
 RETURNS TRIGGER
@@ -3692,7 +3911,7 @@ BEGIN
 INSERT INTO "v_poisopen_SmgTags"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'SmgTags') AS "data"
-        WHERE data -> 'SmgTags' != 'null';
+        WHERE NEW."data" -> 'SmgTags' != 'null';
 RETURN NEW;
 END;
 $$
@@ -3707,10 +3926,14 @@ CREATE TRIGGER t_v_poisopen_SmgTags
 ALTER TABLE poisopen
     ENABLE ALWAYS TRIGGER t_v_poisopen_SmgTags;        
  
+DROP TABLE IF EXISTS "v_poisopen_HasLanguage";
+
 CREATE TABLE  "v_poisopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_poisopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_poisopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -3719,7 +3942,7 @@ BEGIN
 INSERT INTO "v_poisopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -3734,6 +3957,8 @@ CREATE TRIGGER t_v_poisopen_HasLanguage
 ALTER TABLE poisopen
     ENABLE ALWAYS TRIGGER t_v_poisopen_HasLanguage;        
  
+DROP TABLE IF EXISTS "v_poisopen_GpsInfo";
+
 CREATE TABLE "v_poisopen_GpsInfo" (
 "poisopen_Id" varchar,
 "Gpstype" varchar,
@@ -3743,6 +3968,8 @@ CREATE TABLE "v_poisopen_GpsInfo" (
 "AltitudeUnitofMeasure" varchar
 );
 
+DROP FUNCTION IF EXISTS v_poisopen_GpsInfo_fn CASCADE;
+
 CREATE FUNCTION v_poisopen_GpsInfo_fn()
 RETURNS TRIGGER
 AS $$
@@ -3750,8 +3977,8 @@ BEGIN
 INSERT INTO "v_poisopen_GpsInfo"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'GpsInfo') AS "Feature"
-        WHERE data -> 'GpsInfo' != 'null')
+            jsonb_array_elements(NEW."data" -> 'GpsInfo') AS "data"
+        WHERE NEW."data" -> 'GpsInfo' != 'null')
     SELECT "Id" AS "poisopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
 CAST("data"->>'Altitude' As float) AS "Altitude",
 CAST("data"->>'Latitude' As float) AS "Latitude",
@@ -3773,6 +4000,8 @@ ALTER TABLE poisopen
     ENABLE ALWAYS TRIGGER t_v_poisopen_GpsInfo;        
     
 
+DROP TABLE IF EXISTS "v_poisopen_LTSTags";
+
 CREATE TABLE "v_poisopen_LTSTags" (
 "poisopen_Id" varchar,
 "Id" varchar,
@@ -3782,6 +4011,8 @@ CREATE TABLE "v_poisopen_LTSTags" (
 "TagName-it" varchar
 );
 
+DROP FUNCTION IF EXISTS v_poisopen_LTSTags_fn CASCADE;
+
 CREATE FUNCTION v_poisopen_LTSTags_fn()
 RETURNS TRIGGER
 AS $$
@@ -3789,8 +4020,8 @@ BEGIN
 INSERT INTO "v_poisopen_LTSTags"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'LTSTags') AS "Feature"
-        WHERE data -> 'LTSTags' != 'null')
+            jsonb_array_elements(NEW."data" -> 'LTSTags') AS "data"
+        WHERE NEW."data" -> 'LTSTags' != 'null')
     SELECT "Id" AS "poisopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Level' As integer) AS "Level",
 CAST("data"->'TagName'->>'de' As varchar) AS "TagName-de",
@@ -3812,6 +4043,8 @@ ALTER TABLE poisopen
     ENABLE ALWAYS TRIGGER t_v_poisopen_LTSTags;        
     
 
+DROP TABLE IF EXISTS "v_poisopen_OperationSchedule";
+
 CREATE TABLE "v_poisopen_OperationSchedule" (
 "poisopen_Id" varchar,
 "Stop" varchar,
@@ -3820,6 +4053,8 @@ CREATE TABLE "v_poisopen_OperationSchedule" (
 "OperationscheduleName-de" varchar
 );
 
+DROP FUNCTION IF EXISTS v_poisopen_OperationSchedule_fn CASCADE;
+
 CREATE FUNCTION v_poisopen_OperationSchedule_fn()
 RETURNS TRIGGER
 AS $$
@@ -3827,8 +4062,8 @@ BEGIN
 INSERT INTO "v_poisopen_OperationSchedule"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "Feature"
-        WHERE data -> 'OperationSchedule' != 'null')
+            jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "data"
+        WHERE NEW."data" -> 'OperationSchedule' != 'null')
     SELECT "Id" AS "poisopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Start' As varchar) AS "Start",
@@ -3848,6 +4083,9 @@ CREATE TRIGGER t_v_poisopen_OperationSchedule
 ALTER TABLE poisopen
     ENABLE ALWAYS TRIGGER t_v_poisopen_OperationSchedule;        
     
+
+DROP TABLE IF EXISTS "v_regionsopen";
+
 CREATE TABLE "v_regionsopen" (
 "Id" varchar,
 "Active" bool,
@@ -4263,6 +4501,8 @@ CREATE TABLE "v_regionsopen" (
 "D-r-DetailsThemed-Kultur und Sehenswürdigkeiten-MetaDesc" varchar,
 "D-r-DetailsThemed-Kultur und Sehenswürdigkeiten-MetaTitle" varchar
 );
+
+DROP FUNCTION IF EXISTS v_regionsopen_fn CASCADE;
 
 CREATE FUNCTION v_regionsopen_fn()
 RETURNS TRIGGER
@@ -4697,10 +4937,14 @@ CREATE TRIGGER t_v_regionsopen
 ALTER TABLE regionsopen
     ENABLE ALWAYS TRIGGER t_v_regionsopen;
 
+DROP TABLE IF EXISTS "v_regionsopen_SkiareaIds";
+
 CREATE TABLE  "v_regionsopen_SkiareaIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_regionsopen_SkiareaIds_fn CASCADE;
 
 CREATE FUNCTION v_regionsopen_SkiareaIds_fn()
 RETURNS TRIGGER
@@ -4709,7 +4953,7 @@ BEGIN
 INSERT INTO "v_regionsopen_SkiareaIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'SkiareaIds') AS "data"
-        WHERE data -> 'SkiareaIds' != 'null';
+        WHERE NEW."data" -> 'SkiareaIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -4724,10 +4968,14 @@ CREATE TRIGGER t_v_regionsopen_SkiareaIds
 ALTER TABLE regionsopen
     ENABLE ALWAYS TRIGGER t_v_regionsopen_SkiareaIds;        
  
+DROP TABLE IF EXISTS "v_regionsopen_HasLanguage";
+
 CREATE TABLE  "v_regionsopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_regionsopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_regionsopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -4736,7 +4984,7 @@ BEGIN
 INSERT INTO "v_regionsopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -4750,7 +4998,10 @@ CREATE TRIGGER t_v_regionsopen_HasLanguage
 
 ALTER TABLE regionsopen
     ENABLE ALWAYS TRIGGER t_v_regionsopen_HasLanguage;        
- CREATE TABLE "v_skiareasopen" (
+ 
+DROP TABLE IF EXISTS "v_skiareasopen";
+
+CREATE TABLE "v_skiareasopen" (
 "Id" varchar,
 "Active" bool,
 "Gpstype" varchar,
@@ -4949,6 +5200,8 @@ ALTER TABLE regionsopen
 "SkiRegionName-pl" varchar,
 "SkiRegionName-ru" varchar
 );
+
+DROP FUNCTION IF EXISTS v_skiareasopen_fn CASCADE;
 
 CREATE FUNCTION v_skiareasopen_fn()
 RETURNS TRIGGER
@@ -5167,10 +5420,14 @@ CREATE TRIGGER t_v_skiareasopen
 ALTER TABLE skiareasopen
     ENABLE ALWAYS TRIGGER t_v_skiareasopen;
 
+DROP TABLE IF EXISTS "v_skiareasopen_AreaId";
+
 CREATE TABLE  "v_skiareasopen_AreaId" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_skiareasopen_AreaId_fn CASCADE;
 
 CREATE FUNCTION v_skiareasopen_AreaId_fn()
 RETURNS TRIGGER
@@ -5179,7 +5436,7 @@ BEGIN
 INSERT INTO "v_skiareasopen_AreaId"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
-        WHERE data -> 'AreaId' != 'null';
+        WHERE NEW."data" -> 'AreaId' != 'null';
 RETURN NEW;
 END;
 $$
@@ -5194,10 +5451,14 @@ CREATE TRIGGER t_v_skiareasopen_AreaId
 ALTER TABLE skiareasopen
     ENABLE ALWAYS TRIGGER t_v_skiareasopen_AreaId;        
  
+DROP TABLE IF EXISTS "v_skiareasopen_SmgTags";
+
 CREATE TABLE  "v_skiareasopen_SmgTags" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_skiareasopen_SmgTags_fn CASCADE;
 
 CREATE FUNCTION v_skiareasopen_SmgTags_fn()
 RETURNS TRIGGER
@@ -5206,7 +5467,7 @@ BEGIN
 INSERT INTO "v_skiareasopen_SmgTags"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'SmgTags') AS "data"
-        WHERE data -> 'SmgTags' != 'null';
+        WHERE NEW."data" -> 'SmgTags' != 'null';
 RETURN NEW;
 END;
 $$
@@ -5221,10 +5482,14 @@ CREATE TRIGGER t_v_skiareasopen_SmgTags
 ALTER TABLE skiareasopen
     ENABLE ALWAYS TRIGGER t_v_skiareasopen_SmgTags;        
  
+DROP TABLE IF EXISTS "v_skiareasopen_RegionIds";
+
 CREATE TABLE  "v_skiareasopen_RegionIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_skiareasopen_RegionIds_fn CASCADE;
 
 CREATE FUNCTION v_skiareasopen_RegionIds_fn()
 RETURNS TRIGGER
@@ -5233,7 +5498,7 @@ BEGIN
 INSERT INTO "v_skiareasopen_RegionIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'RegionIds') AS "data"
-        WHERE data -> 'RegionIds' != 'null';
+        WHERE NEW."data" -> 'RegionIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -5248,10 +5513,14 @@ CREATE TRIGGER t_v_skiareasopen_RegionIds
 ALTER TABLE skiareasopen
     ENABLE ALWAYS TRIGGER t_v_skiareasopen_RegionIds;        
  
+DROP TABLE IF EXISTS "v_skiareasopen_HasLanguage";
+
 CREATE TABLE  "v_skiareasopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_skiareasopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_skiareasopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -5260,7 +5529,7 @@ BEGIN
 INSERT INTO "v_skiareasopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -5275,10 +5544,14 @@ CREATE TRIGGER t_v_skiareasopen_HasLanguage
 ALTER TABLE skiareasopen
     ENABLE ALWAYS TRIGGER t_v_skiareasopen_HasLanguage;        
  
+DROP TABLE IF EXISTS "v_skiareasopen_TourismvereinIds";
+
 CREATE TABLE  "v_skiareasopen_TourismvereinIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_skiareasopen_TourismvereinIds_fn CASCADE;
 
 CREATE FUNCTION v_skiareasopen_TourismvereinIds_fn()
 RETURNS TRIGGER
@@ -5287,7 +5560,7 @@ BEGIN
 INSERT INTO "v_skiareasopen_TourismvereinIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'TourismvereinIds') AS "data"
-        WHERE data -> 'TourismvereinIds' != 'null';
+        WHERE NEW."data" -> 'TourismvereinIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -5302,6 +5575,8 @@ CREATE TRIGGER t_v_skiareasopen_TourismvereinIds
 ALTER TABLE skiareasopen
     ENABLE ALWAYS TRIGGER t_v_skiareasopen_TourismvereinIds;        
  
+DROP TABLE IF EXISTS "v_skiareasopen_Webcam";
+
 CREATE TABLE "v_skiareasopen_Webcam" (
 "skiareasopen_Id" varchar,
 "WebcamId" varchar,
@@ -5312,6 +5587,8 @@ CREATE TABLE "v_skiareasopen_Webcam" (
 "GpsInfo-AltitudeUnitofMeasure" varchar
 );
 
+DROP FUNCTION IF EXISTS v_skiareasopen_Webcam_fn CASCADE;
+
 CREATE FUNCTION v_skiareasopen_Webcam_fn()
 RETURNS TRIGGER
 AS $$
@@ -5319,8 +5596,8 @@ BEGIN
 INSERT INTO "v_skiareasopen_Webcam"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'Webcam') AS "Feature"
-        WHERE data -> 'Webcam' != 'null')
+            jsonb_array_elements(NEW."data" -> 'Webcam') AS "data"
+        WHERE NEW."data" -> 'Webcam' != 'null')
     SELECT "Id" AS "skiareasopen_Id", CAST("data"->>'WebcamId' As varchar) AS "WebcamId",
 CAST("data"->>'Webcamurl' As varchar) AS "Webcamurl",
 CAST("data"->'GpsInfo'->>'Gpstype' As varchar) AS "GpsInfo-Gpstype",
@@ -5343,6 +5620,8 @@ ALTER TABLE skiareasopen
     ENABLE ALWAYS TRIGGER t_v_skiareasopen_Webcam;        
     
 
+DROP TABLE IF EXISTS "v_skiareasopen_OperationSchedule";
+
 CREATE TABLE "v_skiareasopen_OperationSchedule" (
 "skiareasopen_Id" varchar,
 "Stop" varchar,
@@ -5356,6 +5635,8 @@ CREATE TABLE "v_skiareasopen_OperationSchedule" (
 "OperationscheduleName-pl" varchar
 );
 
+DROP FUNCTION IF EXISTS v_skiareasopen_OperationSchedule_fn CASCADE;
+
 CREATE FUNCTION v_skiareasopen_OperationSchedule_fn()
 RETURNS TRIGGER
 AS $$
@@ -5363,8 +5644,8 @@ BEGIN
 INSERT INTO "v_skiareasopen_OperationSchedule"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "Feature"
-        WHERE data -> 'OperationSchedule' != 'null')
+            jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "data"
+        WHERE NEW."data" -> 'OperationSchedule' != 'null')
     SELECT "Id" AS "skiareasopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Start' As varchar) AS "Start",
@@ -5389,6 +5670,9 @@ CREATE TRIGGER t_v_skiareasopen_OperationSchedule
 ALTER TABLE skiareasopen
     ENABLE ALWAYS TRIGGER t_v_skiareasopen_OperationSchedule;        
     
+
+DROP TABLE IF EXISTS "v_skiregionsopen";
+
 CREATE TABLE "v_skiregionsopen" (
 "Id" varchar,
 "Active" bool,
@@ -5539,6 +5823,8 @@ CREATE TABLE "v_skiregionsopen" (
 "ContactInfos-ru-CountryName" varchar,
 "ContactInfos-ru-Phonenumber" varchar
 );
+
+DROP FUNCTION IF EXISTS v_skiregionsopen_fn CASCADE;
 
 CREATE FUNCTION v_skiregionsopen_fn()
 RETURNS TRIGGER
@@ -5708,10 +5994,14 @@ CREATE TRIGGER t_v_skiregionsopen
 ALTER TABLE skiregionsopen
     ENABLE ALWAYS TRIGGER t_v_skiregionsopen;
 
+DROP TABLE IF EXISTS "v_skiregionsopen_HasLanguage";
+
 CREATE TABLE  "v_skiregionsopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_skiregionsopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_skiregionsopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -5720,7 +6010,7 @@ BEGIN
 INSERT INTO "v_skiregionsopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -5735,11 +6025,15 @@ CREATE TRIGGER t_v_skiregionsopen_HasLanguage
 ALTER TABLE skiregionsopen
     ENABLE ALWAYS TRIGGER t_v_skiregionsopen_HasLanguage;        
  
+DROP TABLE IF EXISTS "v_skiregionsopen_GpsPolygon";
+
 CREATE TABLE "v_skiregionsopen_GpsPolygon" (
 "skiregionsopen_Id" varchar,
 "Latitude" float,
 "Longitude" float
 );
+
+DROP FUNCTION IF EXISTS v_skiregionsopen_GpsPolygon_fn CASCADE;
 
 CREATE FUNCTION v_skiregionsopen_GpsPolygon_fn()
 RETURNS TRIGGER
@@ -5748,8 +6042,8 @@ BEGIN
 INSERT INTO "v_skiregionsopen_GpsPolygon"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'GpsPolygon') AS "Feature"
-        WHERE data -> 'GpsPolygon' != 'null')
+            jsonb_array_elements(NEW."data" -> 'GpsPolygon') AS "data"
+        WHERE NEW."data" -> 'GpsPolygon' != 'null')
     SELECT "Id" AS "skiregionsopen_Id", CAST("data"->>'Latitude' As float) AS "Latitude",
 CAST("data"->>'Longitude' As float) AS "Longitude"
     FROM t;
@@ -5767,6 +6061,9 @@ CREATE TRIGGER t_v_skiregionsopen_GpsPolygon
 ALTER TABLE skiregionsopen
     ENABLE ALWAYS TRIGGER t_v_skiregionsopen_GpsPolygon;        
     
+
+DROP TABLE IF EXISTS "v_smgpoisopen";
+
 CREATE TABLE "v_smgpoisopen" (
 "Id" varchar,
 "Type" varchar,
@@ -5982,6 +6279,8 @@ CREATE TABLE "v_smgpoisopen" (
 "AdditionalPoiInfos-ru-Language" varchar,
 "AdditionalPoiInfos-ru-MainType" varchar
 );
+
+DROP FUNCTION IF EXISTS v_smgpoisopen_fn CASCADE;
 
 CREATE FUNCTION v_smgpoisopen_fn()
 RETURNS TRIGGER
@@ -6216,10 +6515,14 @@ CREATE TRIGGER t_v_smgpoisopen
 ALTER TABLE smgpoisopen
     ENABLE ALWAYS TRIGGER t_v_smgpoisopen;
 
+DROP TABLE IF EXISTS "v_smgpoisopen_AreaId";
+
 CREATE TABLE  "v_smgpoisopen_AreaId" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_smgpoisopen_AreaId_fn CASCADE;
 
 CREATE FUNCTION v_smgpoisopen_AreaId_fn()
 RETURNS TRIGGER
@@ -6228,7 +6531,7 @@ BEGIN
 INSERT INTO "v_smgpoisopen_AreaId"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
-        WHERE data -> 'AreaId' != 'null';
+        WHERE NEW."data" -> 'AreaId' != 'null';
 RETURN NEW;
 END;
 $$
@@ -6243,10 +6546,14 @@ CREATE TRIGGER t_v_smgpoisopen_AreaId
 ALTER TABLE smgpoisopen
     ENABLE ALWAYS TRIGGER t_v_smgpoisopen_AreaId;        
  
+DROP TABLE IF EXISTS "v_smgpoisopen_SmgTags";
+
 CREATE TABLE  "v_smgpoisopen_SmgTags" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_smgpoisopen_SmgTags_fn CASCADE;
 
 CREATE FUNCTION v_smgpoisopen_SmgTags_fn()
 RETURNS TRIGGER
@@ -6255,7 +6562,7 @@ BEGIN
 INSERT INTO "v_smgpoisopen_SmgTags"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'SmgTags') AS "data"
-        WHERE data -> 'SmgTags' != 'null';
+        WHERE NEW."data" -> 'SmgTags' != 'null';
 RETURN NEW;
 END;
 $$
@@ -6270,10 +6577,14 @@ CREATE TRIGGER t_v_smgpoisopen_SmgTags
 ALTER TABLE smgpoisopen
     ENABLE ALWAYS TRIGGER t_v_smgpoisopen_SmgTags;        
  
+DROP TABLE IF EXISTS "v_smgpoisopen_Exposition";
+
 CREATE TABLE  "v_smgpoisopen_Exposition" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_smgpoisopen_Exposition_fn CASCADE;
 
 CREATE FUNCTION v_smgpoisopen_Exposition_fn()
 RETURNS TRIGGER
@@ -6282,7 +6593,7 @@ BEGIN
 INSERT INTO "v_smgpoisopen_Exposition"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'Exposition') AS "data"
-        WHERE data -> 'Exposition' != 'null';
+        WHERE NEW."data" -> 'Exposition' != 'null';
 RETURN NEW;
 END;
 $$
@@ -6297,10 +6608,14 @@ CREATE TRIGGER t_v_smgpoisopen_Exposition
 ALTER TABLE smgpoisopen
     ENABLE ALWAYS TRIGGER t_v_smgpoisopen_Exposition;        
  
+DROP TABLE IF EXISTS "v_smgpoisopen_HasLanguage";
+
 CREATE TABLE  "v_smgpoisopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_smgpoisopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_smgpoisopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -6309,7 +6624,7 @@ BEGIN
 INSERT INTO "v_smgpoisopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -6324,6 +6639,8 @@ CREATE TRIGGER t_v_smgpoisopen_HasLanguage
 ALTER TABLE smgpoisopen
     ENABLE ALWAYS TRIGGER t_v_smgpoisopen_HasLanguage;        
  
+DROP TABLE IF EXISTS "v_smgpoisopen_GpsInfo";
+
 CREATE TABLE "v_smgpoisopen_GpsInfo" (
 "smgpoisopen_Id" varchar,
 "Gpstype" varchar,
@@ -6333,6 +6650,8 @@ CREATE TABLE "v_smgpoisopen_GpsInfo" (
 "AltitudeUnitofMeasure" varchar
 );
 
+DROP FUNCTION IF EXISTS v_smgpoisopen_GpsInfo_fn CASCADE;
+
 CREATE FUNCTION v_smgpoisopen_GpsInfo_fn()
 RETURNS TRIGGER
 AS $$
@@ -6340,8 +6659,8 @@ BEGIN
 INSERT INTO "v_smgpoisopen_GpsInfo"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'GpsInfo') AS "Feature"
-        WHERE data -> 'GpsInfo' != 'null')
+            jsonb_array_elements(NEW."data" -> 'GpsInfo') AS "data"
+        WHERE NEW."data" -> 'GpsInfo' != 'null')
     SELECT "Id" AS "smgpoisopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
 CAST("data"->>'Altitude' As float) AS "Altitude",
 CAST("data"->>'Latitude' As float) AS "Latitude",
@@ -6363,6 +6682,8 @@ ALTER TABLE smgpoisopen
     ENABLE ALWAYS TRIGGER t_v_smgpoisopen_GpsInfo;        
     
 
+DROP TABLE IF EXISTS "v_smgpoisopen_GpsTrack";
+
 CREATE TABLE "v_smgpoisopen_GpsTrack" (
 "smgpoisopen_Id" varchar,
 "Id" varchar,
@@ -6373,6 +6694,8 @@ CREATE TABLE "v_smgpoisopen_GpsTrack" (
 "GpxTrackDesc-it" varchar
 );
 
+DROP FUNCTION IF EXISTS v_smgpoisopen_GpsTrack_fn CASCADE;
+
 CREATE FUNCTION v_smgpoisopen_GpsTrack_fn()
 RETURNS TRIGGER
 AS $$
@@ -6380,8 +6703,8 @@ BEGIN
 INSERT INTO "v_smgpoisopen_GpsTrack"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'GpsTrack') AS "Feature"
-        WHERE data -> 'GpsTrack' != 'null')
+            jsonb_array_elements(NEW."data" -> 'GpsTrack') AS "data"
+        WHERE NEW."data" -> 'GpsTrack' != 'null')
     SELECT "Id" AS "smgpoisopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'GpxTrackUrl' As varchar) AS "GpxTrackUrl",
@@ -6404,6 +6727,8 @@ ALTER TABLE smgpoisopen
     ENABLE ALWAYS TRIGGER t_v_smgpoisopen_GpsTrack;        
     
 
+DROP TABLE IF EXISTS "v_smgpoisopen_OperationSchedule";
+
 CREATE TABLE "v_smgpoisopen_OperationSchedule" (
 "smgpoisopen_Id" varchar,
 "Stop" varchar,
@@ -6412,6 +6737,8 @@ CREATE TABLE "v_smgpoisopen_OperationSchedule" (
 "OperationscheduleName-de" varchar
 );
 
+DROP FUNCTION IF EXISTS v_smgpoisopen_OperationSchedule_fn CASCADE;
+
 CREATE FUNCTION v_smgpoisopen_OperationSchedule_fn()
 RETURNS TRIGGER
 AS $$
@@ -6419,8 +6746,8 @@ BEGIN
 INSERT INTO "v_smgpoisopen_OperationSchedule"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "Feature"
-        WHERE data -> 'OperationSchedule' != 'null')
+            jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "data"
+        WHERE NEW."data" -> 'OperationSchedule' != 'null')
     SELECT "Id" AS "smgpoisopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Start' As varchar) AS "Start",
@@ -6440,12 +6767,17 @@ CREATE TRIGGER t_v_smgpoisopen_OperationSchedule
 ALTER TABLE smgpoisopen
     ENABLE ALWAYS TRIGGER t_v_smgpoisopen_OperationSchedule;        
     
+
+DROP TABLE IF EXISTS "v_smgtags";
+
 CREATE TABLE "v_smgtags" (
 "Id" varchar,
 "Shortname" varchar,
 "MainEntity" varchar,
 "TagName-de" varchar
 );
+
+DROP FUNCTION IF EXISTS v_smgtags_fn CASCADE;
 
 CREATE FUNCTION v_smgtags_fn()
 RETURNS TRIGGER
@@ -6471,10 +6803,14 @@ CREATE TRIGGER t_v_smgtags
 ALTER TABLE smgtags
     ENABLE ALWAYS TRIGGER t_v_smgtags;
 
+DROP TABLE IF EXISTS "v_smgtags_ValidForEntity";
+
 CREATE TABLE  "v_smgtags_ValidForEntity" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_smgtags_ValidForEntity_fn CASCADE;
 
 CREATE FUNCTION v_smgtags_ValidForEntity_fn()
 RETURNS TRIGGER
@@ -6483,7 +6819,7 @@ BEGIN
 INSERT INTO "v_smgtags_ValidForEntity"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'ValidForEntity') AS "data"
-        WHERE data -> 'ValidForEntity' != 'null';
+        WHERE NEW."data" -> 'ValidForEntity' != 'null';
 RETURN NEW;
 END;
 $$
@@ -6497,7 +6833,10 @@ CREATE TRIGGER t_v_smgtags_ValidForEntity
 
 ALTER TABLE smgtags
     ENABLE ALWAYS TRIGGER t_v_smgtags_ValidForEntity;        
- CREATE TABLE "v_suedtiroltypes" (
+ 
+DROP TABLE IF EXISTS "v_suedtiroltypes";
+
+CREATE TABLE "v_suedtiroltypes" (
 "Id" varchar,
 "Key" varchar,
 "Level" integer,
@@ -6511,6 +6850,8 @@ ALTER TABLE smgtags
 "TypeNames-pl" varchar,
 "TypeNames-ru" varchar
 );
+
+DROP FUNCTION IF EXISTS v_suedtiroltypes_fn CASCADE;
 
 CREATE FUNCTION v_suedtiroltypes_fn()
 RETURNS TRIGGER
@@ -6543,6 +6884,9 @@ CREATE TRIGGER t_v_suedtiroltypes
 
 ALTER TABLE suedtiroltypes
     ENABLE ALWAYS TRIGGER t_v_suedtiroltypes;
+
+DROP TABLE IF EXISTS "v_tvsopen";
+
 CREATE TABLE "v_tvsopen" (
 "Id" varchar,
 "Active" bool,
@@ -6759,6 +7103,8 @@ CREATE TABLE "v_tvsopen" (
 "ContactInfos-ru-CountryName" varchar,
 "ContactInfos-ru-Phonenumber" varchar
 );
+
+DROP FUNCTION IF EXISTS v_tvsopen_fn CASCADE;
 
 CREATE FUNCTION v_tvsopen_fn()
 RETURNS TRIGGER
@@ -6994,10 +7340,14 @@ CREATE TRIGGER t_v_tvsopen
 ALTER TABLE tvsopen
     ENABLE ALWAYS TRIGGER t_v_tvsopen;
 
+DROP TABLE IF EXISTS "v_tvsopen_SkiareaIds";
+
 CREATE TABLE  "v_tvsopen_SkiareaIds" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_tvsopen_SkiareaIds_fn CASCADE;
 
 CREATE FUNCTION v_tvsopen_SkiareaIds_fn()
 RETURNS TRIGGER
@@ -7006,7 +7356,7 @@ BEGIN
 INSERT INTO "v_tvsopen_SkiareaIds"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'SkiareaIds') AS "data"
-        WHERE data -> 'SkiareaIds' != 'null';
+        WHERE NEW."data" -> 'SkiareaIds' != 'null';
 RETURN NEW;
 END;
 $$
@@ -7021,10 +7371,14 @@ CREATE TRIGGER t_v_tvsopen_SkiareaIds
 ALTER TABLE tvsopen
     ENABLE ALWAYS TRIGGER t_v_tvsopen_SkiareaIds;        
  
+DROP TABLE IF EXISTS "v_tvsopen_HasLanguage";
+
 CREATE TABLE  "v_tvsopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_tvsopen_HasLanguage_fn CASCADE;
 
 CREATE FUNCTION v_tvsopen_HasLanguage_fn()
 RETURNS TRIGGER
@@ -7033,7 +7387,7 @@ BEGIN
 INSERT INTO "v_tvsopen_HasLanguage"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-        WHERE data -> 'HasLanguage' != 'null';
+        WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
 END;
 $$
@@ -7047,7 +7401,10 @@ CREATE TRIGGER t_v_tvsopen_HasLanguage
 
 ALTER TABLE tvsopen
     ENABLE ALWAYS TRIGGER t_v_tvsopen_HasLanguage;        
- CREATE TABLE "v_wines" (
+ 
+DROP TABLE IF EXISTS "v_wines";
+
+CREATE TABLE "v_wines" (
 "Id" varchar,
 "Active" bool,
 "Vintage" integer,
@@ -7068,6 +7425,8 @@ ALTER TABLE tvsopen
 "Detail-it-Header" varchar,
 "Detail-it-Language" varchar
 );
+
+DROP FUNCTION IF EXISTS v_wines_fn CASCADE;
 
 CREATE FUNCTION v_wines_fn()
 RETURNS TRIGGER
@@ -7108,10 +7467,14 @@ CREATE TRIGGER t_v_wines
 ALTER TABLE wines
     ENABLE ALWAYS TRIGGER t_v_wines;
 
+DROP TABLE IF EXISTS "v_wines_Awards";
+
 CREATE TABLE  "v_wines_Awards" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS v_wines_Awards_fn CASCADE;
 
 CREATE FUNCTION v_wines_Awards_fn()
 RETURNS TRIGGER
@@ -7120,7 +7483,7 @@ BEGIN
 INSERT INTO "v_wines_Awards"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> 'Awards') AS "data"
-        WHERE data -> 'Awards' != 'null';
+        WHERE NEW."data" -> 'Awards' != 'null';
 RETURN NEW;
 END;
 $$

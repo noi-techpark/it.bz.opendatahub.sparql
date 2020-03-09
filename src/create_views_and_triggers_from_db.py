@@ -265,9 +265,14 @@ def sql_view(table_name: str, table_path: TablePath, attr_paths: Dict[AttrPath, 
         return create_view_sql
 
 
-simple_create_trigger_sql_template = """CREATE TABLE "v_{table_name}" (
+simple_create_trigger_sql_template = """
+DROP TABLE IF EXISTS "v_{table_name}";
+
+CREATE TABLE "v_{table_name}" (
 {columns}
 );
+
+DROP FUNCTION IF EXISTS v_{table_name}_fn CASCADE;
 
 CREATE FUNCTION v_{table_name}_fn()
 RETURNS TRIGGER
@@ -293,10 +298,14 @@ ALTER TABLE {table_name}
 
 
 array_create_trigger_sql_template = """
+DROP TABLE IF EXISTS "{view_name}";
+
 CREATE TABLE  "{view_name}" (
 "Id" varchar,
 "data" varchar
 ); 
+
+DROP FUNCTION IF EXISTS {view_name}_fn CASCADE;
 
 CREATE FUNCTION {view_name}_fn()
 RETURNS TRIGGER
@@ -305,7 +314,7 @@ BEGIN
 INSERT INTO "{view_name}"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> '{col_name}') AS "data"
-        WHERE data -> '{col_name}' != 'null';
+        WHERE NEW."data" -> '{col_name}' != 'null';
 RETURN NEW;
 END;
 $$
@@ -322,10 +331,14 @@ ALTER TABLE {table_name}
  """
 
 nested_create_trigger_sql_template = """
+DROP TABLE IF EXISTS "{view_name}";
+
 CREATE TABLE "{view_name}" (
 "{parent_Id}" varchar,
 {columns}
 );
+
+DROP FUNCTION IF EXISTS {view_name}_fn CASCADE;
 
 CREATE FUNCTION {view_name}_fn()
 RETURNS TRIGGER
@@ -334,8 +347,8 @@ BEGIN
 INSERT INTO "{view_name}"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
-            jsonb_array_elements(NEW."data" -> '{col_name}') AS "Feature"
-        WHERE data -> '{col_name}' != 'null')
+            jsonb_array_elements(NEW."data" -> '{col_name}') AS "data"
+        WHERE NEW."data" -> '{col_name}' != 'null')
     SELECT "Id" AS "{parent_Id}", {projections}
     FROM t;
 RETURN NEW;
@@ -446,6 +459,9 @@ if __name__ == '__main__':
     with open(create_view_file, "w+") as f, \
             open(create_trigger_file, "w+") as ft:
         for table_name in tables:
+            # DEBUG ONLY
+            # if table_name != 'accommodationroomsopen':
+            #     continue
             if table_name.startswith("v_"):
                 continue
             model = extract_model_from_table(cursor, table_name)
