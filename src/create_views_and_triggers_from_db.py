@@ -272,6 +272,8 @@ CREATE TABLE "v_{table_name}" (
 {columns}
 );
 
+ALTER TABLE "v_{table_name}" ADD PRIMARY KEY ("Id");
+
 DROP FUNCTION IF EXISTS v_{table_name}_fn CASCADE;
 
 CREATE FUNCTION v_{table_name}_fn()

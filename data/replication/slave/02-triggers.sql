@@ -109,6 +109,8 @@ CREATE TABLE "v_accommodationsopen" (
                                         "LocationInfo-MunicipalityInfo-Name-ru" varchar
 );
 
+ALTER TABLE "v_accommodationsopen" ADD PRIMARY KEY ("Id");
+
 DROP FUNCTION IF EXISTS v_accommodationsopen_fn CASCADE;
 
 CREATE FUNCTION v_accommodationsopen_fn()
@@ -397,556 +399,6 @@ ALTER TABLE accommodationsopen
     ENABLE ALWAYS TRIGGER t_v_accommodationsopen_Features;
 
 
-DROP TABLE IF EXISTS "v_activitiesopen";
-
-CREATE TABLE "v_activitiesopen" (
-                                    "Id" varchar,
-                                    "Type" varchar,
-                                    "Active" bool,
-                                    "IsOpen" bool,
-                                    "PoiType" varchar,
-                                    "SubType" varchar,
-                                    "FeetClimb" bool,
-                                    "Highlight" bool,
-                                    "Shortname" varchar,
-                                    "SmgActive" bool,
-                                    "Difficulty" varchar,
-                                    "HasRentals" bool,
-                                    "IsPrepared" bool,
-                                    "LastChange" varchar,
-                                    "FirstImport" varchar,
-                                    "IsWithLigth" bool,
-                                    "RunToValley" bool,
-                                    "AltitudeSumUp" float,
-                                    "BikeTransport" bool,
-                                    "LiftAvailable" bool,
-                                    "DistanceLength" float,
-                                    "AltitudeSumDown" float,
-                                    "HasFreeEntrance" bool,
-                                    "OutdooractiveID" varchar,
-                                    "DistanceDuration" float,
-                                    "AltitudeDifference" float,
-                                    "AltitudeLowestPoint" float,
-                                    "AltitudeHighestPoint" float,
-                                    "TourismorganizationId" varchar,
-                                    "Detail-de-Title" varchar,
-                                    "Detail-de-BaseText" varchar,
-                                    "Detail-de-Language" varchar,
-                                    "Detail-de-GetThereText" varchar,
-                                    "Detail-en-Title" varchar,
-                                    "Detail-en-BaseText" varchar,
-                                    "Detail-en-Language" varchar,
-                                    "Detail-it-Title" varchar,
-                                    "Detail-it-BaseText" varchar,
-                                    "Detail-it-Language" varchar,
-                                    "Ratings-Stamina" varchar,
-                                    "Ratings-Landscape" varchar,
-                                    "Ratings-Technique" varchar,
-                                    "Ratings-Difficulty" varchar,
-                                    "Ratings-Experience" varchar,
-                                    "GpsPoints-position-Gpstype" varchar,
-                                    "GpsPoints-position-Altitude" float,
-                                    "GpsPoints-position-Latitude" float,
-                                    "GpsPoints-position-Longitude" float,
-                                    "GpsPoints-position-AltitudeUnitofMeasure" varchar,
-                                    "GpsPoints-endposition-Gpstype" varchar,
-                                    "GpsPoints-endposition-Altitude" float,
-                                    "GpsPoints-endposition-Latitude" float,
-                                    "GpsPoints-endposition-Longitude" float,
-                                    "GpsPoints-endposition-AltitudeUnitofMeasure" varchar,
-                                    "ContactInfos-de-Url" varchar,
-                                    "ContactInfos-de-City" varchar,
-                                    "ContactInfos-de-Email" varchar,
-                                    "ContactInfos-de-Address" varchar,
-                                    "ContactInfos-de-Surname" varchar,
-                                    "ContactInfos-de-ZipCode" varchar,
-                                    "ContactInfos-de-Language" varchar,
-                                    "ContactInfos-de-Faxnumber" varchar,
-                                    "ContactInfos-de-Givenname" varchar,
-                                    "ContactInfos-de-NamePrefix" varchar,
-                                    "ContactInfos-de-CompanyName" varchar,
-                                    "ContactInfos-de-CountryCode" varchar,
-                                    "ContactInfos-de-CountryName" varchar,
-                                    "ContactInfos-de-Phonenumber" varchar,
-                                    "ContactInfos-en-Url" varchar,
-                                    "ContactInfos-en-City" varchar,
-                                    "ContactInfos-en-Email" varchar,
-                                    "ContactInfos-en-Address" varchar,
-                                    "ContactInfos-en-Surname" varchar,
-                                    "ContactInfos-en-ZipCode" varchar,
-                                    "ContactInfos-en-Language" varchar,
-                                    "ContactInfos-en-Faxnumber" varchar,
-                                    "ContactInfos-en-Givenname" varchar,
-                                    "ContactInfos-en-NamePrefix" varchar,
-                                    "ContactInfos-en-CompanyName" varchar,
-                                    "ContactInfos-en-CountryCode" varchar,
-                                    "ContactInfos-en-CountryName" varchar,
-                                    "ContactInfos-en-Phonenumber" varchar,
-                                    "ContactInfos-it-Url" varchar,
-                                    "ContactInfos-it-City" varchar,
-                                    "ContactInfos-it-Email" varchar,
-                                    "ContactInfos-it-Address" varchar,
-                                    "ContactInfos-it-Surname" varchar,
-                                    "ContactInfos-it-ZipCode" varchar,
-                                    "ContactInfos-it-Language" varchar,
-                                    "ContactInfos-it-Faxnumber" varchar,
-                                    "ContactInfos-it-Givenname" varchar,
-                                    "ContactInfos-it-NamePrefix" varchar,
-                                    "ContactInfos-it-CompanyName" varchar,
-                                    "ContactInfos-it-CountryCode" varchar,
-                                    "ContactInfos-it-CountryName" varchar,
-                                    "ContactInfos-it-Phonenumber" varchar,
-                                    "LocationInfo-TvInfo-Id" varchar,
-                                    "LocationInfo-TvInfo-Name-cs" varchar,
-                                    "LocationInfo-TvInfo-Name-de" varchar,
-                                    "LocationInfo-TvInfo-Name-en" varchar,
-                                    "LocationInfo-TvInfo-Name-fr" varchar,
-                                    "LocationInfo-TvInfo-Name-it" varchar,
-                                    "LocationInfo-TvInfo-Name-nl" varchar,
-                                    "LocationInfo-TvInfo-Name-pl" varchar,
-                                    "LocationInfo-TvInfo-Name-ru" varchar,
-                                    "LocationInfo-AreaInfo-Id" varchar,
-                                    "LocationInfo-AreaInfo-Name-cs" varchar,
-                                    "LocationInfo-AreaInfo-Name-de" varchar,
-                                    "LocationInfo-AreaInfo-Name-en" varchar,
-                                    "LocationInfo-AreaInfo-Name-fr" varchar,
-                                    "LocationInfo-AreaInfo-Name-it" varchar,
-                                    "LocationInfo-AreaInfo-Name-nl" varchar,
-                                    "LocationInfo-AreaInfo-Name-pl" varchar,
-                                    "LocationInfo-AreaInfo-Name-ru" varchar,
-                                    "LocationInfo-RegionInfo-Id" varchar,
-                                    "LocationInfo-RegionInfo-Name-cs" varchar,
-                                    "LocationInfo-RegionInfo-Name-de" varchar,
-                                    "LocationInfo-RegionInfo-Name-en" varchar,
-                                    "LocationInfo-RegionInfo-Name-fr" varchar,
-                                    "LocationInfo-RegionInfo-Name-it" varchar,
-                                    "LocationInfo-RegionInfo-Name-nl" varchar,
-                                    "LocationInfo-RegionInfo-Name-pl" varchar,
-                                    "LocationInfo-RegionInfo-Name-ru" varchar,
-                                    "AdditionalPoiInfos-de-PoiType" varchar,
-                                    "AdditionalPoiInfos-de-SubType" varchar,
-                                    "AdditionalPoiInfos-de-Language" varchar,
-                                    "AdditionalPoiInfos-de-MainType" varchar,
-                                    "AdditionalPoiInfos-en-PoiType" varchar,
-                                    "AdditionalPoiInfos-en-SubType" varchar,
-                                    "AdditionalPoiInfos-en-Language" varchar,
-                                    "AdditionalPoiInfos-en-MainType" varchar,
-                                    "AdditionalPoiInfos-it-PoiType" varchar,
-                                    "AdditionalPoiInfos-it-SubType" varchar,
-                                    "AdditionalPoiInfos-it-Language" varchar,
-                                    "AdditionalPoiInfos-it-MainType" varchar
-);
-
-DROP FUNCTION IF EXISTS v_activitiesopen_fn CASCADE;
-
-CREATE FUNCTION v_activitiesopen_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO v_activitiesopen
-    SELECT
-        CAST(NEW."data"->>'Id' As varchar) AS "Id",
-        CAST(NEW."data"->>'Type' As varchar) AS "Type",
-        CAST(NEW."data"->>'Active' As bool) AS "Active",
-        CAST(NEW."data"->>'IsOpen' As bool) AS "IsOpen",
-        CAST(NEW."data"->>'PoiType' As varchar) AS "PoiType",
-        CAST(NEW."data"->>'SubType' As varchar) AS "SubType",
-        CAST(NEW."data"->>'FeetClimb' As bool) AS "FeetClimb",
-        CAST(NEW."data"->>'Highlight' As bool) AS "Highlight",
-        CAST(NEW."data"->>'Shortname' As varchar) AS "Shortname",
-        CAST(NEW."data"->>'SmgActive' As bool) AS "SmgActive",
-        CAST(NEW."data"->>'Difficulty' As varchar) AS "Difficulty",
-        CAST(NEW."data"->>'HasRentals' As bool) AS "HasRentals",
-        CAST(NEW."data"->>'IsPrepared' As bool) AS "IsPrepared",
-        CAST(NEW."data"->>'LastChange' As varchar) AS "LastChange",
-        CAST(NEW."data"->>'FirstImport' As varchar) AS "FirstImport",
-        CAST(NEW."data"->>'IsWithLigth' As bool) AS "IsWithLigth",
-        CAST(NEW."data"->>'RunToValley' As bool) AS "RunToValley",
-        CAST(NEW."data"->>'AltitudeSumUp' As float) AS "AltitudeSumUp",
-        CAST(NEW."data"->>'BikeTransport' As bool) AS "BikeTransport",
-        CAST(NEW."data"->>'LiftAvailable' As bool) AS "LiftAvailable",
-        CAST(NEW."data"->>'DistanceLength' As float) AS "DistanceLength",
-        CAST(NEW."data"->>'AltitudeSumDown' As float) AS "AltitudeSumDown",
-        CAST(NEW."data"->>'HasFreeEntrance' As bool) AS "HasFreeEntrance",
-        CAST(NEW."data"->>'OutdooractiveID' As varchar) AS "OutdooractiveID",
-        CAST(NEW."data"->>'DistanceDuration' As float) AS "DistanceDuration",
-        CAST(NEW."data"->>'AltitudeDifference' As float) AS "AltitudeDifference",
-        CAST(NEW."data"->>'AltitudeLowestPoint' As float) AS "AltitudeLowestPoint",
-        CAST(NEW."data"->>'AltitudeHighestPoint' As float) AS "AltitudeHighestPoint",
-        CAST(NEW."data"->>'TourismorganizationId' As varchar) AS "TourismorganizationId",
-        CAST(NEW."data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
-        CAST(NEW."data"->'Detail'->'de'->>'BaseText' As varchar) AS "Detail-de-BaseText",
-        CAST(NEW."data"->'Detail'->'de'->>'Language' As varchar) AS "Detail-de-Language",
-        CAST(NEW."data"->'Detail'->'de'->>'GetThereText' As varchar) AS "Detail-de-GetThereText",
-        CAST(NEW."data"->'Detail'->'en'->>'Title' As varchar) AS "Detail-en-Title",
-        CAST(NEW."data"->'Detail'->'en'->>'BaseText' As varchar) AS "Detail-en-BaseText",
-        CAST(NEW."data"->'Detail'->'en'->>'Language' As varchar) AS "Detail-en-Language",
-        CAST(NEW."data"->'Detail'->'it'->>'Title' As varchar) AS "Detail-it-Title",
-        CAST(NEW."data"->'Detail'->'it'->>'BaseText' As varchar) AS "Detail-it-BaseText",
-        CAST(NEW."data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language",
-        CAST(NEW."data"->'Ratings'->>'Stamina' As varchar) AS "Ratings-Stamina",
-        CAST(NEW."data"->'Ratings'->>'Landscape' As varchar) AS "Ratings-Landscape",
-        CAST(NEW."data"->'Ratings'->>'Technique' As varchar) AS "Ratings-Technique",
-        CAST(NEW."data"->'Ratings'->>'Difficulty' As varchar) AS "Ratings-Difficulty",
-        CAST(NEW."data"->'Ratings'->>'Experience' As varchar) AS "Ratings-Experience",
-        CAST(NEW."data"->'GpsPoints'->'position'->>'Gpstype' As varchar) AS "GpsPoints-position-Gpstype",
-        CAST(NEW."data"->'GpsPoints'->'position'->>'Altitude' As float) AS "GpsPoints-position-Altitude",
-        CAST(NEW."data"->'GpsPoints'->'position'->>'Latitude' As float) AS "GpsPoints-position-Latitude",
-        CAST(NEW."data"->'GpsPoints'->'position'->>'Longitude' As float) AS "GpsPoints-position-Longitude",
-        CAST(NEW."data"->'GpsPoints'->'position'->>'AltitudeUnitofMeasure' As varchar) AS "GpsPoints-position-AltitudeUnitofMeasure",
-        CAST(NEW."data"->'GpsPoints'->'endposition'->>'Gpstype' As varchar) AS "GpsPoints-endposition-Gpstype",
-        CAST(NEW."data"->'GpsPoints'->'endposition'->>'Altitude' As float) AS "GpsPoints-endposition-Altitude",
-        CAST(NEW."data"->'GpsPoints'->'endposition'->>'Latitude' As float) AS "GpsPoints-endposition-Latitude",
-        CAST(NEW."data"->'GpsPoints'->'endposition'->>'Longitude' As float) AS "GpsPoints-endposition-Longitude",
-        CAST(NEW."data"->'GpsPoints'->'endposition'->>'AltitudeUnitofMeasure' As varchar) AS "GpsPoints-endposition-AltitudeUnitofMeasure",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'Url' As varchar) AS "ContactInfos-de-Url",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'City' As varchar) AS "ContactInfos-de-City",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'Email' As varchar) AS "ContactInfos-de-Email",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'Address' As varchar) AS "ContactInfos-de-Address",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'Surname' As varchar) AS "ContactInfos-de-Surname",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'ZipCode' As varchar) AS "ContactInfos-de-ZipCode",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'Language' As varchar) AS "ContactInfos-de-Language",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'Faxnumber' As varchar) AS "ContactInfos-de-Faxnumber",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'Givenname' As varchar) AS "ContactInfos-de-Givenname",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'NamePrefix' As varchar) AS "ContactInfos-de-NamePrefix",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'CompanyName' As varchar) AS "ContactInfos-de-CompanyName",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'CountryCode' As varchar) AS "ContactInfos-de-CountryCode",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'CountryName' As varchar) AS "ContactInfos-de-CountryName",
-        CAST(NEW."data"->'ContactInfos'->'de'->>'Phonenumber' As varchar) AS "ContactInfos-de-Phonenumber",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'Url' As varchar) AS "ContactInfos-en-Url",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'City' As varchar) AS "ContactInfos-en-City",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'Email' As varchar) AS "ContactInfos-en-Email",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'Address' As varchar) AS "ContactInfos-en-Address",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'Surname' As varchar) AS "ContactInfos-en-Surname",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'ZipCode' As varchar) AS "ContactInfos-en-ZipCode",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'Language' As varchar) AS "ContactInfos-en-Language",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'Faxnumber' As varchar) AS "ContactInfos-en-Faxnumber",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'Givenname' As varchar) AS "ContactInfos-en-Givenname",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'NamePrefix' As varchar) AS "ContactInfos-en-NamePrefix",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'CompanyName' As varchar) AS "ContactInfos-en-CompanyName",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'CountryCode' As varchar) AS "ContactInfos-en-CountryCode",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'CountryName' As varchar) AS "ContactInfos-en-CountryName",
-        CAST(NEW."data"->'ContactInfos'->'en'->>'Phonenumber' As varchar) AS "ContactInfos-en-Phonenumber",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'Url' As varchar) AS "ContactInfos-it-Url",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'City' As varchar) AS "ContactInfos-it-City",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'Email' As varchar) AS "ContactInfos-it-Email",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'Address' As varchar) AS "ContactInfos-it-Address",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'Surname' As varchar) AS "ContactInfos-it-Surname",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'ZipCode' As varchar) AS "ContactInfos-it-ZipCode",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'Language' As varchar) AS "ContactInfos-it-Language",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'Faxnumber' As varchar) AS "ContactInfos-it-Faxnumber",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'Givenname' As varchar) AS "ContactInfos-it-Givenname",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'NamePrefix' As varchar) AS "ContactInfos-it-NamePrefix",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'CompanyName' As varchar) AS "ContactInfos-it-CompanyName",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'CountryCode' As varchar) AS "ContactInfos-it-CountryCode",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'CountryName' As varchar) AS "ContactInfos-it-CountryName",
-        CAST(NEW."data"->'ContactInfos'->'it'->>'Phonenumber' As varchar) AS "ContactInfos-it-Phonenumber",
-        CAST(NEW."data"->'LocationInfo'->'TvInfo'->>'Id' As varchar) AS "LocationInfo-TvInfo-Id",
-        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-TvInfo-Name-cs",
-        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'de' As varchar) AS "LocationInfo-TvInfo-Name-de",
-        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'en' As varchar) AS "LocationInfo-TvInfo-Name-en",
-        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-TvInfo-Name-fr",
-        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'it' As varchar) AS "LocationInfo-TvInfo-Name-it",
-        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-TvInfo-Name-nl",
-        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-TvInfo-Name-pl",
-        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-TvInfo-Name-ru",
-        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->>'Id' As varchar) AS "LocationInfo-AreaInfo-Id",
-        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-AreaInfo-Name-cs",
-        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'de' As varchar) AS "LocationInfo-AreaInfo-Name-de",
-        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'en' As varchar) AS "LocationInfo-AreaInfo-Name-en",
-        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-AreaInfo-Name-fr",
-        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'it' As varchar) AS "LocationInfo-AreaInfo-Name-it",
-        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-AreaInfo-Name-nl",
-        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-AreaInfo-Name-pl",
-        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-AreaInfo-Name-ru",
-        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->>'Id' As varchar) AS "LocationInfo-RegionInfo-Id",
-        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-RegionInfo-Name-cs",
-        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'de' As varchar) AS "LocationInfo-RegionInfo-Name-de",
-        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'en' As varchar) AS "LocationInfo-RegionInfo-Name-en",
-        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-RegionInfo-Name-fr",
-        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'it' As varchar) AS "LocationInfo-RegionInfo-Name-it",
-        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-RegionInfo-Name-nl",
-        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-RegionInfo-Name-pl",
-        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-RegionInfo-Name-ru",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'de'->>'PoiType' As varchar) AS "AdditionalPoiInfos-de-PoiType",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'de'->>'SubType' As varchar) AS "AdditionalPoiInfos-de-SubType",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'de'->>'Language' As varchar) AS "AdditionalPoiInfos-de-Language",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'de'->>'MainType' As varchar) AS "AdditionalPoiInfos-de-MainType",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'en'->>'PoiType' As varchar) AS "AdditionalPoiInfos-en-PoiType",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'en'->>'SubType' As varchar) AS "AdditionalPoiInfos-en-SubType",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'en'->>'Language' As varchar) AS "AdditionalPoiInfos-en-Language",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'en'->>'MainType' As varchar) AS "AdditionalPoiInfos-en-MainType",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'it'->>'PoiType' As varchar) AS "AdditionalPoiInfos-it-PoiType",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'it'->>'SubType' As varchar) AS "AdditionalPoiInfos-it-SubType",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'it'->>'Language' As varchar) AS "AdditionalPoiInfos-it-Language",
-        CAST(NEW."data"->'AdditionalPoiInfos'->'it'->>'MainType' As varchar) AS "AdditionalPoiInfos-it-MainType";
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_activitiesopen
-    BEFORE INSERT
-    ON activitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_activitiesopen_fn();
-
-ALTER TABLE activitiesopen
-    ENABLE ALWAYS TRIGGER t_v_activitiesopen;
-
-DROP TABLE IF EXISTS "v_activitiesopen_AreaId";
-
-CREATE TABLE  "v_activitiesopen_AreaId" (
-                                            "Id" varchar,
-                                            "data" varchar
-);
-
-DROP FUNCTION IF EXISTS v_activitiesopen_AreaId_fn CASCADE;
-
-CREATE FUNCTION v_activitiesopen_AreaId_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO "v_activitiesopen_AreaId"
-    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-           jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
-    WHERE NEW."data" -> 'AreaId' != 'null';
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_activitiesopen_AreaId
-    BEFORE INSERT
-    ON activitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_activitiesopen_AreaId_fn();
-
-ALTER TABLE activitiesopen
-    ENABLE ALWAYS TRIGGER t_v_activitiesopen_AreaId;
-
-DROP TABLE IF EXISTS "v_activitiesopen_SmgTags";
-
-CREATE TABLE  "v_activitiesopen_SmgTags" (
-                                             "Id" varchar,
-                                             "data" varchar
-);
-
-DROP FUNCTION IF EXISTS v_activitiesopen_SmgTags_fn CASCADE;
-
-CREATE FUNCTION v_activitiesopen_SmgTags_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO "v_activitiesopen_SmgTags"
-    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-           jsonb_array_elements_text(NEW."data" -> 'SmgTags') AS "data"
-    WHERE NEW."data" -> 'SmgTags' != 'null';
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_activitiesopen_SmgTags
-    BEFORE INSERT
-    ON activitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_activitiesopen_SmgTags_fn();
-
-ALTER TABLE activitiesopen
-    ENABLE ALWAYS TRIGGER t_v_activitiesopen_SmgTags;
-
-DROP TABLE IF EXISTS "v_activitiesopen_Exposition";
-
-CREATE TABLE  "v_activitiesopen_Exposition" (
-                                                "Id" varchar,
-                                                "data" varchar
-);
-
-DROP FUNCTION IF EXISTS v_activitiesopen_Exposition_fn CASCADE;
-
-CREATE FUNCTION v_activitiesopen_Exposition_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO "v_activitiesopen_Exposition"
-    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-           jsonb_array_elements_text(NEW."data" -> 'Exposition') AS "data"
-    WHERE NEW."data" -> 'Exposition' != 'null';
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_activitiesopen_Exposition
-    BEFORE INSERT
-    ON activitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_activitiesopen_Exposition_fn();
-
-ALTER TABLE activitiesopen
-    ENABLE ALWAYS TRIGGER t_v_activitiesopen_Exposition;
-
-DROP TABLE IF EXISTS "v_activitiesopen_HasLanguage";
-
-CREATE TABLE  "v_activitiesopen_HasLanguage" (
-                                                 "Id" varchar,
-                                                 "data" varchar
-);
-
-DROP FUNCTION IF EXISTS v_activitiesopen_HasLanguage_fn CASCADE;
-
-CREATE FUNCTION v_activitiesopen_HasLanguage_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO "v_activitiesopen_HasLanguage"
-    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-           jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-    WHERE NEW."data" -> 'HasLanguage' != 'null';
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_activitiesopen_HasLanguage
-    BEFORE INSERT
-    ON activitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_activitiesopen_HasLanguage_fn();
-
-ALTER TABLE activitiesopen
-    ENABLE ALWAYS TRIGGER t_v_activitiesopen_HasLanguage;
-
-DROP TABLE IF EXISTS "v_activitiesopen_GpsInfo";
-
-CREATE TABLE "v_activitiesopen_GpsInfo" (
-                                            "activitiesopen_Id" varchar,
-                                            "Gpstype" varchar,
-                                            "Altitude" float,
-                                            "Latitude" float,
-                                            "Longitude" float,
-                                            "AltitudeUnitofMeasure" varchar
-);
-
-DROP FUNCTION IF EXISTS v_activitiesopen_GpsInfo_fn CASCADE;
-
-CREATE FUNCTION v_activitiesopen_GpsInfo_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO "v_activitiesopen_GpsInfo"
-    WITH t ("Id", "data") AS (
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-               jsonb_array_elements(NEW."data" -> 'GpsInfo') AS "data"
-        WHERE NEW."data" -> 'GpsInfo' != 'null')
-    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
-           CAST("data"->>'Altitude' As float) AS "Altitude",
-           CAST("data"->>'Latitude' As float) AS "Latitude",
-           CAST("data"->>'Longitude' As float) AS "Longitude",
-           CAST("data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure"
-    FROM t;
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_activitiesopen_GpsInfo
-    BEFORE INSERT
-    ON activitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_activitiesopen_GpsInfo_fn();
-
-ALTER TABLE activitiesopen
-    ENABLE ALWAYS TRIGGER t_v_activitiesopen_GpsInfo;
-
-
-DROP TABLE IF EXISTS "v_activitiesopen_GpsTrack";
-
-CREATE TABLE "v_activitiesopen_GpsTrack" (
-                                             "activitiesopen_Id" varchar,
-                                             "Id" varchar,
-                                             "Type" varchar,
-                                             "GpxTrackUrl" varchar,
-                                             "GpxTrackDesc-de" varchar,
-                                             "GpxTrackDesc-en" varchar,
-                                             "GpxTrackDesc-it" varchar
-);
-
-DROP FUNCTION IF EXISTS v_activitiesopen_GpsTrack_fn CASCADE;
-
-CREATE FUNCTION v_activitiesopen_GpsTrack_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO "v_activitiesopen_GpsTrack"
-    WITH t ("Id", "data") AS (
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-               jsonb_array_elements(NEW."data" -> 'GpsTrack') AS "data"
-        WHERE NEW."data" -> 'GpsTrack' != 'null')
-    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
-           CAST("data"->>'Type' As varchar) AS "Type",
-           CAST("data"->>'GpxTrackUrl' As varchar) AS "GpxTrackUrl",
-           CAST("data"->'GpxTrackDesc'->>'de' As varchar) AS "GpxTrackDesc-de",
-           CAST("data"->'GpxTrackDesc'->>'en' As varchar) AS "GpxTrackDesc-en",
-           CAST("data"->'GpxTrackDesc'->>'it' As varchar) AS "GpxTrackDesc-it"
-    FROM t;
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_activitiesopen_GpsTrack
-    BEFORE INSERT
-    ON activitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_activitiesopen_GpsTrack_fn();
-
-ALTER TABLE activitiesopen
-    ENABLE ALWAYS TRIGGER t_v_activitiesopen_GpsTrack;
-
-
-DROP TABLE IF EXISTS "v_activitiesopen_OperationSchedule";
-
-CREATE TABLE "v_activitiesopen_OperationSchedule" (
-                                                      "activitiesopen_Id" varchar,
-                                                      "Stop" varchar,
-                                                      "Type" varchar,
-                                                      "Start" varchar,
-                                                      "OperationscheduleName-de" varchar
-);
-
-DROP FUNCTION IF EXISTS v_activitiesopen_OperationSchedule_fn CASCADE;
-
-CREATE FUNCTION v_activitiesopen_OperationSchedule_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO "v_activitiesopen_OperationSchedule"
-    WITH t ("Id", "data") AS (
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-               jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "data"
-        WHERE NEW."data" -> 'OperationSchedule' != 'null')
-    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
-           CAST("data"->>'Type' As varchar) AS "Type",
-           CAST("data"->>'Start' As varchar) AS "Start",
-           CAST("data"->'OperationscheduleName'->>'de' As varchar) AS "OperationscheduleName-de"
-    FROM t;
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_activitiesopen_OperationSchedule
-    BEFORE INSERT
-    ON activitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_activitiesopen_OperationSchedule_fn();
-
-ALTER TABLE activitiesopen
-    ENABLE ALWAYS TRIGGER t_v_activitiesopen_OperationSchedule;
-
-
 DROP TABLE IF EXISTS "v_areas";
 
 CREATE TABLE "v_areas" (
@@ -959,6 +411,8 @@ CREATE TABLE "v_areas" (
                            "SmgActive" bool,
                            "TourismvereinId" varchar
 );
+
+ALTER TABLE "v_areas" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_areas_fn CASCADE;
 
@@ -1005,6 +459,8 @@ CREATE TABLE "v_articlesopen" (
                                   "Detail-de-Title" varchar,
                                   "Detail-de-BaseText" varchar
 );
+
+ALTER TABLE "v_articlesopen" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_articlesopen_fn CASCADE;
 
@@ -1106,6 +562,8 @@ CREATE TABLE "v_districtsopen" (
                                    "Detail-ru-Title" varchar,
                                    "Detail-ru-Language" varchar
 );
+
+ALTER TABLE "v_districtsopen" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_districtsopen_fn CASCADE;
 
@@ -1246,6 +704,8 @@ CREATE TABLE "v_eventeuracnoi" (
                                    "ContactAddressLine2" varchar,
                                    "ContactAddressLine3" varchar
 );
+
+ALTER TABLE "v_eventeuracnoi" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_eventeuracnoi_fn CASCADE;
 
@@ -1516,6 +976,8 @@ CREATE TABLE "v_eventsopen" (
                                 "EventAdditionalInfos-it-Language" varchar,
                                 "EventAdditionalInfos-it-Location" varchar
 );
+
+ALTER TABLE "v_eventsopen" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_eventsopen_fn CASCADE;
 
@@ -1951,6 +1413,8 @@ CREATE TABLE "v_experienceareas" (
                                      "Detail-ru-Title" varchar
 );
 
+ALTER TABLE "v_experienceareas" ADD PRIMARY KEY ("Id");
+
 DROP FUNCTION IF EXISTS v_experienceareas_fn CASCADE;
 
 CREATE FUNCTION v_experienceareas_fn()
@@ -2142,6 +1606,8 @@ CREATE TABLE "v_gastronomiesopen" (
                                       "LocationInfo-MunicipalityInfo-Name-pl" varchar,
                                       "LocationInfo-MunicipalityInfo-Name-ru" varchar
 );
+
+ALTER TABLE "v_gastronomiesopen" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_gastronomiesopen_fn CASCADE;
 
@@ -2459,6 +1925,8 @@ CREATE TABLE "v_ltstaggingtypes" (
                                      "TypeDescriptions-it" varchar
 );
 
+ALTER TABLE "v_ltstaggingtypes" ADD PRIMARY KEY ("Id");
+
 DROP FUNCTION IF EXISTS v_ltstaggingtypes_fn CASCADE;
 
 CREATE FUNCTION v_ltstaggingtypes_fn()
@@ -2539,6 +2007,8 @@ CREATE TABLE "v_measuringpoints" (
                                      "LocationInfo-RegionInfo-Name-pl" varchar,
                                      "LocationInfo-RegionInfo-Name-ru" varchar
 );
+
+ALTER TABLE "v_measuringpoints" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_measuringpoints_fn CASCADE;
 
@@ -2919,6 +2389,8 @@ CREATE TABLE "v_metaregionsopen" (
                                      "D-r-DetailsThemed-Kultur und Sehenswürdigkeiten-MetaDesc" varchar,
                                      "D-r-DetailsThemed-Kultur und Sehenswürdigkeiten-MetaTitle" varchar
 );
+
+ALTER TABLE "v_metaregionsopen" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_metaregionsopen_fn CASCADE;
 
@@ -3345,377 +2817,155 @@ EXECUTE PROCEDURE v_metaregionsopen_TourismvereinIds_fn();
 ALTER TABLE metaregionsopen
     ENABLE ALWAYS TRIGGER t_v_metaregionsopen_TourismvereinIds;
 
-DROP TABLE IF EXISTS "v_accommodationroomsopen";
+DROP TABLE IF EXISTS "v_activitiesopen";
 
-CREATE TABLE "v_accommodationroomsopen" (
-                                            "Id" varchar,
-                                            "A0RID" varchar,
-                                            "HGVId" varchar,
-                                            "LTSId" varchar,
-                                            "Source" varchar,
-                                            "Roommax" integer,
-                                            "Roommin" integer,
-                                            "Roomstd" integer,
-                                            "RoomCode" varchar,
-                                            "Roomtype" varchar,
-                                            "Shortname" varchar,
-                                            "RoomQuantity" integer,
-                                            "AccoRoomDetail-de-Name" varchar,
-                                            "AccoRoomDetail-de-Language" varchar,
-                                            "AccoRoomDetail-en-Name" varchar,
-                                            "AccoRoomDetail-en-Language" varchar,
-                                            "AccoRoomDetail-it-Name" varchar,
-                                            "AccoRoomDetail-it-Language" varchar
+CREATE TABLE "v_activitiesopen" (
+                                    "Id" varchar,
+                                    "Type" varchar,
+                                    "Active" bool,
+                                    "IsOpen" bool,
+                                    "PoiType" varchar,
+                                    "SubType" varchar,
+                                    "FeetClimb" bool,
+                                    "Highlight" bool,
+                                    "Shortname" varchar,
+                                    "SmgActive" bool,
+                                    "Difficulty" varchar,
+                                    "HasRentals" bool,
+                                    "IsPrepared" bool,
+                                    "LastChange" varchar,
+                                    "FirstImport" varchar,
+                                    "IsWithLigth" bool,
+                                    "RunToValley" bool,
+                                    "AltitudeSumUp" float,
+                                    "BikeTransport" bool,
+                                    "LiftAvailable" bool,
+                                    "DistanceLength" float,
+                                    "AltitudeSumDown" float,
+                                    "HasFreeEntrance" bool,
+                                    "OutdooractiveID" varchar,
+                                    "DistanceDuration" float,
+                                    "AltitudeDifference" float,
+                                    "AltitudeLowestPoint" float,
+                                    "AltitudeHighestPoint" float,
+                                    "TourismorganizationId" varchar,
+                                    "Detail-de-Title" varchar,
+                                    "Detail-de-BaseText" varchar,
+                                    "Detail-de-Language" varchar,
+                                    "Detail-de-GetThereText" varchar,
+                                    "Detail-en-Title" varchar,
+                                    "Detail-en-BaseText" varchar,
+                                    "Detail-en-Language" varchar,
+                                    "Detail-it-Title" varchar,
+                                    "Detail-it-BaseText" varchar,
+                                    "Detail-it-Language" varchar,
+                                    "Ratings-Stamina" varchar,
+                                    "Ratings-Landscape" varchar,
+                                    "Ratings-Technique" varchar,
+                                    "Ratings-Difficulty" varchar,
+                                    "Ratings-Experience" varchar,
+                                    "GpsPoints-position-Gpstype" varchar,
+                                    "GpsPoints-position-Altitude" float,
+                                    "GpsPoints-position-Latitude" float,
+                                    "GpsPoints-position-Longitude" float,
+                                    "GpsPoints-position-AltitudeUnitofMeasure" varchar,
+                                    "GpsPoints-endposition-Gpstype" varchar,
+                                    "GpsPoints-endposition-Altitude" float,
+                                    "GpsPoints-endposition-Latitude" float,
+                                    "GpsPoints-endposition-Longitude" float,
+                                    "GpsPoints-endposition-AltitudeUnitofMeasure" varchar,
+                                    "ContactInfos-de-Url" varchar,
+                                    "ContactInfos-de-City" varchar,
+                                    "ContactInfos-de-Email" varchar,
+                                    "ContactInfos-de-Address" varchar,
+                                    "ContactInfos-de-Surname" varchar,
+                                    "ContactInfos-de-ZipCode" varchar,
+                                    "ContactInfos-de-Language" varchar,
+                                    "ContactInfos-de-Faxnumber" varchar,
+                                    "ContactInfos-de-Givenname" varchar,
+                                    "ContactInfos-de-NamePrefix" varchar,
+                                    "ContactInfos-de-CompanyName" varchar,
+                                    "ContactInfos-de-CountryCode" varchar,
+                                    "ContactInfos-de-CountryName" varchar,
+                                    "ContactInfos-de-Phonenumber" varchar,
+                                    "ContactInfos-en-Url" varchar,
+                                    "ContactInfos-en-City" varchar,
+                                    "ContactInfos-en-Email" varchar,
+                                    "ContactInfos-en-Address" varchar,
+                                    "ContactInfos-en-Surname" varchar,
+                                    "ContactInfos-en-ZipCode" varchar,
+                                    "ContactInfos-en-Language" varchar,
+                                    "ContactInfos-en-Faxnumber" varchar,
+                                    "ContactInfos-en-Givenname" varchar,
+                                    "ContactInfos-en-NamePrefix" varchar,
+                                    "ContactInfos-en-CompanyName" varchar,
+                                    "ContactInfos-en-CountryCode" varchar,
+                                    "ContactInfos-en-CountryName" varchar,
+                                    "ContactInfos-en-Phonenumber" varchar,
+                                    "ContactInfos-it-Url" varchar,
+                                    "ContactInfos-it-City" varchar,
+                                    "ContactInfos-it-Email" varchar,
+                                    "ContactInfos-it-Address" varchar,
+                                    "ContactInfos-it-Surname" varchar,
+                                    "ContactInfos-it-ZipCode" varchar,
+                                    "ContactInfos-it-Language" varchar,
+                                    "ContactInfos-it-Faxnumber" varchar,
+                                    "ContactInfos-it-Givenname" varchar,
+                                    "ContactInfos-it-NamePrefix" varchar,
+                                    "ContactInfos-it-CompanyName" varchar,
+                                    "ContactInfos-it-CountryCode" varchar,
+                                    "ContactInfos-it-CountryName" varchar,
+                                    "ContactInfos-it-Phonenumber" varchar,
+                                    "LocationInfo-TvInfo-Id" varchar,
+                                    "LocationInfo-TvInfo-Name-cs" varchar,
+                                    "LocationInfo-TvInfo-Name-de" varchar,
+                                    "LocationInfo-TvInfo-Name-en" varchar,
+                                    "LocationInfo-TvInfo-Name-fr" varchar,
+                                    "LocationInfo-TvInfo-Name-it" varchar,
+                                    "LocationInfo-TvInfo-Name-nl" varchar,
+                                    "LocationInfo-TvInfo-Name-pl" varchar,
+                                    "LocationInfo-TvInfo-Name-ru" varchar,
+                                    "LocationInfo-AreaInfo-Id" varchar,
+                                    "LocationInfo-AreaInfo-Name-cs" varchar,
+                                    "LocationInfo-AreaInfo-Name-de" varchar,
+                                    "LocationInfo-AreaInfo-Name-en" varchar,
+                                    "LocationInfo-AreaInfo-Name-fr" varchar,
+                                    "LocationInfo-AreaInfo-Name-it" varchar,
+                                    "LocationInfo-AreaInfo-Name-nl" varchar,
+                                    "LocationInfo-AreaInfo-Name-pl" varchar,
+                                    "LocationInfo-AreaInfo-Name-ru" varchar,
+                                    "LocationInfo-RegionInfo-Id" varchar,
+                                    "LocationInfo-RegionInfo-Name-cs" varchar,
+                                    "LocationInfo-RegionInfo-Name-de" varchar,
+                                    "LocationInfo-RegionInfo-Name-en" varchar,
+                                    "LocationInfo-RegionInfo-Name-fr" varchar,
+                                    "LocationInfo-RegionInfo-Name-it" varchar,
+                                    "LocationInfo-RegionInfo-Name-nl" varchar,
+                                    "LocationInfo-RegionInfo-Name-pl" varchar,
+                                    "LocationInfo-RegionInfo-Name-ru" varchar,
+                                    "AdditionalPoiInfos-de-PoiType" varchar,
+                                    "AdditionalPoiInfos-de-SubType" varchar,
+                                    "AdditionalPoiInfos-de-Language" varchar,
+                                    "AdditionalPoiInfos-de-MainType" varchar,
+                                    "AdditionalPoiInfos-en-PoiType" varchar,
+                                    "AdditionalPoiInfos-en-SubType" varchar,
+                                    "AdditionalPoiInfos-en-Language" varchar,
+                                    "AdditionalPoiInfos-en-MainType" varchar,
+                                    "AdditionalPoiInfos-it-PoiType" varchar,
+                                    "AdditionalPoiInfos-it-SubType" varchar,
+                                    "AdditionalPoiInfos-it-Language" varchar,
+                                    "AdditionalPoiInfos-it-MainType" varchar
 );
 
-DROP FUNCTION IF EXISTS v_accommodationroomsopen_fn CASCADE;
+ALTER TABLE "v_activitiesopen" ADD PRIMARY KEY ("Id");
 
-CREATE FUNCTION v_accommodationroomsopen_fn()
+DROP FUNCTION IF EXISTS v_activitiesopen_fn CASCADE;
+
+CREATE FUNCTION v_activitiesopen_fn()
     RETURNS TRIGGER
 AS $$
 BEGIN
-    INSERT INTO v_accommodationroomsopen
-    SELECT
-        CAST(NEW."data"->>'Id' As varchar) AS "Id",
-        CAST(NEW."data"->>'A0RID' As varchar) AS "A0RID",
-        CAST(NEW."data"->>'HGVId' As varchar) AS "HGVId",
-        CAST(NEW."data"->>'LTSId' As varchar) AS "LTSId",
-        CAST(NEW."data"->>'Source' As varchar) AS "Source",
-        CAST(NEW."data"->>'Roommax' As integer) AS "Roommax",
-        CAST(NEW."data"->>'Roommin' As integer) AS "Roommin",
-        CAST(NEW."data"->>'Roomstd' As integer) AS "Roomstd",
-        CAST(NEW."data"->>'RoomCode' As varchar) AS "RoomCode",
-        CAST(NEW."data"->>'Roomtype' As varchar) AS "Roomtype",
-        CAST(NEW."data"->>'Shortname' As varchar) AS "Shortname",
-        CAST(NEW."data"->>'RoomQuantity' As integer) AS "RoomQuantity",
-        CAST(NEW."data"->'AccoRoomDetail'->'de'->>'Name' As varchar) AS "AccoRoomDetail-de-Name",
-        CAST(NEW."data"->'AccoRoomDetail'->'de'->>'Language' As varchar) AS "AccoRoomDetail-de-Language",
-        CAST(NEW."data"->'AccoRoomDetail'->'en'->>'Name' As varchar) AS "AccoRoomDetail-en-Name",
-        CAST(NEW."data"->'AccoRoomDetail'->'en'->>'Language' As varchar) AS "AccoRoomDetail-en-Language",
-        CAST(NEW."data"->'AccoRoomDetail'->'it'->>'Name' As varchar) AS "AccoRoomDetail-it-Name",
-        CAST(NEW."data"->'AccoRoomDetail'->'it'->>'Language' As varchar) AS "AccoRoomDetail-it-Language";
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_accommodationroomsopen
-    BEFORE INSERT
-    ON accommodationroomsopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_accommodationroomsopen_fn();
-
-ALTER TABLE accommodationroomsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationroomsopen;
-
-DROP TABLE IF EXISTS "v_accommodationroomsopen_Features";
-
-CREATE TABLE "v_accommodationroomsopen_Features" (
-                                                     "accommodationroomsopen_Id" varchar,
-                                                     "Id" varchar,
-                                                     "Name" varchar
-);
-
-DROP FUNCTION IF EXISTS v_accommodationroomsopen_Features_fn CASCADE;
-
-CREATE FUNCTION v_accommodationroomsopen_Features_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO "v_accommodationroomsopen_Features"
-    WITH t ("Id", "data") AS (
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-               jsonb_array_elements(NEW."data" -> 'Features') AS "data"
-        WHERE NEW."data" -> 'Features' != 'null')
-    SELECT "Id" AS "accommodationroomsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
-           CAST("data"->>'Name' As varchar) AS "Name"
-    FROM t;
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_accommodationroomsopen_Features
-    BEFORE INSERT
-    ON accommodationroomsopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_accommodationroomsopen_Features_fn();
-
-ALTER TABLE accommodationroomsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationroomsopen_Features;
-
-
-DROP TABLE IF EXISTS "v_municipalitiesopen";
-
-CREATE TABLE "v_municipalitiesopen" (
-                                        "Id" varchar,
-                                        "Plz" varchar,
-                                        "Active" bool,
-                                        "SiagId" varchar,
-                                        "Gpstype" varchar,
-                                        "Altitude" float,
-                                        "CustomId" varchar,
-                                        "Latitude" float,
-                                        "RegionId" varchar,
-                                        "Longitude" float,
-                                        "Shortname" varchar,
-                                        "SmgActive" bool,
-                                        "LastChange" varchar,
-                                        "Inhabitants" integer,
-                                        "IstatNumber" varchar,
-                                        "TourismvereinId" varchar,
-                                        "VisibleInSearch" bool,
-                                        "AltitudeUnitofMeasure" varchar,
-                                        "Detail-cs-Title" varchar,
-                                        "Detail-cs-Language" varchar,
-                                        "Detail-de-Title" varchar,
-                                        "Detail-de-Language" varchar,
-                                        "Detail-en-Title" varchar,
-                                        "Detail-en-Language" varchar,
-                                        "Detail-fr-Title" varchar,
-                                        "Detail-fr-Language" varchar,
-                                        "Detail-it-Title" varchar,
-                                        "Detail-it-Language" varchar,
-                                        "Detail-nl-Title" varchar,
-                                        "Detail-nl-Language" varchar,
-                                        "Detail-pl-Title" varchar,
-                                        "Detail-pl-Language" varchar,
-                                        "Detail-ru-Title" varchar,
-                                        "Detail-ru-Language" varchar
-);
-
-DROP FUNCTION IF EXISTS v_municipalitiesopen_fn CASCADE;
-
-CREATE FUNCTION v_municipalitiesopen_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO v_municipalitiesopen
-    SELECT
-        CAST(NEW."data"->>'Id' As varchar) AS "Id",
-        CAST(NEW."data"->>'Plz' As varchar) AS "Plz",
-        CAST(NEW."data"->>'Active' As bool) AS "Active",
-        CAST(NEW."data"->>'SiagId' As varchar) AS "SiagId",
-        CAST(NEW."data"->>'Gpstype' As varchar) AS "Gpstype",
-        CAST(NEW."data"->>'Altitude' As float) AS "Altitude",
-        CAST(NEW."data"->>'CustomId' As varchar) AS "CustomId",
-        CAST(NEW."data"->>'Latitude' As float) AS "Latitude",
-        CAST(NEW."data"->>'RegionId' As varchar) AS "RegionId",
-        CAST(NEW."data"->>'Longitude' As float) AS "Longitude",
-        CAST(NEW."data"->>'Shortname' As varchar) AS "Shortname",
-        CAST(NEW."data"->>'SmgActive' As bool) AS "SmgActive",
-        CAST(NEW."data"->>'LastChange' As varchar) AS "LastChange",
-        CAST(NEW."data"->>'Inhabitants' As integer) AS "Inhabitants",
-        CAST(NEW."data"->>'IstatNumber' As varchar) AS "IstatNumber",
-        CAST(NEW."data"->>'TourismvereinId' As varchar) AS "TourismvereinId",
-        CAST(NEW."data"->>'VisibleInSearch' As bool) AS "VisibleInSearch",
-        CAST(NEW."data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure",
-        CAST(NEW."data"->'Detail'->'cs'->>'Title' As varchar) AS "Detail-cs-Title",
-        CAST(NEW."data"->'Detail'->'cs'->>'Language' As varchar) AS "Detail-cs-Language",
-        CAST(NEW."data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
-        CAST(NEW."data"->'Detail'->'de'->>'Language' As varchar) AS "Detail-de-Language",
-        CAST(NEW."data"->'Detail'->'en'->>'Title' As varchar) AS "Detail-en-Title",
-        CAST(NEW."data"->'Detail'->'en'->>'Language' As varchar) AS "Detail-en-Language",
-        CAST(NEW."data"->'Detail'->'fr'->>'Title' As varchar) AS "Detail-fr-Title",
-        CAST(NEW."data"->'Detail'->'fr'->>'Language' As varchar) AS "Detail-fr-Language",
-        CAST(NEW."data"->'Detail'->'it'->>'Title' As varchar) AS "Detail-it-Title",
-        CAST(NEW."data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language",
-        CAST(NEW."data"->'Detail'->'nl'->>'Title' As varchar) AS "Detail-nl-Title",
-        CAST(NEW."data"->'Detail'->'nl'->>'Language' As varchar) AS "Detail-nl-Language",
-        CAST(NEW."data"->'Detail'->'pl'->>'Title' As varchar) AS "Detail-pl-Title",
-        CAST(NEW."data"->'Detail'->'pl'->>'Language' As varchar) AS "Detail-pl-Language",
-        CAST(NEW."data"->'Detail'->'ru'->>'Title' As varchar) AS "Detail-ru-Title",
-        CAST(NEW."data"->'Detail'->'ru'->>'Language' As varchar) AS "Detail-ru-Language";
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_municipalitiesopen
-    BEFORE INSERT
-    ON municipalitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_municipalitiesopen_fn();
-
-ALTER TABLE municipalitiesopen
-    ENABLE ALWAYS TRIGGER t_v_municipalitiesopen;
-
-DROP TABLE IF EXISTS "v_municipalitiesopen_HasLanguage";
-
-CREATE TABLE  "v_municipalitiesopen_HasLanguage" (
-                                                     "Id" varchar,
-                                                     "data" varchar
-);
-
-DROP FUNCTION IF EXISTS v_municipalitiesopen_HasLanguage_fn CASCADE;
-
-CREATE FUNCTION v_municipalitiesopen_HasLanguage_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO "v_municipalitiesopen_HasLanguage"
-    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-           jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
-    WHERE NEW."data" -> 'HasLanguage' != 'null';
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_municipalitiesopen_HasLanguage
-    BEFORE INSERT
-    ON municipalitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_municipalitiesopen_HasLanguage_fn();
-
-ALTER TABLE municipalitiesopen
-    ENABLE ALWAYS TRIGGER t_v_municipalitiesopen_HasLanguage;
-
-DROP TABLE IF EXISTS "v_poisopen";
-
-CREATE TABLE "v_poisopen" (
-                              "Id" varchar,
-                              "Type" varchar,
-                              "Active" bool,
-                              "IsOpen" bool,
-                              "PoiType" varchar,
-                              "SubType" varchar,
-                              "FeetClimb" bool,
-                              "Highlight" bool,
-                              "Shortname" varchar,
-                              "SmgActive" bool,
-                              "HasRentals" bool,
-                              "IsPrepared" bool,
-                              "LastChange" varchar,
-                              "FirstImport" varchar,
-                              "IsWithLigth" bool,
-                              "RunToValley" bool,
-                              "AltitudeSumUp" float,
-                              "LiftAvailable" bool,
-                              "DistanceLength" float,
-                              "AltitudeSumDown" float,
-                              "HasFreeEntrance" bool,
-                              "DistanceDuration" float,
-                              "AltitudeDifference" float,
-                              "AltitudeLowestPoint" float,
-                              "AltitudeHighestPoint" float,
-                              "TourismorganizationId" varchar,
-                              "Detail-de-Title" varchar,
-                              "Detail-de-Header" varchar,
-                              "Detail-de-BaseText" varchar,
-                              "Detail-de-Language" varchar,
-                              "Detail-de-IntroText" varchar,
-                              "Detail-de-GetThereText" varchar,
-                              "Detail-de-AdditionalText" varchar,
-                              "Detail-en-Title" varchar,
-                              "Detail-en-Header" varchar,
-                              "Detail-en-BaseText" varchar,
-                              "Detail-en-Language" varchar,
-                              "Detail-en-IntroText" varchar,
-                              "Detail-en-GetThereText" varchar,
-                              "Detail-en-AdditionalText" varchar,
-                              "Detail-it-Title" varchar,
-                              "Detail-it-Header" varchar,
-                              "Detail-it-BaseText" varchar,
-                              "Detail-it-Language" varchar,
-                              "Detail-it-IntroText" varchar,
-                              "Detail-it-GetThereText" varchar,
-                              "Detail-it-AdditionalText" varchar,
-                              "GpsPoints-position-Gpstype" varchar,
-                              "GpsPoints-position-Altitude" float,
-                              "GpsPoints-position-Latitude" float,
-                              "GpsPoints-position-Longitude" float,
-                              "GpsPoints-position-AltitudeUnitofMeasure" varchar,
-                              "ContactInfos-de-Url" varchar,
-                              "ContactInfos-de-City" varchar,
-                              "ContactInfos-de-Email" varchar,
-                              "ContactInfos-de-Address" varchar,
-                              "ContactInfos-de-Surname" varchar,
-                              "ContactInfos-de-ZipCode" varchar,
-                              "ContactInfos-de-Language" varchar,
-                              "ContactInfos-de-Faxnumber" varchar,
-                              "ContactInfos-de-Givenname" varchar,
-                              "ContactInfos-de-NamePrefix" varchar,
-                              "ContactInfos-de-CompanyName" varchar,
-                              "ContactInfos-de-CountryCode" varchar,
-                              "ContactInfos-de-CountryName" varchar,
-                              "ContactInfos-de-Phonenumber" varchar,
-                              "ContactInfos-en-Url" varchar,
-                              "ContactInfos-en-City" varchar,
-                              "ContactInfos-en-Email" varchar,
-                              "ContactInfos-en-Address" varchar,
-                              "ContactInfos-en-Surname" varchar,
-                              "ContactInfos-en-ZipCode" varchar,
-                              "ContactInfos-en-Language" varchar,
-                              "ContactInfos-en-Faxnumber" varchar,
-                              "ContactInfos-en-Givenname" varchar,
-                              "ContactInfos-en-NamePrefix" varchar,
-                              "ContactInfos-en-CompanyName" varchar,
-                              "ContactInfos-en-CountryCode" varchar,
-                              "ContactInfos-en-CountryName" varchar,
-                              "ContactInfos-en-Phonenumber" varchar,
-                              "ContactInfos-it-Url" varchar,
-                              "ContactInfos-it-City" varchar,
-                              "ContactInfos-it-Email" varchar,
-                              "ContactInfos-it-Address" varchar,
-                              "ContactInfos-it-Surname" varchar,
-                              "ContactInfos-it-ZipCode" varchar,
-                              "ContactInfos-it-Language" varchar,
-                              "ContactInfos-it-Faxnumber" varchar,
-                              "ContactInfos-it-Givenname" varchar,
-                              "ContactInfos-it-NamePrefix" varchar,
-                              "ContactInfos-it-CompanyName" varchar,
-                              "ContactInfos-it-CountryCode" varchar,
-                              "ContactInfos-it-CountryName" varchar,
-                              "ContactInfos-it-Phonenumber" varchar,
-                              "LocationInfo-TvInfo-Id" varchar,
-                              "LocationInfo-TvInfo-Name-cs" varchar,
-                              "LocationInfo-TvInfo-Name-de" varchar,
-                              "LocationInfo-TvInfo-Name-en" varchar,
-                              "LocationInfo-TvInfo-Name-fr" varchar,
-                              "LocationInfo-TvInfo-Name-it" varchar,
-                              "LocationInfo-TvInfo-Name-nl" varchar,
-                              "LocationInfo-TvInfo-Name-pl" varchar,
-                              "LocationInfo-TvInfo-Name-ru" varchar,
-                              "LocationInfo-AreaInfo-Id" varchar,
-                              "LocationInfo-AreaInfo-Name-cs" varchar,
-                              "LocationInfo-AreaInfo-Name-de" varchar,
-                              "LocationInfo-AreaInfo-Name-en" varchar,
-                              "LocationInfo-AreaInfo-Name-fr" varchar,
-                              "LocationInfo-AreaInfo-Name-it" varchar,
-                              "LocationInfo-AreaInfo-Name-nl" varchar,
-                              "LocationInfo-AreaInfo-Name-pl" varchar,
-                              "LocationInfo-AreaInfo-Name-ru" varchar,
-                              "LocationInfo-RegionInfo-Id" varchar,
-                              "LocationInfo-RegionInfo-Name-cs" varchar,
-                              "LocationInfo-RegionInfo-Name-de" varchar,
-                              "LocationInfo-RegionInfo-Name-en" varchar,
-                              "LocationInfo-RegionInfo-Name-fr" varchar,
-                              "LocationInfo-RegionInfo-Name-it" varchar,
-                              "LocationInfo-RegionInfo-Name-nl" varchar,
-                              "LocationInfo-RegionInfo-Name-pl" varchar,
-                              "LocationInfo-RegionInfo-Name-ru" varchar,
-                              "AdditionalPoiInfos-de-PoiType" varchar,
-                              "AdditionalPoiInfos-de-SubType" varchar,
-                              "AdditionalPoiInfos-de-Language" varchar,
-                              "AdditionalPoiInfos-de-MainType" varchar,
-                              "AdditionalPoiInfos-en-PoiType" varchar,
-                              "AdditionalPoiInfos-en-SubType" varchar,
-                              "AdditionalPoiInfos-en-Language" varchar,
-                              "AdditionalPoiInfos-en-MainType" varchar,
-                              "AdditionalPoiInfos-it-PoiType" varchar,
-                              "AdditionalPoiInfos-it-SubType" varchar,
-                              "AdditionalPoiInfos-it-Language" varchar,
-                              "AdditionalPoiInfos-it-MainType" varchar
-);
-
-DROP FUNCTION IF EXISTS v_poisopen_fn CASCADE;
-
-CREATE FUNCTION v_poisopen_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO v_poisopen
+    INSERT INTO v_activitiesopen
     SELECT
         CAST(NEW."data"->>'Id' As varchar) AS "Id",
         CAST(NEW."data"->>'Type' As varchar) AS "Type",
@@ -3727,6 +2977,7 @@ BEGIN
         CAST(NEW."data"->>'Highlight' As bool) AS "Highlight",
         CAST(NEW."data"->>'Shortname' As varchar) AS "Shortname",
         CAST(NEW."data"->>'SmgActive' As bool) AS "SmgActive",
+        CAST(NEW."data"->>'Difficulty' As varchar) AS "Difficulty",
         CAST(NEW."data"->>'HasRentals' As bool) AS "HasRentals",
         CAST(NEW."data"->>'IsPrepared' As bool) AS "IsPrepared",
         CAST(NEW."data"->>'LastChange' As varchar) AS "LastChange",
@@ -3734,41 +2985,42 @@ BEGIN
         CAST(NEW."data"->>'IsWithLigth' As bool) AS "IsWithLigth",
         CAST(NEW."data"->>'RunToValley' As bool) AS "RunToValley",
         CAST(NEW."data"->>'AltitudeSumUp' As float) AS "AltitudeSumUp",
+        CAST(NEW."data"->>'BikeTransport' As bool) AS "BikeTransport",
         CAST(NEW."data"->>'LiftAvailable' As bool) AS "LiftAvailable",
         CAST(NEW."data"->>'DistanceLength' As float) AS "DistanceLength",
         CAST(NEW."data"->>'AltitudeSumDown' As float) AS "AltitudeSumDown",
         CAST(NEW."data"->>'HasFreeEntrance' As bool) AS "HasFreeEntrance",
+        CAST(NEW."data"->>'OutdooractiveID' As varchar) AS "OutdooractiveID",
         CAST(NEW."data"->>'DistanceDuration' As float) AS "DistanceDuration",
         CAST(NEW."data"->>'AltitudeDifference' As float) AS "AltitudeDifference",
         CAST(NEW."data"->>'AltitudeLowestPoint' As float) AS "AltitudeLowestPoint",
         CAST(NEW."data"->>'AltitudeHighestPoint' As float) AS "AltitudeHighestPoint",
         CAST(NEW."data"->>'TourismorganizationId' As varchar) AS "TourismorganizationId",
         CAST(NEW."data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
-        CAST(NEW."data"->'Detail'->'de'->>'Header' As varchar) AS "Detail-de-Header",
         CAST(NEW."data"->'Detail'->'de'->>'BaseText' As varchar) AS "Detail-de-BaseText",
         CAST(NEW."data"->'Detail'->'de'->>'Language' As varchar) AS "Detail-de-Language",
-        CAST(NEW."data"->'Detail'->'de'->>'IntroText' As varchar) AS "Detail-de-IntroText",
         CAST(NEW."data"->'Detail'->'de'->>'GetThereText' As varchar) AS "Detail-de-GetThereText",
-        CAST(NEW."data"->'Detail'->'de'->>'AdditionalText' As varchar) AS "Detail-de-AdditionalText",
         CAST(NEW."data"->'Detail'->'en'->>'Title' As varchar) AS "Detail-en-Title",
-        CAST(NEW."data"->'Detail'->'en'->>'Header' As varchar) AS "Detail-en-Header",
         CAST(NEW."data"->'Detail'->'en'->>'BaseText' As varchar) AS "Detail-en-BaseText",
         CAST(NEW."data"->'Detail'->'en'->>'Language' As varchar) AS "Detail-en-Language",
-        CAST(NEW."data"->'Detail'->'en'->>'IntroText' As varchar) AS "Detail-en-IntroText",
-        CAST(NEW."data"->'Detail'->'en'->>'GetThereText' As varchar) AS "Detail-en-GetThereText",
-        CAST(NEW."data"->'Detail'->'en'->>'AdditionalText' As varchar) AS "Detail-en-AdditionalText",
         CAST(NEW."data"->'Detail'->'it'->>'Title' As varchar) AS "Detail-it-Title",
-        CAST(NEW."data"->'Detail'->'it'->>'Header' As varchar) AS "Detail-it-Header",
         CAST(NEW."data"->'Detail'->'it'->>'BaseText' As varchar) AS "Detail-it-BaseText",
         CAST(NEW."data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language",
-        CAST(NEW."data"->'Detail'->'it'->>'IntroText' As varchar) AS "Detail-it-IntroText",
-        CAST(NEW."data"->'Detail'->'it'->>'GetThereText' As varchar) AS "Detail-it-GetThereText",
-        CAST(NEW."data"->'Detail'->'it'->>'AdditionalText' As varchar) AS "Detail-it-AdditionalText",
+        CAST(NEW."data"->'Ratings'->>'Stamina' As varchar) AS "Ratings-Stamina",
+        CAST(NEW."data"->'Ratings'->>'Landscape' As varchar) AS "Ratings-Landscape",
+        CAST(NEW."data"->'Ratings'->>'Technique' As varchar) AS "Ratings-Technique",
+        CAST(NEW."data"->'Ratings'->>'Difficulty' As varchar) AS "Ratings-Difficulty",
+        CAST(NEW."data"->'Ratings'->>'Experience' As varchar) AS "Ratings-Experience",
         CAST(NEW."data"->'GpsPoints'->'position'->>'Gpstype' As varchar) AS "GpsPoints-position-Gpstype",
         CAST(NEW."data"->'GpsPoints'->'position'->>'Altitude' As float) AS "GpsPoints-position-Altitude",
         CAST(NEW."data"->'GpsPoints'->'position'->>'Latitude' As float) AS "GpsPoints-position-Latitude",
         CAST(NEW."data"->'GpsPoints'->'position'->>'Longitude' As float) AS "GpsPoints-position-Longitude",
         CAST(NEW."data"->'GpsPoints'->'position'->>'AltitudeUnitofMeasure' As varchar) AS "GpsPoints-position-AltitudeUnitofMeasure",
+        CAST(NEW."data"->'GpsPoints'->'endposition'->>'Gpstype' As varchar) AS "GpsPoints-endposition-Gpstype",
+        CAST(NEW."data"->'GpsPoints'->'endposition'->>'Altitude' As float) AS "GpsPoints-endposition-Altitude",
+        CAST(NEW."data"->'GpsPoints'->'endposition'->>'Latitude' As float) AS "GpsPoints-endposition-Latitude",
+        CAST(NEW."data"->'GpsPoints'->'endposition'->>'Longitude' As float) AS "GpsPoints-endposition-Longitude",
+        CAST(NEW."data"->'GpsPoints'->'endposition'->>'AltitudeUnitofMeasure' As varchar) AS "GpsPoints-endposition-AltitudeUnitofMeasure",
         CAST(NEW."data"->'ContactInfos'->'de'->>'Url' As varchar) AS "ContactInfos-de-Url",
         CAST(NEW."data"->'ContactInfos'->'de'->>'City' As varchar) AS "ContactInfos-de-City",
         CAST(NEW."data"->'ContactInfos'->'de'->>'Email' As varchar) AS "ContactInfos-de-Email",
@@ -3855,29 +3107,29 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER t_v_poisopen
+CREATE TRIGGER t_v_activitiesopen
     BEFORE INSERT
-    ON poisopen
+    ON activitiesopen
     FOR EACH ROW
-EXECUTE PROCEDURE v_poisopen_fn();
+EXECUTE PROCEDURE v_activitiesopen_fn();
 
-ALTER TABLE poisopen
-    ENABLE ALWAYS TRIGGER t_v_poisopen;
+ALTER TABLE activitiesopen
+    ENABLE ALWAYS TRIGGER t_v_activitiesopen;
 
-DROP TABLE IF EXISTS "v_poisopen_AreaId";
+DROP TABLE IF EXISTS "v_activitiesopen_AreaId";
 
-CREATE TABLE  "v_poisopen_AreaId" (
-                                      "Id" varchar,
-                                      "data" varchar
+CREATE TABLE  "v_activitiesopen_AreaId" (
+                                            "Id" varchar,
+                                            "data" varchar
 );
 
-DROP FUNCTION IF EXISTS v_poisopen_AreaId_fn CASCADE;
+DROP FUNCTION IF EXISTS v_activitiesopen_AreaId_fn CASCADE;
 
-CREATE FUNCTION v_poisopen_AreaId_fn()
+CREATE FUNCTION v_activitiesopen_AreaId_fn()
     RETURNS TRIGGER
 AS $$
 BEGIN
-    INSERT INTO "v_poisopen_AreaId"
+    INSERT INTO "v_activitiesopen_AreaId"
     SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
            jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
     WHERE NEW."data" -> 'AreaId' != 'null';
@@ -3886,29 +3138,29 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER t_v_poisopen_AreaId
+CREATE TRIGGER t_v_activitiesopen_AreaId
     BEFORE INSERT
-    ON poisopen
+    ON activitiesopen
     FOR EACH ROW
-EXECUTE PROCEDURE v_poisopen_AreaId_fn();
+EXECUTE PROCEDURE v_activitiesopen_AreaId_fn();
 
-ALTER TABLE poisopen
-    ENABLE ALWAYS TRIGGER t_v_poisopen_AreaId;
+ALTER TABLE activitiesopen
+    ENABLE ALWAYS TRIGGER t_v_activitiesopen_AreaId;
 
-DROP TABLE IF EXISTS "v_poisopen_SmgTags";
+DROP TABLE IF EXISTS "v_activitiesopen_SmgTags";
 
-CREATE TABLE  "v_poisopen_SmgTags" (
-                                       "Id" varchar,
-                                       "data" varchar
+CREATE TABLE  "v_activitiesopen_SmgTags" (
+                                             "Id" varchar,
+                                             "data" varchar
 );
 
-DROP FUNCTION IF EXISTS v_poisopen_SmgTags_fn CASCADE;
+DROP FUNCTION IF EXISTS v_activitiesopen_SmgTags_fn CASCADE;
 
-CREATE FUNCTION v_poisopen_SmgTags_fn()
+CREATE FUNCTION v_activitiesopen_SmgTags_fn()
     RETURNS TRIGGER
 AS $$
 BEGIN
-    INSERT INTO "v_poisopen_SmgTags"
+    INSERT INTO "v_activitiesopen_SmgTags"
     SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
            jsonb_array_elements_text(NEW."data" -> 'SmgTags') AS "data"
     WHERE NEW."data" -> 'SmgTags' != 'null';
@@ -3917,29 +3169,60 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER t_v_poisopen_SmgTags
+CREATE TRIGGER t_v_activitiesopen_SmgTags
     BEFORE INSERT
-    ON poisopen
+    ON activitiesopen
     FOR EACH ROW
-EXECUTE PROCEDURE v_poisopen_SmgTags_fn();
+EXECUTE PROCEDURE v_activitiesopen_SmgTags_fn();
 
-ALTER TABLE poisopen
-    ENABLE ALWAYS TRIGGER t_v_poisopen_SmgTags;
+ALTER TABLE activitiesopen
+    ENABLE ALWAYS TRIGGER t_v_activitiesopen_SmgTags;
 
-DROP TABLE IF EXISTS "v_poisopen_HasLanguage";
+DROP TABLE IF EXISTS "v_activitiesopen_Exposition";
 
-CREATE TABLE  "v_poisopen_HasLanguage" (
-                                           "Id" varchar,
-                                           "data" varchar
+CREATE TABLE  "v_activitiesopen_Exposition" (
+                                                "Id" varchar,
+                                                "data" varchar
 );
 
-DROP FUNCTION IF EXISTS v_poisopen_HasLanguage_fn CASCADE;
+DROP FUNCTION IF EXISTS v_activitiesopen_Exposition_fn CASCADE;
 
-CREATE FUNCTION v_poisopen_HasLanguage_fn()
+CREATE FUNCTION v_activitiesopen_Exposition_fn()
     RETURNS TRIGGER
 AS $$
 BEGIN
-    INSERT INTO "v_poisopen_HasLanguage"
+    INSERT INTO "v_activitiesopen_Exposition"
+    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
+           jsonb_array_elements_text(NEW."data" -> 'Exposition') AS "data"
+    WHERE NEW."data" -> 'Exposition' != 'null';
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_activitiesopen_Exposition
+    BEFORE INSERT
+    ON activitiesopen
+    FOR EACH ROW
+EXECUTE PROCEDURE v_activitiesopen_Exposition_fn();
+
+ALTER TABLE activitiesopen
+    ENABLE ALWAYS TRIGGER t_v_activitiesopen_Exposition;
+
+DROP TABLE IF EXISTS "v_activitiesopen_HasLanguage";
+
+CREATE TABLE  "v_activitiesopen_HasLanguage" (
+                                                 "Id" varchar,
+                                                 "data" varchar
+);
+
+DROP FUNCTION IF EXISTS v_activitiesopen_HasLanguage_fn CASCADE;
+
+CREATE FUNCTION v_activitiesopen_HasLanguage_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO "v_activitiesopen_HasLanguage"
     SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
            jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
     WHERE NEW."data" -> 'HasLanguage' != 'null';
@@ -3948,38 +3231,38 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER t_v_poisopen_HasLanguage
+CREATE TRIGGER t_v_activitiesopen_HasLanguage
     BEFORE INSERT
-    ON poisopen
+    ON activitiesopen
     FOR EACH ROW
-EXECUTE PROCEDURE v_poisopen_HasLanguage_fn();
+EXECUTE PROCEDURE v_activitiesopen_HasLanguage_fn();
 
-ALTER TABLE poisopen
-    ENABLE ALWAYS TRIGGER t_v_poisopen_HasLanguage;
+ALTER TABLE activitiesopen
+    ENABLE ALWAYS TRIGGER t_v_activitiesopen_HasLanguage;
 
-DROP TABLE IF EXISTS "v_poisopen_GpsInfo";
+DROP TABLE IF EXISTS "v_activitiesopen_GpsInfo";
 
-CREATE TABLE "v_poisopen_GpsInfo" (
-                                      "poisopen_Id" varchar,
-                                      "Gpstype" varchar,
-                                      "Altitude" float,
-                                      "Latitude" float,
-                                      "Longitude" float,
-                                      "AltitudeUnitofMeasure" varchar
+CREATE TABLE "v_activitiesopen_GpsInfo" (
+                                            "activitiesopen_Id" varchar,
+                                            "Gpstype" varchar,
+                                            "Altitude" float,
+                                            "Latitude" float,
+                                            "Longitude" float,
+                                            "AltitudeUnitofMeasure" varchar
 );
 
-DROP FUNCTION IF EXISTS v_poisopen_GpsInfo_fn CASCADE;
+DROP FUNCTION IF EXISTS v_activitiesopen_GpsInfo_fn CASCADE;
 
-CREATE FUNCTION v_poisopen_GpsInfo_fn()
+CREATE FUNCTION v_activitiesopen_GpsInfo_fn()
     RETURNS TRIGGER
 AS $$
 BEGIN
-    INSERT INTO "v_poisopen_GpsInfo"
+    INSERT INTO "v_activitiesopen_GpsInfo"
     WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
                jsonb_array_elements(NEW."data" -> 'GpsInfo') AS "data"
         WHERE NEW."data" -> 'GpsInfo' != 'null')
-    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
+    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
            CAST("data"->>'Altitude' As float) AS "Altitude",
            CAST("data"->>'Latitude' As float) AS "Latitude",
            CAST("data"->>'Longitude' As float) AS "Longitude",
@@ -3990,81 +3273,83 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER t_v_poisopen_GpsInfo
+CREATE TRIGGER t_v_activitiesopen_GpsInfo
     BEFORE INSERT
-    ON poisopen
+    ON activitiesopen
     FOR EACH ROW
-EXECUTE PROCEDURE v_poisopen_GpsInfo_fn();
+EXECUTE PROCEDURE v_activitiesopen_GpsInfo_fn();
 
-ALTER TABLE poisopen
-    ENABLE ALWAYS TRIGGER t_v_poisopen_GpsInfo;
+ALTER TABLE activitiesopen
+    ENABLE ALWAYS TRIGGER t_v_activitiesopen_GpsInfo;
 
 
-DROP TABLE IF EXISTS "v_poisopen_LTSTags";
+DROP TABLE IF EXISTS "v_activitiesopen_GpsTrack";
 
-CREATE TABLE "v_poisopen_LTSTags" (
-                                      "poisopen_Id" varchar,
-                                      "Id" varchar,
-                                      "Level" integer,
-                                      "TagName-de" varchar,
-                                      "TagName-en" varchar,
-                                      "TagName-it" varchar
+CREATE TABLE "v_activitiesopen_GpsTrack" (
+                                             "activitiesopen_Id" varchar,
+                                             "Id" varchar,
+                                             "Type" varchar,
+                                             "GpxTrackUrl" varchar,
+                                             "GpxTrackDesc-de" varchar,
+                                             "GpxTrackDesc-en" varchar,
+                                             "GpxTrackDesc-it" varchar
 );
 
-DROP FUNCTION IF EXISTS v_poisopen_LTSTags_fn CASCADE;
+DROP FUNCTION IF EXISTS v_activitiesopen_GpsTrack_fn CASCADE;
 
-CREATE FUNCTION v_poisopen_LTSTags_fn()
+CREATE FUNCTION v_activitiesopen_GpsTrack_fn()
     RETURNS TRIGGER
 AS $$
 BEGIN
-    INSERT INTO "v_poisopen_LTSTags"
+    INSERT INTO "v_activitiesopen_GpsTrack"
     WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-               jsonb_array_elements(NEW."data" -> 'LTSTags') AS "data"
-        WHERE NEW."data" -> 'LTSTags' != 'null')
-    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
-           CAST("data"->>'Level' As integer) AS "Level",
-           CAST("data"->'TagName'->>'de' As varchar) AS "TagName-de",
-           CAST("data"->'TagName'->>'en' As varchar) AS "TagName-en",
-           CAST("data"->'TagName'->>'it' As varchar) AS "TagName-it"
+               jsonb_array_elements(NEW."data" -> 'GpsTrack') AS "data"
+        WHERE NEW."data" -> 'GpsTrack' != 'null')
+    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+           CAST("data"->>'Type' As varchar) AS "Type",
+           CAST("data"->>'GpxTrackUrl' As varchar) AS "GpxTrackUrl",
+           CAST("data"->'GpxTrackDesc'->>'de' As varchar) AS "GpxTrackDesc-de",
+           CAST("data"->'GpxTrackDesc'->>'en' As varchar) AS "GpxTrackDesc-en",
+           CAST("data"->'GpxTrackDesc'->>'it' As varchar) AS "GpxTrackDesc-it"
     FROM t;
     RETURN NEW;
 END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER t_v_poisopen_LTSTags
+CREATE TRIGGER t_v_activitiesopen_GpsTrack
     BEFORE INSERT
-    ON poisopen
+    ON activitiesopen
     FOR EACH ROW
-EXECUTE PROCEDURE v_poisopen_LTSTags_fn();
+EXECUTE PROCEDURE v_activitiesopen_GpsTrack_fn();
 
-ALTER TABLE poisopen
-    ENABLE ALWAYS TRIGGER t_v_poisopen_LTSTags;
+ALTER TABLE activitiesopen
+    ENABLE ALWAYS TRIGGER t_v_activitiesopen_GpsTrack;
 
 
-DROP TABLE IF EXISTS "v_poisopen_OperationSchedule";
+DROP TABLE IF EXISTS "v_activitiesopen_OperationSchedule";
 
-CREATE TABLE "v_poisopen_OperationSchedule" (
-                                                "poisopen_Id" varchar,
-                                                "Stop" varchar,
-                                                "Type" varchar,
-                                                "Start" varchar,
-                                                "OperationscheduleName-de" varchar
+CREATE TABLE "v_activitiesopen_OperationSchedule" (
+                                                      "activitiesopen_Id" varchar,
+                                                      "Stop" varchar,
+                                                      "Type" varchar,
+                                                      "Start" varchar,
+                                                      "OperationscheduleName-de" varchar
 );
 
-DROP FUNCTION IF EXISTS v_poisopen_OperationSchedule_fn CASCADE;
+DROP FUNCTION IF EXISTS v_activitiesopen_OperationSchedule_fn CASCADE;
 
-CREATE FUNCTION v_poisopen_OperationSchedule_fn()
+CREATE FUNCTION v_activitiesopen_OperationSchedule_fn()
     RETURNS TRIGGER
 AS $$
 BEGIN
-    INSERT INTO "v_poisopen_OperationSchedule"
+    INSERT INTO "v_activitiesopen_OperationSchedule"
     WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
                jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "data"
         WHERE NEW."data" -> 'OperationSchedule' != 'null')
-    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
+    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
            CAST("data"->>'Type' As varchar) AS "Type",
            CAST("data"->>'Start' As varchar) AS "Start",
            CAST("data"->'OperationscheduleName'->>'de' As varchar) AS "OperationscheduleName-de"
@@ -4074,14 +3359,124 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER t_v_poisopen_OperationSchedule
+CREATE TRIGGER t_v_activitiesopen_OperationSchedule
     BEFORE INSERT
-    ON poisopen
+    ON activitiesopen
     FOR EACH ROW
-EXECUTE PROCEDURE v_poisopen_OperationSchedule_fn();
+EXECUTE PROCEDURE v_activitiesopen_OperationSchedule_fn();
 
-ALTER TABLE poisopen
-    ENABLE ALWAYS TRIGGER t_v_poisopen_OperationSchedule;
+ALTER TABLE activitiesopen
+    ENABLE ALWAYS TRIGGER t_v_activitiesopen_OperationSchedule;
+
+
+DROP TABLE IF EXISTS "v_accommodationroomsopen";
+
+CREATE TABLE "v_accommodationroomsopen" (
+                                            "Id" varchar,
+                                            "A0RID" varchar,
+                                            "HGVId" varchar,
+                                            "LTSId" varchar,
+                                            "Source" varchar,
+                                            "Roommax" integer,
+                                            "Roommin" integer,
+                                            "Roomstd" integer,
+                                            "RoomCode" varchar,
+                                            "Roomtype" varchar,
+                                            "Shortname" varchar,
+                                            "RoomQuantity" integer,
+                                            "AccoRoomDetail-de-Name" varchar,
+                                            "AccoRoomDetail-de-Language" varchar,
+                                            "AccoRoomDetail-de-Longdesc" varchar,
+                                            "AccoRoomDetail-de-Shortdesc" varchar,
+                                            "AccoRoomDetail-en-Name" varchar,
+                                            "AccoRoomDetail-en-Language" varchar,
+                                            "AccoRoomDetail-it-Name" varchar,
+                                            "AccoRoomDetail-it-Language" varchar,
+                                            "AccoRoomDetail-it-Longdesc" varchar,
+                                            "AccoRoomDetail-it-Shortdesc" varchar
+);
+
+ALTER TABLE "v_accommodationroomsopen" ADD PRIMARY KEY ("Id");
+
+DROP FUNCTION IF EXISTS v_accommodationroomsopen_fn CASCADE;
+
+CREATE FUNCTION v_accommodationroomsopen_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO v_accommodationroomsopen
+    SELECT
+        CAST(NEW."data"->>'Id' As varchar) AS "Id",
+        CAST(NEW."data"->>'A0RID' As varchar) AS "A0RID",
+        CAST(NEW."data"->>'HGVId' As varchar) AS "HGVId",
+        CAST(NEW."data"->>'LTSId' As varchar) AS "LTSId",
+        CAST(NEW."data"->>'Source' As varchar) AS "Source",
+        CAST(NEW."data"->>'Roommax' As integer) AS "Roommax",
+        CAST(NEW."data"->>'Roommin' As integer) AS "Roommin",
+        CAST(NEW."data"->>'Roomstd' As integer) AS "Roomstd",
+        CAST(NEW."data"->>'RoomCode' As varchar) AS "RoomCode",
+        CAST(NEW."data"->>'Roomtype' As varchar) AS "Roomtype",
+        CAST(NEW."data"->>'Shortname' As varchar) AS "Shortname",
+        CAST(NEW."data"->>'RoomQuantity' As integer) AS "RoomQuantity",
+        CAST(NEW."data"->'AccoRoomDetail'->'de'->>'Name' As varchar) AS "AccoRoomDetail-de-Name",
+        CAST(NEW."data"->'AccoRoomDetail'->'de'->>'Language' As varchar) AS "AccoRoomDetail-de-Language",
+        CAST(NEW."data"->'AccoRoomDetail'->'de'->>'Longdesc' As varchar) AS "AccoRoomDetail-de-Longdesc",
+        CAST(NEW."data"->'AccoRoomDetail'->'de'->>'Shortdesc' As varchar) AS "AccoRoomDetail-de-Shortdesc",
+        CAST(NEW."data"->'AccoRoomDetail'->'en'->>'Name' As varchar) AS "AccoRoomDetail-en-Name",
+        CAST(NEW."data"->'AccoRoomDetail'->'en'->>'Language' As varchar) AS "AccoRoomDetail-en-Language",
+        CAST(NEW."data"->'AccoRoomDetail'->'it'->>'Name' As varchar) AS "AccoRoomDetail-it-Name",
+        CAST(NEW."data"->'AccoRoomDetail'->'it'->>'Language' As varchar) AS "AccoRoomDetail-it-Language",
+        CAST(NEW."data"->'AccoRoomDetail'->'it'->>'Longdesc' As varchar) AS "AccoRoomDetail-it-Longdesc",
+        CAST(NEW."data"->'AccoRoomDetail'->'it'->>'Shortdesc' As varchar) AS "AccoRoomDetail-it-Shortdesc";
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_accommodationroomsopen
+    BEFORE INSERT
+    ON accommodationroomsopen
+    FOR EACH ROW
+EXECUTE PROCEDURE v_accommodationroomsopen_fn();
+
+ALTER TABLE accommodationroomsopen
+    ENABLE ALWAYS TRIGGER t_v_accommodationroomsopen;
+
+DROP TABLE IF EXISTS "v_accommodationroomsopen_Features";
+
+CREATE TABLE "v_accommodationroomsopen_Features" (
+                                                     "accommodationroomsopen_Id" varchar,
+                                                     "Id" varchar,
+                                                     "Name" varchar
+);
+
+DROP FUNCTION IF EXISTS v_accommodationroomsopen_Features_fn CASCADE;
+
+CREATE FUNCTION v_accommodationroomsopen_Features_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO "v_accommodationroomsopen_Features"
+    WITH t ("Id", "data") AS (
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
+               jsonb_array_elements(NEW."data" -> 'Features') AS "data"
+        WHERE NEW."data" -> 'Features' != 'null')
+    SELECT "Id" AS "accommodationroomsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+           CAST("data"->>'Name' As varchar) AS "Name"
+    FROM t;
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_accommodationroomsopen_Features
+    BEFORE INSERT
+    ON accommodationroomsopen
+    FOR EACH ROW
+EXECUTE PROCEDURE v_accommodationroomsopen_Features_fn();
+
+ALTER TABLE accommodationroomsopen
+    ENABLE ALWAYS TRIGGER t_v_accommodationroomsopen_Features;
 
 
 DROP TABLE IF EXISTS "v_regionsopen";
@@ -4501,6 +3896,8 @@ CREATE TABLE "v_regionsopen" (
                                  "D-r-DetailsThemed-Kultur und Sehenswürdigkeiten-MetaDesc" varchar,
                                  "D-r-DetailsThemed-Kultur und Sehenswürdigkeiten-MetaTitle" varchar
 );
+
+ALTER TABLE "v_regionsopen" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_regionsopen_fn CASCADE;
 
@@ -5201,6 +4598,8 @@ CREATE TABLE "v_skiareasopen" (
                                   "SkiRegionName-ru" varchar
 );
 
+ALTER TABLE "v_skiareasopen" ADD PRIMARY KEY ("Id");
+
 DROP FUNCTION IF EXISTS v_skiareasopen_fn CASCADE;
 
 CREATE FUNCTION v_skiareasopen_fn()
@@ -5824,6 +5223,8 @@ CREATE TABLE "v_skiregionsopen" (
                                     "ContactInfos-ru-Phonenumber" varchar
 );
 
+ALTER TABLE "v_skiregionsopen" ADD PRIMARY KEY ("Id");
+
 DROP FUNCTION IF EXISTS v_skiregionsopen_fn CASCADE;
 
 CREATE FUNCTION v_skiregionsopen_fn()
@@ -6279,6 +5680,8 @@ CREATE TABLE "v_smgpoisopen" (
                                  "AdditionalPoiInfos-ru-Language" varchar,
                                  "AdditionalPoiInfos-ru-MainType" varchar
 );
+
+ALTER TABLE "v_smgpoisopen" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_smgpoisopen_fn CASCADE;
 
@@ -6768,71 +6171,520 @@ ALTER TABLE smgpoisopen
     ENABLE ALWAYS TRIGGER t_v_smgpoisopen_OperationSchedule;
 
 
-DROP TABLE IF EXISTS "v_smgtags";
+DROP TABLE IF EXISTS "v_poisopen";
 
-CREATE TABLE "v_smgtags" (
-                             "Id" varchar,
-                             "Shortname" varchar,
-                             "MainEntity" varchar,
-                             "TagName-de" varchar
+CREATE TABLE "v_poisopen" (
+                              "Id" varchar,
+                              "Type" varchar,
+                              "Active" bool,
+                              "IsOpen" bool,
+                              "PoiType" varchar,
+                              "SubType" varchar,
+                              "FeetClimb" bool,
+                              "Highlight" bool,
+                              "Shortname" varchar,
+                              "SmgActive" bool,
+                              "HasRentals" bool,
+                              "IsPrepared" bool,
+                              "LastChange" varchar,
+                              "FirstImport" varchar,
+                              "IsWithLigth" bool,
+                              "RunToValley" bool,
+                              "AltitudeSumUp" float,
+                              "LiftAvailable" bool,
+                              "DistanceLength" float,
+                              "AltitudeSumDown" float,
+                              "HasFreeEntrance" bool,
+                              "DistanceDuration" float,
+                              "AltitudeDifference" float,
+                              "AltitudeLowestPoint" float,
+                              "AltitudeHighestPoint" float,
+                              "TourismorganizationId" varchar,
+                              "Detail-de-Title" varchar,
+                              "Detail-de-Header" varchar,
+                              "Detail-de-BaseText" varchar,
+                              "Detail-de-Language" varchar,
+                              "Detail-de-IntroText" varchar,
+                              "Detail-de-GetThereText" varchar,
+                              "Detail-de-AdditionalText" varchar,
+                              "Detail-en-Title" varchar,
+                              "Detail-en-Header" varchar,
+                              "Detail-en-BaseText" varchar,
+                              "Detail-en-Language" varchar,
+                              "Detail-en-IntroText" varchar,
+                              "Detail-en-GetThereText" varchar,
+                              "Detail-en-AdditionalText" varchar,
+                              "Detail-it-Title" varchar,
+                              "Detail-it-Header" varchar,
+                              "Detail-it-BaseText" varchar,
+                              "Detail-it-Language" varchar,
+                              "Detail-it-IntroText" varchar,
+                              "Detail-it-GetThereText" varchar,
+                              "Detail-it-AdditionalText" varchar,
+                              "GpsPoints-position-Gpstype" varchar,
+                              "GpsPoints-position-Altitude" float,
+                              "GpsPoints-position-Latitude" float,
+                              "GpsPoints-position-Longitude" float,
+                              "GpsPoints-position-AltitudeUnitofMeasure" varchar,
+                              "ContactInfos-de-Url" varchar,
+                              "ContactInfos-de-City" varchar,
+                              "ContactInfos-de-Email" varchar,
+                              "ContactInfos-de-Address" varchar,
+                              "ContactInfos-de-Surname" varchar,
+                              "ContactInfos-de-ZipCode" varchar,
+                              "ContactInfos-de-Language" varchar,
+                              "ContactInfos-de-Faxnumber" varchar,
+                              "ContactInfos-de-Givenname" varchar,
+                              "ContactInfos-de-NamePrefix" varchar,
+                              "ContactInfos-de-CompanyName" varchar,
+                              "ContactInfos-de-CountryCode" varchar,
+                              "ContactInfos-de-CountryName" varchar,
+                              "ContactInfos-de-Phonenumber" varchar,
+                              "ContactInfos-en-Url" varchar,
+                              "ContactInfos-en-City" varchar,
+                              "ContactInfos-en-Email" varchar,
+                              "ContactInfos-en-Address" varchar,
+                              "ContactInfos-en-Surname" varchar,
+                              "ContactInfos-en-ZipCode" varchar,
+                              "ContactInfos-en-Language" varchar,
+                              "ContactInfos-en-Faxnumber" varchar,
+                              "ContactInfos-en-Givenname" varchar,
+                              "ContactInfos-en-NamePrefix" varchar,
+                              "ContactInfos-en-CompanyName" varchar,
+                              "ContactInfos-en-CountryCode" varchar,
+                              "ContactInfos-en-CountryName" varchar,
+                              "ContactInfos-en-Phonenumber" varchar,
+                              "ContactInfos-it-Url" varchar,
+                              "ContactInfos-it-City" varchar,
+                              "ContactInfos-it-Email" varchar,
+                              "ContactInfos-it-Address" varchar,
+                              "ContactInfos-it-Surname" varchar,
+                              "ContactInfos-it-ZipCode" varchar,
+                              "ContactInfos-it-Language" varchar,
+                              "ContactInfos-it-Faxnumber" varchar,
+                              "ContactInfos-it-Givenname" varchar,
+                              "ContactInfos-it-NamePrefix" varchar,
+                              "ContactInfos-it-CompanyName" varchar,
+                              "ContactInfos-it-CountryCode" varchar,
+                              "ContactInfos-it-CountryName" varchar,
+                              "ContactInfos-it-Phonenumber" varchar,
+                              "LocationInfo-TvInfo-Id" varchar,
+                              "LocationInfo-TvInfo-Name-cs" varchar,
+                              "LocationInfo-TvInfo-Name-de" varchar,
+                              "LocationInfo-TvInfo-Name-en" varchar,
+                              "LocationInfo-TvInfo-Name-fr" varchar,
+                              "LocationInfo-TvInfo-Name-it" varchar,
+                              "LocationInfo-TvInfo-Name-nl" varchar,
+                              "LocationInfo-TvInfo-Name-pl" varchar,
+                              "LocationInfo-TvInfo-Name-ru" varchar,
+                              "LocationInfo-AreaInfo-Id" varchar,
+                              "LocationInfo-AreaInfo-Name-cs" varchar,
+                              "LocationInfo-AreaInfo-Name-de" varchar,
+                              "LocationInfo-AreaInfo-Name-en" varchar,
+                              "LocationInfo-AreaInfo-Name-fr" varchar,
+                              "LocationInfo-AreaInfo-Name-it" varchar,
+                              "LocationInfo-AreaInfo-Name-nl" varchar,
+                              "LocationInfo-AreaInfo-Name-pl" varchar,
+                              "LocationInfo-AreaInfo-Name-ru" varchar,
+                              "LocationInfo-RegionInfo-Id" varchar,
+                              "LocationInfo-RegionInfo-Name-cs" varchar,
+                              "LocationInfo-RegionInfo-Name-de" varchar,
+                              "LocationInfo-RegionInfo-Name-en" varchar,
+                              "LocationInfo-RegionInfo-Name-fr" varchar,
+                              "LocationInfo-RegionInfo-Name-it" varchar,
+                              "LocationInfo-RegionInfo-Name-nl" varchar,
+                              "LocationInfo-RegionInfo-Name-pl" varchar,
+                              "LocationInfo-RegionInfo-Name-ru" varchar,
+                              "AdditionalPoiInfos-de-PoiType" varchar,
+                              "AdditionalPoiInfos-de-SubType" varchar,
+                              "AdditionalPoiInfos-de-Language" varchar,
+                              "AdditionalPoiInfos-de-MainType" varchar,
+                              "AdditionalPoiInfos-en-PoiType" varchar,
+                              "AdditionalPoiInfos-en-SubType" varchar,
+                              "AdditionalPoiInfos-en-Language" varchar,
+                              "AdditionalPoiInfos-en-MainType" varchar,
+                              "AdditionalPoiInfos-it-PoiType" varchar,
+                              "AdditionalPoiInfos-it-SubType" varchar,
+                              "AdditionalPoiInfos-it-Language" varchar,
+                              "AdditionalPoiInfos-it-MainType" varchar
 );
 
-DROP FUNCTION IF EXISTS v_smgtags_fn CASCADE;
+ALTER TABLE "v_poisopen" ADD PRIMARY KEY ("Id");
 
-CREATE FUNCTION v_smgtags_fn()
+DROP FUNCTION IF EXISTS v_poisopen_fn CASCADE;
+
+CREATE FUNCTION v_poisopen_fn()
     RETURNS TRIGGER
 AS $$
 BEGIN
-    INSERT INTO v_smgtags
+    INSERT INTO v_poisopen
     SELECT
         CAST(NEW."data"->>'Id' As varchar) AS "Id",
+        CAST(NEW."data"->>'Type' As varchar) AS "Type",
+        CAST(NEW."data"->>'Active' As bool) AS "Active",
+        CAST(NEW."data"->>'IsOpen' As bool) AS "IsOpen",
+        CAST(NEW."data"->>'PoiType' As varchar) AS "PoiType",
+        CAST(NEW."data"->>'SubType' As varchar) AS "SubType",
+        CAST(NEW."data"->>'FeetClimb' As bool) AS "FeetClimb",
+        CAST(NEW."data"->>'Highlight' As bool) AS "Highlight",
         CAST(NEW."data"->>'Shortname' As varchar) AS "Shortname",
-        CAST(NEW."data"->>'MainEntity' As varchar) AS "MainEntity",
-        CAST(NEW."data"->'TagName'->>'de' As varchar) AS "TagName-de";
+        CAST(NEW."data"->>'SmgActive' As bool) AS "SmgActive",
+        CAST(NEW."data"->>'HasRentals' As bool) AS "HasRentals",
+        CAST(NEW."data"->>'IsPrepared' As bool) AS "IsPrepared",
+        CAST(NEW."data"->>'LastChange' As varchar) AS "LastChange",
+        CAST(NEW."data"->>'FirstImport' As varchar) AS "FirstImport",
+        CAST(NEW."data"->>'IsWithLigth' As bool) AS "IsWithLigth",
+        CAST(NEW."data"->>'RunToValley' As bool) AS "RunToValley",
+        CAST(NEW."data"->>'AltitudeSumUp' As float) AS "AltitudeSumUp",
+        CAST(NEW."data"->>'LiftAvailable' As bool) AS "LiftAvailable",
+        CAST(NEW."data"->>'DistanceLength' As float) AS "DistanceLength",
+        CAST(NEW."data"->>'AltitudeSumDown' As float) AS "AltitudeSumDown",
+        CAST(NEW."data"->>'HasFreeEntrance' As bool) AS "HasFreeEntrance",
+        CAST(NEW."data"->>'DistanceDuration' As float) AS "DistanceDuration",
+        CAST(NEW."data"->>'AltitudeDifference' As float) AS "AltitudeDifference",
+        CAST(NEW."data"->>'AltitudeLowestPoint' As float) AS "AltitudeLowestPoint",
+        CAST(NEW."data"->>'AltitudeHighestPoint' As float) AS "AltitudeHighestPoint",
+        CAST(NEW."data"->>'TourismorganizationId' As varchar) AS "TourismorganizationId",
+        CAST(NEW."data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
+        CAST(NEW."data"->'Detail'->'de'->>'Header' As varchar) AS "Detail-de-Header",
+        CAST(NEW."data"->'Detail'->'de'->>'BaseText' As varchar) AS "Detail-de-BaseText",
+        CAST(NEW."data"->'Detail'->'de'->>'Language' As varchar) AS "Detail-de-Language",
+        CAST(NEW."data"->'Detail'->'de'->>'IntroText' As varchar) AS "Detail-de-IntroText",
+        CAST(NEW."data"->'Detail'->'de'->>'GetThereText' As varchar) AS "Detail-de-GetThereText",
+        CAST(NEW."data"->'Detail'->'de'->>'AdditionalText' As varchar) AS "Detail-de-AdditionalText",
+        CAST(NEW."data"->'Detail'->'en'->>'Title' As varchar) AS "Detail-en-Title",
+        CAST(NEW."data"->'Detail'->'en'->>'Header' As varchar) AS "Detail-en-Header",
+        CAST(NEW."data"->'Detail'->'en'->>'BaseText' As varchar) AS "Detail-en-BaseText",
+        CAST(NEW."data"->'Detail'->'en'->>'Language' As varchar) AS "Detail-en-Language",
+        CAST(NEW."data"->'Detail'->'en'->>'IntroText' As varchar) AS "Detail-en-IntroText",
+        CAST(NEW."data"->'Detail'->'en'->>'GetThereText' As varchar) AS "Detail-en-GetThereText",
+        CAST(NEW."data"->'Detail'->'en'->>'AdditionalText' As varchar) AS "Detail-en-AdditionalText",
+        CAST(NEW."data"->'Detail'->'it'->>'Title' As varchar) AS "Detail-it-Title",
+        CAST(NEW."data"->'Detail'->'it'->>'Header' As varchar) AS "Detail-it-Header",
+        CAST(NEW."data"->'Detail'->'it'->>'BaseText' As varchar) AS "Detail-it-BaseText",
+        CAST(NEW."data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language",
+        CAST(NEW."data"->'Detail'->'it'->>'IntroText' As varchar) AS "Detail-it-IntroText",
+        CAST(NEW."data"->'Detail'->'it'->>'GetThereText' As varchar) AS "Detail-it-GetThereText",
+        CAST(NEW."data"->'Detail'->'it'->>'AdditionalText' As varchar) AS "Detail-it-AdditionalText",
+        CAST(NEW."data"->'GpsPoints'->'position'->>'Gpstype' As varchar) AS "GpsPoints-position-Gpstype",
+        CAST(NEW."data"->'GpsPoints'->'position'->>'Altitude' As float) AS "GpsPoints-position-Altitude",
+        CAST(NEW."data"->'GpsPoints'->'position'->>'Latitude' As float) AS "GpsPoints-position-Latitude",
+        CAST(NEW."data"->'GpsPoints'->'position'->>'Longitude' As float) AS "GpsPoints-position-Longitude",
+        CAST(NEW."data"->'GpsPoints'->'position'->>'AltitudeUnitofMeasure' As varchar) AS "GpsPoints-position-AltitudeUnitofMeasure",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'Url' As varchar) AS "ContactInfos-de-Url",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'City' As varchar) AS "ContactInfos-de-City",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'Email' As varchar) AS "ContactInfos-de-Email",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'Address' As varchar) AS "ContactInfos-de-Address",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'Surname' As varchar) AS "ContactInfos-de-Surname",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'ZipCode' As varchar) AS "ContactInfos-de-ZipCode",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'Language' As varchar) AS "ContactInfos-de-Language",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'Faxnumber' As varchar) AS "ContactInfos-de-Faxnumber",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'Givenname' As varchar) AS "ContactInfos-de-Givenname",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'NamePrefix' As varchar) AS "ContactInfos-de-NamePrefix",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'CompanyName' As varchar) AS "ContactInfos-de-CompanyName",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'CountryCode' As varchar) AS "ContactInfos-de-CountryCode",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'CountryName' As varchar) AS "ContactInfos-de-CountryName",
+        CAST(NEW."data"->'ContactInfos'->'de'->>'Phonenumber' As varchar) AS "ContactInfos-de-Phonenumber",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'Url' As varchar) AS "ContactInfos-en-Url",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'City' As varchar) AS "ContactInfos-en-City",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'Email' As varchar) AS "ContactInfos-en-Email",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'Address' As varchar) AS "ContactInfos-en-Address",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'Surname' As varchar) AS "ContactInfos-en-Surname",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'ZipCode' As varchar) AS "ContactInfos-en-ZipCode",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'Language' As varchar) AS "ContactInfos-en-Language",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'Faxnumber' As varchar) AS "ContactInfos-en-Faxnumber",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'Givenname' As varchar) AS "ContactInfos-en-Givenname",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'NamePrefix' As varchar) AS "ContactInfos-en-NamePrefix",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'CompanyName' As varchar) AS "ContactInfos-en-CompanyName",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'CountryCode' As varchar) AS "ContactInfos-en-CountryCode",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'CountryName' As varchar) AS "ContactInfos-en-CountryName",
+        CAST(NEW."data"->'ContactInfos'->'en'->>'Phonenumber' As varchar) AS "ContactInfos-en-Phonenumber",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'Url' As varchar) AS "ContactInfos-it-Url",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'City' As varchar) AS "ContactInfos-it-City",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'Email' As varchar) AS "ContactInfos-it-Email",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'Address' As varchar) AS "ContactInfos-it-Address",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'Surname' As varchar) AS "ContactInfos-it-Surname",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'ZipCode' As varchar) AS "ContactInfos-it-ZipCode",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'Language' As varchar) AS "ContactInfos-it-Language",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'Faxnumber' As varchar) AS "ContactInfos-it-Faxnumber",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'Givenname' As varchar) AS "ContactInfos-it-Givenname",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'NamePrefix' As varchar) AS "ContactInfos-it-NamePrefix",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'CompanyName' As varchar) AS "ContactInfos-it-CompanyName",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'CountryCode' As varchar) AS "ContactInfos-it-CountryCode",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'CountryName' As varchar) AS "ContactInfos-it-CountryName",
+        CAST(NEW."data"->'ContactInfos'->'it'->>'Phonenumber' As varchar) AS "ContactInfos-it-Phonenumber",
+        CAST(NEW."data"->'LocationInfo'->'TvInfo'->>'Id' As varchar) AS "LocationInfo-TvInfo-Id",
+        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-TvInfo-Name-cs",
+        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'de' As varchar) AS "LocationInfo-TvInfo-Name-de",
+        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'en' As varchar) AS "LocationInfo-TvInfo-Name-en",
+        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-TvInfo-Name-fr",
+        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'it' As varchar) AS "LocationInfo-TvInfo-Name-it",
+        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-TvInfo-Name-nl",
+        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-TvInfo-Name-pl",
+        CAST(NEW."data"->'LocationInfo'->'TvInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-TvInfo-Name-ru",
+        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->>'Id' As varchar) AS "LocationInfo-AreaInfo-Id",
+        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-AreaInfo-Name-cs",
+        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'de' As varchar) AS "LocationInfo-AreaInfo-Name-de",
+        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'en' As varchar) AS "LocationInfo-AreaInfo-Name-en",
+        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-AreaInfo-Name-fr",
+        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'it' As varchar) AS "LocationInfo-AreaInfo-Name-it",
+        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-AreaInfo-Name-nl",
+        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-AreaInfo-Name-pl",
+        CAST(NEW."data"->'LocationInfo'->'AreaInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-AreaInfo-Name-ru",
+        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->>'Id' As varchar) AS "LocationInfo-RegionInfo-Id",
+        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-RegionInfo-Name-cs",
+        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'de' As varchar) AS "LocationInfo-RegionInfo-Name-de",
+        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'en' As varchar) AS "LocationInfo-RegionInfo-Name-en",
+        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-RegionInfo-Name-fr",
+        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'it' As varchar) AS "LocationInfo-RegionInfo-Name-it",
+        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-RegionInfo-Name-nl",
+        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-RegionInfo-Name-pl",
+        CAST(NEW."data"->'LocationInfo'->'RegionInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-RegionInfo-Name-ru",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'de'->>'PoiType' As varchar) AS "AdditionalPoiInfos-de-PoiType",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'de'->>'SubType' As varchar) AS "AdditionalPoiInfos-de-SubType",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'de'->>'Language' As varchar) AS "AdditionalPoiInfos-de-Language",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'de'->>'MainType' As varchar) AS "AdditionalPoiInfos-de-MainType",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'en'->>'PoiType' As varchar) AS "AdditionalPoiInfos-en-PoiType",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'en'->>'SubType' As varchar) AS "AdditionalPoiInfos-en-SubType",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'en'->>'Language' As varchar) AS "AdditionalPoiInfos-en-Language",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'en'->>'MainType' As varchar) AS "AdditionalPoiInfos-en-MainType",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'it'->>'PoiType' As varchar) AS "AdditionalPoiInfos-it-PoiType",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'it'->>'SubType' As varchar) AS "AdditionalPoiInfos-it-SubType",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'it'->>'Language' As varchar) AS "AdditionalPoiInfos-it-Language",
+        CAST(NEW."data"->'AdditionalPoiInfos'->'it'->>'MainType' As varchar) AS "AdditionalPoiInfos-it-MainType";
     RETURN NEW;
 END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER t_v_smgtags
+CREATE TRIGGER t_v_poisopen
     BEFORE INSERT
-    ON smgtags
+    ON poisopen
     FOR EACH ROW
-EXECUTE PROCEDURE v_smgtags_fn();
+EXECUTE PROCEDURE v_poisopen_fn();
 
-ALTER TABLE smgtags
-    ENABLE ALWAYS TRIGGER t_v_smgtags;
+ALTER TABLE poisopen
+    ENABLE ALWAYS TRIGGER t_v_poisopen;
 
-DROP TABLE IF EXISTS "v_smgtags_ValidForEntity";
+DROP TABLE IF EXISTS "v_poisopen_AreaId";
 
-CREATE TABLE  "v_smgtags_ValidForEntity" (
-                                             "Id" varchar,
-                                             "data" varchar
+CREATE TABLE  "v_poisopen_AreaId" (
+                                      "Id" varchar,
+                                      "data" varchar
 );
 
-DROP FUNCTION IF EXISTS v_smgtags_ValidForEntity_fn CASCADE;
+DROP FUNCTION IF EXISTS v_poisopen_AreaId_fn CASCADE;
 
-CREATE FUNCTION v_smgtags_ValidForEntity_fn()
+CREATE FUNCTION v_poisopen_AreaId_fn()
     RETURNS TRIGGER
 AS $$
 BEGIN
-    INSERT INTO "v_smgtags_ValidForEntity"
+    INSERT INTO "v_poisopen_AreaId"
     SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-           jsonb_array_elements_text(NEW."data" -> 'ValidForEntity') AS "data"
-    WHERE NEW."data" -> 'ValidForEntity' != 'null';
+           jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
+    WHERE NEW."data" -> 'AreaId' != 'null';
     RETURN NEW;
 END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER t_v_smgtags_ValidForEntity
+CREATE TRIGGER t_v_poisopen_AreaId
     BEFORE INSERT
-    ON smgtags
+    ON poisopen
     FOR EACH ROW
-EXECUTE PROCEDURE v_smgtags_ValidForEntity_fn();
+EXECUTE PROCEDURE v_poisopen_AreaId_fn();
 
-ALTER TABLE smgtags
-    ENABLE ALWAYS TRIGGER t_v_smgtags_ValidForEntity;
+ALTER TABLE poisopen
+    ENABLE ALWAYS TRIGGER t_v_poisopen_AreaId;
+
+DROP TABLE IF EXISTS "v_poisopen_SmgTags";
+
+CREATE TABLE  "v_poisopen_SmgTags" (
+                                       "Id" varchar,
+                                       "data" varchar
+);
+
+DROP FUNCTION IF EXISTS v_poisopen_SmgTags_fn CASCADE;
+
+CREATE FUNCTION v_poisopen_SmgTags_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO "v_poisopen_SmgTags"
+    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
+           jsonb_array_elements_text(NEW."data" -> 'SmgTags') AS "data"
+    WHERE NEW."data" -> 'SmgTags' != 'null';
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_poisopen_SmgTags
+    BEFORE INSERT
+    ON poisopen
+    FOR EACH ROW
+EXECUTE PROCEDURE v_poisopen_SmgTags_fn();
+
+ALTER TABLE poisopen
+    ENABLE ALWAYS TRIGGER t_v_poisopen_SmgTags;
+
+DROP TABLE IF EXISTS "v_poisopen_HasLanguage";
+
+CREATE TABLE  "v_poisopen_HasLanguage" (
+                                           "Id" varchar,
+                                           "data" varchar
+);
+
+DROP FUNCTION IF EXISTS v_poisopen_HasLanguage_fn CASCADE;
+
+CREATE FUNCTION v_poisopen_HasLanguage_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO "v_poisopen_HasLanguage"
+    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
+           jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
+    WHERE NEW."data" -> 'HasLanguage' != 'null';
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_poisopen_HasLanguage
+    BEFORE INSERT
+    ON poisopen
+    FOR EACH ROW
+EXECUTE PROCEDURE v_poisopen_HasLanguage_fn();
+
+ALTER TABLE poisopen
+    ENABLE ALWAYS TRIGGER t_v_poisopen_HasLanguage;
+
+DROP TABLE IF EXISTS "v_poisopen_GpsInfo";
+
+CREATE TABLE "v_poisopen_GpsInfo" (
+                                      "poisopen_Id" varchar,
+                                      "Gpstype" varchar,
+                                      "Altitude" float,
+                                      "Latitude" float,
+                                      "Longitude" float,
+                                      "AltitudeUnitofMeasure" varchar
+);
+
+DROP FUNCTION IF EXISTS v_poisopen_GpsInfo_fn CASCADE;
+
+CREATE FUNCTION v_poisopen_GpsInfo_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO "v_poisopen_GpsInfo"
+    WITH t ("Id", "data") AS (
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
+               jsonb_array_elements(NEW."data" -> 'GpsInfo') AS "data"
+        WHERE NEW."data" -> 'GpsInfo' != 'null')
+    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
+           CAST("data"->>'Altitude' As float) AS "Altitude",
+           CAST("data"->>'Latitude' As float) AS "Latitude",
+           CAST("data"->>'Longitude' As float) AS "Longitude",
+           CAST("data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure"
+    FROM t;
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_poisopen_GpsInfo
+    BEFORE INSERT
+    ON poisopen
+    FOR EACH ROW
+EXECUTE PROCEDURE v_poisopen_GpsInfo_fn();
+
+ALTER TABLE poisopen
+    ENABLE ALWAYS TRIGGER t_v_poisopen_GpsInfo;
+
+
+DROP TABLE IF EXISTS "v_poisopen_LTSTags";
+
+CREATE TABLE "v_poisopen_LTSTags" (
+                                      "poisopen_Id" varchar,
+                                      "Id" varchar,
+                                      "Level" integer,
+                                      "TagName-de" varchar,
+                                      "TagName-en" varchar,
+                                      "TagName-it" varchar
+);
+
+DROP FUNCTION IF EXISTS v_poisopen_LTSTags_fn CASCADE;
+
+CREATE FUNCTION v_poisopen_LTSTags_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO "v_poisopen_LTSTags"
+    WITH t ("Id", "data") AS (
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
+               jsonb_array_elements(NEW."data" -> 'LTSTags') AS "data"
+        WHERE NEW."data" -> 'LTSTags' != 'null')
+    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+           CAST("data"->>'Level' As integer) AS "Level",
+           CAST("data"->'TagName'->>'de' As varchar) AS "TagName-de",
+           CAST("data"->'TagName'->>'en' As varchar) AS "TagName-en",
+           CAST("data"->'TagName'->>'it' As varchar) AS "TagName-it"
+    FROM t;
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_poisopen_LTSTags
+    BEFORE INSERT
+    ON poisopen
+    FOR EACH ROW
+EXECUTE PROCEDURE v_poisopen_LTSTags_fn();
+
+ALTER TABLE poisopen
+    ENABLE ALWAYS TRIGGER t_v_poisopen_LTSTags;
+
+
+DROP TABLE IF EXISTS "v_poisopen_OperationSchedule";
+
+CREATE TABLE "v_poisopen_OperationSchedule" (
+                                                "poisopen_Id" varchar,
+                                                "Stop" varchar,
+                                                "Type" varchar,
+                                                "Start" varchar,
+                                                "OperationscheduleName-de" varchar
+);
+
+DROP FUNCTION IF EXISTS v_poisopen_OperationSchedule_fn CASCADE;
+
+CREATE FUNCTION v_poisopen_OperationSchedule_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO "v_poisopen_OperationSchedule"
+    WITH t ("Id", "data") AS (
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
+               jsonb_array_elements(NEW."data" -> 'OperationSchedule') AS "data"
+        WHERE NEW."data" -> 'OperationSchedule' != 'null')
+    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
+           CAST("data"->>'Type' As varchar) AS "Type",
+           CAST("data"->>'Start' As varchar) AS "Start",
+           CAST("data"->'OperationscheduleName'->>'de' As varchar) AS "OperationscheduleName-de"
+    FROM t;
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_poisopen_OperationSchedule
+    BEFORE INSERT
+    ON poisopen
+    FOR EACH ROW
+EXECUTE PROCEDURE v_poisopen_OperationSchedule_fn();
+
+ALTER TABLE poisopen
+    ENABLE ALWAYS TRIGGER t_v_poisopen_OperationSchedule;
+
 
 DROP TABLE IF EXISTS "v_suedtiroltypes";
 
@@ -6850,6 +6702,8 @@ CREATE TABLE "v_suedtiroltypes" (
                                     "TypeNames-pl" varchar,
                                     "TypeNames-ru" varchar
 );
+
+ALTER TABLE "v_suedtiroltypes" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_suedtiroltypes_fn CASCADE;
 
@@ -7103,6 +6957,8 @@ CREATE TABLE "v_tvsopen" (
                              "ContactInfos-ru-CountryName" varchar,
                              "ContactInfos-ru-Phonenumber" varchar
 );
+
+ALTER TABLE "v_tvsopen" ADD PRIMARY KEY ("Id");
 
 DROP FUNCTION IF EXISTS v_tvsopen_fn CASCADE;
 
@@ -7426,6 +7282,8 @@ CREATE TABLE "v_wines" (
                            "Detail-it-Language" varchar
 );
 
+ALTER TABLE "v_wines" ADD PRIMARY KEY ("Id");
+
 DROP FUNCTION IF EXISTS v_wines_fn CASCADE;
 
 CREATE FUNCTION v_wines_fn()
@@ -7497,3 +7355,199 @@ EXECUTE PROCEDURE v_wines_Awards_fn();
 
 ALTER TABLE wines
     ENABLE ALWAYS TRIGGER t_v_wines_Awards;
+
+DROP TABLE IF EXISTS "v_municipalitiesopen";
+
+CREATE TABLE "v_municipalitiesopen" (
+                                        "Id" varchar,
+                                        "Plz" varchar,
+                                        "Active" bool,
+                                        "SiagId" varchar,
+                                        "Gpstype" varchar,
+                                        "Altitude" float,
+                                        "CustomId" varchar,
+                                        "Latitude" float,
+                                        "RegionId" varchar,
+                                        "Longitude" float,
+                                        "Shortname" varchar,
+                                        "SmgActive" bool,
+                                        "LastChange" varchar,
+                                        "Inhabitants" integer,
+                                        "IstatNumber" varchar,
+                                        "TourismvereinId" varchar,
+                                        "VisibleInSearch" bool,
+                                        "AltitudeUnitofMeasure" varchar,
+                                        "Detail-cs-Title" varchar,
+                                        "Detail-cs-Language" varchar,
+                                        "Detail-de-Title" varchar,
+                                        "Detail-de-Language" varchar,
+                                        "Detail-en-Title" varchar,
+                                        "Detail-en-Language" varchar,
+                                        "Detail-fr-Title" varchar,
+                                        "Detail-fr-Language" varchar,
+                                        "Detail-it-Title" varchar,
+                                        "Detail-it-Language" varchar,
+                                        "Detail-nl-Title" varchar,
+                                        "Detail-nl-Language" varchar,
+                                        "Detail-pl-Title" varchar,
+                                        "Detail-pl-Language" varchar,
+                                        "Detail-ru-Title" varchar,
+                                        "Detail-ru-Language" varchar
+);
+
+ALTER TABLE "v_municipalitiesopen" ADD PRIMARY KEY ("Id");
+
+DROP FUNCTION IF EXISTS v_municipalitiesopen_fn CASCADE;
+
+CREATE FUNCTION v_municipalitiesopen_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO v_municipalitiesopen
+    SELECT
+        CAST(NEW."data"->>'Id' As varchar) AS "Id",
+        CAST(NEW."data"->>'Plz' As varchar) AS "Plz",
+        CAST(NEW."data"->>'Active' As bool) AS "Active",
+        CAST(NEW."data"->>'SiagId' As varchar) AS "SiagId",
+        CAST(NEW."data"->>'Gpstype' As varchar) AS "Gpstype",
+        CAST(NEW."data"->>'Altitude' As float) AS "Altitude",
+        CAST(NEW."data"->>'CustomId' As varchar) AS "CustomId",
+        CAST(NEW."data"->>'Latitude' As float) AS "Latitude",
+        CAST(NEW."data"->>'RegionId' As varchar) AS "RegionId",
+        CAST(NEW."data"->>'Longitude' As float) AS "Longitude",
+        CAST(NEW."data"->>'Shortname' As varchar) AS "Shortname",
+        CAST(NEW."data"->>'SmgActive' As bool) AS "SmgActive",
+        CAST(NEW."data"->>'LastChange' As varchar) AS "LastChange",
+        CAST(NEW."data"->>'Inhabitants' As integer) AS "Inhabitants",
+        CAST(NEW."data"->>'IstatNumber' As varchar) AS "IstatNumber",
+        CAST(NEW."data"->>'TourismvereinId' As varchar) AS "TourismvereinId",
+        CAST(NEW."data"->>'VisibleInSearch' As bool) AS "VisibleInSearch",
+        CAST(NEW."data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure",
+        CAST(NEW."data"->'Detail'->'cs'->>'Title' As varchar) AS "Detail-cs-Title",
+        CAST(NEW."data"->'Detail'->'cs'->>'Language' As varchar) AS "Detail-cs-Language",
+        CAST(NEW."data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
+        CAST(NEW."data"->'Detail'->'de'->>'Language' As varchar) AS "Detail-de-Language",
+        CAST(NEW."data"->'Detail'->'en'->>'Title' As varchar) AS "Detail-en-Title",
+        CAST(NEW."data"->'Detail'->'en'->>'Language' As varchar) AS "Detail-en-Language",
+        CAST(NEW."data"->'Detail'->'fr'->>'Title' As varchar) AS "Detail-fr-Title",
+        CAST(NEW."data"->'Detail'->'fr'->>'Language' As varchar) AS "Detail-fr-Language",
+        CAST(NEW."data"->'Detail'->'it'->>'Title' As varchar) AS "Detail-it-Title",
+        CAST(NEW."data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language",
+        CAST(NEW."data"->'Detail'->'nl'->>'Title' As varchar) AS "Detail-nl-Title",
+        CAST(NEW."data"->'Detail'->'nl'->>'Language' As varchar) AS "Detail-nl-Language",
+        CAST(NEW."data"->'Detail'->'pl'->>'Title' As varchar) AS "Detail-pl-Title",
+        CAST(NEW."data"->'Detail'->'pl'->>'Language' As varchar) AS "Detail-pl-Language",
+        CAST(NEW."data"->'Detail'->'ru'->>'Title' As varchar) AS "Detail-ru-Title",
+        CAST(NEW."data"->'Detail'->'ru'->>'Language' As varchar) AS "Detail-ru-Language";
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_municipalitiesopen
+    BEFORE INSERT
+    ON municipalitiesopen
+    FOR EACH ROW
+EXECUTE PROCEDURE v_municipalitiesopen_fn();
+
+ALTER TABLE municipalitiesopen
+    ENABLE ALWAYS TRIGGER t_v_municipalitiesopen;
+
+DROP TABLE IF EXISTS "v_municipalitiesopen_HasLanguage";
+
+CREATE TABLE  "v_municipalitiesopen_HasLanguage" (
+                                                     "Id" varchar,
+                                                     "data" varchar
+);
+
+DROP FUNCTION IF EXISTS v_municipalitiesopen_HasLanguage_fn CASCADE;
+
+CREATE FUNCTION v_municipalitiesopen_HasLanguage_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO "v_municipalitiesopen_HasLanguage"
+    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
+           jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
+    WHERE NEW."data" -> 'HasLanguage' != 'null';
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_municipalitiesopen_HasLanguage
+    BEFORE INSERT
+    ON municipalitiesopen
+    FOR EACH ROW
+EXECUTE PROCEDURE v_municipalitiesopen_HasLanguage_fn();
+
+ALTER TABLE municipalitiesopen
+    ENABLE ALWAYS TRIGGER t_v_municipalitiesopen_HasLanguage;
+
+DROP TABLE IF EXISTS "v_smgtags";
+
+CREATE TABLE "v_smgtags" (
+                             "Id" varchar,
+                             "Shortname" varchar,
+                             "MainEntity" varchar,
+                             "TagName-de" varchar
+);
+
+ALTER TABLE "v_smgtags" ADD PRIMARY KEY ("Id");
+
+DROP FUNCTION IF EXISTS v_smgtags_fn CASCADE;
+
+CREATE FUNCTION v_smgtags_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO v_smgtags
+    SELECT
+        CAST(NEW."data"->>'Id' As varchar) AS "Id",
+        CAST(NEW."data"->>'Shortname' As varchar) AS "Shortname",
+        CAST(NEW."data"->>'MainEntity' As varchar) AS "MainEntity",
+        CAST(NEW."data"->'TagName'->>'de' As varchar) AS "TagName-de";
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_smgtags
+    BEFORE INSERT
+    ON smgtags
+    FOR EACH ROW
+EXECUTE PROCEDURE v_smgtags_fn();
+
+ALTER TABLE smgtags
+    ENABLE ALWAYS TRIGGER t_v_smgtags;
+
+DROP TABLE IF EXISTS "v_smgtags_ValidForEntity";
+
+CREATE TABLE  "v_smgtags_ValidForEntity" (
+                                             "Id" varchar,
+                                             "data" varchar
+);
+
+DROP FUNCTION IF EXISTS v_smgtags_ValidForEntity_fn CASCADE;
+
+CREATE FUNCTION v_smgtags_ValidForEntity_fn()
+    RETURNS TRIGGER
+AS $$
+BEGIN
+    INSERT INTO "v_smgtags_ValidForEntity"
+    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
+           jsonb_array_elements_text(NEW."data" -> 'ValidForEntity') AS "data"
+    WHERE NEW."data" -> 'ValidForEntity' != 'null';
+    RETURN NEW;
+END;
+$$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER t_v_smgtags_ValidForEntity
+    BEFORE INSERT
+    ON smgtags
+    FOR EACH ROW
+EXECUTE PROCEDURE v_smgtags_ValidForEntity_fn();
+
+ALTER TABLE smgtags
+    ENABLE ALWAYS TRIGGER t_v_smgtags_ValidForEntity;

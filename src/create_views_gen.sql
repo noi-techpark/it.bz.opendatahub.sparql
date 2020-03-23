@@ -138,202 +138,6 @@ CREATE MATERIALIZED VIEW "v_accommodationsopen_Features" AS
 CAST("data"->>'Name' As varchar) AS "Name"
     FROM t;
 
-CREATE MATERIALIZED VIEW "v_activitiesopen" AS
-SELECT CAST("data"->>'Id' As varchar) AS "Id",
-CAST("data"->>'Type' As varchar) AS "Type",
-CAST("data"->>'Active' As bool) AS "Active",
-CAST("data"->>'IsOpen' As bool) AS "IsOpen",
-CAST("data"->>'PoiType' As varchar) AS "PoiType",
-CAST("data"->>'SubType' As varchar) AS "SubType",
-CAST("data"->>'FeetClimb' As bool) AS "FeetClimb",
-CAST("data"->>'Highlight' As bool) AS "Highlight",
-CAST("data"->>'Shortname' As varchar) AS "Shortname",
-CAST("data"->>'SmgActive' As bool) AS "SmgActive",
-CAST("data"->>'Difficulty' As varchar) AS "Difficulty",
-CAST("data"->>'HasRentals' As bool) AS "HasRentals",
-CAST("data"->>'IsPrepared' As bool) AS "IsPrepared",
-CAST("data"->>'LastChange' As varchar) AS "LastChange",
-CAST("data"->>'FirstImport' As varchar) AS "FirstImport",
-CAST("data"->>'IsWithLigth' As bool) AS "IsWithLigth",
-CAST("data"->>'RunToValley' As bool) AS "RunToValley",
-CAST("data"->>'AltitudeSumUp' As float) AS "AltitudeSumUp",
-CAST("data"->>'BikeTransport' As bool) AS "BikeTransport",
-CAST("data"->>'LiftAvailable' As bool) AS "LiftAvailable",
-CAST("data"->>'DistanceLength' As float) AS "DistanceLength",
-CAST("data"->>'AltitudeSumDown' As float) AS "AltitudeSumDown",
-CAST("data"->>'HasFreeEntrance' As bool) AS "HasFreeEntrance",
-CAST("data"->>'OutdooractiveID' As varchar) AS "OutdooractiveID",
-CAST("data"->>'DistanceDuration' As float) AS "DistanceDuration",
-CAST("data"->>'AltitudeDifference' As float) AS "AltitudeDifference",
-CAST("data"->>'AltitudeLowestPoint' As float) AS "AltitudeLowestPoint",
-CAST("data"->>'AltitudeHighestPoint' As float) AS "AltitudeHighestPoint",
-CAST("data"->>'TourismorganizationId' As varchar) AS "TourismorganizationId",
-CAST("data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
-CAST("data"->'Detail'->'de'->>'BaseText' As varchar) AS "Detail-de-BaseText",
-CAST("data"->'Detail'->'de'->>'Language' As varchar) AS "Detail-de-Language",
-CAST("data"->'Detail'->'de'->>'GetThereText' As varchar) AS "Detail-de-GetThereText",
-CAST("data"->'Detail'->'en'->>'Title' As varchar) AS "Detail-en-Title",
-CAST("data"->'Detail'->'en'->>'BaseText' As varchar) AS "Detail-en-BaseText",
-CAST("data"->'Detail'->'en'->>'Language' As varchar) AS "Detail-en-Language",
-CAST("data"->'Detail'->'it'->>'Title' As varchar) AS "Detail-it-Title",
-CAST("data"->'Detail'->'it'->>'BaseText' As varchar) AS "Detail-it-BaseText",
-CAST("data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language",
-CAST("data"->'Ratings'->>'Stamina' As varchar) AS "Ratings-Stamina",
-CAST("data"->'Ratings'->>'Landscape' As varchar) AS "Ratings-Landscape",
-CAST("data"->'Ratings'->>'Technique' As varchar) AS "Ratings-Technique",
-CAST("data"->'Ratings'->>'Difficulty' As varchar) AS "Ratings-Difficulty",
-CAST("data"->'Ratings'->>'Experience' As varchar) AS "Ratings-Experience",
-CAST("data"->'GpsPoints'->'position'->>'Gpstype' As varchar) AS "GpsPoints-position-Gpstype",
-CAST("data"->'GpsPoints'->'position'->>'Altitude' As float) AS "GpsPoints-position-Altitude",
-CAST("data"->'GpsPoints'->'position'->>'Latitude' As float) AS "GpsPoints-position-Latitude",
-CAST("data"->'GpsPoints'->'position'->>'Longitude' As float) AS "GpsPoints-position-Longitude",
-CAST("data"->'GpsPoints'->'position'->>'AltitudeUnitofMeasure' As varchar) AS "GpsPoints-position-AltitudeUnitofMeasure",
-CAST("data"->'GpsPoints'->'endposition'->>'Gpstype' As varchar) AS "GpsPoints-endposition-Gpstype",
-CAST("data"->'GpsPoints'->'endposition'->>'Altitude' As float) AS "GpsPoints-endposition-Altitude",
-CAST("data"->'GpsPoints'->'endposition'->>'Latitude' As float) AS "GpsPoints-endposition-Latitude",
-CAST("data"->'GpsPoints'->'endposition'->>'Longitude' As float) AS "GpsPoints-endposition-Longitude",
-CAST("data"->'GpsPoints'->'endposition'->>'AltitudeUnitofMeasure' As varchar) AS "GpsPoints-endposition-AltitudeUnitofMeasure",
-CAST("data"->'ContactInfos'->'de'->>'Url' As varchar) AS "ContactInfos-de-Url",
-CAST("data"->'ContactInfos'->'de'->>'City' As varchar) AS "ContactInfos-de-City",
-CAST("data"->'ContactInfos'->'de'->>'Email' As varchar) AS "ContactInfos-de-Email",
-CAST("data"->'ContactInfos'->'de'->>'Address' As varchar) AS "ContactInfos-de-Address",
-CAST("data"->'ContactInfos'->'de'->>'Surname' As varchar) AS "ContactInfos-de-Surname",
-CAST("data"->'ContactInfos'->'de'->>'ZipCode' As varchar) AS "ContactInfos-de-ZipCode",
-CAST("data"->'ContactInfos'->'de'->>'Language' As varchar) AS "ContactInfos-de-Language",
-CAST("data"->'ContactInfos'->'de'->>'Faxnumber' As varchar) AS "ContactInfos-de-Faxnumber",
-CAST("data"->'ContactInfos'->'de'->>'Givenname' As varchar) AS "ContactInfos-de-Givenname",
-CAST("data"->'ContactInfos'->'de'->>'NamePrefix' As varchar) AS "ContactInfos-de-NamePrefix",
-CAST("data"->'ContactInfos'->'de'->>'CompanyName' As varchar) AS "ContactInfos-de-CompanyName",
-CAST("data"->'ContactInfos'->'de'->>'CountryCode' As varchar) AS "ContactInfos-de-CountryCode",
-CAST("data"->'ContactInfos'->'de'->>'CountryName' As varchar) AS "ContactInfos-de-CountryName",
-CAST("data"->'ContactInfos'->'de'->>'Phonenumber' As varchar) AS "ContactInfos-de-Phonenumber",
-CAST("data"->'ContactInfos'->'en'->>'Url' As varchar) AS "ContactInfos-en-Url",
-CAST("data"->'ContactInfos'->'en'->>'City' As varchar) AS "ContactInfos-en-City",
-CAST("data"->'ContactInfos'->'en'->>'Email' As varchar) AS "ContactInfos-en-Email",
-CAST("data"->'ContactInfos'->'en'->>'Address' As varchar) AS "ContactInfos-en-Address",
-CAST("data"->'ContactInfos'->'en'->>'Surname' As varchar) AS "ContactInfos-en-Surname",
-CAST("data"->'ContactInfos'->'en'->>'ZipCode' As varchar) AS "ContactInfos-en-ZipCode",
-CAST("data"->'ContactInfos'->'en'->>'Language' As varchar) AS "ContactInfos-en-Language",
-CAST("data"->'ContactInfos'->'en'->>'Faxnumber' As varchar) AS "ContactInfos-en-Faxnumber",
-CAST("data"->'ContactInfos'->'en'->>'Givenname' As varchar) AS "ContactInfos-en-Givenname",
-CAST("data"->'ContactInfos'->'en'->>'NamePrefix' As varchar) AS "ContactInfos-en-NamePrefix",
-CAST("data"->'ContactInfos'->'en'->>'CompanyName' As varchar) AS "ContactInfos-en-CompanyName",
-CAST("data"->'ContactInfos'->'en'->>'CountryCode' As varchar) AS "ContactInfos-en-CountryCode",
-CAST("data"->'ContactInfos'->'en'->>'CountryName' As varchar) AS "ContactInfos-en-CountryName",
-CAST("data"->'ContactInfos'->'en'->>'Phonenumber' As varchar) AS "ContactInfos-en-Phonenumber",
-CAST("data"->'ContactInfos'->'it'->>'Url' As varchar) AS "ContactInfos-it-Url",
-CAST("data"->'ContactInfos'->'it'->>'City' As varchar) AS "ContactInfos-it-City",
-CAST("data"->'ContactInfos'->'it'->>'Email' As varchar) AS "ContactInfos-it-Email",
-CAST("data"->'ContactInfos'->'it'->>'Address' As varchar) AS "ContactInfos-it-Address",
-CAST("data"->'ContactInfos'->'it'->>'Surname' As varchar) AS "ContactInfos-it-Surname",
-CAST("data"->'ContactInfos'->'it'->>'ZipCode' As varchar) AS "ContactInfos-it-ZipCode",
-CAST("data"->'ContactInfos'->'it'->>'Language' As varchar) AS "ContactInfos-it-Language",
-CAST("data"->'ContactInfos'->'it'->>'Faxnumber' As varchar) AS "ContactInfos-it-Faxnumber",
-CAST("data"->'ContactInfos'->'it'->>'Givenname' As varchar) AS "ContactInfos-it-Givenname",
-CAST("data"->'ContactInfos'->'it'->>'NamePrefix' As varchar) AS "ContactInfos-it-NamePrefix",
-CAST("data"->'ContactInfos'->'it'->>'CompanyName' As varchar) AS "ContactInfos-it-CompanyName",
-CAST("data"->'ContactInfos'->'it'->>'CountryCode' As varchar) AS "ContactInfos-it-CountryCode",
-CAST("data"->'ContactInfos'->'it'->>'CountryName' As varchar) AS "ContactInfos-it-CountryName",
-CAST("data"->'ContactInfos'->'it'->>'Phonenumber' As varchar) AS "ContactInfos-it-Phonenumber",
-CAST("data"->'LocationInfo'->'TvInfo'->>'Id' As varchar) AS "LocationInfo-TvInfo-Id",
-CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-TvInfo-Name-cs",
-CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'de' As varchar) AS "LocationInfo-TvInfo-Name-de",
-CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'en' As varchar) AS "LocationInfo-TvInfo-Name-en",
-CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-TvInfo-Name-fr",
-CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'it' As varchar) AS "LocationInfo-TvInfo-Name-it",
-CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-TvInfo-Name-nl",
-CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-TvInfo-Name-pl",
-CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-TvInfo-Name-ru",
-CAST("data"->'LocationInfo'->'AreaInfo'->>'Id' As varchar) AS "LocationInfo-AreaInfo-Id",
-CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-AreaInfo-Name-cs",
-CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'de' As varchar) AS "LocationInfo-AreaInfo-Name-de",
-CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'en' As varchar) AS "LocationInfo-AreaInfo-Name-en",
-CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-AreaInfo-Name-fr",
-CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'it' As varchar) AS "LocationInfo-AreaInfo-Name-it",
-CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-AreaInfo-Name-nl",
-CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-AreaInfo-Name-pl",
-CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-AreaInfo-Name-ru",
-CAST("data"->'LocationInfo'->'RegionInfo'->>'Id' As varchar) AS "LocationInfo-RegionInfo-Id",
-CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-RegionInfo-Name-cs",
-CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'de' As varchar) AS "LocationInfo-RegionInfo-Name-de",
-CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'en' As varchar) AS "LocationInfo-RegionInfo-Name-en",
-CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-RegionInfo-Name-fr",
-CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'it' As varchar) AS "LocationInfo-RegionInfo-Name-it",
-CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-RegionInfo-Name-nl",
-CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-RegionInfo-Name-pl",
-CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-RegionInfo-Name-ru",
-CAST("data"->'AdditionalPoiInfos'->'de'->>'PoiType' As varchar) AS "AdditionalPoiInfos-de-PoiType",
-CAST("data"->'AdditionalPoiInfos'->'de'->>'SubType' As varchar) AS "AdditionalPoiInfos-de-SubType",
-CAST("data"->'AdditionalPoiInfos'->'de'->>'Language' As varchar) AS "AdditionalPoiInfos-de-Language",
-CAST("data"->'AdditionalPoiInfos'->'de'->>'MainType' As varchar) AS "AdditionalPoiInfos-de-MainType",
-CAST("data"->'AdditionalPoiInfos'->'en'->>'PoiType' As varchar) AS "AdditionalPoiInfos-en-PoiType",
-CAST("data"->'AdditionalPoiInfos'->'en'->>'SubType' As varchar) AS "AdditionalPoiInfos-en-SubType",
-CAST("data"->'AdditionalPoiInfos'->'en'->>'Language' As varchar) AS "AdditionalPoiInfos-en-Language",
-CAST("data"->'AdditionalPoiInfos'->'en'->>'MainType' As varchar) AS "AdditionalPoiInfos-en-MainType",
-CAST("data"->'AdditionalPoiInfos'->'it'->>'PoiType' As varchar) AS "AdditionalPoiInfos-it-PoiType",
-CAST("data"->'AdditionalPoiInfos'->'it'->>'SubType' As varchar) AS "AdditionalPoiInfos-it-SubType",
-CAST("data"->'AdditionalPoiInfos'->'it'->>'Language' As varchar) AS "AdditionalPoiInfos-it-Language",
-CAST("data"->'AdditionalPoiInfos'->'it'->>'MainType' As varchar) AS "AdditionalPoiInfos-it-MainType"
-FROM activitiesopen;
-
-CREATE UNIQUE INDEX "v_activitiesopen_pk" ON "v_activitiesopen"("Id");
-
-CREATE MATERIALIZED VIEW "v_activitiesopen_AreaId" AS
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'AreaId') AS "data"
-        FROM activitiesopen
-        WHERE data -> 'AreaId' != 'null';
- 
-CREATE MATERIALIZED VIEW "v_activitiesopen_SmgTags" AS
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
-        FROM activitiesopen
-        WHERE data -> 'SmgTags' != 'null';
- 
-CREATE MATERIALIZED VIEW "v_activitiesopen_Exposition" AS
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'Exposition') AS "data"
-        FROM activitiesopen
-        WHERE data -> 'Exposition' != 'null';
- 
-CREATE MATERIALIZED VIEW "v_activitiesopen_HasLanguage" AS
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
-        FROM activitiesopen
-        WHERE data -> 'HasLanguage' != 'null';
- 
-CREATE MATERIALIZED VIEW "v_activitiesopen_GpsInfo" AS
-    WITH t ("Id", "data") AS (
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'GpsInfo') AS "Feature"
-        FROM activitiesopen
-        WHERE data -> 'GpsInfo' != 'null')
-    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
-CAST("data"->>'Altitude' As float) AS "Altitude",
-CAST("data"->>'Latitude' As float) AS "Latitude",
-CAST("data"->>'Longitude' As float) AS "Longitude",
-CAST("data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure"
-    FROM t;
-
-CREATE MATERIALIZED VIEW "v_activitiesopen_GpsTrack" AS
-    WITH t ("Id", "data") AS (
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'GpsTrack') AS "Feature"
-        FROM activitiesopen
-        WHERE data -> 'GpsTrack' != 'null')
-    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
-CAST("data"->>'Type' As varchar) AS "Type",
-CAST("data"->>'GpxTrackUrl' As varchar) AS "GpxTrackUrl",
-CAST("data"->'GpxTrackDesc'->>'de' As varchar) AS "GpxTrackDesc-de",
-CAST("data"->'GpxTrackDesc'->>'en' As varchar) AS "GpxTrackDesc-en",
-CAST("data"->'GpxTrackDesc'->>'it' As varchar) AS "GpxTrackDesc-it"
-    FROM t;
-
-CREATE MATERIALIZED VIEW "v_activitiesopen_OperationSchedule" AS
-    WITH t ("Id", "data") AS (
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
-        FROM activitiesopen
-        WHERE data -> 'OperationSchedule' != 'null')
-    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
-CAST("data"->>'Type' As varchar) AS "Type",
-CAST("data"->>'Start' As varchar) AS "Start",
-CAST("data"->'OperationscheduleName'->>'de' As varchar) AS "OperationscheduleName-de"
-    FROM t;
-
 CREATE MATERIALIZED VIEW "v_areas" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'GID' As varchar) AS "GID",
@@ -1244,83 +1048,7 @@ CREATE MATERIALIZED VIEW "v_metaregionsopen_TourismvereinIds" AS
         FROM metaregionsopen
         WHERE data -> 'TourismvereinIds' != 'null';
  
-CREATE MATERIALIZED VIEW "v_accommodationroomsopen" AS
-SELECT CAST("data"->>'Id' As varchar) AS "Id",
-CAST("data"->>'A0RID' As varchar) AS "A0RID",
-CAST("data"->>'HGVId' As varchar) AS "HGVId",
-CAST("data"->>'LTSId' As varchar) AS "LTSId",
-CAST("data"->>'Source' As varchar) AS "Source",
-CAST("data"->>'Roommax' As integer) AS "Roommax",
-CAST("data"->>'Roommin' As integer) AS "Roommin",
-CAST("data"->>'Roomstd' As integer) AS "Roomstd",
-CAST("data"->>'RoomCode' As varchar) AS "RoomCode",
-CAST("data"->>'Roomtype' As varchar) AS "Roomtype",
-CAST("data"->>'Shortname' As varchar) AS "Shortname",
-CAST("data"->>'RoomQuantity' As integer) AS "RoomQuantity",
-CAST("data"->'AccoRoomDetail'->'de'->>'Name' As varchar) AS "AccoRoomDetail-de-Name",
-CAST("data"->'AccoRoomDetail'->'de'->>'Language' As varchar) AS "AccoRoomDetail-de-Language",
-CAST("data"->'AccoRoomDetail'->'en'->>'Name' As varchar) AS "AccoRoomDetail-en-Name",
-CAST("data"->'AccoRoomDetail'->'en'->>'Language' As varchar) AS "AccoRoomDetail-en-Language",
-CAST("data"->'AccoRoomDetail'->'it'->>'Name' As varchar) AS "AccoRoomDetail-it-Name",
-CAST("data"->'AccoRoomDetail'->'it'->>'Language' As varchar) AS "AccoRoomDetail-it-Language"
-FROM accommodationroomsopen;
-
-CREATE UNIQUE INDEX "v_accommodationroomsopen_pk" ON "v_accommodationroomsopen"("Id");
-
-CREATE MATERIALIZED VIEW "v_accommodationroomsopen_Features" AS
-    WITH t ("Id", "data") AS (
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'Features') AS "Feature"
-        FROM accommodationroomsopen
-        WHERE data -> 'Features' != 'null')
-    SELECT "Id" AS "accommodationroomsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
-CAST("data"->>'Name' As varchar) AS "Name"
-    FROM t;
-
-CREATE MATERIALIZED VIEW "v_municipalitiesopen" AS
-SELECT CAST("data"->>'Id' As varchar) AS "Id",
-CAST("data"->>'Plz' As varchar) AS "Plz",
-CAST("data"->>'Active' As bool) AS "Active",
-CAST("data"->>'SiagId' As varchar) AS "SiagId",
-CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
-CAST("data"->>'Altitude' As float) AS "Altitude",
-CAST("data"->>'CustomId' As varchar) AS "CustomId",
-CAST("data"->>'Latitude' As float) AS "Latitude",
-CAST("data"->>'RegionId' As varchar) AS "RegionId",
-CAST("data"->>'Longitude' As float) AS "Longitude",
-CAST("data"->>'Shortname' As varchar) AS "Shortname",
-CAST("data"->>'SmgActive' As bool) AS "SmgActive",
-CAST("data"->>'LastChange' As varchar) AS "LastChange",
-CAST("data"->>'Inhabitants' As integer) AS "Inhabitants",
-CAST("data"->>'IstatNumber' As varchar) AS "IstatNumber",
-CAST("data"->>'TourismvereinId' As varchar) AS "TourismvereinId",
-CAST("data"->>'VisibleInSearch' As bool) AS "VisibleInSearch",
-CAST("data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure",
-CAST("data"->'Detail'->'cs'->>'Title' As varchar) AS "Detail-cs-Title",
-CAST("data"->'Detail'->'cs'->>'Language' As varchar) AS "Detail-cs-Language",
-CAST("data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
-CAST("data"->'Detail'->'de'->>'Language' As varchar) AS "Detail-de-Language",
-CAST("data"->'Detail'->'en'->>'Title' As varchar) AS "Detail-en-Title",
-CAST("data"->'Detail'->'en'->>'Language' As varchar) AS "Detail-en-Language",
-CAST("data"->'Detail'->'fr'->>'Title' As varchar) AS "Detail-fr-Title",
-CAST("data"->'Detail'->'fr'->>'Language' As varchar) AS "Detail-fr-Language",
-CAST("data"->'Detail'->'it'->>'Title' As varchar) AS "Detail-it-Title",
-CAST("data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language",
-CAST("data"->'Detail'->'nl'->>'Title' As varchar) AS "Detail-nl-Title",
-CAST("data"->'Detail'->'nl'->>'Language' As varchar) AS "Detail-nl-Language",
-CAST("data"->'Detail'->'pl'->>'Title' As varchar) AS "Detail-pl-Title",
-CAST("data"->'Detail'->'pl'->>'Language' As varchar) AS "Detail-pl-Language",
-CAST("data"->'Detail'->'ru'->>'Title' As varchar) AS "Detail-ru-Title",
-CAST("data"->'Detail'->'ru'->>'Language' As varchar) AS "Detail-ru-Language"
-FROM municipalitiesopen;
-
-CREATE UNIQUE INDEX "v_municipalitiesopen_pk" ON "v_municipalitiesopen"("Id");
-
-CREATE MATERIALIZED VIEW "v_municipalitiesopen_HasLanguage" AS
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
-        FROM municipalitiesopen
-        WHERE data -> 'HasLanguage' != 'null';
- 
-CREATE MATERIALIZED VIEW "v_poisopen" AS
+CREATE MATERIALIZED VIEW "v_activitiesopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Active' As bool) AS "Active",
@@ -1331,6 +1059,7 @@ CAST("data"->>'FeetClimb' As bool) AS "FeetClimb",
 CAST("data"->>'Highlight' As bool) AS "Highlight",
 CAST("data"->>'Shortname' As varchar) AS "Shortname",
 CAST("data"->>'SmgActive' As bool) AS "SmgActive",
+CAST("data"->>'Difficulty' As varchar) AS "Difficulty",
 CAST("data"->>'HasRentals' As bool) AS "HasRentals",
 CAST("data"->>'IsPrepared' As bool) AS "IsPrepared",
 CAST("data"->>'LastChange' As varchar) AS "LastChange",
@@ -1338,41 +1067,42 @@ CAST("data"->>'FirstImport' As varchar) AS "FirstImport",
 CAST("data"->>'IsWithLigth' As bool) AS "IsWithLigth",
 CAST("data"->>'RunToValley' As bool) AS "RunToValley",
 CAST("data"->>'AltitudeSumUp' As float) AS "AltitudeSumUp",
+CAST("data"->>'BikeTransport' As bool) AS "BikeTransport",
 CAST("data"->>'LiftAvailable' As bool) AS "LiftAvailable",
 CAST("data"->>'DistanceLength' As float) AS "DistanceLength",
 CAST("data"->>'AltitudeSumDown' As float) AS "AltitudeSumDown",
 CAST("data"->>'HasFreeEntrance' As bool) AS "HasFreeEntrance",
+CAST("data"->>'OutdooractiveID' As varchar) AS "OutdooractiveID",
 CAST("data"->>'DistanceDuration' As float) AS "DistanceDuration",
 CAST("data"->>'AltitudeDifference' As float) AS "AltitudeDifference",
 CAST("data"->>'AltitudeLowestPoint' As float) AS "AltitudeLowestPoint",
 CAST("data"->>'AltitudeHighestPoint' As float) AS "AltitudeHighestPoint",
 CAST("data"->>'TourismorganizationId' As varchar) AS "TourismorganizationId",
 CAST("data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
-CAST("data"->'Detail'->'de'->>'Header' As varchar) AS "Detail-de-Header",
 CAST("data"->'Detail'->'de'->>'BaseText' As varchar) AS "Detail-de-BaseText",
 CAST("data"->'Detail'->'de'->>'Language' As varchar) AS "Detail-de-Language",
-CAST("data"->'Detail'->'de'->>'IntroText' As varchar) AS "Detail-de-IntroText",
 CAST("data"->'Detail'->'de'->>'GetThereText' As varchar) AS "Detail-de-GetThereText",
-CAST("data"->'Detail'->'de'->>'AdditionalText' As varchar) AS "Detail-de-AdditionalText",
 CAST("data"->'Detail'->'en'->>'Title' As varchar) AS "Detail-en-Title",
-CAST("data"->'Detail'->'en'->>'Header' As varchar) AS "Detail-en-Header",
 CAST("data"->'Detail'->'en'->>'BaseText' As varchar) AS "Detail-en-BaseText",
 CAST("data"->'Detail'->'en'->>'Language' As varchar) AS "Detail-en-Language",
-CAST("data"->'Detail'->'en'->>'IntroText' As varchar) AS "Detail-en-IntroText",
-CAST("data"->'Detail'->'en'->>'GetThereText' As varchar) AS "Detail-en-GetThereText",
-CAST("data"->'Detail'->'en'->>'AdditionalText' As varchar) AS "Detail-en-AdditionalText",
 CAST("data"->'Detail'->'it'->>'Title' As varchar) AS "Detail-it-Title",
-CAST("data"->'Detail'->'it'->>'Header' As varchar) AS "Detail-it-Header",
 CAST("data"->'Detail'->'it'->>'BaseText' As varchar) AS "Detail-it-BaseText",
 CAST("data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language",
-CAST("data"->'Detail'->'it'->>'IntroText' As varchar) AS "Detail-it-IntroText",
-CAST("data"->'Detail'->'it'->>'GetThereText' As varchar) AS "Detail-it-GetThereText",
-CAST("data"->'Detail'->'it'->>'AdditionalText' As varchar) AS "Detail-it-AdditionalText",
+CAST("data"->'Ratings'->>'Stamina' As varchar) AS "Ratings-Stamina",
+CAST("data"->'Ratings'->>'Landscape' As varchar) AS "Ratings-Landscape",
+CAST("data"->'Ratings'->>'Technique' As varchar) AS "Ratings-Technique",
+CAST("data"->'Ratings'->>'Difficulty' As varchar) AS "Ratings-Difficulty",
+CAST("data"->'Ratings'->>'Experience' As varchar) AS "Ratings-Experience",
 CAST("data"->'GpsPoints'->'position'->>'Gpstype' As varchar) AS "GpsPoints-position-Gpstype",
 CAST("data"->'GpsPoints'->'position'->>'Altitude' As float) AS "GpsPoints-position-Altitude",
 CAST("data"->'GpsPoints'->'position'->>'Latitude' As float) AS "GpsPoints-position-Latitude",
 CAST("data"->'GpsPoints'->'position'->>'Longitude' As float) AS "GpsPoints-position-Longitude",
 CAST("data"->'GpsPoints'->'position'->>'AltitudeUnitofMeasure' As varchar) AS "GpsPoints-position-AltitudeUnitofMeasure",
+CAST("data"->'GpsPoints'->'endposition'->>'Gpstype' As varchar) AS "GpsPoints-endposition-Gpstype",
+CAST("data"->'GpsPoints'->'endposition'->>'Altitude' As float) AS "GpsPoints-endposition-Altitude",
+CAST("data"->'GpsPoints'->'endposition'->>'Latitude' As float) AS "GpsPoints-endposition-Latitude",
+CAST("data"->'GpsPoints'->'endposition'->>'Longitude' As float) AS "GpsPoints-endposition-Longitude",
+CAST("data"->'GpsPoints'->'endposition'->>'AltitudeUnitofMeasure' As varchar) AS "GpsPoints-endposition-AltitudeUnitofMeasure",
 CAST("data"->'ContactInfos'->'de'->>'Url' As varchar) AS "ContactInfos-de-Url",
 CAST("data"->'ContactInfos'->'de'->>'City' As varchar) AS "ContactInfos-de-City",
 CAST("data"->'ContactInfos'->'de'->>'Email' As varchar) AS "ContactInfos-de-Email",
@@ -1454,58 +1184,100 @@ CAST("data"->'AdditionalPoiInfos'->'it'->>'PoiType' As varchar) AS "AdditionalPo
 CAST("data"->'AdditionalPoiInfos'->'it'->>'SubType' As varchar) AS "AdditionalPoiInfos-it-SubType",
 CAST("data"->'AdditionalPoiInfos'->'it'->>'Language' As varchar) AS "AdditionalPoiInfos-it-Language",
 CAST("data"->'AdditionalPoiInfos'->'it'->>'MainType' As varchar) AS "AdditionalPoiInfos-it-MainType"
-FROM poisopen;
+FROM activitiesopen;
 
-CREATE UNIQUE INDEX "v_poisopen_pk" ON "v_poisopen"("Id");
+CREATE UNIQUE INDEX "v_activitiesopen_pk" ON "v_activitiesopen"("Id");
 
-CREATE MATERIALIZED VIEW "v_poisopen_AreaId" AS
+CREATE MATERIALIZED VIEW "v_activitiesopen_AreaId" AS
         SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'AreaId') AS "data"
-        FROM poisopen
+        FROM activitiesopen
         WHERE data -> 'AreaId' != 'null';
  
-CREATE MATERIALIZED VIEW "v_poisopen_SmgTags" AS
+CREATE MATERIALIZED VIEW "v_activitiesopen_SmgTags" AS
         SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
-        FROM poisopen
+        FROM activitiesopen
         WHERE data -> 'SmgTags' != 'null';
  
-CREATE MATERIALIZED VIEW "v_poisopen_HasLanguage" AS
+CREATE MATERIALIZED VIEW "v_activitiesopen_Exposition" AS
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'Exposition') AS "data"
+        FROM activitiesopen
+        WHERE data -> 'Exposition' != 'null';
+ 
+CREATE MATERIALIZED VIEW "v_activitiesopen_HasLanguage" AS
         SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
-        FROM poisopen
+        FROM activitiesopen
         WHERE data -> 'HasLanguage' != 'null';
  
-CREATE MATERIALIZED VIEW "v_poisopen_GpsInfo" AS
+CREATE MATERIALIZED VIEW "v_activitiesopen_GpsInfo" AS
     WITH t ("Id", "data") AS (
         SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'GpsInfo') AS "Feature"
-        FROM poisopen
+        FROM activitiesopen
         WHERE data -> 'GpsInfo' != 'null')
-    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
+    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
 CAST("data"->>'Altitude' As float) AS "Altitude",
 CAST("data"->>'Latitude' As float) AS "Latitude",
 CAST("data"->>'Longitude' As float) AS "Longitude",
 CAST("data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure"
     FROM t;
 
-CREATE MATERIALIZED VIEW "v_poisopen_LTSTags" AS
+CREATE MATERIALIZED VIEW "v_activitiesopen_GpsTrack" AS
     WITH t ("Id", "data") AS (
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'LTSTags') AS "Feature"
-        FROM poisopen
-        WHERE data -> 'LTSTags' != 'null')
-    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
-CAST("data"->>'Level' As integer) AS "Level",
-CAST("data"->'TagName'->>'de' As varchar) AS "TagName-de",
-CAST("data"->'TagName'->>'en' As varchar) AS "TagName-en",
-CAST("data"->'TagName'->>'it' As varchar) AS "TagName-it"
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'GpsTrack') AS "Feature"
+        FROM activitiesopen
+        WHERE data -> 'GpsTrack' != 'null')
+    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+CAST("data"->>'Type' As varchar) AS "Type",
+CAST("data"->>'GpxTrackUrl' As varchar) AS "GpxTrackUrl",
+CAST("data"->'GpxTrackDesc'->>'de' As varchar) AS "GpxTrackDesc-de",
+CAST("data"->'GpxTrackDesc'->>'en' As varchar) AS "GpxTrackDesc-en",
+CAST("data"->'GpxTrackDesc'->>'it' As varchar) AS "GpxTrackDesc-it"
     FROM t;
 
-CREATE MATERIALIZED VIEW "v_poisopen_OperationSchedule" AS
+CREATE MATERIALIZED VIEW "v_activitiesopen_OperationSchedule" AS
     WITH t ("Id", "data") AS (
         SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
-        FROM poisopen
+        FROM activitiesopen
         WHERE data -> 'OperationSchedule' != 'null')
-    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
+    SELECT "Id" AS "activitiesopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
 CAST("data"->>'Type' As varchar) AS "Type",
 CAST("data"->>'Start' As varchar) AS "Start",
 CAST("data"->'OperationscheduleName'->>'de' As varchar) AS "OperationscheduleName-de"
+    FROM t;
+
+CREATE MATERIALIZED VIEW "v_accommodationroomsopen" AS
+SELECT CAST("data"->>'Id' As varchar) AS "Id",
+CAST("data"->>'A0RID' As varchar) AS "A0RID",
+CAST("data"->>'HGVId' As varchar) AS "HGVId",
+CAST("data"->>'LTSId' As varchar) AS "LTSId",
+CAST("data"->>'Source' As varchar) AS "Source",
+CAST("data"->>'Roommax' As integer) AS "Roommax",
+CAST("data"->>'Roommin' As integer) AS "Roommin",
+CAST("data"->>'Roomstd' As integer) AS "Roomstd",
+CAST("data"->>'RoomCode' As varchar) AS "RoomCode",
+CAST("data"->>'Roomtype' As varchar) AS "Roomtype",
+CAST("data"->>'Shortname' As varchar) AS "Shortname",
+CAST("data"->>'RoomQuantity' As integer) AS "RoomQuantity",
+CAST("data"->'AccoRoomDetail'->'de'->>'Name' As varchar) AS "AccoRoomDetail-de-Name",
+CAST("data"->'AccoRoomDetail'->'de'->>'Language' As varchar) AS "AccoRoomDetail-de-Language",
+CAST("data"->'AccoRoomDetail'->'de'->>'Longdesc' As varchar) AS "AccoRoomDetail-de-Longdesc",
+CAST("data"->'AccoRoomDetail'->'de'->>'Shortdesc' As varchar) AS "AccoRoomDetail-de-Shortdesc",
+CAST("data"->'AccoRoomDetail'->'en'->>'Name' As varchar) AS "AccoRoomDetail-en-Name",
+CAST("data"->'AccoRoomDetail'->'en'->>'Language' As varchar) AS "AccoRoomDetail-en-Language",
+CAST("data"->'AccoRoomDetail'->'it'->>'Name' As varchar) AS "AccoRoomDetail-it-Name",
+CAST("data"->'AccoRoomDetail'->'it'->>'Language' As varchar) AS "AccoRoomDetail-it-Language",
+CAST("data"->'AccoRoomDetail'->'it'->>'Longdesc' As varchar) AS "AccoRoomDetail-it-Longdesc",
+CAST("data"->'AccoRoomDetail'->'it'->>'Shortdesc' As varchar) AS "AccoRoomDetail-it-Shortdesc"
+FROM accommodationroomsopen;
+
+CREATE UNIQUE INDEX "v_accommodationroomsopen_pk" ON "v_accommodationroomsopen"("Id");
+
+CREATE MATERIALIZED VIEW "v_accommodationroomsopen_Features" AS
+    WITH t ("Id", "data") AS (
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'Features') AS "Feature"
+        FROM accommodationroomsopen
+        WHERE data -> 'Features' != 'null')
+    SELECT "Id" AS "accommodationroomsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+CAST("data"->>'Name' As varchar) AS "Name"
     FROM t;
 
 CREATE MATERIALIZED VIEW "v_regionsopen" AS
@@ -2633,20 +2405,194 @@ CAST("data"->>'Start' As varchar) AS "Start",
 CAST("data"->'OperationscheduleName'->>'de' As varchar) AS "OperationscheduleName-de"
     FROM t;
 
-CREATE MATERIALIZED VIEW "v_smgtags" AS
+CREATE MATERIALIZED VIEW "v_poisopen" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
+CAST("data"->>'Type' As varchar) AS "Type",
+CAST("data"->>'Active' As bool) AS "Active",
+CAST("data"->>'IsOpen' As bool) AS "IsOpen",
+CAST("data"->>'PoiType' As varchar) AS "PoiType",
+CAST("data"->>'SubType' As varchar) AS "SubType",
+CAST("data"->>'FeetClimb' As bool) AS "FeetClimb",
+CAST("data"->>'Highlight' As bool) AS "Highlight",
 CAST("data"->>'Shortname' As varchar) AS "Shortname",
-CAST("data"->>'MainEntity' As varchar) AS "MainEntity",
-CAST("data"->'TagName'->>'de' As varchar) AS "TagName-de"
-FROM smgtags;
+CAST("data"->>'SmgActive' As bool) AS "SmgActive",
+CAST("data"->>'HasRentals' As bool) AS "HasRentals",
+CAST("data"->>'IsPrepared' As bool) AS "IsPrepared",
+CAST("data"->>'LastChange' As varchar) AS "LastChange",
+CAST("data"->>'FirstImport' As varchar) AS "FirstImport",
+CAST("data"->>'IsWithLigth' As bool) AS "IsWithLigth",
+CAST("data"->>'RunToValley' As bool) AS "RunToValley",
+CAST("data"->>'AltitudeSumUp' As float) AS "AltitudeSumUp",
+CAST("data"->>'LiftAvailable' As bool) AS "LiftAvailable",
+CAST("data"->>'DistanceLength' As float) AS "DistanceLength",
+CAST("data"->>'AltitudeSumDown' As float) AS "AltitudeSumDown",
+CAST("data"->>'HasFreeEntrance' As bool) AS "HasFreeEntrance",
+CAST("data"->>'DistanceDuration' As float) AS "DistanceDuration",
+CAST("data"->>'AltitudeDifference' As float) AS "AltitudeDifference",
+CAST("data"->>'AltitudeLowestPoint' As float) AS "AltitudeLowestPoint",
+CAST("data"->>'AltitudeHighestPoint' As float) AS "AltitudeHighestPoint",
+CAST("data"->>'TourismorganizationId' As varchar) AS "TourismorganizationId",
+CAST("data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
+CAST("data"->'Detail'->'de'->>'Header' As varchar) AS "Detail-de-Header",
+CAST("data"->'Detail'->'de'->>'BaseText' As varchar) AS "Detail-de-BaseText",
+CAST("data"->'Detail'->'de'->>'Language' As varchar) AS "Detail-de-Language",
+CAST("data"->'Detail'->'de'->>'IntroText' As varchar) AS "Detail-de-IntroText",
+CAST("data"->'Detail'->'de'->>'GetThereText' As varchar) AS "Detail-de-GetThereText",
+CAST("data"->'Detail'->'de'->>'AdditionalText' As varchar) AS "Detail-de-AdditionalText",
+CAST("data"->'Detail'->'en'->>'Title' As varchar) AS "Detail-en-Title",
+CAST("data"->'Detail'->'en'->>'Header' As varchar) AS "Detail-en-Header",
+CAST("data"->'Detail'->'en'->>'BaseText' As varchar) AS "Detail-en-BaseText",
+CAST("data"->'Detail'->'en'->>'Language' As varchar) AS "Detail-en-Language",
+CAST("data"->'Detail'->'en'->>'IntroText' As varchar) AS "Detail-en-IntroText",
+CAST("data"->'Detail'->'en'->>'GetThereText' As varchar) AS "Detail-en-GetThereText",
+CAST("data"->'Detail'->'en'->>'AdditionalText' As varchar) AS "Detail-en-AdditionalText",
+CAST("data"->'Detail'->'it'->>'Title' As varchar) AS "Detail-it-Title",
+CAST("data"->'Detail'->'it'->>'Header' As varchar) AS "Detail-it-Header",
+CAST("data"->'Detail'->'it'->>'BaseText' As varchar) AS "Detail-it-BaseText",
+CAST("data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language",
+CAST("data"->'Detail'->'it'->>'IntroText' As varchar) AS "Detail-it-IntroText",
+CAST("data"->'Detail'->'it'->>'GetThereText' As varchar) AS "Detail-it-GetThereText",
+CAST("data"->'Detail'->'it'->>'AdditionalText' As varchar) AS "Detail-it-AdditionalText",
+CAST("data"->'GpsPoints'->'position'->>'Gpstype' As varchar) AS "GpsPoints-position-Gpstype",
+CAST("data"->'GpsPoints'->'position'->>'Altitude' As float) AS "GpsPoints-position-Altitude",
+CAST("data"->'GpsPoints'->'position'->>'Latitude' As float) AS "GpsPoints-position-Latitude",
+CAST("data"->'GpsPoints'->'position'->>'Longitude' As float) AS "GpsPoints-position-Longitude",
+CAST("data"->'GpsPoints'->'position'->>'AltitudeUnitofMeasure' As varchar) AS "GpsPoints-position-AltitudeUnitofMeasure",
+CAST("data"->'ContactInfos'->'de'->>'Url' As varchar) AS "ContactInfos-de-Url",
+CAST("data"->'ContactInfos'->'de'->>'City' As varchar) AS "ContactInfos-de-City",
+CAST("data"->'ContactInfos'->'de'->>'Email' As varchar) AS "ContactInfos-de-Email",
+CAST("data"->'ContactInfos'->'de'->>'Address' As varchar) AS "ContactInfos-de-Address",
+CAST("data"->'ContactInfos'->'de'->>'Surname' As varchar) AS "ContactInfos-de-Surname",
+CAST("data"->'ContactInfos'->'de'->>'ZipCode' As varchar) AS "ContactInfos-de-ZipCode",
+CAST("data"->'ContactInfos'->'de'->>'Language' As varchar) AS "ContactInfos-de-Language",
+CAST("data"->'ContactInfos'->'de'->>'Faxnumber' As varchar) AS "ContactInfos-de-Faxnumber",
+CAST("data"->'ContactInfos'->'de'->>'Givenname' As varchar) AS "ContactInfos-de-Givenname",
+CAST("data"->'ContactInfos'->'de'->>'NamePrefix' As varchar) AS "ContactInfos-de-NamePrefix",
+CAST("data"->'ContactInfos'->'de'->>'CompanyName' As varchar) AS "ContactInfos-de-CompanyName",
+CAST("data"->'ContactInfos'->'de'->>'CountryCode' As varchar) AS "ContactInfos-de-CountryCode",
+CAST("data"->'ContactInfos'->'de'->>'CountryName' As varchar) AS "ContactInfos-de-CountryName",
+CAST("data"->'ContactInfos'->'de'->>'Phonenumber' As varchar) AS "ContactInfos-de-Phonenumber",
+CAST("data"->'ContactInfos'->'en'->>'Url' As varchar) AS "ContactInfos-en-Url",
+CAST("data"->'ContactInfos'->'en'->>'City' As varchar) AS "ContactInfos-en-City",
+CAST("data"->'ContactInfos'->'en'->>'Email' As varchar) AS "ContactInfos-en-Email",
+CAST("data"->'ContactInfos'->'en'->>'Address' As varchar) AS "ContactInfos-en-Address",
+CAST("data"->'ContactInfos'->'en'->>'Surname' As varchar) AS "ContactInfos-en-Surname",
+CAST("data"->'ContactInfos'->'en'->>'ZipCode' As varchar) AS "ContactInfos-en-ZipCode",
+CAST("data"->'ContactInfos'->'en'->>'Language' As varchar) AS "ContactInfos-en-Language",
+CAST("data"->'ContactInfos'->'en'->>'Faxnumber' As varchar) AS "ContactInfos-en-Faxnumber",
+CAST("data"->'ContactInfos'->'en'->>'Givenname' As varchar) AS "ContactInfos-en-Givenname",
+CAST("data"->'ContactInfos'->'en'->>'NamePrefix' As varchar) AS "ContactInfos-en-NamePrefix",
+CAST("data"->'ContactInfos'->'en'->>'CompanyName' As varchar) AS "ContactInfos-en-CompanyName",
+CAST("data"->'ContactInfos'->'en'->>'CountryCode' As varchar) AS "ContactInfos-en-CountryCode",
+CAST("data"->'ContactInfos'->'en'->>'CountryName' As varchar) AS "ContactInfos-en-CountryName",
+CAST("data"->'ContactInfos'->'en'->>'Phonenumber' As varchar) AS "ContactInfos-en-Phonenumber",
+CAST("data"->'ContactInfos'->'it'->>'Url' As varchar) AS "ContactInfos-it-Url",
+CAST("data"->'ContactInfos'->'it'->>'City' As varchar) AS "ContactInfos-it-City",
+CAST("data"->'ContactInfos'->'it'->>'Email' As varchar) AS "ContactInfos-it-Email",
+CAST("data"->'ContactInfos'->'it'->>'Address' As varchar) AS "ContactInfos-it-Address",
+CAST("data"->'ContactInfos'->'it'->>'Surname' As varchar) AS "ContactInfos-it-Surname",
+CAST("data"->'ContactInfos'->'it'->>'ZipCode' As varchar) AS "ContactInfos-it-ZipCode",
+CAST("data"->'ContactInfos'->'it'->>'Language' As varchar) AS "ContactInfos-it-Language",
+CAST("data"->'ContactInfos'->'it'->>'Faxnumber' As varchar) AS "ContactInfos-it-Faxnumber",
+CAST("data"->'ContactInfos'->'it'->>'Givenname' As varchar) AS "ContactInfos-it-Givenname",
+CAST("data"->'ContactInfos'->'it'->>'NamePrefix' As varchar) AS "ContactInfos-it-NamePrefix",
+CAST("data"->'ContactInfos'->'it'->>'CompanyName' As varchar) AS "ContactInfos-it-CompanyName",
+CAST("data"->'ContactInfos'->'it'->>'CountryCode' As varchar) AS "ContactInfos-it-CountryCode",
+CAST("data"->'ContactInfos'->'it'->>'CountryName' As varchar) AS "ContactInfos-it-CountryName",
+CAST("data"->'ContactInfos'->'it'->>'Phonenumber' As varchar) AS "ContactInfos-it-Phonenumber",
+CAST("data"->'LocationInfo'->'TvInfo'->>'Id' As varchar) AS "LocationInfo-TvInfo-Id",
+CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-TvInfo-Name-cs",
+CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'de' As varchar) AS "LocationInfo-TvInfo-Name-de",
+CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'en' As varchar) AS "LocationInfo-TvInfo-Name-en",
+CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-TvInfo-Name-fr",
+CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'it' As varchar) AS "LocationInfo-TvInfo-Name-it",
+CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-TvInfo-Name-nl",
+CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-TvInfo-Name-pl",
+CAST("data"->'LocationInfo'->'TvInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-TvInfo-Name-ru",
+CAST("data"->'LocationInfo'->'AreaInfo'->>'Id' As varchar) AS "LocationInfo-AreaInfo-Id",
+CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-AreaInfo-Name-cs",
+CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'de' As varchar) AS "LocationInfo-AreaInfo-Name-de",
+CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'en' As varchar) AS "LocationInfo-AreaInfo-Name-en",
+CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-AreaInfo-Name-fr",
+CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'it' As varchar) AS "LocationInfo-AreaInfo-Name-it",
+CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-AreaInfo-Name-nl",
+CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-AreaInfo-Name-pl",
+CAST("data"->'LocationInfo'->'AreaInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-AreaInfo-Name-ru",
+CAST("data"->'LocationInfo'->'RegionInfo'->>'Id' As varchar) AS "LocationInfo-RegionInfo-Id",
+CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'cs' As varchar) AS "LocationInfo-RegionInfo-Name-cs",
+CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'de' As varchar) AS "LocationInfo-RegionInfo-Name-de",
+CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'en' As varchar) AS "LocationInfo-RegionInfo-Name-en",
+CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'fr' As varchar) AS "LocationInfo-RegionInfo-Name-fr",
+CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'it' As varchar) AS "LocationInfo-RegionInfo-Name-it",
+CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'nl' As varchar) AS "LocationInfo-RegionInfo-Name-nl",
+CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'pl' As varchar) AS "LocationInfo-RegionInfo-Name-pl",
+CAST("data"->'LocationInfo'->'RegionInfo'->'Name'->>'ru' As varchar) AS "LocationInfo-RegionInfo-Name-ru",
+CAST("data"->'AdditionalPoiInfos'->'de'->>'PoiType' As varchar) AS "AdditionalPoiInfos-de-PoiType",
+CAST("data"->'AdditionalPoiInfos'->'de'->>'SubType' As varchar) AS "AdditionalPoiInfos-de-SubType",
+CAST("data"->'AdditionalPoiInfos'->'de'->>'Language' As varchar) AS "AdditionalPoiInfos-de-Language",
+CAST("data"->'AdditionalPoiInfos'->'de'->>'MainType' As varchar) AS "AdditionalPoiInfos-de-MainType",
+CAST("data"->'AdditionalPoiInfos'->'en'->>'PoiType' As varchar) AS "AdditionalPoiInfos-en-PoiType",
+CAST("data"->'AdditionalPoiInfos'->'en'->>'SubType' As varchar) AS "AdditionalPoiInfos-en-SubType",
+CAST("data"->'AdditionalPoiInfos'->'en'->>'Language' As varchar) AS "AdditionalPoiInfos-en-Language",
+CAST("data"->'AdditionalPoiInfos'->'en'->>'MainType' As varchar) AS "AdditionalPoiInfos-en-MainType",
+CAST("data"->'AdditionalPoiInfos'->'it'->>'PoiType' As varchar) AS "AdditionalPoiInfos-it-PoiType",
+CAST("data"->'AdditionalPoiInfos'->'it'->>'SubType' As varchar) AS "AdditionalPoiInfos-it-SubType",
+CAST("data"->'AdditionalPoiInfos'->'it'->>'Language' As varchar) AS "AdditionalPoiInfos-it-Language",
+CAST("data"->'AdditionalPoiInfos'->'it'->>'MainType' As varchar) AS "AdditionalPoiInfos-it-MainType"
+FROM poisopen;
 
-CREATE UNIQUE INDEX "v_smgtags_pk" ON "v_smgtags"("Id");
+CREATE UNIQUE INDEX "v_poisopen_pk" ON "v_poisopen"("Id");
 
-CREATE MATERIALIZED VIEW "v_smgtags_ValidForEntity" AS
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'ValidForEntity') AS "data"
-        FROM smgtags
-        WHERE data -> 'ValidForEntity' != 'null';
+CREATE MATERIALIZED VIEW "v_poisopen_AreaId" AS
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'AreaId') AS "data"
+        FROM poisopen
+        WHERE data -> 'AreaId' != 'null';
  
+CREATE MATERIALIZED VIEW "v_poisopen_SmgTags" AS
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
+        FROM poisopen
+        WHERE data -> 'SmgTags' != 'null';
+ 
+CREATE MATERIALIZED VIEW "v_poisopen_HasLanguage" AS
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+        FROM poisopen
+        WHERE data -> 'HasLanguage' != 'null';
+ 
+CREATE MATERIALIZED VIEW "v_poisopen_GpsInfo" AS
+    WITH t ("Id", "data") AS (
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'GpsInfo') AS "Feature"
+        FROM poisopen
+        WHERE data -> 'GpsInfo' != 'null')
+    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
+CAST("data"->>'Altitude' As float) AS "Altitude",
+CAST("data"->>'Latitude' As float) AS "Latitude",
+CAST("data"->>'Longitude' As float) AS "Longitude",
+CAST("data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure"
+    FROM t;
+
+CREATE MATERIALIZED VIEW "v_poisopen_LTSTags" AS
+    WITH t ("Id", "data") AS (
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'LTSTags') AS "Feature"
+        FROM poisopen
+        WHERE data -> 'LTSTags' != 'null')
+    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
+CAST("data"->>'Level' As integer) AS "Level",
+CAST("data"->'TagName'->>'de' As varchar) AS "TagName-de",
+CAST("data"->'TagName'->>'en' As varchar) AS "TagName-en",
+CAST("data"->'TagName'->>'it' As varchar) AS "TagName-it"
+    FROM t;
+
+CREATE MATERIALIZED VIEW "v_poisopen_OperationSchedule" AS
+    WITH t ("Id", "data") AS (
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements("data" -> 'OperationSchedule') AS "Feature"
+        FROM poisopen
+        WHERE data -> 'OperationSchedule' != 'null')
+    SELECT "Id" AS "poisopen_Id", CAST("data"->>'Stop' As varchar) AS "Stop",
+CAST("data"->>'Type' As varchar) AS "Type",
+CAST("data"->>'Start' As varchar) AS "Start",
+CAST("data"->'OperationscheduleName'->>'de' As varchar) AS "OperationscheduleName-de"
+    FROM t;
+
 CREATE MATERIALIZED VIEW "v_suedtiroltypes" AS
 SELECT CAST("data"->>'Id' As varchar) AS "Id",
 CAST("data"->>'Key' As varchar) AS "Key",
@@ -2921,4 +2867,62 @@ CREATE MATERIALIZED VIEW "v_wines_Awards" AS
         SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'Awards') AS "data"
         FROM wines
         WHERE data -> 'Awards' != 'null';
+ 
+CREATE MATERIALIZED VIEW "v_municipalitiesopen" AS
+SELECT CAST("data"->>'Id' As varchar) AS "Id",
+CAST("data"->>'Plz' As varchar) AS "Plz",
+CAST("data"->>'Active' As bool) AS "Active",
+CAST("data"->>'SiagId' As varchar) AS "SiagId",
+CAST("data"->>'Gpstype' As varchar) AS "Gpstype",
+CAST("data"->>'Altitude' As float) AS "Altitude",
+CAST("data"->>'CustomId' As varchar) AS "CustomId",
+CAST("data"->>'Latitude' As float) AS "Latitude",
+CAST("data"->>'RegionId' As varchar) AS "RegionId",
+CAST("data"->>'Longitude' As float) AS "Longitude",
+CAST("data"->>'Shortname' As varchar) AS "Shortname",
+CAST("data"->>'SmgActive' As bool) AS "SmgActive",
+CAST("data"->>'LastChange' As varchar) AS "LastChange",
+CAST("data"->>'Inhabitants' As integer) AS "Inhabitants",
+CAST("data"->>'IstatNumber' As varchar) AS "IstatNumber",
+CAST("data"->>'TourismvereinId' As varchar) AS "TourismvereinId",
+CAST("data"->>'VisibleInSearch' As bool) AS "VisibleInSearch",
+CAST("data"->>'AltitudeUnitofMeasure' As varchar) AS "AltitudeUnitofMeasure",
+CAST("data"->'Detail'->'cs'->>'Title' As varchar) AS "Detail-cs-Title",
+CAST("data"->'Detail'->'cs'->>'Language' As varchar) AS "Detail-cs-Language",
+CAST("data"->'Detail'->'de'->>'Title' As varchar) AS "Detail-de-Title",
+CAST("data"->'Detail'->'de'->>'Language' As varchar) AS "Detail-de-Language",
+CAST("data"->'Detail'->'en'->>'Title' As varchar) AS "Detail-en-Title",
+CAST("data"->'Detail'->'en'->>'Language' As varchar) AS "Detail-en-Language",
+CAST("data"->'Detail'->'fr'->>'Title' As varchar) AS "Detail-fr-Title",
+CAST("data"->'Detail'->'fr'->>'Language' As varchar) AS "Detail-fr-Language",
+CAST("data"->'Detail'->'it'->>'Title' As varchar) AS "Detail-it-Title",
+CAST("data"->'Detail'->'it'->>'Language' As varchar) AS "Detail-it-Language",
+CAST("data"->'Detail'->'nl'->>'Title' As varchar) AS "Detail-nl-Title",
+CAST("data"->'Detail'->'nl'->>'Language' As varchar) AS "Detail-nl-Language",
+CAST("data"->'Detail'->'pl'->>'Title' As varchar) AS "Detail-pl-Title",
+CAST("data"->'Detail'->'pl'->>'Language' As varchar) AS "Detail-pl-Language",
+CAST("data"->'Detail'->'ru'->>'Title' As varchar) AS "Detail-ru-Title",
+CAST("data"->'Detail'->'ru'->>'Language' As varchar) AS "Detail-ru-Language"
+FROM municipalitiesopen;
+
+CREATE UNIQUE INDEX "v_municipalitiesopen_pk" ON "v_municipalitiesopen"("Id");
+
+CREATE MATERIALIZED VIEW "v_municipalitiesopen_HasLanguage" AS
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
+        FROM municipalitiesopen
+        WHERE data -> 'HasLanguage' != 'null';
+ 
+CREATE MATERIALIZED VIEW "v_smgtags" AS
+SELECT CAST("data"->>'Id' As varchar) AS "Id",
+CAST("data"->>'Shortname' As varchar) AS "Shortname",
+CAST("data"->>'MainEntity' As varchar) AS "MainEntity",
+CAST("data"->'TagName'->>'de' As varchar) AS "TagName-de"
+FROM smgtags;
+
+CREATE UNIQUE INDEX "v_smgtags_pk" ON "v_smgtags"("Id");
+
+CREATE MATERIALIZED VIEW "v_smgtags_ValidForEntity" AS
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", jsonb_array_elements_text("data" -> 'ValidForEntity') AS "data"
+        FROM smgtags
+        WHERE data -> 'ValidForEntity' != 'null';
  
