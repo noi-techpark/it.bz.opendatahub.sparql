@@ -3,7 +3,7 @@
 ## Lodging businesses and accommodation
 
 ### Lodging businesses without accommodation
-```sql
+```sparql
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX schema: <http://schema.org/>
 

@@ -149,15 +149,15 @@ query="""
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
-SELECT ?e ?pos ?posLabel ?posColor 
+SELECT ?e ?pos ?posLabel ?posColor
 WHERE {
-  ?e a schema:FoodEstablishment ; 
-     geo:asWKT ?pos ; 
-     schema:name ?posLabel ; 
+  ?e a schema:FoodEstablishment ;
+     geo:asWKT ?pos ;
+     schema:name ?posLabel ;
      schema:address ?a .
   # ?a schema:postalCode "39100" . # Uncomment for Bolzano only
   FILTER (lang(?posLabel) = 'de')
-  
+
   # Colors (with priority)
   OPTIONAL {
     ?e a schema:Restaurant .
@@ -185,14 +185,14 @@ query="""
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
-SELECT ?e 
-       ?pos 
-       (CONCAT(?name, " (", str(?altitude), " m)") AS ?posLabel) 
-       ?posColor 
+SELECT ?e
+       ?pos
+       (CONCAT(?name, " (", str(?altitude), " m)") AS ?posLabel)
+       ?posColor
 WHERE {
-  ?e a schema:Restaurant; 
-     geo:asWKT ?pos ; 
-     schema:name ?name ; 
+  ?e a schema:Restaurant;
+     geo:asWKT ?pos ;
+     schema:name ?name ;
      schema:geo ?geo .
   ?geo schema:elevation ?altitude .
   FILTER (lang(?name) = 'de')
@@ -209,11 +209,81 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 
 SELECT ?pos ?posLabel
 WHERE {
-  ?p a :Pizzeria ; 
-     geo:asWKT ?pos ; 
-     schema:name ?posLabel ; 
+  ?p a :Pizzeria ;
+     geo:asWKT ?pos ;
+     schema:name ?posLabel ;
      schema:geo ?geo .
   FILTER (lang(?posLabel) = 'it')
+}
+"""
+
+[[tabGroups.tabs]]
+name="Asian cuisine (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posLabel ?desc
+WHERE {
+  ?p a schema:FoodEstablishment ; 
+     geo:asWKT ?pos ; 
+     schema:name ?name ; 
+     schema:servesCuisine "asian"@en .
+     OPTIONAL { 
+       ?p schema:description ?desc .
+       FILTER (lang(?desc) = 'it')
+     }
+  FILTER (lang(?name) = 'it')
+  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Mediterranean cuisine (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posLabel ?desc
+WHERE {
+  ?p a schema:FoodEstablishment ; 
+     geo:asWKT ?pos ; 
+     schema:name ?name ; 
+     schema:servesCuisine "mediterranean"@en .
+     OPTIONAL { 
+       ?p schema:description ?desc .
+       FILTER (lang(?desc) = 'de')
+     }
+  FILTER (lang(?name) = 'de')
+  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Apfelstrudel (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posLabel ?desc
+WHERE {
+  ?p a schema:FoodEstablishment ; 
+     geo:asWKT ?pos ; 
+     schema:name ?name ; 
+     schema:hasMenu [
+      schema:hasMenuItem [ 
+        schema:name "Apfelstrudel"@de 
+        ]
+     ] .
+     OPTIONAL { 
+       ?p schema:description ?desc .
+       FILTER (lang(?desc) = 'de')
+     }
+  FILTER (lang(?name) = 'de')
+  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
 }
 """
 
@@ -304,10 +374,10 @@ PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
 SELECT ?h ?pos ?posLabel ("jet,0.8" AS ?posColor) WHERE {
   ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?name ; schema:address ?a .
-  ?a schema:addressLocality ?deCity, ?itCity ; schema:postalCode "39100" . 
-  FILTER ((lang(?name) = 'de') && (lang(?deCity) = 'de') && (lang(?itCity) = 'it') 
+  ?a schema:addressLocality ?deCity, ?itCity ; schema:postalCode "39100" .
+  FILTER ((lang(?name) = 'de') && (lang(?deCity) = 'de') && (lang(?itCity) = 'it')
     && ((lcase(str(?itCity)) != "bolzano") || (lcase(str(?deCity)) != "bozen")))
-  
+
   BIND(concat(?name,'<hr/>de: ',?deCity, '<hr/> it: ',?itCity) AS ?posLabel)
 }
 """
