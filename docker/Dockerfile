@@ -1,5 +1,6 @@
 FROM ontop/ontop-endpoint:4.0-snapshot as base
-COPY --from=flyway/flyway:6.3.3 /flyway/flyway /usr/local/bin/flyway
+COPY --from=flyway/flyway:6.3.3 /flyway /flyway
+ENV PATH="/flyway:${PATH}"
 
 # Dev
 FROM base as dev
