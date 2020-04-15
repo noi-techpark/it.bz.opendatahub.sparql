@@ -1,11 +1,14 @@
 FROM ontop/ontop-endpoint:4.0-snapshot as base
+COPY --from=flyway/flyway:6.3.3 /usr/local/bin/flyway /usr/local/bin/flyway
 
+# Dev
 FROM base as dev
 
+# Build
 FROM base as build
-
 RUN apk add --no-cache postgresql-client
-
-COPY docker/endpoint.sh /endpoint.sh
-
-ENTRYPOINT /endpoint.sh
+COPY docker/entrypoint.sh /entrypoint.sh
+COPY sql /opt/ontop/sql
+COPY vkg /opt/ontop/input
+COPY jdbc /opt/ontop/jdbc
+ENTRYPOINT /entrypoint.sh
