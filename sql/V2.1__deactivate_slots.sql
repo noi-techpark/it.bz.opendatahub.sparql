@@ -7,7 +7,6 @@
 DO $$
 BEGIN
   IF EXISTS(select * from pg_catalog.pg_subscription where subname = '${subscription_name}')
-  THEN)
   THEN
     ALTER SUBSCRIPTION ${subscription_name} DISABLE;
     ALTER SUBSCRIPTION ${subscription_name} SET (slot_name = NONE);
