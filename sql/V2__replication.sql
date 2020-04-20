@@ -1,5 +1,3 @@
-ALTER SUBSCRIPTION vkgsubscription DISABLE;
-ALTER SUBSCRIPTION vkgsubscription SET (slot_name = NONE);
 DROP SUBSCRIPTION IF EXISTS vkgsubscription;
 
 CREATE SUBSCRIPTION vkgsubscription 
