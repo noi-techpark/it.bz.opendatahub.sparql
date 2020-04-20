@@ -12,15 +12,23 @@ pipeline {
         DOCKER_SERVER_DIRECTORY = "/var/docker/odh-vkg"
         DOCKER_SERVER_PORT = "1008"
         ONTOP_QUERY_TIMEOUT = 15
+
         ORIGINAL_POSTGRES_HOST = "prod-postgres-tourism.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
         ORIGINAL_POSTGRES_DB = "tourism"
-        ORIGINAL_POSTGRES_USERNAME = credentials('odh-vkg-prod-original-postgres-username')
+        ORIGINAL_POSTGRES_USER = credentials('odh-vkg-prod-original-postgres-username')
         ORIGINAL_POSTGRES_PASSWORD = credentials('odh-vkg-prod-original-postgres-password')
         COPY_POSTGRES_HOST = "test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
         COPY_POSTGRES_DB = "odh_vkg_prod"
-        COPY_POSTGRES_USERNAME = credentials('odh-vkg-prod-copy-postgres-username')
+        COPY_POSTGRES_USER = credentials('odh-vkg-prod-copy-postgres-username')
         COPY_POSTGRES_PASSWORD = credentials('odh-vkg-prod-copy-postgres-password')
-		COPY_POSTGRES_STATEMENT_TIMEOUT = 360
+
+        FLYWAY_URL = "jdbc:postgresql://${COPY_POSTGRES_HOST}/${COPY_POSTGRES_DB}"
+        FLYWAY_USER = "${COPY_POSTGRES_USER}"
+        FLYWAY_PASSWORD = "${COPY_POSTGRES_PASSWORD}"
+        FLYWAY_PLACEHOLDERS_ORIGINAL_HOST = "${ORIGINAL_POSTGRES_HOST}"
+        FLYWAY_PLACEHOLDERS_ORIGINAL_DB = "${ORIGINAL_POSTGRES_DB}"
+        FLYWAY_PLACEHOLDERS_ORIGINAL_USER = "${ORIGINAL_POSTGRES_USER}"
+        FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD = "${ORIGINAL_POSTGRES_PASSWORD}"
     }
 
     stages {
@@ -32,20 +40,23 @@ pipeline {
                     echo "DOCKER_IMAGE_APP=${DOCKER_IMAGE_APP}" >> .env
                     echo "DOCKER_TAG_APP=${DOCKER_TAG_APP}" >> .env
                 
-                    echo "ORIGINAL_POSTGRES_HOST=${ORIGINAL_POSTGRES_HOST}" >> .env
-                    echo "ORIGINAL_POSTGRES_DB=${ORIGINAL_POSTGRES_DB}" >> .env
-                    echo "ORIGINAL_POSTGRES_USERNAME=${ORIGINAL_POSTGRES_USERNAME}" >> .env
-                    echo "ORIGINAL_POSTGRES_PASSWORD=${ORIGINAL_POSTGRES_PASSWORD}" >> .env
                     echo "COPY_POSTGRES_HOST=${COPY_POSTGRES_HOST}" >> .env
                     echo "COPY_POSTGRES_DB=${COPY_POSTGRES_DB}" >> .env
                     echo "COPY_POSTGRES_USERNAME=${COPY_POSTGRES_USERNAME}" >> .env
                     echo "COPY_POSTGRES_PASSWORD=${COPY_POSTGRES_PASSWORD}" >> .env
-                    echo "COPY_POSTGRES_STATEMENT_TIMEOUT=${COPY_POSTGRES_STATEMENT_TIMEOUT}" >> .env
+
+                    echo "FLYWAY_URL=${FLYWAY_URL}" >> .env
+                    echo "FLYWAY_USER=${FLYWAY_USER}" >> .env
+                    echo "FLYWAY_PASSWORD=${FLYWAY_PASSWORD}" >> .env
+                    echo "FLYWAY_PLACEHOLDERS_ORIGINAL_HOST=${FLYWAY_PLACEHOLDERS_ORIGINAL_HOST}" >> .env
+                    echo "FLYWAY_PLACEHOLDERS_ORIGINAL_DB=${FLYWAY_PLACEHOLDERS_ORIGINAL_DB}" >> .env
+                    echo "FLYWAY_PLACEHOLDERS_ORIGINAL_USER=${FLYWAY_PLACEHOLDERS_ORIGINAL_USER}" >> .env
+                    echo "FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD=${FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD}" >> .env
 
                     sed -i -e "s%\\(DOCKER_SERVER_PORT\\s*=\\).*\\$%\\1${DOCKER_SERVER_PORT}%" .env
 
                     sed -i -e "s%\\(jdbc.url\\s*=\\).*\\$%\\1jdbc\\\\\\\\:postgresql\\\\\\\\://${COPY_POSTGRES_HOST}/${COPY_POSTGRES_DB}%" vkg/odh.docker.properties
-                    sed -i -e "s%\\(jdbc.user\\s*=\\).*\\$%\\1${COPY_POSTGRES_USERNAME}%" vkg/odh.docker.properties
+                    sed -i -e "s%\\(jdbc.user\\s*=\\).*\\$%\\1${COPY_POSTGRES_USER}%" vkg/odh.docker.properties
                     sed -i -e "s%\\(jdbc.password\\s*=\\).*\\$%\\1${COPY_POSTGRES_PASSWORD}%" vkg/odh.docker.properties
                     sed -i -e "s%\\(ontop.query.defaultTimeout\\s*=\\).*\\$%\\1${ONTOP_QUERY_TIMEOUT}%" vkg/odh.docker.properties
                 '''
@@ -74,10 +85,7 @@ pipeline {
                             ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'mkdir -p ${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER}'
                             pv docker-compose.run.yml | ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'tee ${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER}/docker-compose.yml'
                             scp -r -o StrictHostKeyChecking=no .env ${DOCKER_SERVER_IP}:${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER}/.env
-                            scp -r -o StrictHostKeyChecking=no vkg ${DOCKER_SERVER_IP}:${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER}/vkg
-                            scp -r -o StrictHostKeyChecking=no jdbc ${DOCKER_SERVER_IP}:${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER}/jdbc
-                            scp -r -o StrictHostKeyChecking=no src ${DOCKER_SERVER_IP}:${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER}/src
-                        
+
                             ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'cd ${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER} && docker-compose --no-ansi pull'
                             ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} '[ -d \"${DOCKER_SERVER_DIRECTORY}/current\" ] && (cd ${DOCKER_SERVER_DIRECTORY}/current && docker-compose --no-ansi down) || true'
                             ssh -o StrictHostKeyChecking=no ${DOCKER_SERVER_IP} 'ln -sfn ${DOCKER_SERVER_DIRECTORY}/releases/${BUILD_NUMBER} ${DOCKER_SERVER_DIRECTORY}/current'
