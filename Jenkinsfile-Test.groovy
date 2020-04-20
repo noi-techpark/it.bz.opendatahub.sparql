@@ -42,7 +42,7 @@ pipeline {
                 
                     echo "COPY_POSTGRES_HOST=${COPY_POSTGRES_HOST}" >> .env
                     echo "COPY_POSTGRES_DB=${COPY_POSTGRES_DB}" >> .env
-                    echo "COPY_POSTGRES_USERNAME=${COPY_POSTGRES_USERNAME}" >> .env
+                    echo "COPY_POSTGRES_USER=${COPY_POSTGRES_USER}" >> .env
                     echo "COPY_POSTGRES_PASSWORD=${COPY_POSTGRES_PASSWORD}" >> .env
 
                     echo "FLYWAY_URL=${FLYWAY_URL}" >> .env
