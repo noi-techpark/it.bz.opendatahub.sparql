@@ -15,22 +15,7 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
-
---
--- Name: cube; Type: EXTENSION; Schema: -; Owner: -
---
-
-
-
---
--- Name: earthdistance; Type: EXTENSION; Schema: -; Owner: -
---
-
-
-
 SET default_tablespace = '';
-
-SET default_table_access_method = heap;
 
 --
 -- Name: AspNetRoles; Type: TABLE; Schema: public; Owner: -
