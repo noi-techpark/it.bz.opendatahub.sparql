@@ -16,13 +16,17 @@ pipeline {
         }
         stage('Test & Build') {
             steps {
-                sh "docker-compose -f docker-compose.build.yml build --pull"
+                ansiColor('xterm') {
+                    sh "docker-compose -f docker-compose.build.yml build --pull"
+                }
             }
         }
     }
     post { 
         always { 
-            sh 'docker-compose -f docker-compose.build.yml down || true'
+            ansiColor('xterm') {
+                sh 'docker-compose -f docker-compose.build.yml down || true'
+            }
         }
     }
 }
