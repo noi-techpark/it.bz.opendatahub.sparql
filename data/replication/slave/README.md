@@ -49,6 +49,17 @@ CREATE PUBLICATION odhpub FOR ALL TABLES;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO vkgreplicate;
 ```
 
+If you see a continues increase in storage, it is possible that PITR prevents
+the cleaning of WAL logs. See [AWS RDS
+Docs](https://aws.amazon.com/premiumsupport/knowledge-center/diskfull-error-rds-postgresql/).
+To check whether PITR is activated or not, do
+```sql
+show archive_timeout;
+```
+If it is not equal `0`, you have PITR activated, and that means that Postgres
+generates also WAL logs without writes. Normally, they would be cleaned after a
+few MB, but with PITR they are kept forever.
+
 ## Slave configuration
 
 If the master is a Docker container on the same machine, one must make sure they are on the same Docker network (here `tourism`) than the master container.
@@ -76,4 +87,14 @@ Note that the subscription `subodh` must not already exist (otherwise give it an
 Before removing the slave container, it is recommended to disable the subscription:
 ```sql
 ALTER SUBSCRIPTION subodh DISABLE;
+```
+
+To free storage, you can also drop the underlying slot:
+```sql
+SELECT pg_drop_replication_slot('Your_slotname_name');
+```
+
+Find your slots and subscription with
+```sql
+SELECT * FROM pg_catalog.pg_subscription;
 ```
