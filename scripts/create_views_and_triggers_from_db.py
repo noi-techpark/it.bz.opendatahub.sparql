@@ -457,7 +457,7 @@ if __name__ == '__main__':
     # tables = ['accommodationsopen']
 
     create_view_file = "create_views_gen.sql"
-    create_trigger_file = "create_tirggers_gen.sql"
+    create_trigger_file = "create_triggers_gen.sql"
     with open(create_view_file, "w+") as f, \
             open(create_trigger_file, "w+") as ft:
         for table_name in tables:

@@ -2,11 +2,14 @@
 
 Contains the Open Data fragment of the tourism dataset of the Open Data Hub.
 
-## How to start
+## How to start manually
 
 ```sh
 docker run --name odh_db_running -p 7777:5432 -e POSTGRES_USER=tourismuser -e POSTGRES_PASSWORD=postgres2 -d ontopicvkg/odh-tourism-db
 ```
+
+Note that normally it is started by docker-compose in dev mode.
+
 
 ## Cleaning the dump file
 
@@ -17,7 +20,26 @@ Remove the lines `CREATE INDEX` involving `ll_to_earth`. They produce some warni
 ### Rights to NOI employees
 Remove the `GRANT` commands at the end of the file.
 
-## Files to put in the data directory
+### Split the schema from the data
 
+The schema is expected to be called `original_schema.sql` and the data `dump-tourism-201911121025.sql` .
+
+Make sure that the following statement is disabled (`public` needs to be in the `search_path` for the triggers to work).
+```sql
+-- SELECT pg_catalog.set_config('search_path', '', false);
+```
+
+## Build the Docker image
+
+### Files to put in the data directory
+
+* `original_schema.sql`
 * `dump-tourism-201911121025.sql.gz` (you can use the `gzip` to create it from the SQL file)
-* `create_views.sql` from the `src` directory
+* `create_triggers_gen.sql` from the `scripts` directory
+
+### Commands
+
+```sh
+docker build -t ontopicvkg/odh-tourism-db .
+docker push ontopicvkg/odh-tourism-db
+```
