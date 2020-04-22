@@ -13,8 +13,8 @@ pipeline {
         DOCKER_SERVER_PORT = "1008"
         ONTOP_QUERY_TIMEOUT = 15
 
-        ORIGINAL_POSTGRES_HOST = "prod-postgres-tourism.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-        ORIGINAL_POSTGRES_DB = "tourism"
+        ORIGINAL_POSTGRES_HOST = "prod-postgres-vkgreplication.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+        ORIGINAL_POSTGRES_DB = "postgres"
         ORIGINAL_POSTGRES_USER = credentials('odh-vkg-prod-original-postgres-username')
         ORIGINAL_POSTGRES_PASSWORD = credentials('odh-vkg-prod-original-postgres-password')
         COPY_POSTGRES_HOST = "test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
