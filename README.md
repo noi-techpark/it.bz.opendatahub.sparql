@@ -5,7 +5,7 @@ Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH).
 ## Table of contents
 
 - [Getting started](#getting-started)
-- [Deployment](#deployment)
+- [Development](#development)
 - [Docker environment](#docker-environment)
 - [Information](#information)
 
@@ -16,7 +16,9 @@ on your local machine for development and testing purposes.
 
 ### Prerequisites
 
-For a ready to use Docker environment with all prerequisites already installed and prepared, you can check out the [Docker environment](#docker-environment) section.
+For a ready to use Docker environment with all prerequisites already installed
+and prepared, you can check out the [Docker environment](#docker-environment)
+section.
 
 ### Source code
 
@@ -32,21 +34,24 @@ Change directory:
 cd odh-vkg/
 ```
 
-## Deployment
+## Development
 
-1. Create database views
+1. Change the credentials of the database
 
-* Run the script [src/create_views.sql](src/create_views.sql) to create the materialized views. 
+* Modify the file [vkg/odh.docker.properties](vkg/odh.docker.properties)
+  accordingly. Note that on Linux, `host.docker.internal` currently needs to be
+  replaced by the IP address of the machine.
 
-2. Change the credentials of the database
-
-* Modify the file [vkg/odh.docker.properties](vkg/odh.docker.properties) accordingly. Note that on Linux, `host.docker.internal` currently needs to be replaced by the IP address of the machine.
-
-3. Create the `.env` file in which the SPARQL endpoint port is specified
+2. Create the `.env` file in which the SPARQL endpoint port is specified
 
 * `cp .env.example .env`
 
-4. Start the Docker container (see [the dedicated section](#Start-and-stop-the-containers))
+3. Start the Docker container (see [the dedicated
+   section](#Start-and-stop-the-containers)). This will create all needed
+   database assets for you via [flyway](https://flywaydb.org) taking the SQL
+   scripts inside ![sql](sql) folder.
+
+4. Setup logical replication from the database master to this machine, as described in ![data/replication/slave/README.md](data/replication/slave/README.md).
 
 5. Visit the Ontop endpoint
 
