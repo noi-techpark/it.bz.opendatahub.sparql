@@ -5,9 +5,8 @@ Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH).
 ## Table of contents
 
 - [Getting started](#getting-started)
-- [Deployment](#deployment)
-- [Docker environment](#docker-environment)
 - [Information](#information)
+- [Deployment at NOI](#deployment-at-noi)
 
 ## Getting started
 
@@ -32,39 +31,35 @@ Change directory:
 cd odh-vkg/
 ```
 
-## Deployment
+### Local deployment
 
-1. Create database views
-
-* Run the script [src/create_views.sql](src/create_views.sql) to create the materialized views. 
-
-2. Change the credentials of the database
-
-* Modify the file [vkg/odh.docker.properties](vkg/odh.docker.properties) accordingly. Note that on Linux, `host.docker.internal` currently needs to be replaced by the IP address of the machine.
-
-3. Create the `.env` file in which the SPARQL endpoint port is specified
+1. Create the `.env` file in which the SPARQL endpoint port and the PG external port (for debugging purposes) are specified
 
 * `cp .env.example .env`
 
-4. Start the Docker container (see [the dedicated section](#Start-and-stop-the-containers))
+2. Start the Docker container (see [the dedicated section](#Start-and-stop-the-containers))
 
-5. Visit the Ontop endpoint
+3. Visit the SPARQL endpoint
 
 * Now we can open the link <http://localhost:8080> in the browser and test some SPARQL queries
 
-## Docker environment
+#### Docker environment
 
 For the project a Docker environment is already prepared and ready to use with all necessary prerequisites.
 
-These Docker containers are the same as used by the continuous integration servers.
+The default Docker Compose file *(docker-compose.yml)* uses 3 containers:
+ - A PostgreSQL  DB containing a fragment of the ODH Tourism dataset
+ - Ontop as SPARQL endpoint
+ - Nginx as reverse proxy and cache
 
-### Installation
+
+#### Installation
 
 Install [Docker](https://docs.docker.com/install/) (with Docker Compose) locally on your machine.
 
-### Start and stop the containers
+#### Start and stop the containers
 
-#### Option 1: On the foreground
+##### Option 1: On the foreground
 
 To start the container on the foreground:
 ```
@@ -72,7 +67,7 @@ docker-compose pull && docker-compose up
 ```
 The container is run on the foreground and can be stopped by pressing CTRL-C.
 
-#### Option 2: On the background
+##### Option 2: On the background
 
 To start the container on the background:
 ```
@@ -118,3 +113,19 @@ Some examples of possible SPARQL queries can be found in the SPARQL Queries fold
 ### Schema
 
 The schema of the VKG can be visualized [in the dedicated page](sparql_queries/schema.md).
+
+
+## Deployment at NOI
+
+The databases used in the test and production environments of NOI are not managed by Docker, but are instead AWS RDS services.
+
+Deployment in these environments is achieved through Jenkins scripts (*Jenkinsfile-CI.groovy*, *Jenkinsfile-Production.groovy* and *Jenkinsfile-Test.groovy*). They use two dedicated Docker compose scripts: (*docker-compose.build.yml* and *docker-compose.run.yml*).
+
+Current deployments:
+ * Test: https://sparql.opendatahub.testingmachine.eu/
+ * Production: https://sparql.opendatahub.bz.it/
+
+### Database synchronization
+The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](data/replication/slave/README.md).
+
+
