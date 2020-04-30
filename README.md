@@ -5,8 +5,9 @@ Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH).
 ## Table of contents
 
 - [Getting started](#getting-started)
-- [Information](#information)
 - [Deployment at NOI](#deployment-at-noi)
+- [Maintenance](#maintenance)
+- [Information](#information)
 
 ## Getting started
 
@@ -79,6 +80,36 @@ To stop it:
 docker-compose down
 ```
 
+## Deployment at NOI
+
+The databases used in the test and production environments of NOI are not managed by Docker, but are instead AWS RDS services.
+
+Deployment in these environments is achieved through Jenkins scripts (*Jenkinsfile-CI.groovy*, *Jenkinsfile-Production.groovy* and *Jenkinsfile-Test.groovy*). They use two dedicated Docker compose scripts: (*docker-compose.build.yml* and *docker-compose.run.yml*).
+
+Current deployments:
+ * Test: https://sparql.opendatahub.testingmachine.eu/
+ * Production: https://sparql.opendatahub.bz.it/
+
+#### Database synchronization
+The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](data/replication/slave/README.md).
+
+## Maintenance
+
+### Schema evolution
+
+#### Update the derived tables
+
+### Logical replication
+
+
+
+
+### Test database image
+
+For building a newer version of the Docker image of the test database out of a fresh dump, please refer to [the dedicated page](data/test/README.md).
+
+This Docker image is published [on Docker Hub](https://hub.docker.com/r/ontopicvkg/odh-tourism-db).
+
 
 ## Information
 
@@ -113,27 +144,6 @@ Some examples of possible SPARQL queries can be found in the SPARQL Queries fold
 ### Schema
 
 The schema of the VKG can be visualized [in the dedicated page](sparql_queries/schema.md).
-
-
-## Deployment at NOI
-
-The databases used in the test and production environments of NOI are not managed by Docker, but are instead AWS RDS services.
-
-Deployment in these environments is achieved through Jenkins scripts (*Jenkinsfile-CI.groovy*, *Jenkinsfile-Production.groovy* and *Jenkinsfile-Test.groovy*). They use two dedicated Docker compose scripts: (*docker-compose.build.yml* and *docker-compose.run.yml*).
-
-Current deployments:
- * Test: https://sparql.opendatahub.testingmachine.eu/
- * Production: https://sparql.opendatahub.bz.it/
-
-### Database synchronization
-The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](data/replication/slave/README.md).
-
-
-## Test database image
-
-For building a newer version of the Docker image of the test database out of a fresh dump, please refer to [the dedicated page](data/test/README.md).
-
-This Docker image is published [on Docker Hub](https://hub.docker.com/r/ontopicvkg/odh-tourism-db).
 
 
 
