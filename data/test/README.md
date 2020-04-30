@@ -1,6 +1,8 @@
-# PostgreSQL Docker image for Open Data Hub
+# PostgreSQL Docker test image for Tourism ODH
 
-Contains the Open Data fragment of the tourism dataset of the Open Data Hub.
+Contains the Open Data fragment of the tourism dataset of the Open Data Hub. This Docker image is published [on Docker Hub](https://hub.docker.com/r/ontopicvkg/odh-tourism-db).
+
+Note this image is intended to be used for development and tests purposes, on your local machine. It does not contain up-to-date data.
 
 ## How to start manually
 
@@ -10,17 +12,17 @@ docker run --name odh_db_running -p 7777:5432 -e POSTGRES_USER=tourismuser -e PO
 
 Note that normally it is started by docker-compose in dev mode.
 
+## Release a new version
 
-## Cleaning the dump file
+### Cleaning the dump file
 
-
-### Disable the indexes using the earthdistance extension
+#### Disable the indexes using the earthdistance extension
 Remove the lines `CREATE INDEX` involving `ll_to_earth`. They produce some warnings while creating the materialized views.
 
-### Rights to NOI employees
+#### Rights to NOI employees
 Remove the `GRANT` commands at the end of the file.
 
-### Split the schema from the data
+#### Split the schema from the data
 
 The schema is expected to be called `original_schema.sql` and the data `dump-tourism-201911121025.sql` .
 
@@ -29,15 +31,15 @@ Make sure that the following statement is disabled (`public` needs to be in the 
 -- SELECT pg_catalog.set_config('search_path', '', false);
 ```
 
-## Build the Docker image
+### Build the Docker image
 
-### Files to put in the data directory
+#### Files to put in the data directory
 
 * `original_schema.sql`
 * `dump-tourism-201911121025.sql.gz` (you can use the `gzip` to create it from the SQL file)
 * `create_triggers_gen.sql` from the `scripts` directory
 
-### Commands
+#### Commands
 
 ```sh
 docker build -t ontopicvkg/odh-tourism-db .
