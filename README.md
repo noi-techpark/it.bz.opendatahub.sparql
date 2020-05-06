@@ -16,7 +16,9 @@ on your local machine for development and testing purposes.
 
 ### Prerequisites
 
-For a ready to use Docker environment with all prerequisites already installed and prepared, you can check out the [Docker environment](#docker-environment) section.
+For a ready to use Docker environment with all prerequisites already installed
+and prepared, you can check out the [Docker environment](#docker-environment)
+section.
 
 ### Source code
 
@@ -92,6 +94,7 @@ Current deployments:
 
 #### Database synchronization
 The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](data/replication/slave/README.md).
+
 
 ## Maintenance
 

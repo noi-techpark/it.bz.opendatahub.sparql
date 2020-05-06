@@ -77,3 +77,28 @@ Before removing the slave container, it is recommended to disable the subscripti
 ```sql
 ALTER SUBSCRIPTION subodh DISABLE;
 ```
+
+## I see an excessive disk space usage
+
+If you see a continues increase in storage, it is possible that PITR prevents
+the cleaning of WAL logs. See [AWS RDS
+Docs](https://aws.amazon.com/premiumsupport/knowledge-center/diskfull-error-rds-postgresql/).
+To check whether PITR is activated or not, do
+```sql
+show archive_timeout;
+```
+
+If it is not equal `0`, you have PITR activated, and that means that Postgres
+generates also WAL logs without writes. Normally, they would be cleaned after a
+few MB, but with PITR they are kept forever. This is a problem, if you have
+slots that are never consumed (`active=false`).
+
+Find your slots and subscription with
+```sql
+SELECT * FROM pg_catalog.pg_subscription;
+```
+
+To free storage, you can also drop the underlying slot:
+```sql
+SELECT pg_drop_replication_slot('Your_slotname_name');
+```
