@@ -31,6 +31,17 @@ Make sure that the following statement is disabled (`public` needs to be in the 
 -- SELECT pg_catalog.set_config('search_path', '', false);
 ```
 
+### Updating the script generating triggers and trigger tables
+
+In case the schema have changed.
+
+  1. Create a temporary Docker image of PG out the original schema and the dump. **TODO: provide the Dockerfile**
+  2. Start this image.
+  3. Generate the script by connecting this container.
+  4. Stop and delete the container
+  5. Remove the temporary image.
+
+
 ### Build the Docker image
 
 #### Files to put in the data directory
