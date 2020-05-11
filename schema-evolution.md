@@ -25,9 +25,11 @@ Not considered at the moment. To be investigated when the situation appears.
 Adding a column in a source table will stop the replication (see https://pgdash.io/blog/postgres-replication-gotchas.html)
 until the same column is added to the corresponding replicated table.
 
+See [the dedicated action for migrating the schema](#adding-and-removing-columns-in-the-mirror-tables).
+
 #### Column removed
-Here, source tables are simply having 2 columns: `id` and `data`. 
-At the moment, we don't expect any of them to be removed without having the table removed as well.
+At the moment only two columns in the mirror tables are used for building derived tables: `id` and `data`.
+However, removing an additional column may break the replication. See [the dedicated action for migrating the schema](#adding-and-removing-columns-in-the-mirror-tables).
 
 ### Table level
 
@@ -53,14 +55,25 @@ ALTER SUBSCRIPTION mysub ENABLE;
 
 **TODO: modify the script for performing all these actions**.
 
-This script performs the following actions:
+This SQL script performs the following actions:
 1. It pauses the replication
 2. It regenerates the derived table and trigger.
 3. It populates the derived table from the mirror table.
 4. It resumes the replication (see above).
 
 Steps:
+ 1. Generates the script. **TODO: add the command **
+ 2. [Publish it](#publish-a-migration-script)
+
+
+ ### Adding and removing columns in the mirror tables
+
+1. Write a SQL script adding and removing some columns in the mirror tables
+2. [Publish it](#publish-a-migration-script)
+
+### Publish a migration script
+Steps:
  1. Copy the script to the `sql` and rename it with the latest `Vxx__` prefix (following the Flyway conventions)
  2. Commit the new file and push it on Github.
- 
+
  The CI runner should recreate the Ontop Docker image. When starting this new image, the container should run the new script (through Flyway) on the slave DB instance.
