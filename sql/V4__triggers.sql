@@ -1,3 +1,5 @@
+-- Triggers must be in place before the replication starts, otherwise we will
+-- have race-conditions, where some data will not be ported to the v_* tables
 
 DROP TABLE IF EXISTS "v_accommodationsopen";
 
