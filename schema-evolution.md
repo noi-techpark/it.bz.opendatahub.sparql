@@ -45,10 +45,10 @@ Given that the subscription has been created for all the tables, it should stop 
 From https://pgdash.io/blog/postgres-replication-gotchas.html
 ```sql
 -- pause replication (destination side)
-ALTER SUBSCRIPTION mysub DISABLE;
+ALTER SUBSCRIPTION ${subscription_name} DISABLE;
 
 -- resume replication
-ALTER SUBSCRIPTION mysub ENABLE;
+ALTER SUBSCRIPTION ${subscription_name} ENABLE;
 ```
 
 ### Regenerating a derived table and a trigger
@@ -62,7 +62,7 @@ This SQL script performs the following actions:
 4. It resumes the replication (see above).
 
 Steps:
- 1. Generates the script. **TODO: add the command **
+ 1. Generates the script. **TODO: add the command**
  2. [Publish it](#publish-a-migration-script)
 
 
