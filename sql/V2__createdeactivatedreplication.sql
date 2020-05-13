@@ -10,5 +10,16 @@ BEGIN
   THEN
     ALTER SUBSCRIPTION ${subscription_name} DISABLE;
     ALTER SUBSCRIPTION ${subscription_name} SET (slot_name = NONE);
+    DROP SUBSCRIPTION ${subscription_name};
+    CREATE SUBSCRIPTION ${subscription_name}
+      CONNECTION 'host=${original_host_ip} dbname=${original_db} user=${original_user} password=${original_password}'
+      PUBLICATION vkgpublication
+      WITH (create_slot = false);
+  ELSE
+    CREATE SUBSCRIPTION ${subscription_name}
+      CONNECTION 'host=${original_host_ip} dbname=${original_db} user=${original_user} password=${original_password}'
+      PUBLICATION vkgpublication
+      WITH (create_slot = true);
   END IF;
+  ALTER SUBSCRIPTION ${subscription_name} DISABLE;
 END $$;
