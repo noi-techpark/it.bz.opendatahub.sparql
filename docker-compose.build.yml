@@ -5,7 +5,7 @@ services:
     image: ${DOCKER_IMAGE_APP}:${DOCKER_TAG_APP}
     build:
       context: ./
-      dockerfile: docker/Dockerfile
+      dockerfile: infrastructure/docker/Dockerfile
       target: build
     env_file: .env
     restart: unless-stopped

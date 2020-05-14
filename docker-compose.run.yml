@@ -4,17 +4,39 @@ services:
   ontop:
     image: ${DOCKER_IMAGE_APP}:${DOCKER_TAG_APP}
     restart: unless-stopped
-    env_file: .env
     environment:
-      - ONTOP_ONTOLOGY_FILE=/opt/ontop/input/odh.ttl
-      - ONTOP_MAPPING_FILE=/opt/ontop/input/odh.obda
-      - ONTOP_PROPERTIES_FILE=/opt/ontop/input/odh.docker.properties
-      - ONTOP_PORTAL_FILE=/opt/ontop/input/odh.portal.toml
-      - ONTOP_CORS_ALLOWED_ORIGINS=*
+      ONTOP_ONTOLOGY_FILE: /opt/ontop/input/odh.ttl
+      ONTOP_MAPPING_FILE: /opt/ontop/input/odh.obda
+      ONTOP_PROPERTIES_FILE: /opt/ontop/input/odh.docker.properties
+      ONTOP_PORTAL_FILE: /opt/ontop/input/odh.portal.toml
+      ONTOP_CORS_ALLOWED_ORIGINS: *
+      COPY_POSTGRES_HOST: ${COPY_POSTGRES_HOST}
+      COPY_POSTGRES_DB: ${COPY_POSTGRES_DB}
+      COPY_POSTGRES_USER: ${COPY_POSTGRES_USER}
+      COPY_POSTGRES_PASSWORD: ${COPY_POSTGRES_PASSWORD}
+      FLYWAY_URL: ${FLYWAY_URL}
+      FLYWAY_USER: ${FLYWAY_USER}
+      FLYWAY_PASSWORD: ${FLYWAY_PASSWORD}
+      FLYWAY_PLACEHOLDERS_ORIGINAL_HOST_IP: ${FLYWAY_PLACEHOLDERS_ORIGINAL_HOST_IP}
+      FLYWAY_PLACEHOLDERS_ORIGINAL_DB: ${FLYWAY_PLACEHOLDERS_ORIGINAL_DB}
+      FLYWAY_PLACEHOLDERS_ORIGINAL_USER: ${FLYWAY_PLACEHOLDERS_ORIGINAL_USER}
+      FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD: ${FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD}
+      FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME: ${FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
   nginx:
     build:
       context: caching/nginx
     restart: unless-stopped
-    env_file: .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     ports:
       - "${DOCKER_SERVER_PORT}:80"
