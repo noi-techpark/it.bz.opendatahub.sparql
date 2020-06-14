@@ -8,7 +8,7 @@ FROM base as build
 COPY --from=flyway/flyway:6.4.0-alpine /flyway /flyway
 RUN ln -s /flyway/flyway /usr/local/bin/flyway
 RUN apk add --no-cache postgresql-client
-COPY docker/entrypoint.sh /entrypoint.sh
+COPY infrastructure/docker/ontop/entrypoint.sh /entrypoint.sh
 COPY sql /opt/ontop/sql
 COPY vkg /opt/ontop/input
 COPY jdbc /opt/ontop/jdbc
