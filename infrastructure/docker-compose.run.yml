@@ -9,7 +9,7 @@ services:
       ONTOP_MAPPING_FILE: /opt/ontop/input/odh.obda
       ONTOP_PROPERTIES_FILE: /opt/ontop/input/odh.docker.properties
       ONTOP_PORTAL_FILE: /opt/ontop/input/odh.portal.toml
-      ONTOP_CORS_ALLOWED_ORIGINS: *
+      ONTOP_CORS_ALLOWED_ORIGINS: "*"
       COPY_POSTGRES_HOST: ${COPY_POSTGRES_HOST}
       COPY_POSTGRES_DB: ${COPY_POSTGRES_DB}
       COPY_POSTGRES_USER: ${COPY_POSTGRES_USER}
