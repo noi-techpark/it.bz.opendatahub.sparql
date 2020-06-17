@@ -34,13 +34,13 @@ pipeline {
     stages {
         stage('Configure') {
             steps {
-                sh """
+                sh '''
                     rm -f .env
                     cp .env.example .env
-                    echo 'COMPOSE_PROJECT_NAME=${DOCKER_PROJECT_NAME}' >> .env
-                    echo 'DOCKER_IMAGE_ONTOP=${DOCKER_IMAGE_ONTOP}' >> .env
-                    echo 'DOCKER_IMAGE_NGINX=${DOCKER_IMAGE_NGINX}' >> .env
-                    echo 'DOCKER_TAG=${DOCKER_TAG}' >> .env
+                    echo "COMPOSE_PROJECT_NAME=${DOCKER_PROJECT_NAME}" >> .env
+                    echo "DOCKER_IMAGE_ONTOP=${DOCKER_IMAGE_ONTOP}" >> .env
+                    echo "DOCKER_IMAGE_NGINX=${DOCKER_IMAGE_NGINX}" >> .env
+                    echo "DOCKER_TAG=${DOCKER_TAG}" >> .env
 
                     echo "SERVER_PORT=${SERVER_PORT}" >> .env
 
@@ -62,7 +62,7 @@ pipeline {
                     sed -i -e "s%\\(jdbc.user\\s*=\\).*\\$%\\1${COPY_POSTGRES_USER}%" vkg/odh.docker.properties
                     sed -i -e "s%\\(jdbc.password\\s*=\\).*\\$%\\1${COPY_POSTGRES_PASSWORD}%" vkg/odh.docker.properties
                     sed -i -e "s%\\(ontop.query.defaultTimeout\\s*=\\).*\\$%\\1${ONTOP_QUERY_TIMEOUT}%" vkg/odh.docker.properties
-                """
+                '''
             }
         }
         stage('Build') {
