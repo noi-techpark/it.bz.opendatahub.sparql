@@ -16,7 +16,7 @@ pipeline {
         ORIGINAL_POSTGRES_DB = "postgres"
         ORIGINAL_POSTGRES_USER = credentials('odh-vkg-prod-original-postgres-username')
         ORIGINAL_POSTGRES_PASSWORD = credentials('odh-vkg-prod-original-postgres-password')
-        COPY_POSTGRES_HOST = "prod-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+        COPY_POSTGRES_HOST = "test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
         COPY_POSTGRES_DB = "odh_vkg_prod"
         COPY_POSTGRES_USER = credentials('odh-vkg-prod-copy-postgres-username')
         COPY_POSTGRES_PASSWORD = credentials('odh-vkg-prod-copy-postgres-password')
