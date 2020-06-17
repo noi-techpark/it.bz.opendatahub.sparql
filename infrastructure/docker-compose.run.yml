@@ -23,7 +23,7 @@ services:
       FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD: "${FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD}"
       FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME: "${FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME}"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 20s
       timeout: 10s
       retries: 5
@@ -32,7 +32,7 @@ services:
     image: ${DOCKER_IMAGE_NGINX}:${DOCKER_TAG}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      test: ["CMD", "curl", "-f", "http://localhost:80/actuator/health"]
       interval: 20s
       timeout: 10s
       retries: 5
