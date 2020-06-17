@@ -1755,11 +1755,6 @@ geo:asWKT rdf:type owl:DatatypeProperty .
            rdfs:subClassOf schema:SportsActivityLocation .
 
 
-###  http://noi.example.org/ontology/odh#Theater
-:Theater rdf:type owl:Class ;
-         rdfs:subClassOf schema:CivicStructure .
-
-
 ###  http://noi.example.org/ontology/odh#TörggeleLokale
 :TörggeleLokale rdf:type owl:Class ;
                 rdfs:subClassOf :FarmRestaurant .

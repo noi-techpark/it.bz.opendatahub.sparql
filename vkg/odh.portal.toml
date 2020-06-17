@@ -287,6 +287,28 @@ WHERE {
 }
 """
 
+[[tabGroups.tabs]]
+name="Theater (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT * WHERE {
+  ?t a schema:PerformingArtsTheater ; geo:asWKT ?pos ; schema:name ?posLabel .
+}
+"""
+
+[[tabGroups.tabs]]
+name="Medical (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT * WHERE {
+  ?m a schema:MedicalOrganization ; geo:asWKT ?pos ; schema:name ?posLabel .
+}
+"""
+
 [[tabGroups]]
 
 name="Data Quality Queries"

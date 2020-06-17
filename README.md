@@ -100,12 +100,7 @@ The SPARQL endpoints do not query directly the production database but slave rea
 
 ### Schema evolution
 
-#### Update the derived tables
-
-### Logical replication
-
-
-
+[See the dedicated page](schema-evolution.md)
 
 ### Test database image
 

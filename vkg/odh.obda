@@ -135,16 +135,12 @@ mappingId	SkiResort_Area
 target		:data/skiResort/{Id} schema:isPartOf :data/area/{data} . 
 source		SELECT "Id", "data" FROM "v_skiareasopen_AreaId"
 
-mappingId	EntertainmentBusiness
-target		:data/poi/{Id} a schema:EntertainmentBusiness . 
-source		SELECT * FROM v_poisopen WHERE "Type" = 'Kunsthandwerker'
-
 mappingId	MedicalOrganization
 target		:data/poi/{Id} a schema:MedicalOrganization . 
 source		SELECT * FROM v_poisopen WHERE "Type" = 'Ärzte, Apotheken'
 
 mappingId	Theater
-target		:data/poi/{Id} a :Theater . 
+target		:data/poi/{Id} a schema:PerformingArtsTheater . 
 source		SELECT * FROM v_poisopen WHERE "SubType" = 'Theater'
 
 mappingId	Activity
