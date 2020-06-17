@@ -12,15 +12,16 @@ services:
       ONTOP_MAPPING_FILE: /opt/ontop/input/odh.obda
       ONTOP_PROPERTIES_FILE: /opt/ontop/input/odh.docker.properties
       ONTOP_PORTAL_FILE: /opt/ontop/input/odh.portal.toml
-      ONTOP_CORS_ALLOWED_ORIGINS: *
+      ONTOP_CORS_ALLOWED_ORIGINS: "*"
       ONTOP_DEV_MODE: true
     volumes:
       - ./vkg:/opt/ontop/input
       - ./jdbc:/opt/ontop/jdbc
       - ./src:/opt/ontop/src
   nginx:
-    build: 
-      context: infrastructure/docker/nginx
+    build:
+      context: ./
+      dockerfile: infrastructure/docker/nginx/Dockerfile
     env_file: .env
     ports:
       - "${SERVER_PORT}:80"
