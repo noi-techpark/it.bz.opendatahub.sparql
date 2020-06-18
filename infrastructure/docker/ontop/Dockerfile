@@ -1,5 +1,8 @@
 FROM ontop/ontop-endpoint:4.0-snapshot as base
 
+RUN apk add --update curl && \
+    rm -rf /var/cache/apk/*
+
 # Dev
 FROM base as dev
 
