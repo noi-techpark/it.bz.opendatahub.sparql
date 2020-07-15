@@ -28,6 +28,7 @@ services:
       - "${SERVER_PORT}:80"
   db:
     image: ontopicvkg/odh-tourism-db
+    shm_size: 1g
     ports:
       - "${MAPPED_POSTGRES_PORT}:5432"
     environment:
