@@ -1,0 +1,38 @@
+[PrefixDeclaration]
+:		http://ex.org/suedtirol#
+WV:		http://www.wurvoc.org/vocabularies/WV/
+dc:		http://purl.org/dc/elements/1.1/
+sf:		http://www.opengis.net/ont/sf#
+geo:		http://www.opengis.net/ont/geosparql#
+owl:		http://www.w3.org/2002/07/owl#
+rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
+xml:		http://www.w3.org/XML/1998/namespace
+xsd:		http://www.w3.org/2001/XMLSchema#
+foaf:		http://xmlns.com/foaf/0.1/
+obda:		https://w3id.org/obda/vocabulary#
+om-2:		http://www.wurvoc.org/bibliography/om-2/
+rdfs:		http://www.w3.org/2000/01/rdf-schema#
+skos:		http://www.w3.org/2004/02/skos/core#
+sosa:		http://www.w3.org/ns/sosa/
+vann:		http://purl.org/vocab/vann/
+terms:		http://purl.org/dc/terms/
+schema:		http://schema.org/
+
+[MappingDeclaration] @collection [[
+mappingId	station
+target		:station/{id} a :TrafficStation ; rdfs:label {name}^^xsd:string . 
+source		SELECT * FROM intimev2.station
+
+mappingId	station_geom
+target		:station/{id} geo:defaultGeometry :station/geometry/{id} . :station/geometry/{id} geo:asWKT {wkt}^^geo:wktLiteral . 
+source		SELECT id, ST_ASTEXT(pointprojection) AS wkt FROM intimev2.station
+
+mappingId	type_observableProperty
+target		:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:string ; rdfs:comment {description}^^xsd:string . 
+source		SELECT * FROM intimev2.type
+
+mappingId	measurement_observation
+target		:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} . 
+source		SELECT * FROM intimev2.measurement
+]]
+
