@@ -1,4 +1,4 @@
 FROM postgres:12
 
 COPY original_schema.sql /docker-entrypoint-initdb.d/01-schema.sql
-COPY 02-triggers.sql /docker-entrypoint-initdb.d/
+COPY triggers_and_derived_tables.sql /docker-entrypoint-initdb.d/02-triggers.sql

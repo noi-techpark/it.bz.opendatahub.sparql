@@ -1,5 +1,9 @@
+#!/usr/bin/python3
+
 from itertools import chain
 from typing import List, Any, Dict, TypeVar
+import getopt
+import sys
 
 import psycopg2
 
@@ -434,14 +438,66 @@ def sql_type_of(value):
         t = 'varchar'
     return t
 
+def usage():
+    print('create_derived_tables_and_triggers_from_db.py -u <user> -p <password> -h <hostname> -d <database> --port=<port>')
+
 
 if __name__ == '__main__':
 
-    connection = psycopg2.connect(user="tourismuser",
-                                  password="postgres2",
-                                  host="127.0.0.1",
-                                  port="7777",
-                                  database="tourismuser")
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "u:p:h:d:", ["port="])
+    except getopt.GetoptError:
+      usage()
+      exit(2)
+
+    user = None
+    password = None
+    host = None
+    db = None
+    port = None
+    for opt, arg in opts:
+        if opt == '-u':
+            user = arg
+        if opt == '-p':
+            password = arg
+        if opt == '-h':
+            host = arg
+        if opt == '-d':
+            db = arg
+        if opt == '--port':
+            port = arg
+
+    if user is None:
+        print("user is required")
+        usage()
+        exit(2)
+
+    if password is None:
+        print("password is required")
+        usage()
+        exit(2)
+
+    if host is None:
+        print("hostname is required")
+        usage()
+        exit(2)
+
+    if db is None:
+        print("database is required")
+        usage()
+        exit(2)
+
+    if port is None:
+        print("port is required")
+        usage()
+        exit(2)
+
+
+    connection = psycopg2.connect(user=user,
+                                  password=password,
+                                  host=host,
+                                  port=port,
+                                  database=db)
 
     cursor = connection.cursor()
     # Print PostgreSQL Connection properties
@@ -453,13 +509,12 @@ if __name__ == '__main__':
     # print("You are connected to - ", record, "\n")
 
     tables = get_all_table_names(cursor)
+    tables.sort()
 
     # tables = ['accommodationsopen']
 
-    create_view_file = "create_views_gen.sql"
-    create_trigger_file = "create_triggers_gen.sql"
-    with open(create_view_file, "w+") as f, \
-            open(create_trigger_file, "w+") as ft:
+    create_trigger_file = "triggers_and_derived_tables.sql"
+    with open(create_trigger_file, "w+") as ft:
         for table_name in tables:
             # DEBUG ONLY
             # if table_name != 'accommodationroomsopen':
@@ -468,9 +523,6 @@ if __name__ == '__main__':
                 continue
             model = extract_model_from_table(cursor, table_name)
             for table_path, attrs in model.items():
-                view = sql_view(table_name, table_path, attrs)
-                if view is not None:
-                    f.write(view)
                 trigger = sql_trigger(table_name, table_path, attrs)
                 if trigger is not None:
                     ft.write(trigger)
