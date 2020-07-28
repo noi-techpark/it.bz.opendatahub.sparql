@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  master:
+    image: ontopicvkg/odh-tourism-db:original
+    shm_size: 1g
+    ports:
+      - "7779:5432"
+    environment:
+      - POSTGRES_USER=tourismuser
+      - POSTGRES_PASSWORD=postgres2
+  slave:
+    image: ontopicvkg/odh-db-slave
+    shm_size: 1g
+    ports:
+      - "7780:5432"
+    environment:
+      - POSTGRES_USER=tourismuser
+      - POSTGRES_PASSWORD=postgres2
