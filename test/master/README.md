@@ -1,13 +1,19 @@
-# PostgreSQL Docker test image for Tourism ODH
+# PostgreSQL Docker test image for ODH Tourism
 
-Contains the Open Data fragment of the tourism dataset of the Open Data Hub. This Docker image is published [on Docker Hub](https://hub.docker.com/r/ontopicvkg/odh-tourism-db).
+Contains the Open Data fragment of the tourism dataset of the Open Data Hub. The various versions of the Docker image are published [on Docker Hub](https://hub.docker.com/r/ontopicvkg/odh-tourism-db).
 
 Note this image is intended to be used for development and tests purposes, on your local machine. It does not contain up-to-date data.
 
+It has 2 main versions:
+  - Standalone: contains the original dump, the triggers and the derived views
+  - Master: contains the original dump and a publication (for logical replication) has been created.
+
+
 ## How to start manually
 
+Standalone version: 
 ```sh
-docker run --name odh_db_running -p 7777:5432 -e POSTGRES_USER=tourismuser -e POSTGRES_PASSWORD=postgres2 -d ontopicvkg/odh-tourism-db
+docker run --name odh_db_running -p 7777:5432 -e POSTGRES_USER=tourismuser -e POSTGRES_PASSWORD=postgres2 -d ontopicvkg/odh-tourism-db:standalone
 ```
 
 Note that normally it is started by docker-compose in dev mode.
@@ -31,7 +37,7 @@ Make sure that the following statement is disabled (`public` needs to be in the 
 -- SELECT pg_catalog.set_config('search_path', '', false);
 ```
 
-### Updating the script generating triggers and trigger tables
+### Updating the script generating triggers and trigger tables (for the standalone version)
 
 In case the schema have changed.
 
@@ -47,22 +53,22 @@ In case the schema have changed.
 
 ### Build the Docker image
 
-#### Files to put in the data directory
+#### Files to put in the `test/master` directory
 
 * `original_schema.sql`
 * `dump-tourism-201911121025.sql.gz` (you can use the `gzip` to create it from the SQL file)
-* `triggers_and_derived_tables.sql` from the `scripts` directory
+* `triggers_and_derived_tables.sql` from the `scripts` directory (for the standalone version)
 
 #### Commands
 
-With triggers:
+Standalone version:
 ```sh
-docker build --target full -t ontopicvkg/odh-tourism-db .
-docker push ontopicvkg/odh-tourism-db
+docker build --target standalone -t ontopicvkg/odh-tourism-db:standalone .
+docker push ontopicvkg/odh-tourism-db:standalone
 ```
 
-Without triggers (original):
+Master version:
 ```sh
-docker build --target base -t ontopicvkg/odh-tourism-db:original .
-docker push ontopicvkg/odh-tourism-db:original
+docker build --target master -t ontopicvkg/odh-tourism-db:master .
+docker push ontopicvkg/odh-tourism-db:master
 ```

@@ -45,6 +45,7 @@ cd odh-vkg/
 3. Visit the SPARQL endpoint
 
 * Now we can open the link <http://localhost:8080> in the browser and test some SPARQL queries
+* Note that synchronisation between the master and the slave takes some time. Until it is finished, some queries may return empty results.
 
 #### Docker environment
 
@@ -104,7 +105,7 @@ The SPARQL endpoints do not query directly the production database but slave rea
 
 ### Test database image
 
-For building a newer version of the Docker image of the test database out of a fresh dump, please refer to [the dedicated page](data/test/README.md).
+For building a newer version of the Docker image of the test database out of a fresh dump, please refer to [the dedicated page](test/master/README.md).
 
 This Docker image is published [on Docker Hub](https://hub.docker.com/r/ontopicvkg/odh-tourism-db).
 
@@ -142,6 +143,3 @@ Some examples of possible SPARQL queries can be found in the SPARQL Queries fold
 ### Schema
 
 The schema of the VKG can be visualized [in the dedicated page](sparql_queries/schema.md).
-
-
-
