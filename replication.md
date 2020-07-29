@@ -1,4 +1,4 @@
-# Slave Docker image for the ODH tourism dataset
+# Replication tips
 
 Inspired by https://blog.raveland.org/post/postgresql_lr_en/
 
@@ -51,15 +51,11 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO vkgreplicate;
 
 ## Slave configuration
 
-If the master is a Docker container on the same machine, one must make sure they are on the same Docker network (here `tourism`) than the master container.
-
-```bash
-docker run --name odh_db_slave -p 7778:5432 -e POSTGRES_USER=tourismuser -e POSTGRES_PASSWORD=postgres2 --network tourism -d ontopicvkg/odh-db-slave
-```
+If the master is a Docker container on the same machine, one must make sure they are on the same Docker network than the master container.
 
 Connect to the shell and open `psql`
 ```bash
-docker exec -it odh_db_slave /bin/sh
+docker exec -it my_slave_db /bin/sh
 psql -U tourismuser
 ```
 
