@@ -67,7 +67,7 @@ Install [Docker](https://docs.docker.com/install/) (with Docker Compose) locally
 
 To start the container on the foreground:
 ```
-docker-compose pull && docker-compose up
+docker-compose pull && docker-compose up --pull
 ```
 The container is run on the foreground and can be stopped by pressing CTRL-C.
 
@@ -75,7 +75,7 @@ The container is run on the foreground and can be stopped by pressing CTRL-C.
 
 To start the container on the background:
 ```
-docker-compose pull && docker-compose up -d
+docker-compose pull && docker-compose up --pull -d
 ```
 
 To stop it:
@@ -94,7 +94,7 @@ Current deployments:
  * Production: https://sparql.opendatahub.bz.it/
 
 #### Database synchronization
-The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](data/replication/slave/README.md).
+The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](replication.md).
 
 
 ## Maintenance
