@@ -94,18 +94,18 @@ Current deployments:
  * Production: https://sparql.opendatahub.bz.it/
 
 #### Database synchronization
-The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](replication.md).
+The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](docs/replication.md).
 
 
 ## Maintenance
 
 ### Schema evolution
 
-[See the dedicated page](schema-evolution.md)
+[See the dedicated page](docs/schema-evolution.md)
 
 ### Test database image
 
-For building a newer version of the Docker image of the test database out of a fresh dump, please refer to [the dedicated page](test/master/README.md).
+For building a newer version of the Docker image of the test database out of a fresh dump, please refer to [the dedicated page](docs/test-master.md).
 
 This Docker image is published [on Docker Hub](https://hub.docker.com/r/ontopicvkg/odh-tourism-db).
 
