@@ -19,8 +19,12 @@ terms:		http://purl.org/dc/terms/
 schema:		http://schema.org/
 
 [MappingDeclaration] @collection [[
+mappingId	road_segment_geom
+target		:road_segment/{id} geo:defaultGeometry :road_segment/geometry/{id} . :road_segment/geometry/{id} geo:asWKT {wkt}^^geo:wktLiteral . 
+source		SELECT id, ST_ASTEXT(linegeometry) AS wkt FROM intimev2.edge
+
 mappingId	station
-target		:station/{id} a :TrafficStation ; rdfs:label {name}^^xsd:string . 
+target		:station/{id} a :TrafficStation ; rdfs:label {name}^^xsd:string ; :hasStationType {stationtype}^^xsd:string . 
 source		SELECT * FROM intimev2.station
 
 mappingId	station_geom
@@ -34,5 +38,13 @@ source		SELECT * FROM intimev2.type
 mappingId	measurement_observation
 target		:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} . 
 source		SELECT * FROM intimev2.measurement
+
+mappingId	road_segment
+target		:road_segment/{id} a :RoadSegment ; :hasOriginStation :station/{origin_id} ; :hasDestinationStation :station/{destination_id} . 
+source		SELECT * FROM intimev2.edge
+
+mappingId	station_hosts
+target		:station/{id} a :TrafficStation ; sosa:isHostedBy :station/{parent_id} . 
+source		SELECT * FROM intimev2.station
 ]]
 

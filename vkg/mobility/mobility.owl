@@ -19,10 +19,34 @@
      xmlns:terms="http://purl.org/dc/terms/"
      xmlns:schema="http://schema.org/">
     <owl:Ontology rdf:about="http://ex.org/suedtirol">
+        <owl:imports rdf:resource="http://schema.org/"/>
         <owl:imports rdf:resource="http://www.ontology-of-units-of-measure.org/resource/om-2/"/>
         <owl:imports rdf:resource="http://www.opengis.net/ont/geosparql"/>
         <owl:imports rdf:resource="http://www.w3.org/ns/ssn/"/>
     </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://ex.org/suedtirol#hasDestinationStation -->
+
+    <owl:ObjectProperty rdf:about="http://ex.org/suedtirol#hasDestinationStation"/>
+    
+
+
+    <!-- http://ex.org/suedtirol#hasOriginStation -->
+
+    <owl:ObjectProperty rdf:about="http://ex.org/suedtirol#hasOriginStation"/>
     
 
 
@@ -76,6 +100,12 @@
     <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasPostcode">
         <rdfs:domain rdf:resource="http://ex.org/suedtirol#Address"/>
     </owl:DatatypeProperty>
+    
+
+
+    <!-- http://ex.org/suedtirol#hasStationType -->
+
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasStationType"/>
     
 
 
@@ -328,6 +358,14 @@
 
     <owl:Class rdf:about="http://ex.org/suedtirol#Resort">
         <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#RoadSegment -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#RoadSegment">
+        <rdfs:subClassOf rdf:resource="http://www.opengis.net/ont/geosparql#Feature"/>
     </owl:Class>
     
 
