@@ -14,8 +14,11 @@ A new JSON key is first safely ignored. One [can regenerate the corresponding de
 However, one should plan to remove soon the mapping entries using that key. 
 Indeed, they may break once the derived tables and triggers are regenerated, as the corresponding column won't appear anymore.
 
+In case of an array, the derived table for the old array is now useless. Please write by hand a SQL script for cleaning the derived table and its trigger.
+
 #### Literal replaced by an Object or an Array
 Not considered at the moment. To be investigated when the situation appears.
+
 
 ### Column level
 
