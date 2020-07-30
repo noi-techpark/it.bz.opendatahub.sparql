@@ -45,7 +45,8 @@ In case the schema have changed.
   2. Start this image.
   3. Generate the script by connecting this container.
   ```sh
-  python3 create_derived_tables_and_triggers_from_db.py -u tourismuser -p postgres2 -h localhost -d tourismuser --port=7777
+  cd scripts
+  python3 create_derived_tables_and_triggers_from_db.py all -u tourismuser -p postgres2 -h localhost -d tourismuser --port=7777
   ```
   4. Stop and delete the container
   5. Remove the temporary image.

@@ -15,14 +15,6 @@ services:
       ONTOP_PORTAL_FILE: /opt/ontop/input/odh.portal.toml
       ONTOP_CORS_ALLOWED_ORIGINS: "*"
       ONTOP_DEV_MODE: "true"
-      FLYWAY_PLACEHOLDERS_ORIGINAL_HOST_IP: "master-db"
-      FLYWAY_PLACEHOLDERS_ORIGINAL_DB: "tourismuser"
-      FLYWAY_PLACEHOLDERS_ORIGINAL_USER: "vkgreplicate"
-      FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD: "Azerty"
-      FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME: "vkgsubscription_test"
-      FLYWAY_URL: "jdbc:postgresql://slave-db/tourismuser"
-      FLYWAY_USER: "tourismuser"
-      FLYWAY_PASSWORD: "postgres2"
       EXTRA_FLYWAY_OPTIONS: "-mixed=true"
     volumes:
       - ./vkg:/opt/ontop/input
@@ -41,6 +33,8 @@ services:
     environment:
       - POSTGRES_USER=tourismuser
       - POSTGRES_PASSWORD=postgres2
+    ports:
+      - "${DEV_MASTER_POSTGRES_PORT}:5432"
   slave-db:
     image: postgres:12
     shm_size: 1g

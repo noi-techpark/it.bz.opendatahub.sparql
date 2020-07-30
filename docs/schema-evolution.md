@@ -49,19 +49,21 @@ ALTER SUBSCRIPTION ${subscription_name} DISABLE;
 ALTER SUBSCRIPTION ${subscription_name} ENABLE;
 ```
 
-### Regenerating a derived table and a trigger
-
-**TODO: modify the script for performing all these actions**.
+### Regenerating the derived tables of a mirror table
 
 This SQL script performs the following actions:
-1. It pauses the replication
-2. It regenerates the derived table and trigger.
-3. It populates the derived table from the mirror table.
-4. It resumes the replication (see above).
+1. It pauses the replication.
+2. It regenerates all the derived tables and triggers of a mirror table.
+3. It populates the derived tables from the mirror table.
+4. It resumes the replication.
 
 Steps:
- 1. Generates the script. **TODO: add the command**
- 2. [Publish it](#publish-a-migration-script)
+ 1. Generate the script (change the parameter values)
+ ```sh
+ cd scripts
+ python3 create_derived_tables_and_triggers_from_db.py regenerate -t accommodationsopen -u tourismuser -p postgres2 -h localhost -d tourismuser --port 7776 --subscription=vkgsubscription_test
+ ```
+ 2. [Publish](#publish-a-migration-script) the SQL script with the prefix `regen-`.
 
 
  ### Adding and removing columns in the mirror tables

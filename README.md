@@ -36,7 +36,7 @@ cd odh-vkg/
 
 ### Local deployment
 
-1. Create the `.env` file in which the SPARQL endpoint port and the PG external port (for debugging purposes) are specified
+1. Create the `.env` file in which, amongst all, the SPARQL endpoint port and the PG external port (for debugging purposes) are specified
 
 * `cp .env.example .env`
 
