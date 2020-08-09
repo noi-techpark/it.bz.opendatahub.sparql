@@ -4,7 +4,7 @@ title="Open Data Hub Knowledge Graph Portal"
 
 name="Mobility"
 [[tabGroups.tabs]]
-name="station"
+name="Stations"
 query="""
 PREFIX : <http://ex.org/suedtirol#>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
@@ -24,15 +24,76 @@ PREFIX terms: <http://purl.org/dc/terms/>
 PREFIX schema: <http://schema.org/>
 
 SELECT * {
-?s a :TrafficStation .
+?s a :Station .
 ?s rdfs:label ?l .
 OPTIONAL {?s geo:defaultGeometry ?g .
 ?g geo:asWKT ?wkt .}
 }
 """
 
+
 [[tabGroups.tabs]]
-name="properties"
+name="Stations per type"
+query="""
+PREFIX : <http://ex.org/suedtirol#>
+PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xml: <http://www.w3.org/XML/1998/namespace>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX obda: <https://w3id.org/obda/vocabulary#>
+PREFIX om-2: <http://www.wurvoc.org/bibliography/om-2/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX vann: <http://purl.org/vocab/vann/>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?st (COUNT(?s) AS ?count)   WHERE {
+  ?s :hasStationType ?st .
+}
+GROUP BY ?st
+ORDER BY DESC(?count)
+"""
+
+[[tabGroups.tabs]]
+name="isHostedBy"
+query="""
+PREFIX : <http://ex.org/suedtirol#>
+PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xml: <http://www.w3.org/XML/1998/namespace>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX obda: <https://w3id.org/obda/vocabulary#>
+PREFIX om-2: <http://www.wurvoc.org/bibliography/om-2/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX vann: <http://purl.org/vocab/vann/>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+
+SELECT DISTINCT ?t1 ?t2 {
+?s1 sosa:isHostedBy ?s2 .
+?s1 rdfs:label ?ll ; :hasStationType ?t1.
+#?s1 geo:defaultGeometry [geo:asWKT ?wkt1] .
+?s2 rdfs:label ?l2 ; :hasStationType ?t2 .
+#?s2 geo:defaultGeometry [geo:asWKT ?wkt2] .
+}
+"""
+
+[[tabGroups.tabs]]
+name="ObservableProperties"
 query="""
 PREFIX : <http://ex.org/suedtirol#>
 PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
@@ -61,7 +122,7 @@ SELECT * WHERE {
 """
 
 [[tabGroups.tabs]]
-name="observation"
+name="Observations"
 query="""
 PREFIX : <http://ex.org/suedtirol#>
 PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
@@ -83,7 +144,7 @@ PREFIX terms: <http://purl.org/dc/terms/>
 PREFIX schema: <http://schema.org/>
 
 SELECT * WHERE {
-#?s a sosa:Sensor .
+?s a sosa:Sensor .
 #?s sosa:isHostedBy ?p.
 ?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
 ?s sosa:madeObservation ?o .
@@ -91,13 +152,13 @@ SELECT * WHERE {
 ?o sosa:resultTime ?t .
 ?o sosa:observedProperty ?prop .
 ?prop rdfs:comment ?pc .
-BIND(CONCAT(str(?v), ?pc) AS ?wktLabel)
+BIND(CONCAT( ?pc, ": ", str(?v)) AS ?wktLabel)
 }
-LIMIT 100
+#LIMIT 100
 """
 
 [[tabGroups.tabs]]
-name="observation"
+name="Sensors"
 query="""
 PREFIX : <http://ex.org/suedtirol#>
 PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
@@ -118,23 +179,17 @@ PREFIX vann: <http://purl.org/vocab/vann/>
 PREFIX terms: <http://purl.org/dc/terms/>
 PREFIX schema: <http://schema.org/>
 
-SELECT * WHERE {
-#?s a sosa:Sensor .
-#?s sosa:isHostedBy ?p.
-#?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+SELECT DISTINCT ?st WHERE {
+?s a sosa:Sensor .
+?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+  ?s :hasStationType ?st .
 #?s sosa:madeObservation ?o .
-#?o sosa:hasSimpleResult ?v .
-#?o sosa:resultTime ?t .
-?o sosa:observedProperty ?prop .
-?prop rdfs:label ?l .
-#?prop rdfs:comment ?pc .
-#BIND(CONCAT(str(?v), ?pc) AS ?wktLabel)
 }
 LIMIT 100
 """
 
 [[tabGroups.tabs]]
-name="road"
+name="Road"
 query="""
 PREFIX : <http://ex.org/suedtirol#>
 PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
@@ -192,8 +247,9 @@ OPTIONAL {?s geo:defaultGeometry ?g .
 }
 """
 
+
 [[tabGroups.tabs]]
-name="sensor/observableProperty/statistics"
+name="Sensor/ObservableProperty/Observation statistics"
 query="""
 PREFIX : <http://ex.org/suedtirol#>
 PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
@@ -224,14 +280,83 @@ SELECT ?st ?pc ?unit (COUNT(*) AS ?count)  (MIN(?t) AS ?min_t) (MAX(?t) AS ?max_
 ?o sosa:hasSimpleResult ?v .
 ?o sosa:resultTime ?t .
 ?o sosa:observedProperty ?prop .
-?prop rdfs:comment ?pc .
+?prop rdfs:label ?pc .
   ?prop :hasUnit ?unit .
 #BIND(CONCAT(?st, "/", ?pc, "/",  str(?v), "/", ?unit) AS ?wktLabel)
 }
 GROUP BY ?st ?prop ?pc ?unit
 ORDER BY DESC(?count)
+"""
 
+[[tabGroups.tabs]]
+name="Observation of a station (siemens->Galilei_Palermo)"
+query="""
+PREFIX : <http://ex.org/suedtirol#>
+PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xml: <http://www.w3.org/XML/1998/namespace>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX obda: <https://w3id.org/obda/vocabulary#>
+PREFIX om-2: <http://www.wurvoc.org/bibliography/om-2/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX vann: <http://purl.org/vocab/vann/>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
 
+SELECT ?t ?v {
+  FILTER (?s = <http://ex.org/suedtirol#station/342142>) # siemens->Galilei_Palermo
+  ?s a :Station .
+  ?s rdfs:label ?wktLabel .
+  OPTIONAL {  ?s sosa:madeObservation ?o . ?o sosa:hasSimpleResult ?v .
+  ?o sosa:resultTime ?t .
+  ?o sosa:observedProperty ?prop .
+  FILTER (?prop = <http://ex.org/suedtirol#property/54>) # Velocita media dei veicoli
+  ?prop rdfs:comment ?pc .
+  ?prop :hasUnit ?unit .
+  }
+  OPTIONAL {?s geo:defaultGeometry ?g .
+  ?g geo:asWKT ?wkt .}
+}
+"""
+
+[[tabGroups.tabs]]
+name="Municipality"
+query="""
+PREFIX : <http://ex.org/suedtirol#>
+PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX sf: <http://www.opengis.net/ont/sf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xml: <http://www.w3.org/XML/1998/namespace>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX obda: <https://w3id.org/obda/vocabulary#>
+PREFIX om-2: <http://www.wurvoc.org/bibliography/om-2/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX vann: <http://purl.org/vocab/vann/>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+
+SELECT * {
+    ?s a :Municipality .
+    ?s rdfs:label ?wktLabel .
+    FILTER(LANG(?wktLabel)='it') .
+    OPTIONAL {
+        ?s geo:defaultGeometry ?g .
+        ?g geo:asWKT ?wkt .
+    }
+}
 """
 
 [[tabGroups.tabs]]
@@ -271,75 +396,6 @@ BIND(CONCAT(?st, "/", ?pc, "/",  str(?v), "/", ?unit) AS ?wktLabel)
 """
 
 [[tabGroups.tabs]]
-name="observation of a station (siemens->Galilei_Palermo)"
-query="""
-PREFIX : <http://ex.org/suedtirol#>
-PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
-PREFIX dc: <http://purl.org/dc/elements/1.1/>
-PREFIX sf: <http://www.opengis.net/ont/sf#>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX xml: <http://www.w3.org/XML/1998/namespace>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-PREFIX obda: <https://w3id.org/obda/vocabulary#>
-PREFIX om-2: <http://www.wurvoc.org/bibliography/om-2/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX sosa: <http://www.w3.org/ns/sosa/>
-PREFIX vann: <http://purl.org/vocab/vann/>
-PREFIX terms: <http://purl.org/dc/terms/>
-PREFIX schema: <http://schema.org/>
-
-SELECT ?t ?v {
- FILTER (?s = <http://ex.org/suedtirol#station/342142>) # siemens->Galilei_Palermo
-?s a :Station .
-?s rdfs:label ?wktLabel .
-  OPTIONAL {  ?s sosa:madeObservation ?o . ?o sosa:hasSimpleResult ?v .
-?o sosa:resultTime ?t .
-?o sosa:observedProperty ?prop .
-    FILTER (?prop = <http://ex.org/suedtirol#property/54>) # Velocita media dei veicoli
-?prop rdfs:comment ?pc .
-  ?prop :hasUnit ?unit .
-}
-OPTIONAL {?s geo:defaultGeometry ?g .
-?g geo:asWKT ?wkt .}
-}
-"""
-
-[[tabGroups.tabs]]
-name="Municipality"
-query="""
-PREFIX : <http://ex.org/suedtirol#>
-PREFIX WV: <http://www.wurvoc.org/vocabularies/WV/>
-PREFIX dc: <http://purl.org/dc/elements/1.1/>
-PREFIX sf: <http://www.opengis.net/ont/sf#>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX xml: <http://www.w3.org/XML/1998/namespace>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-PREFIX obda: <https://w3id.org/obda/vocabulary#>
-PREFIX om-2: <http://www.wurvoc.org/bibliography/om-2/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX sosa: <http://www.w3.org/ns/sosa/>
-PREFIX vann: <http://purl.org/vocab/vann/>
-PREFIX terms: <http://purl.org/dc/terms/>
-PREFIX schema: <http://schema.org/>
-
-SELECT * {
-?s a :Municipality .
-?s rdfs:label ?wktLabel .
-FILTER(LANG(?wktLabel)='it') .
-OPTIONAL {?s geo:defaultGeometry ?g .
-?g geo:asWKT ?wkt .}
-}
-"""
-
-[[tabGroups.tabs]]
 name="Covid and Municipality"
 query="""
 PREFIX : <http://ex.org/suedtirol#>
@@ -363,7 +419,6 @@ PREFIX schema: <http://schema.org/>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 
 SELECT ?mWkt ?wkt ?wktLabel {
-
     # Municipality
     ?m a :Municipality .
     ?m rdfs:label ?mWktLabel .
