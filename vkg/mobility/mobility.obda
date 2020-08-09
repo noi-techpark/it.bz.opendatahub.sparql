@@ -20,31 +20,147 @@ schema:		http://schema.org/
 
 [MappingDeclaration] @collection [[
 mappingId	road_segment_geom
-target		:road_segment/{id} geo:defaultGeometry :road_segment/geometry/{id} . :road_segment/geometry/{id} geo:asWKT {wkt}^^geo:wktLiteral . 
+target		:road_segment/{id} geo:defaultGeometry :road_segment/geometry/{id} . :road_segment/geometry/{id} geo:asWKT {wkt}^^geo:wktLiteral .
 source		SELECT id, ST_ASTEXT(linegeometry) AS wkt FROM intimev2.edge
 
 mappingId	station
-target		:station/{id} a :TrafficStation ; rdfs:label {name}^^xsd:string ; :hasStationType {stationtype}^^xsd:string . 
+target		:station/{id} a :Station ; :isActive {active} ; :isAvailable {available} ; rdfs:label {name}^^xsd:string ; :hasOrigin {origin} ; :hasStationCode {stationcode} ; :hasStationType {stationtype}^^xsd:string .
 source		SELECT * FROM intimev2.station
 
 mappingId	station_geom
-target		:station/{id} geo:defaultGeometry :station/geometry/{id} . :station/geometry/{id} geo:asWKT {wkt}^^geo:wktLiteral . 
+target		:station/{id} geo:defaultGeometry :station/geometry/{id} . :station/geometry/{id} geo:asWKT {wkt}^^geo:wktLiteral .
 source		SELECT id, ST_ASTEXT(pointprojection) AS wkt FROM intimev2.station
 
 mappingId	type_observableProperty
-target		:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:string ; rdfs:comment {description}^^xsd:string . 
+target		:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:string ; :hasUnit {cunit} ; :hasRType {rtype} ; rdfs:comment {description}^^xsd:string .
 source		SELECT * FROM intimev2.type
 
 mappingId	measurement_observation
-target		:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} . 
+target		:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} .
 source		SELECT * FROM intimev2.measurement
 
 mappingId	road_segment
-target		:road_segment/{id} a :RoadSegment ; :hasOriginStation :station/{origin_id} ; :hasDestinationStation :station/{destination_id} . 
+target		:road_segment/{id} a :RoadSegment ; :hasOriginStation :station/{origin_id} ; :hasDestinationStation :station/{destination_id} .
 source		SELECT * FROM intimev2.edge
 
 mappingId	station_hosts
-target		:station/{id} a :TrafficStation ; sosa:isHostedBy :station/{parent_id} . 
+target		:station/{id} a :Station ; sosa:isHostedBy :station/{parent_id} . :station/{parent_id} a sosa:Platform .
 source		SELECT * FROM intimev2.station
+
+mappingId	station-CarpoolingUser
+target		:station/{id} a :CarpoolingUser .
+source		SELECT * FROM intimev2.station WHERE stationtype='CarpoolingUser'
+
+mappingId	station-EChargingStation
+target		:station/{id} a :EChargingStation .
+source		SELECT * FROM intimev2.station WHERE stationtype='EChargingStation'
+
+mappingId	station-NOI-Place
+target		:station/{id} a :NOI-Place .
+source		SELECT * FROM intimev2.station WHERE stationtype='NOI-Place'
+
+mappingId	station-LinkStation
+target		:station/{id} a :LinkStation .
+source		SELECT * FROM intimev2.station WHERE stationtype='LinkStation'
+
+mappingId	station-Covid-19
+target		:station/{id} a :Covid-19 .
+source		SELECT * FROM intimev2.station WHERE stationtype='Covid-19'
+
+mappingId	station-VMS
+target		:station/{id} a :VMS .
+source		SELECT * FROM intimev2.station WHERE stationtype='VMS'
+
+mappingId	station-BluetoothStation
+target		:station/{id} a :BluetoothStation .
+source		SELECT * FROM intimev2.station WHERE stationtype='BluetoothStation'
+
+mappingId	station-TrafficSensor
+target		:station/{id} a :TrafficSensor .
+source		SELECT * FROM intimev2.station WHERE stationtype='TrafficSensor'
+
+mappingId	station-EChargingPlug
+target		:station/{id} a :EChargingPlug .
+source		SELECT * FROM intimev2.station WHERE stationtype='EChargingPlug'
+
+mappingId	station-TrafficStreetFactor
+target		:station/{id} a :TrafficStreetFactor .
+source		SELECT * FROM intimev2.station WHERE stationtype='TrafficStreetFactor'
+
+mappingId	station-CreativeIndustry
+target		:station/{id} a :CreativeIndustry .
+source		SELECT * FROM intimev2.station WHERE stationtype='CreativeIndustry'
+
+mappingId	station-Bicycle
+target		:station/{id} a :Bicycle .
+source		SELECT * FROM intimev2.station WHERE stationtype='Bicycle'
+
+mappingId	station-EnvironmentStation
+target		:station/{id} a :EnvironmentStation .
+source		SELECT * FROM intimev2.station WHERE stationtype='EnvironmentStation'
+
+mappingId	station-CarsharingStation
+target		:station/{id} a :CarsharingStation .
+source		SELECT * FROM intimev2.station WHERE stationtype='CarsharingStation'
+
+mappingId	station-CarsharingCar
+target		:station/{id} a :CarsharingCar .
+source		SELECT * FROM intimev2.station WHERE stationtype='CarsharingCar'
+
+mappingId	station-CarpoolingService
+target		:station/{id} a :CarpoolingService .
+source		SELECT * FROM intimev2.station WHERE stationtype='CarpoolingService'
+
+mappingId	station-CarpoolingHub
+target		:station/{id} a :CarpoolingHub .
+source		SELECT * FROM intimev2.station WHERE stationtype='CarpoolingHub'
+
+mappingId	station-Streetstation
+target		:station/{id} a :Streetstation .
+source		SELECT * FROM intimev2.station WHERE stationtype='Streetstation'
+
+mappingId	station-MeteoStation
+target		:station/{id} a :MeteoStation .
+source		SELECT * FROM intimev2.station WHERE stationtype='MeteoStation'
+
+mappingId	station-ParkingSensor
+target		:station/{id} a :ParkingSensor .
+source		SELECT * FROM intimev2.station WHERE stationtype='ParkingSensor'
+
+mappingId	station-BikesharingStation
+target		:station/{id} a :BikesharingStation .
+source		SELECT * FROM intimev2.station WHERE stationtype='BikesharingStation'
+
+mappingId	station-Bicyclestationbay
+target		:station/{id} a :Bicyclestationbay .
+source		SELECT * FROM intimev2.station WHERE stationtype='Bicyclestationbay'
+
+mappingId	station-RWISstation
+target		:station/{id} a :RWISstation .
+source		SELECT * FROM intimev2.station WHERE stationtype='RWISstation'
+
+mappingId	station-Trafficstation
+target		:station/{id} a :Trafficstation .
+source		SELECT * FROM intimev2.station WHERE stationtype='Trafficstation'
+
+mappingId	station-Mobilestation
+target		:station/{id} a :Mobilestation .
+source		SELECT * FROM intimev2.station WHERE stationtype='Mobilestation'
+
+mappingId	station-traffic
+target		:station/{id} a :traffic .
+source		SELECT * FROM intimev2.station WHERE stationtype='traffic'
+
+mappingId	station-ParkingStation
+target		:station/{id} a :ParkingStation .
+source		SELECT * FROM intimev2.station WHERE stationtype='ParkingStation'
+
+mappingId	municipality_geom
+target		:municipality/{istat_code} geo:defaultGeometry :municipality/geometry/{istat_code} . :municipality/geometry/{istat_code} geo:asWKT {wkt}^^geo:wktLiteral .
+source		SELECT istat_code, ST_AsText(geom_4326) AS wkt FROM municipalities
+
+mappingId	municipality
+target		:municipality/{istat_code} a :Municipality ; rdfs:label {name_i}@it , {name_d}@de ; :hasIStatCode {istat_code}^^xsd:integer .
+source		SELECT istat_code, name_i, name_d FROM municipalities
 ]]
 

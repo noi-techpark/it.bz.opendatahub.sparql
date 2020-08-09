@@ -63,9 +63,7 @@
 
     <!-- http://ex.org/suedtirol#hasFrazioneCode -->
 
-    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasFrazioneCode">
-        <rdfs:domain rdf:resource="http://ex.org/suedtirol#Frazione"/>
-    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasFrazioneCode"/>
     
 
 
@@ -89,17 +87,31 @@
 
     <!-- http://ex.org/suedtirol#hasIStatCode -->
 
-    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasIStatCode">
-        <rdfs:domain rdf:resource="http://ex.org/suedtirol#Municipality"/>
-    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasIStatCode"/>
+    
+
+
+    <!-- http://ex.org/suedtirol#hasOrigin -->
+
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasOrigin"/>
     
 
 
     <!-- http://ex.org/suedtirol#hasPostcode -->
 
-    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasPostcode">
-        <rdfs:domain rdf:resource="http://ex.org/suedtirol#Address"/>
-    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasPostcode"/>
+    
+
+
+    <!-- http://ex.org/suedtirol#hasRType -->
+
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasRType"/>
+    
+
+
+    <!-- http://ex.org/suedtirol#hasStationCode -->
+
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasStationCode"/>
     
 
 
@@ -111,9 +123,7 @@
 
     <!-- http://ex.org/suedtirol#hasStreetCode -->
 
-    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasStreetCode">
-        <rdfs:domain rdf:resource="http://ex.org/suedtirol#Street"/>
-    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasStreetCode"/>
     
 
 
@@ -129,27 +139,21 @@
     
 
 
-    <!-- http://ex.org/suedtirol#hasXmax -->
+    <!-- http://ex.org/suedtirol#hasUnit -->
 
-    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasXmax"/>
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasUnit"/>
     
 
 
-    <!-- http://ex.org/suedtirol#hasXmin -->
+    <!-- http://ex.org/suedtirol#isActive -->
 
-    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasXmin"/>
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#isActive"/>
     
 
 
-    <!-- http://ex.org/suedtirol#hasYmax -->
+    <!-- http://ex.org/suedtirol#isAvailable -->
 
-    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasYmax"/>
-    
-
-
-    <!-- http://ex.org/suedtirol#hasYmin -->
-
-    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#hasYmin"/>
+    <owl:DatatypeProperty rdf:about="http://ex.org/suedtirol#isAvailable"/>
     
 
 
@@ -176,124 +180,143 @@
     
 
 
-    <!-- http://ex.org/suedtirol#Address -->
+    <!-- http://ex.org/suedtirol#Bicycle -->
 
-    <owl:Class rdf:about="http://ex.org/suedtirol#Address">
-        <rdfs:subClassOf rdf:resource="http://www.opengis.net/ont/geosparql#Feature"/>
+    <owl:Class rdf:about="http://ex.org/suedtirol#Bicycle">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
     </owl:Class>
     
 
 
-    <!-- http://ex.org/suedtirol#AdministrationUnit -->
+    <!-- http://ex.org/suedtirol#Bicyclestationbay -->
 
-    <owl:Class rdf:about="http://ex.org/suedtirol#AdministrationUnit">
-        <rdfs:subClassOf rdf:resource="http://www.opengis.net/ont/geosparql#Feature"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#Agency -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#Agency">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#Area -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#Area">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#CentralService -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#CentralService">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#Department -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#Department">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#DirezioneDidattica -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#DirezioneDidattica">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#EducationInstitution"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#District -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#District">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#AdministrationUnit"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#EducationInstitution -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#EducationInstitution">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#School"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#External -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#External">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#FillingStation -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#FillingStation">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#POI"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#Frazione -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#Frazione">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#AdministrationUnit"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#Grid -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#Grid">
-        <rdfs:subClassOf rdf:resource="http://www.opengis.net/ont/geosparql#Feature"/>
+    <owl:Class rdf:about="http://ex.org/suedtirol#Bicyclestationbay">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
         <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/sosa/Platform"/>
     </owl:Class>
     
 
 
-    <!-- http://ex.org/suedtirol#Healthcare -->
+    <!-- http://ex.org/suedtirol#BikesharingStation -->
 
-    <owl:Class rdf:about="http://ex.org/suedtirol#Healthcare">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#POI"/>
+    <owl:Class rdf:about="http://ex.org/suedtirol#BikesharingStation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/sosa/Platform"/>
     </owl:Class>
     
 
 
-    <!-- http://ex.org/suedtirol#Intendenza -->
+    <!-- http://ex.org/suedtirol#BluetoothStation -->
 
-    <owl:Class rdf:about="http://ex.org/suedtirol#Intendenza">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#EducationInstitution"/>
+    <owl:Class rdf:about="http://ex.org/suedtirol#BluetoothStation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#CarpoolingHub -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#CarpoolingHub">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/sosa/Platform"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#CarpoolingService -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#CarpoolingService">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#CarpoolingUser -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#CarpoolingUser">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#CarsharingCar -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#CarsharingCar">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#CarsharingStation -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#CarsharingStation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/sosa/Platform"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#Covid-19 -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#Covid-19">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#CreativeIndustry -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#CreativeIndustry">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#EChargingPlug -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#EChargingPlug">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#EChargingStation -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#EChargingStation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/sosa/Platform"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#EnvironmentStation -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#EnvironmentStation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#LinkStation -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#LinkStation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#MeteoStation -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#MeteoStation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#Mobilestation -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#Mobilestation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
     </owl:Class>
     
 
@@ -301,63 +324,39 @@
     <!-- http://ex.org/suedtirol#Municipality -->
 
     <owl:Class rdf:about="http://ex.org/suedtirol#Municipality">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#AdministrationUnit"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#Museum -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#Museum">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#Office -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#Office">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#Organization -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#Organization">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#POI"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#POI -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#POI">
         <rdfs:subClassOf rdf:resource="http://www.opengis.net/ont/geosparql#Feature"/>
     </owl:Class>
     
 
 
-    <!-- http://ex.org/suedtirol#Pharmacy -->
+    <!-- http://ex.org/suedtirol#NOI-Place -->
 
-    <owl:Class rdf:about="http://ex.org/suedtirol#Pharmacy">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#POI"/>
+    <owl:Class rdf:about="http://ex.org/suedtirol#NOI-Place">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
     </owl:Class>
     
 
 
-    <!-- http://ex.org/suedtirol#Province -->
+    <!-- http://ex.org/suedtirol#ParkingSensor -->
 
-    <owl:Class rdf:about="http://ex.org/suedtirol#Province">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#AdministrationUnit"/>
+    <owl:Class rdf:about="http://ex.org/suedtirol#ParkingSensor">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
     </owl:Class>
     
 
 
-    <!-- http://ex.org/suedtirol#Resort -->
+    <!-- http://ex.org/suedtirol#ParkingStation -->
 
-    <owl:Class rdf:about="http://ex.org/suedtirol#Resort">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
+    <owl:Class rdf:about="http://ex.org/suedtirol#ParkingStation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#RWISstation -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#RWISstation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
     </owl:Class>
     
 
@@ -370,60 +369,59 @@
     
 
 
-    <!-- http://ex.org/suedtirol#School -->
+    <!-- http://ex.org/suedtirol#Station -->
 
-    <owl:Class rdf:about="http://ex.org/suedtirol#School">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#POI"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#Scuola -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#Scuola">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#EducationInstitution"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#ServicePoint -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#ServicePoint">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#Street -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#Street">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#AdministrationUnit"/>
-    </owl:Class>
-    
-
-
-    <!-- http://ex.org/suedtirol#TrafficStation -->
-
-    <owl:Class rdf:about="http://ex.org/suedtirol#TrafficStation">
+    <owl:Class rdf:about="http://ex.org/suedtirol#Station">
         <rdfs:subClassOf rdf:resource="http://www.opengis.net/ont/geosparql#Feature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#Streetstation -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#Streetstation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#TrafficSensor -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#TrafficSensor">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#TrafficStreetFactor -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#TrafficStreetFactor">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ex.org/suedtirol#Trafficstation -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#Trafficstation">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
         <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/sosa/Platform"/>
     </owl:Class>
     
 
 
-    <!-- http://ex.org/suedtirol#UnclassifiedOrganization -->
+    <!-- http://ex.org/suedtirol#VMS -->
 
-    <owl:Class rdf:about="http://ex.org/suedtirol#UnclassifiedOrganization">
-        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Organization"/>
+    <owl:Class rdf:about="http://ex.org/suedtirol#VMS">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
     </owl:Class>
     
 
 
-    <!-- http://ex.org/suedtirol#WeatherStation -->
+    <!-- http://ex.org/suedtirol#traffic -->
 
-    <owl:Class rdf:about="http://ex.org/suedtirol#WeatherStation">
-        <rdfs:subClassOf rdf:resource="http://www.opengis.net/ont/geosparql#Feature"/>
-        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/sosa/Platform"/>
+    <owl:Class rdf:about="http://ex.org/suedtirol#traffic">
+        <rdfs:subClassOf rdf:resource="http://ex.org/suedtirol#Station"/>
     </owl:Class>
 </rdf:RDF>
 
