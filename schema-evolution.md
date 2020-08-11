@@ -8,11 +8,9 @@ This documentation provides recommendations on how to proceed when the schema of
 ### JSON level
 
 #### New key
-A new JSON key is first safely ignored. One [can regenerate the corresponding derived  table and trigger](#regenerating-a-derived-table-and-a-trigger) for creating the corresponding column.
+A new JSON key is first safely ignored. One [can regenerate the corresponding derived table and trigger](#regenerating-a-derived-table-and-a-trigger) for creating the corresponding column.
 
 #### Key removed
-**TODO: check that it does not prevent anything from working immediately.**
-
 However, one should plan to remove soon the mapping entries using that key. 
 Indeed, they may break once the derived tables and triggers are regenerated, as the corresponding column won't appear anymore.
 
@@ -34,10 +32,10 @@ However, removing an additional column may break the replication. See [the dedic
 ### Table level
 
 #### New table
-Given that the subscription has been created for all the tables, it should stop the replication until the corresponding table is added on the slave. **TODO: test it**.
+Given that the subscription has been created for all the tables, it should stop the replication until the corresponding table is added on the slave after the first row is inserted.
 
 #### Table removed
-**TODO: test it**.
+It does not seems to complain.
 
 ## Actions
 

@@ -67,7 +67,7 @@ Make sure, that the slave can access the master via TCP. Check firewall rules.
 
 Let the slave subscribe to the publication:
 ```sql
-CREATE SUBSCRIPTION subodh CONNECTION 'host=odh-hackathon-2019_db_1 dbname=tourismuser user=vkgreplicate password=Azerty' PUBLICATION odhpub;
+CREATE SUBSCRIPTION subodh CONNECTION 'host=odh-tourism-db1 dbname=tourismuser user=vkgreplicate password=Azerty' PUBLICATION odhpub;
 ```
 Note that the subscription `subodh` must not already exist (otherwise give it another name).
 
@@ -102,3 +102,8 @@ To free storage, you can also drop the underlying slot:
 ```sql
 SELECT pg_drop_replication_slot('Your_slotname_name');
 ```
+
+
+## Easy experimenting
+
+There is [a Docker compose file](./docker-compose.test.yml) available for starting the master and the slave DB. Note that the publication and the subscription are NOT set up. Also their WAL level is `replicated`, not `logical`.

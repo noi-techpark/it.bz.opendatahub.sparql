@@ -35,9 +35,12 @@ Make sure that the following statement is disabled (`public` needs to be in the 
 
 In case the schema have changed.
 
-  1. Create a temporary Docker image of PG out the original schema and the dump. **TODO: provide the Dockerfile**
+  1. Create a temporary Docker image of PG out the original schema and the dump (preferably without triggers). See below for the instructions.
   2. Start this image.
   3. Generate the script by connecting this container.
+  ```sh
+  python3 create_derived_tables_and_triggers_from_db.py -u tourismuser -p postgres2 -h localhost -d tourismuser --port=7777
+  ```
   4. Stop and delete the container
   5. Remove the temporary image.
 
@@ -48,11 +51,18 @@ In case the schema have changed.
 
 * `original_schema.sql`
 * `dump-tourism-201911121025.sql.gz` (you can use the `gzip` to create it from the SQL file)
-* `create_triggers_gen.sql` from the `scripts` directory
+* `triggers_and_derived_tables.sql` from the `scripts` directory
 
 #### Commands
 
+With triggers:
 ```sh
-docker build -t ontopicvkg/odh-tourism-db .
+docker build --target full -t ontopicvkg/odh-tourism-db .
 docker push ontopicvkg/odh-tourism-db
+```
+
+Without triggers (original):
+```sh
+docker build --target base -t ontopicvkg/odh-tourism-db:original .
+docker push ontopicvkg/odh-tourism-db:original
 ```
