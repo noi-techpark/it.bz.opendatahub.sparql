@@ -213,3 +213,5 @@ vkg/odh.properties
 tmp*.*
 
 *.local.properties
+*.sql.gz
+test/master/*.sql

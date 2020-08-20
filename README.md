@@ -36,7 +36,7 @@ cd odh-vkg/
 
 ### Local deployment
 
-1. Create the `.env` file in which the SPARQL endpoint port and the PG external port (for debugging purposes) are specified
+1. Create the `.env` file in which, amongst all, the SPARQL endpoint port and the PG external port (for debugging purposes) are specified
 
 * `cp .env.example .env`
 
@@ -45,6 +45,7 @@ cd odh-vkg/
 3. Visit the SPARQL endpoint
 
 * Now we can open the link <http://localhost:8080> in the browser and test some SPARQL queries
+* Note that synchronisation between the master and the slave takes some time. Until it is finished, some queries may return empty results.
 
 #### Docker environment
 
@@ -66,7 +67,7 @@ Install [Docker](https://docs.docker.com/install/) (with Docker Compose) locally
 
 To start the container on the foreground:
 ```
-docker-compose pull && docker-compose up
+docker-compose pull && docker-compose up --pull
 ```
 The container is run on the foreground and can be stopped by pressing CTRL-C.
 
@@ -74,7 +75,7 @@ The container is run on the foreground and can be stopped by pressing CTRL-C.
 
 To start the container on the background:
 ```
-docker-compose pull && docker-compose up -d
+docker-compose pull && docker-compose up --pull -d
 ```
 
 To stop it:
@@ -93,18 +94,18 @@ Current deployments:
  * Production: https://sparql.opendatahub.bz.it/
 
 #### Database synchronization
-The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](data/replication/slave/README.md).
+The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](docs/replication.md).
 
 
 ## Maintenance
 
 ### Schema evolution
 
-[See the dedicated page](schema-evolution.md)
+[See the dedicated page](docs/schema-evolution.md)
 
 ### Test database image
 
-For building a newer version of the Docker image of the test database out of a fresh dump, please refer to [the dedicated page](data/test/README.md).
+For building a newer version of the Docker image of the test database out of a fresh dump, please refer to [the dedicated page](docs/test-master.md).
 
 This Docker image is published [on Docker Hub](https://hub.docker.com/r/ontopicvkg/odh-tourism-db).
 
@@ -142,6 +143,3 @@ Some examples of possible SPARQL queries can be found in the SPARQL Queries fold
 ### Schema
 
 The schema of the VKG can be visualized [in the dedicated page](sparql_queries/schema.md).
-
-
-
