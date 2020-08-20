@@ -36,7 +36,7 @@ services:
     ports:
       - "${DEV_MASTER_POSTGRES_PORT}:5432"
   slave-db:
-    image: postgres:12
+    image: postgres:12.1
     shm_size: 1g
     ports:
       - "${MAPPED_POSTGRES_PORT}:5432"
