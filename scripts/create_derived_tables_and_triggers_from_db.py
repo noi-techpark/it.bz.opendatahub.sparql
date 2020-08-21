@@ -4,6 +4,7 @@ from itertools import chain
 from typing import List, Any, Dict, TypeVar
 import getopt
 import sys
+from functools import reduce
 
 import psycopg2
 
@@ -22,6 +23,12 @@ class AttrPath:
 
     def __repr__(self):
         return self.__str__()
+
+    def __eq__(self, other):
+        return isinstance(other, AttrPath) and self._path == other._path
+
+    def __hash__(self):
+        return hash(str(self))
 
     def add(self, e: str):
         lc = self._path.copy()
@@ -59,6 +66,12 @@ class TablePath:
 
     def __str__(self):
         return "[" + "/".join([str(e) for e in self._path]) + "]"
+
+    def __eq__(self, other):
+        return isinstance(other, TablePath) and self._path == other._path
+
+    def __hash__(self):
+        return hash(str(self))
 
     def __repr__(self):
         return self.__str__()
@@ -170,11 +183,21 @@ def extract_columns(data: Any, attr_path: AttrPath) -> Dict[AttrPath, Any]:
 
 def extract_model_from_table(cursor, table_name: str):
     # global model
-    cursor.execute("SELECT data FROM \"{}\" LIMIT 1".format(table_name))
-    r = cursor.fetchone()
-    sample = r[0]
-    model = extract_model(sample, TablePath.root())
-    return model
+    cursor.execute("SELECT data FROM \"{}\" TABLESAMPLE BERNOULLI(50) LIMIT 100".format(table_name))
+    samples = cursor.fetchall()
+    models = [extract_model(r[0], TablePath.root()) for r in samples]
+    return reduce(merge_models, models)
+
+
+def merge_models(m1, m2):
+    m3 = {**m1, **m2}
+    for key, value in m3.items():
+        if key in m1 and key in m2 and isinstance(value, dict):
+            # Merge values (when they are also dicts)
+            other_value = m1[key]
+            if isinstance(other_value, dict):
+                m3[key] = {**value, **(m1[key])}
+    return m3
 
 
 def get_all_table_names(cursor) -> List[str]:
@@ -284,7 +307,7 @@ CREATE FUNCTION v_{table_name}_fn()
 RETURNS TRIGGER
 AS $$
 BEGIN
-INSERT INTO v_{table_name}
+INSERT INTO public.v_{table_name}
 SELECT
 {projections};
 RETURN NEW;
@@ -316,7 +339,7 @@ CREATE FUNCTION {view_name}_fn()
 RETURNS TRIGGER
 AS $$
 BEGIN
-INSERT INTO "{view_name}"
+INSERT INTO public."{view_name}"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> '{col_name}') AS "data"
         WHERE NEW."data" -> '{col_name}' != 'null';
@@ -349,7 +372,7 @@ CREATE FUNCTION {view_name}_fn()
 RETURNS TRIGGER
 AS $$
 BEGIN
-INSERT INTO "{view_name}"
+INSERT INTO public."{view_name}"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements(NEW."data" -> '{col_name}') AS "data"
@@ -420,6 +443,7 @@ def sql_trigger(table_name: str, table_path: TablePath, attr_paths: Dict[AttrPat
         # create_unique_index_sql = nested_create_unique_index_sql_template.format(view_name=view_name,parent_Id=parent_Id)
         return create_trigger_sql
 
+
 def cast(col, sample_value):
     t = sql_type_of(sample_value)
     return "CAST({} As {})".format(col, t)
@@ -436,15 +460,20 @@ def sql_type_of(value):
         t = 'varchar'
     return t
 
+
 def usage():
-    print('create_derived_tables_and_triggers_from_db.py all -u <user> -p <password> -h <hostname> -d <database> --port=<port>')
-    print('create_derived_tables_and_triggers_from_db.py regenerate -t <source-table> -u <user> -p <password> -h <hostname> -d <database> --port=<port> --subscription=<subscription>')
+    print(
+        'create_derived_tables_and_triggers_from_db.py all -u <user> -p <password> -h <hostname> -d <database> --port=<port>')
+    print(
+        'create_derived_tables_and_triggers_from_db.py regenerate -t <source-table> -u <user> -p <password> -h <hostname> -d <database> --port=<port> --subscription=<subscription>')
+
 
 def generate_all(cursor, tables):
     create_trigger_file = "triggers_and_derived_tables.sql"
     with open(create_trigger_file, "w+") as ft:
         for table_name in tables:
             generate(cursor, table_name, ft)
+
 
 def generate(cursor, table_name, ft):
     # DEBUG ONLY
@@ -458,6 +487,7 @@ def generate(cursor, table_name, ft):
         if trigger is not None:
             ft.write(trigger)
 
+
 def pause_resume_subscription(subscription, enable, ft):
     action = "ENABLE" if enable else "DISABLE"
 
@@ -466,10 +496,12 @@ def pause_resume_subscription(subscription, enable, ft):
         action=action
     ))
 
+
 pause_resume_subscription_sql_template = """
 ALTER SUBSCRIPTION {subscription_name} {action};
 
 """
+
 
 def regenerate(cursor, source_table, publication):
     regen_file = "regen-" + source_table + ".sql"
@@ -479,7 +511,8 @@ def regenerate(cursor, source_table, publication):
         repopulate(cursor, source_table, ft)
         pause_resume_subscription(publication, True, ft)
 
-simple_repopulate_sql_template="""
+
+simple_repopulate_sql_template = """
 INSERT INTO v_{table_name}
 SELECT
 {projections}
@@ -504,6 +537,7 @@ WITH t ("Id", "data") AS (
     SELECT "Id" AS "{parent_Id}", {projections}
     FROM t;
 """
+
 
 def repopulate(cursor, table_name, ft):
     model = extract_model_from_table(cursor, table_name)
@@ -553,12 +587,12 @@ if __name__ == '__main__':
     try:
         opts, args = getopt.getopt(argv[2:], "t:u:p:h:d:", ["port=", "subscription="])
     except getopt.GetoptError:
-      usage()
-      exit(2)
+        usage()
+        exit(2)
 
-      if len(opts) == 0:
-          usage()
-          exit(2)
+        if len(opts) == 0:
+            usage()
+            exit(2)
 
     source_table = None
     user = None
@@ -583,7 +617,7 @@ if __name__ == '__main__':
         elif opt == '--subscription':
             subscription = arg
 
-    print(opts)
+    # print(opts)
 
     if user is None:
         print("user is required")
@@ -609,7 +643,6 @@ if __name__ == '__main__':
         print("port is required")
         usage()
         exit(2)
-
 
     connection = psycopg2.connect(user=user,
                                   password=password,
