@@ -301,11 +301,11 @@ source		select "AccoCategoryId" as id FROM "v_accommodationsopen" where "AccoCat
 
 mappingId	Lodging Business - aggregate rating
 target		data:rating/trustyou/{trustId} a schema:AggregateRating ; schema:bestRating "100"^^xsd:integer ; schema:ratingValue {score}^^xsd:integer ; schema:reviewCount {reviews}^^xsd:integer . 
-source		select "TrustYouID" as trustId, "TrustYouScore"/10 as  score , "TrustYouResults" as reviews from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 100
+source		select "TrustYouID" as trustId, "TrustYouScore"/10 as  score , "TrustYouResults" as reviews from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business -hasAggregateRating
 target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{trustId} . 
-source		select "Id" as id, "TrustYouID" as trustId from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 100
+source		select "Id" as id, "TrustYouID" as trustId from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business - image
 target		data:accommodation/{id} schema:image <{image}> . 
