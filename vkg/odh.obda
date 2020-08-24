@@ -300,11 +300,11 @@ target		data:category/accomodation/{id} schema:ratingValue "5"^^xsd:integer .
 source		select "AccoCategoryId" as id FROM "v_accommodationsopen" where "AccoCategoryId" = '5flowers' or "AccoCategoryId" = '5stars'  or "AccoCategoryId" = '5suns'
 
 mappingId	Lodging Business - aggregate rating
-target		data:rating/trustyou/{trustId} a schema:AggregateRating ; schema:bestRating "100"^^xsd:integer ; schema:ratingValue {score}^^xsd:integer ; schema:reviewCount {reviews}^^xsd:integer . 
+target		data:rating/trustyou/{trustId} a schema:AggregateRating ; schema:author data:author/trustyou/{trustid} ; schema:bestRating "100"^^xsd:integer ; schema:ratingValue {score}^^xsd:integer ; schema:reviewCount {reviews}^^xsd:integer . 
 source		select "TrustYouID" as trustId, "TrustYouScore"/10 as  score , "TrustYouResults" as reviews from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business -hasAggregateRating
-target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{trustId} ; schema:author data:author/trustyou/{trustid} . 
+target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{trustId} . 
 source		select "Id" as id, "TrustYouID" as trustId from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business - image
