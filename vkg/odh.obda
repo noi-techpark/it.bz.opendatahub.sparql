@@ -19,7 +19,7 @@ source		SELECT "Id"
 			WHERE "AccoTypeId" = 'Camping'
 
 mappingId	LodgingBusiness
-target		data:accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email {de_email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accomodation/{rating} . 
+target		data:accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email {de_email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{rating} . 
 source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude,  "AccoDetail-de-Email" AS de_email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone,
 			 "AccoDetail-de-Fax" AS  de_fax, "AccoDetail-it-Shortdesc" AS it_desc,  "AccoDetail-de-Shortdesc" AS de_desc,  "AccoDetail-en-Shortdesc" AS en_desc, "AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name, "AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
 			FROM "v_accommodationsopen"
@@ -280,11 +280,11 @@ target		data:category/accommodation/{id} a schema:Rating .
 source		Select "AccoCategoryId" as id FROM "v_accommodationsopen"
 
 mappingId	Lodging Business - aggregate rating
-target		data:rating/trustyou/{trustId} a schema:AggregateRating ; schema:author data:author/trustyou ; schema:bestRating "100"^^xsd:integer ; schema:ratingValue {score}^^xsd:integer ; schema:reviewCount {reviews}^^xsd:integer . 
-source		select "TrustYouID" as trustId, "TrustYouScore"/10 as  score , "TrustYouResults" as reviews from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
+target		data:rating/trustyou/{id}/{trustId} a schema:AggregateRating ; schema:author data:author/trustyou ; schema:bestRating "100"^^xsd:integer ; schema:ratingValue {score}^^xsd:integer ; schema:reviewCount {reviews}^^xsd:integer . 
+source		select "Id" as id, "TrustYouID" as trustId, "TrustYouScore"/10 as  score , "TrustYouResults" as reviews from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business -hasAggregateRating
-target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{trustId} . 
+target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{id}/{trustId} . 
 source		select "Id" as id, "TrustYouID" as trustId from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business - image
