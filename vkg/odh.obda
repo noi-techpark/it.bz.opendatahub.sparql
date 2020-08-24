@@ -275,10 +275,6 @@ source		SELECT "Id"
 			FROM public.v_gastronomiesopen
 			WHERE "Detail-de-BaseText" ~ 'Apfelstrudel'
 
-mappingId	MAPID-b0ee5b23372148f6b34b8ea5467519a8
-target		data:category/accommodation/{id} a schema:Rating . 
-source		Select "AccoCategoryId" as id FROM "v_accommodationsopen"
-
 mappingId	Lodging Business - aggregate rating
 target		data:rating/trustyou/{id}/{trustId} a schema:AggregateRating ; schema:author data:author/trustyou ; schema:bestRating "100"^^xsd:integer ; schema:ratingValue {score}^^xsd:integer ; schema:reviewCount {reviews}^^xsd:integer . 
 source		select "Id" as id, "TrustYouID" as trustId, "TrustYouScore"/10 as  score , "TrustYouResults" as reviews from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
@@ -296,7 +292,7 @@ target		data:author/trustyou a schema:Organization ; schema:name "Trust you" ; s
 source		select  1
 
 mappingId	AccomodationRating
-target		data:category/accommodation/{id} schema:ratingValue {value}^^xsd:integer . 
+target		data:category/accommodation/{id} a schema:Rating ; schema:ratingValue {value}^^xsd:integer . 
 source		select  "AccoCategoryId" as id, (CASE WHEN "AccoCategoryId" = '1flowers' or "AccoCategoryId" = '1stars'  or "AccoCategoryId" = '1suns'   THEN 1 WHEN "AccoCategoryId" = '2flowers' or "AccoCategoryId" = '2stars'  or "AccoCategoryId" = '2suns'   THEN 2  WHEN "AccoCategoryId" = '3flowers' or "AccoCategoryId" = '3stars'  or "AccoCategoryId" = '3suns'   THEN 3  WHEN "AccoCategoryId" = '4flowers' or "AccoCategoryId" = '4stars'  or "AccoCategoryId" = '4suns'   THEN 4  WHEN "AccoCategoryId" = '5flowers' or "AccoCategoryId" = '5stars'  or "AccoCategoryId" = '5suns'   THEN 5 ELSE NULL END ) as value FROM "v_accommodationsopen"
 ]]
 
