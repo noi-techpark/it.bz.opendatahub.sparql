@@ -304,11 +304,15 @@ target		data:rating/trustyou/{trustId} a schema:AggregateRating ; schema:bestRat
 source		select "TrustYouID" as trustId, "TrustYouScore"/10 as  score , "TrustYouResults" as reviews from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business -hasAggregateRating
-target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{trustId} . 
+target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{trustId} ; schema:author data:author/trustyou/{trustid} . 
 source		select "Id" as id, "TrustYouID" as trustId from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business - image
 target		data:accommodation/{id} schema:image <{image}> . 
 source		select  "accommodationsopen_Id" as id , "ImageUrl" as image from "v_accommodationsopen_ImageGallery" where TO_TIMESTAMP("ValidTo", 'YYYY-MM-DDTHH24:MI:SS') > NOW() AND TO_TIMESTAMP("ValidFrom", 'YYYY-MM-DDTHH24:MI:SS') < NOW()
+
+mappingId	MAPID-9dbd9116f9f84c78961099f0004a9690
+target		data:author/trustyou/{trustId} a schema:Organization ; schema:name "Trust you" ; schema:url <https://www.trustyou.com/> . 
+source		select "TrustYouID" as trustId from "v_accommodationsopen" where "TrustYouID" is not null
 ]]
 
