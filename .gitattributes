@@ -1,0 +1,3 @@
+*.sh eol=lf
+*.conf eol=lf
+*.sql eol=lf

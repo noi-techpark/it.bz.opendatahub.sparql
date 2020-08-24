@@ -211,3 +211,7 @@ vkg/odh.properties
 .DS_Store
 
 tmp*.*
+
+*.local.properties
+*.sql.gz
+test/master/*.sql
