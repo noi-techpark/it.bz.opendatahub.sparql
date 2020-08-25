@@ -403,3 +403,17 @@ SELECT ?h ?pos ?posLabel ("jet,0.8" AS ?posColor) WHERE {
   BIND(concat(?name,'<hr/>de: ',?deCity, '<hr/> it: ',?itCity) AS ?posLabel)
 }
 """
+
+[[tabGroups.tabs]]
+
+name="Lodging businesses with too low Aggregate rating value (possible normalization issue)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * WHERE {
+    ?accomodation schema:name ?name ; schema:aggregateRating [ a schema:AggregateRating ; schema:ratingValue ?value  ] .
+  FILTER (?value < 10 && langmatches(lang(?name), "de"))
+}
+"""
