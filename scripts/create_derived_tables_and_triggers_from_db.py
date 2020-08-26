@@ -1,5 +1,10 @@
+#!/usr/bin/python3
+
 from itertools import chain
 from typing import List, Any, Dict, TypeVar
+import getopt
+import sys
+from functools import reduce
 
 import psycopg2
 
@@ -18,6 +23,12 @@ class AttrPath:
 
     def __repr__(self):
         return self.__str__()
+
+    def __eq__(self, other):
+        return isinstance(other, AttrPath) and self._path == other._path
+
+    def __hash__(self):
+        return hash(str(self))
 
     def add(self, e: str):
         lc = self._path.copy()
@@ -55,6 +66,12 @@ class TablePath:
 
     def __str__(self):
         return "[" + "/".join([str(e) for e in self._path]) + "]"
+
+    def __eq__(self, other):
+        return isinstance(other, TablePath) and self._path == other._path
+
+    def __hash__(self):
+        return hash(str(self))
 
     def __repr__(self):
         return self.__str__()
@@ -166,11 +183,21 @@ def extract_columns(data: Any, attr_path: AttrPath) -> Dict[AttrPath, Any]:
 
 def extract_model_from_table(cursor, table_name: str):
     # global model
-    cursor.execute("SELECT data FROM \"{}\" LIMIT 1".format(table_name))
-    r = cursor.fetchone()
-    sample = r[0]
-    model = extract_model(sample, TablePath.root())
-    return model
+    cursor.execute("SELECT data FROM \"{}\" TABLESAMPLE BERNOULLI(50) LIMIT 100".format(table_name))
+    samples = cursor.fetchall()
+    models = [extract_model(r[0], TablePath.root()) for r in samples]
+    return reduce(merge_models, models)
+
+
+def merge_models(m1, m2):
+    m3 = {**m1, **m2}
+    for key, value in m3.items():
+        if key in m1 and key in m2 and isinstance(value, dict):
+            # Merge values (when they are also dicts)
+            other_value = m1[key]
+            if isinstance(other_value, dict):
+                m3[key] = {**value, **(m1[key])}
+    return m3
 
 
 def get_all_table_names(cursor) -> List[str]:
@@ -280,7 +307,7 @@ CREATE FUNCTION v_{table_name}_fn()
 RETURNS TRIGGER
 AS $$
 BEGIN
-INSERT INTO v_{table_name}
+INSERT INTO public.v_{table_name}
 SELECT
 {projections};
 RETURN NEW;
@@ -298,7 +325,6 @@ ALTER TABLE {table_name}
     ENABLE ALWAYS TRIGGER t_v_{table_name};
 """
 
-
 array_create_trigger_sql_template = """
 DROP TABLE IF EXISTS "{view_name}";
 
@@ -313,7 +339,7 @@ CREATE FUNCTION {view_name}_fn()
 RETURNS TRIGGER
 AS $$
 BEGIN
-INSERT INTO "{view_name}"
+INSERT INTO public."{view_name}"
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements_text(NEW."data" -> '{col_name}') AS "data"
         WHERE NEW."data" -> '{col_name}' != 'null';
@@ -346,7 +372,7 @@ CREATE FUNCTION {view_name}_fn()
 RETURNS TRIGGER
 AS $$
 BEGIN
-INSERT INTO "{view_name}"
+INSERT INTO public."{view_name}"
 WITH t ("Id", "data") AS (
         SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
             jsonb_array_elements(NEW."data" -> '{col_name}') AS "data"
@@ -435,13 +461,194 @@ def sql_type_of(value):
     return t
 
 
+def usage():
+    print(
+        'create_derived_tables_and_triggers_from_db.py all -u <user> -p <password> -h <hostname> -d <database> --port=<port>')
+    print(
+        'create_derived_tables_and_triggers_from_db.py regenerate -t <source-table> -u <user> -p <password> -h <hostname> -d <database> --port=<port> --subscription=<subscription>')
+
+
+def generate_all(cursor, tables):
+    create_trigger_file = "triggers_and_derived_tables.sql"
+    with open(create_trigger_file, "w+") as ft:
+        for table_name in tables:
+            generate(cursor, table_name, ft)
+
+
+def generate(cursor, table_name, ft):
+    # DEBUG ONLY
+    # if table_name != 'accommodationroomsopen':
+    #     continue
+    if table_name.startswith("v_"):
+        return
+    model = extract_model_from_table(cursor, table_name)
+    for table_path, attrs in model.items():
+        trigger = sql_trigger(table_name, table_path, attrs)
+        if trigger is not None:
+            ft.write(trigger)
+
+
+def pause_resume_subscription(subscription, enable, ft):
+    action = "ENABLE" if enable else "DISABLE"
+
+    ft.write(pause_resume_subscription_sql_template.format(
+        subscription_name=subscription,
+        action=action
+    ))
+
+
+pause_resume_subscription_sql_template = """
+ALTER SUBSCRIPTION {subscription_name} {action};
+
+"""
+
+
+def regenerate(cursor, source_table, publication):
+    regen_file = "regen-" + source_table + ".sql"
+    with open(regen_file, "w+") as ft:
+        pause_resume_subscription(publication, False, ft)
+        generate(cursor, source_table, ft)
+        repopulate(cursor, source_table, ft)
+        pause_resume_subscription(publication, True, ft)
+
+
+simple_repopulate_sql_template = """
+INSERT INTO v_{table_name}
+SELECT
+{projections}
+FROM {table_name};
+"""
+
+array_repopulate_sql_template = """
+INSERT INTO "{view_name}"
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+            jsonb_array_elements_text("data" -> '{col_name}') AS "data"
+        FROM {table_name}
+        WHERE "data" -> '{col_name}' != 'null';
+"""
+
+nested_repopulate_sql_template = """
+INSERT INTO "{view_name}"
+WITH t ("Id", "data") AS (
+        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+            jsonb_array_elements("data" -> '{col_name}') AS "data"
+        FROM {table_name}
+        WHERE "data" -> '{col_name}' != 'null')
+    SELECT "Id" AS "{parent_Id}", {projections}
+    FROM t;
+"""
+
+
+def repopulate(cursor, table_name, ft):
+    model = extract_model_from_table(cursor, table_name)
+    for table_path, attr_paths in model.items():
+        if table_path.is_empty():
+            projections = ",\n".join([
+                "{0} AS \"{1}\"".format(cast(c.as_json_path(), v), c.as_column_name())
+                for c, v in attr_paths.items()
+            ])
+            sql = simple_repopulate_sql_template.format(table_name=table_name, projections=projections)
+            ft.write(sql)
+        elif table_path._path[-1]._path[-1] == '$literal':
+            real_table_path = TablePath([AttrPath(
+                tp._path[:-1] if tp._path[-1] == '$literal' else tp._path)
+                for tp in table_path._path
+            ])
+            view_name = "v_" + table_name + "_" + real_table_path.as_table_name()
+            col_name = real_table_path.as_table_name()
+            sql = array_repopulate_sql_template \
+                .format(view_name=view_name, table_name=table_name, col_name=col_name)
+            ft.write(sql)
+        else:
+            view_name = "v_{0}_{1}".format(table_name, table_path.as_table_name())
+            projections = ",\n".join([
+                cast(c.as_json_path(), v) +
+                " AS \"" + c.as_column_name() + "\""
+                for c, v in attr_paths.items()
+            ])
+            col_name = table_path.as_table_name()
+            parent_Id = table_name + "_Id"
+            sql = nested_repopulate_sql_template \
+                .format(view_name=view_name, table_name=table_name, col_name=col_name,
+                        projections=projections, parent_Id=parent_Id)
+            ft.write(sql)
+
+
 if __name__ == '__main__':
 
-    connection = psycopg2.connect(user="tourismuser",
-                                  password="postgres2",
-                                  host="127.0.0.1",
-                                  port="7777",
-                                  database="tourismuser")
+    argv = sys.argv
+    if len(argv) < 2:
+        print("command is required")
+        usage()
+        exit(2)
+
+    command = argv[1]
+
+    try:
+        opts, args = getopt.getopt(argv[2:], "t:u:p:h:d:", ["port=", "subscription="])
+    except getopt.GetoptError:
+        usage()
+        exit(2)
+
+        if len(opts) == 0:
+            usage()
+            exit(2)
+
+    source_table = None
+    user = None
+    password = None
+    host = None
+    db = None
+    port = None
+    subscription = None
+    for opt, arg in opts:
+        if opt == '-t':
+            source_table = arg
+        elif opt == '-u':
+            user = arg
+        elif opt == '-p':
+            password = arg
+        elif opt == '-h':
+            host = arg
+        elif opt == '-d':
+            db = arg
+        elif opt == '--port':
+            port = arg
+        elif opt == '--subscription':
+            subscription = arg
+
+    # print(opts)
+
+    if user is None:
+        print("user is required")
+        usage()
+        exit(2)
+
+    if password is None:
+        print("password is required")
+        usage()
+        exit(2)
+
+    if host is None:
+        print("hostname is required")
+        usage()
+        exit(2)
+
+    if db is None:
+        print("database is required")
+        usage()
+        exit(2)
+
+    if port is None:
+        print("port is required")
+        usage()
+        exit(2)
+
+    connection = psycopg2.connect(user=user,
+                                  password=password,
+                                  host=host,
+                                  port=port,
+                                  database=db)
 
     cursor = connection.cursor()
     # Print PostgreSQL Connection properties
@@ -453,24 +660,27 @@ if __name__ == '__main__':
     # print("You are connected to - ", record, "\n")
 
     tables = get_all_table_names(cursor)
+    tables.sort()
 
     # tables = ['accommodationsopen']
 
-    create_view_file = "create_views_gen.sql"
-    create_trigger_file = "create_triggers_gen.sql"
-    with open(create_view_file, "w+") as f, \
-            open(create_trigger_file, "w+") as ft:
-        for table_name in tables:
-            # DEBUG ONLY
-            # if table_name != 'accommodationroomsopen':
-            #     continue
-            if table_name.startswith("v_"):
-                continue
-            model = extract_model_from_table(cursor, table_name)
-            for table_path, attrs in model.items():
-                view = sql_view(table_name, table_path, attrs)
-                if view is not None:
-                    f.write(view)
-                trigger = sql_trigger(table_name, table_path, attrs)
-                if trigger is not None:
-                    ft.write(trigger)
+    if command == 'all':
+        generate_all(cursor, tables)
+    else:
+        if source_table is None:
+            print("source-table is required")
+            exit(3)
+        if source_table not in tables:
+            print("source-table not found")
+            exit(4)
+        if source_table.startswith('v_'):
+            print("The source table must not start with \"v_\"")
+            exit(5)
+        if subscription is None:
+            print("subscription is required for regenerating")
+            exit(7)
+        if command == 'regenerate':
+            regenerate(cursor, source_table, subscription)
+        else:
+            print("Unknown command: " + command)
+            exit(6)

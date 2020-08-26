@@ -19,8 +19,9 @@ source		SELECT "Id"
 			WHERE "AccoTypeId" = 'Camping'
 
 mappingId	LodgingBusiness
-target		data:accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email {email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it . 
-source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude,  "AccoDetail-de-Email" AS email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone, "AccoDetail-de-Mobile"  AS mobile, "AccoDetail-de-Fax" AS  de_fax, "AccoDetail-it-Shortdesc" AS it_desc, "AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name
+target		data:accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email {de_email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{id}/{rating} . 
+source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude,  "AccoDetail-de-Email" AS de_email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone,
+			 "AccoDetail-de-Fax" AS  de_fax, "AccoDetail-it-Shortdesc" AS it_desc,  "AccoDetail-de-Shortdesc" AS de_desc,  "AccoDetail-en-Shortdesc" AS en_desc, "AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name, "AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
 			FROM "v_accommodationsopen"
 
 mappingId	Lodging business - geo
@@ -29,12 +30,12 @@ source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Al
 			FROM "v_accommodationsopen"
 
 mappingId	LodgingBusiness - address
-target		data:address/accommodation/{id} a schema:PostalAddress ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . data:accommodation/{id} schema:address data:address/accommodation/{id} ; schema:email {email} ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} . 
+target		data:address/accommodation/{id} a schema:PostalAddress ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . data:accommodation/{id} schema:address data:address/accommodation/{id} ; schema:email {email} ; schema:telephone {phone} ; schema:faxNumber {fax} . 
 source		SELECT "Id" AS id,
 			"AccoDetail-de-City" AS de_city, "AccoDetail-de-Zip" AS de_zip, "AccoDetail-de-Street" AS de_street,
 			"AccoDetail-it-City" AS it_city, "AccoDetail-it-Street" AS it_street,
 			"AccoDetail-en-City" AS en_city, "AccoDetail-en-Street" AS en_street,
-			"AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone, "AccoDetail-de-Mobile"  AS mobile, "AccoDetail-de-Fax" AS  de_fax,
+			"AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS phone, "AccoDetail-de-Mobile"  AS mobile, "AccoDetail-de-Fax" AS fax,
 			"AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name,   "AccoDetail-de-Email" AS email
 			FROM "v_accommodationsopen"
 
@@ -273,5 +274,25 @@ target		data:menu/gastronomy/{Id} schema:hasMenuItem data:menuitem/apfelstrudel/
 source		SELECT "Id"
 			FROM public.v_gastronomiesopen
 			WHERE "Detail-de-BaseText" ~ 'Apfelstrudel'
+
+mappingId	Lodging Business - aggregate rating
+target		data:rating/trustyou/{id}/{trustId} a schema:AggregateRating ; schema:author data:author/trustyou ; schema:bestRating "100"^^xsd:integer ; schema:ratingValue {score}^^xsd:integer ; schema:reviewCount {reviews}^^xsd:integer . 
+source		select "Id" as id, "TrustYouID" as trustId, "TrustYouScore"/10 as  score , "TrustYouResults" as reviews from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
+
+mappingId	Lodging Business -hasAggregateRating
+target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{id}/{trustId} . 
+source		select "Id" as id, "TrustYouID" as trustId from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
+
+mappingId	Lodging Business - image
+target		data:accommodation/{id} schema:image <{image}> . 
+source		select  "accommodationsopen_Id" as id , "ImageUrl" as image from "v_accommodationsopen_ImageGallery" where TO_TIMESTAMP("ValidTo", 'YYYY-MM-DDTHH24:MI:SS') > NOW() AND TO_TIMESTAMP("ValidFrom", 'YYYY-MM-DDTHH24:MI:SS') < NOW()
+
+mappingId	MAPID-9dbd9116f9f84c78961099f0004a9690
+target		data:author/trustyou a schema:Organization ; schema:name "Trust you" ; schema:url <https://www.trustyou.com/> . 
+source		select  1
+
+mappingId	AccomodationRating
+target		data:category/accommodation/{id}/{rating} a schema:Rating ; schema:ratingValue {value}^^xsd:integer . 
+source		select "Id" as id,  "AccoCategoryId" as rating, (CASE WHEN "AccoCategoryId" = '1flowers' or "AccoCategoryId" = '1stars'  or "AccoCategoryId" = '1suns'   THEN 1 WHEN "AccoCategoryId" = '2flowers' or "AccoCategoryId" = '2stars'  or "AccoCategoryId" = '2suns'   THEN 2  WHEN "AccoCategoryId" = '3flowers' or "AccoCategoryId" = '3stars'  or "AccoCategoryId" = '3suns'   THEN 3  WHEN "AccoCategoryId" = '4flowers' or "AccoCategoryId" = '4stars'  or "AccoCategoryId" = '4suns'   THEN 4  WHEN "AccoCategoryId" = '5flowers' or "AccoCategoryId" = '5stars'  or "AccoCategoryId" = '5suns'   THEN 5 ELSE NULL END ) as value FROM "v_accommodationsopen"
 ]]
 
