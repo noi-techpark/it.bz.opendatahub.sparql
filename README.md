@@ -67,7 +67,7 @@ Install [Docker](https://docs.docker.com/install/) (with Docker Compose) locally
 
 To start the container on the foreground:
 ```
-docker-compose pull && docker-compose up --pull
+docker-compose pull && docker-compose up --build
 ```
 The container is run on the foreground and can be stopped by pressing CTRL-C.
 
@@ -75,7 +75,7 @@ The container is run on the foreground and can be stopped by pressing CTRL-C.
 
 To start the container on the background:
 ```
-docker-compose pull && docker-compose up --pull -d
+docker-compose pull && docker-compose up --build -d
 ```
 
 To stop it:
