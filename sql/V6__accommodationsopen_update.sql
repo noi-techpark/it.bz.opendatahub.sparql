@@ -1,5 +1,5 @@
 
-ALTER SUBSCRIPTION vkgsubscription_test DISABLE;
+ALTER SUBSCRIPTION ${subscription_name} DISABLE;
 
 
 DROP TABLE IF EXISTS "v_accommodationsopen";
@@ -825,5 +825,5 @@ CAST("data"->'ImageDesc'->>'en' As varchar) AS "ImageDesc-en",
 CAST("data"->'ImageDesc'->>'it' As varchar) AS "ImageDesc-it"
     FROM t;
 
-ALTER SUBSCRIPTION vkgsubscription_test ENABLE;
+ALTER SUBSCRIPTION ${subscription_name} ENABLE;
 
