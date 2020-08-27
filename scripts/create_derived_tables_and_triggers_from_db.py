@@ -465,7 +465,7 @@ def usage():
     print(
         'create_derived_tables_and_triggers_from_db.py all -u <user> -p <password> -h <hostname> -d <database> --port=<port>')
     print(
-        'create_derived_tables_and_triggers_from_db.py regenerate -t <source-table> -u <user> -p <password> -h <hostname> -d <database> --port=<port> --subscription=<subscription>')
+        'create_derived_tables_and_triggers_from_db.py regenerate -t <source-table> -u <user> -p <password> -h <hostname> -d <database> --port=<port>')
 
 
 def generate_all(cursor, tables):
@@ -488,28 +488,19 @@ def generate(cursor, table_name, ft):
             ft.write(trigger)
 
 
-def pause_resume_subscription(subscription, enable, ft):
+def pause_resume_subscription(enable, ft):
     action = "ENABLE" if enable else "DISABLE"
 
-    ft.write(pause_resume_subscription_sql_template.format(
-        subscription_name=subscription,
-        action=action
-    ))
+    ft.write("ALTER SUBSCRIPTION ${subscription_name} " + action + ";")
 
 
-pause_resume_subscription_sql_template = """
-ALTER SUBSCRIPTION {subscription_name} {action};
-
-"""
-
-
-def regenerate(cursor, source_table, publication):
+def regenerate(cursor, source_table):
     regen_file = "regen-" + source_table + ".sql"
     with open(regen_file, "w+") as ft:
-        pause_resume_subscription(publication, False, ft)
+        pause_resume_subscription(False, ft)
         generate(cursor, source_table, ft)
         repopulate(cursor, source_table, ft)
-        pause_resume_subscription(publication, True, ft)
+        pause_resume_subscription(True, ft)
 
 
 simple_repopulate_sql_template = """
@@ -600,7 +591,6 @@ if __name__ == '__main__':
     host = None
     db = None
     port = None
-    subscription = None
     for opt, arg in opts:
         if opt == '-t':
             source_table = arg
@@ -614,8 +604,6 @@ if __name__ == '__main__':
             db = arg
         elif opt == '--port':
             port = arg
-        elif opt == '--subscription':
-            subscription = arg
 
     # print(opts)
 
@@ -676,11 +664,8 @@ if __name__ == '__main__':
         if source_table.startswith('v_'):
             print("The source table must not start with \"v_\"")
             exit(5)
-        if subscription is None:
-            print("subscription is required for regenerating")
-            exit(7)
         if command == 'regenerate':
-            regenerate(cursor, source_table, subscription)
+            regenerate(cursor, source_table)
         else:
             print("Unknown command: " + command)
             exit(6)
