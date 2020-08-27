@@ -64,7 +64,7 @@ Steps:
  1. Generate the script (change the parameter values)
  ```sh
  cd scripts
- python3 create_derived_tables_and_triggers_from_db.py regenerate -t accommodationsopen -u tourismuser -p postgres2 -h localhost -d tourismuser --port 7776 --subscription=vkgsubscription_test
+ python3 create_derived_tables_and_triggers_from_db.py regenerate -t accommodationsopen -u tourismuser -p postgres2 -h localhost -d tourismuser --port 7776
  ```
  2. [Publish](#publish-a-migration-script) the SQL script with the prefix `regen-`.
 
