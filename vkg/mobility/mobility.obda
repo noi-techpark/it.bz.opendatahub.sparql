@@ -36,7 +36,7 @@ target		:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:strin
 source		SELECT * FROM intimev2.type
 
 mappingId	measurement_observation
-target		:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} . 
+target		:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} . 
 source		SELECT * FROM intimev2.measurement
 
 mappingId	road_segment
@@ -166,5 +166,9 @@ source		SELECT istat_code, name_i, name_d FROM municipalities
 mappingId	metadata
 target		:station/{station_id} :hasStationMetadata {json}^^xsd:string . 
 source		SELECT * FROM intimev2.metadata
+
+mappingId	measurement_observation(0)
+target		:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} . 
+source		SELECT * FROM intimev2.measurementhistory
 ]]
 

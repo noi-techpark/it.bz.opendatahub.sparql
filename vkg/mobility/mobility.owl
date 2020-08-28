@@ -311,6 +311,12 @@
     
 
 
+    <!-- http://ex.org/suedtirol#LatestObservation -->
+
+    <owl:Class rdf:about="http://ex.org/suedtirol#LatestObservation"/>
+    
+
+
     <!-- http://ex.org/suedtirol#LinkStation -->
 
     <owl:Class rdf:about="http://ex.org/suedtirol#LinkStation">
