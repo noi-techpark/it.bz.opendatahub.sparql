@@ -1,0 +1,60 @@
+{
+    "queries": {
+        "accommodation": {
+            "sparqlQueryType": "construct",
+            "name": "Accommodation",
+            "description": "JSON-LD snippets for lodging businesses, based on schema.org.",
+            "parameters": {
+                "Id": {
+                    "description": "Internal identifier of the lodging business",
+                    "type": "xsd:string",
+                    "safeForRandomGeneration": true,
+                    "required": true
+                },
+                "language": {
+                    "description": "Preferred language (e.g. it, de, en, ru). Default: en",
+                    "type": "xsd:string",
+                    "safeForRandomGeneration": false,
+                    "required": false
+                },
+                "idtoshow": {
+                    "description": "Identifier to show in the output for the lodging business. If not specified, the internal one is used instead.",
+                    "type": "iri",
+                    "safeForRandomGeneration": true,
+                    "required": false
+                },
+                "urltoshow": {
+                    "description": "Deprecated",
+                    "type": "iri",
+                    "safeForRandomGeneration": true,
+                    "required": false
+                },
+                "imageurltoshow": {
+                    "description": "URL to the lodging business image. If not specified, the internal one is used instead.",
+                    "type": "iri",
+                    "safeForRandomGeneration": true,
+                    "required": false
+                },
+                "showId": {
+                    "description": "If set to false, hides the lodging business identifier. Default: true",
+                    "type": "xsd:string",
+                    "safeForRandomGeneration": false,
+                    "required": false
+                }
+            },
+            "context": "schema-org",
+            "outputContext": {
+                "@context": "http://schema.org"
+            },
+            "frame": {
+                "@type": [
+                  "Hotel",
+                  "Campground",
+                  "BedAndBreakfast",
+                  "Hostel",
+                  "LodgingBusiness"
+                ]
+            }
+        }
+    }
+}

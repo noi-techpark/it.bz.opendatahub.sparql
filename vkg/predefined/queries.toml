@@ -1,0 +1,232 @@
+title="Pre-defined queries"
+
+[accommodation]
+query="""
+BASE <http://noi.example.org/data/accommodation/>
+PREFIX schema: <http://schema.org/>
+ CONSTRUCT {
+   ?idUrl a ?cl ; schema:name ?nameStr ; schema:description ?descStr ;
+   schema:image ?imageUrl ; schema:email ?email ;
+   schema:url ?url ; schema:telephone ?telephone ;
+   schema:priceRange ?priceRange ;
+   schema:address [
+        a schema:PostalAddress ; schema:name ?aNameStr ; schema:alternateName ?alternateStr;
+        schema:addressRegion ?province; schema:addressCountry ?country; schema:addressLocality ?aLocalityStr ;
+        schema:streetAddress ?aStreetStr ;  schema:postalCode ?aZip ; schema:telephone ?telephone;
+        schema:email ?email ;  schema:faxNumber ?fax  ] ;
+   schema:geo [
+        a schema:GeoCoordinates ; schema:latitude ?gLatitudeStr ; schema:longitude ?gLongitudeStr ] ;
+   schema:starRating [
+        a schema:Rating ; schema:ratingValue ?sRatingValue ];
+   schema:aggregateRating ?agRating .
+        ?agRating a schema:AggregateRating ;
+        schema:author [ a schema:Organization; schema:name ?authorName ; schema:url ?authorUrl] ;
+        schema:ratingValue ?aggValueStr ; schema:bestRating ?aggBestStr ; schema:reviewCount ?aggCountStr  .
+ }
+ WHERE {
+
+   # Show the @id property in Json LD,  default value true
+   BIND ((COALESCE(?showid, "true") != "false") AS ?hasId)
+
+   # build default @id
+   BIND (COALESCE(?idtoshow, IRI(CONCAT("http://service.suedtirol.info/api/Accommodation/", ?Id)))  AS ?defaultId)
+
+   # build default @id
+   BIND (IF(?hasId, ?defaultId, BNODE()) AS ?idUrl)
+
+   # build default @id
+   BIND (COALESCE(?language, "en") AS ?l)
+   BIND (IF(?l = "ru" || ?l = "fr" || ?l = "pl"
+            || ?l = "cs" || ?l = "de" ||
+             ?l = "nl" || ?l = "it", ?l, "en") AS  ?normalizedLanguage)
+
+   # data block
+   VALUES (?province ?normalizedLanguage ) {
+   ("Südtirol - Alto Adige" "en")
+   ("Alto Adige" "it")
+   ("Южный Тирол" "ru")
+   ("Sud-Tyrol" "fr")
+   ("Południowy Tyrol" "pl")
+   ("Itálie" "cs")
+   ("Italien" "de")
+   ("Italië" "nl")
+   }
+
+   VALUES (?country ?normalizedLanguage ) {
+      ("Italia" "it")
+      ("Italy" "en")
+      ("Италия" "ru")
+      ("Italie" "fr")
+      ("Włochy" "pl")
+      ("Jižní Tyrolsko" "cs")
+      ("Südtirol" "de")
+      ("Südtirol" "nl")
+      }
+
+  # base iri
+  BIND (IRI(?Id) AS ?h)
+
+  ?h a schema:LodgingBusiness ;
+  schema:address ?a ; schema:geo ?g .
+  ?a a schema:PostalAddress .
+  ?g a schema:GeoCoordinates .
+
+  OPTIONAL {
+        ?h schema:email ?email .
+  }
+
+  OPTIONAL {
+        ?h schema:telephone ?telephone .
+  }
+
+
+  OPTIONAL {
+        ?h schema:faxNumber ?fax .
+   }
+
+  OPTIONAL {
+        ?h schema:url ?url .
+  }
+
+     # star rating
+   OPTIONAL {
+          ?h schema:starRating ?s .
+          ?s schema:ratingValue ?sRating .
+          ?s a schema:Rating .
+   }
+
+  OPTIONAL {
+     ?h a schema:Hotel .
+     BIND (schema:Hotel AS ?c)
+   }
+   OPTIONAL {
+     ?h a schema:Campground .
+     BIND (schema:Campground AS ?c)
+   }
+   OPTIONAL {
+     ?h a schema:BedAndBreakfast .
+     BIND (schema:BedAndBreakfast AS ?c)
+   }
+   OPTIONAL {
+     ?h a schema:Hostel .
+     BIND (schema:Hostel AS ?c)
+   }
+   BIND (COALESCE(?c, schema:LodgingBusiness) AS ?cl)
+
+  # if language exists use it
+  OPTIONAL {
+       ?h schema:name ?name .
+        FILTER (?language = lang(?name))
+  }
+
+
+  # if language does not exist use english
+  OPTIONAL {
+        ?h schema:name ?name .
+        FILTER ("en" = lang(?name))
+  }
+
+  OPTIONAL {
+        ?h schema:description ?desc .
+        FILTER (?language = lang(?desc)   )
+  }
+
+  OPTIONAL {
+        ?h schema:description ?desc .
+        FILTER ("en" = lang(?desc))
+  }
+
+  # geo coordinates
+  OPTIONAL {
+          ?g schema:latitude ?gLatitude .
+   }
+
+   OPTIONAL {
+          ?g  schema:longitude ?gLongitude .
+   }
+
+   # address
+   OPTIONAL {
+        ?a schema:name ?aName .
+           FILTER (?language = lang(?aName) )
+   }
+
+   OPTIONAL {
+         ?a schema:name ?aName .
+           FILTER ("en" = lang(?aName))
+   }
+
+   OPTIONAL {
+        ?a schema:addressLocality ?aLocality .
+        FILTER (?language = lang(?aLocality) )
+   }
+
+   OPTIONAL {
+        ?a schema:addressLocality ?aLocality .
+        FILTER ("en" = lang(?aLocality))
+
+   }
+
+   OPTIONAL {
+     ?a schema:alternateName ?alternate .
+     FILTER (?language  = lang(?alternate) )
+   }
+
+   OPTIONAL {
+       ?a schema:alternateName ?alternate .
+       FILTER ("en" = lang(?alternate))
+   }
+
+   OPTIONAL {
+       ?a schema:postalCode ?aZip .
+   }
+
+   OPTIONAL {
+     ?a schema:streetAddress ?aStreet .
+     FILTER (?language  = lang(?aStreet) )
+   }
+
+   OPTIONAL {
+       ?a schema:streetAddress ?aStreet .
+       FILTER ("en" = lang(?aStreet))
+   }
+
+   OPTIONAL {
+       ?h schema:priceRange ?priceRange .
+   }
+
+   # aggregate rating
+   OPTIONAL {
+        ?h  schema:aggregateRating  ?z.
+        ?z a schema:AggregateRating ;
+        schema:author [ schema:name ?authorName ; schema:url ?authorUrl] ;
+        schema:ratingValue ?aggValue ;
+        schema:bestRating ?aggBest ;
+        schema:reviewCount ?aggCount .
+        BIND (BNODE() as ?agRating)
+        FILTER( ?authorUrl = <https://www.trustyou.com/>)
+   }
+
+   # image with size limit
+   OPTIONAL {
+        ?h schema:image ?im .
+        BIND(IF(STRSTARTS(str(?im) , "https://doc.lts.it/DocSite/ImageRender.aspx") , IRI(CONCAT (str(?im), "&W=800")), ?im ) AS ?image )
+    }
+
+   BIND(str(?name) AS ?nameStr)
+   BIND(str(?desc) AS ?descStr)
+   BIND(str(?alternate) AS ?alternateStr)
+   BIND(str(?aName) AS ?aNameStr)
+   BIND(str(?aStreet) AS ?aStreetStr)
+   BIND(str(?aLocality) AS ?aLocalityStr)
+   BIND(str(?sRating) AS ?sRatingValue)
+   BIND(COALESCE(?imageurltoshow, ?image ) AS ?imageUrl)
+   BIND(str(?name) AS ?nameStr)
+   BIND(str(?aggValue) AS ?aggValueStr)
+   BIND(str(?aggBest) AS ?aggBestStr)
+   BIND(str(?aggCount) AS ?aggCountStr)
+   BIND(str(?gLatitude) AS ?gLatitudeStr)
+   BIND(str(?gLongitude) AS ?gLongitudeStr)
+
+ }
+"""
