@@ -1,5 +1,3 @@
-title="Pre-defined queries"
-
 [accommodation]
 query="""
 BASE <http://noi.example.org/data/accommodation/>
@@ -47,9 +45,9 @@ PREFIX schema: <http://schema.org/>
    ("Южный Тирол" "ru")
    ("Sud-Tyrol" "fr")
    ("Południowy Tyrol" "pl")
-   ("Itálie" "cs")
-   ("Italien" "de")
-   ("Italië" "nl")
+   ("Jižní Tyrolsko" "cs")
+   ("Südtirol" "de")
+   ("Südtirol" "nl")
    }
 
    VALUES (?country ?normalizedLanguage ) {
@@ -58,9 +56,9 @@ PREFIX schema: <http://schema.org/>
       ("Италия" "ru")
       ("Italie" "fr")
       ("Włochy" "pl")
-      ("Jižní Tyrolsko" "cs")
-      ("Südtirol" "de")
-      ("Südtirol" "nl")
+      ("Itálie" "cs")
+      ("Italien" "de")
+      ("Italië" "nl")
       }
 
   # base iri

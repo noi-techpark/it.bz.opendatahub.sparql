@@ -1,7 +1,7 @@
 {
     "queries": {
         "accommodation": {
-            "sparqlQueryType": "construct",
+            "queryType": "graph",
             "name": "Accommodation",
             "description": "JSON-LD snippets for lodging businesses, based on schema.org.",
             "parameters": {
