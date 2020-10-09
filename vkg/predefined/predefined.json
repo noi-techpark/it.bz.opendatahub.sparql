@@ -42,11 +42,8 @@
                     "required": false
                 }
             },
-            "context": "schema-org",
-            "outputContext": {
-                "@context": "http://schema.org"
-            },
             "frame": {
+                "@context": "https://schema.org",
                 "@type": [
                   "Hotel",
                   "Campground",
