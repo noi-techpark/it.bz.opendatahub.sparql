@@ -4,6 +4,8 @@
             "queryType": "graph",
             "name": "Accommodation",
             "description": "JSON-LD snippets for lodging businesses, based on schema.org.",
+            "return404IfEmpty": true,
+            "resultStreaming": false,
             "parameters": {
                 "Id": {
                     "description": "Internal identifier of the lodging business",
@@ -35,7 +37,7 @@
                     "safeForRandomGeneration": true,
                     "required": false
                 },
-                "showId": {
+                "showid": {
                     "description": "If set to false, hides the lodging business identifier. Default: true",
                     "type": "xsd:string",
                     "safeForRandomGeneration": false,
