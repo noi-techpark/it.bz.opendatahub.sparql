@@ -292,7 +292,13 @@ target		data:author/trustyou a schema:Organization ; schema:name "Trust you" ; s
 source		select  1
 
 mappingId	AccomodationRating
-target		data:category/accommodation/{id}/{rating} a schema:Rating ; schema:ratingValue {value}^^xsd:integer . 
-source		select "Id" as id,  "AccoCategoryId" as rating, (CASE WHEN "AccoCategoryId" = '1flowers' or "AccoCategoryId" = '1stars'  or "AccoCategoryId" = '1suns'   THEN 1 WHEN "AccoCategoryId" = '2flowers' or "AccoCategoryId" = '2stars'  or "AccoCategoryId" = '2suns'   THEN 2  WHEN "AccoCategoryId" = '3flowers' or "AccoCategoryId" = '3stars'  or "AccoCategoryId" = '3suns'   THEN 3  WHEN "AccoCategoryId" = '4flowers' or "AccoCategoryId" = '4stars'  or "AccoCategoryId" = '4suns'   THEN 4  WHEN "AccoCategoryId" = '5flowers' or "AccoCategoryId" = '5stars'  or "AccoCategoryId" = '5suns'   THEN 5 ELSE NULL END ) as value FROM "v_accommodationsopen"
+target		data:category/accommodation/{id}/{rating} a schema:Rating ; schema:ratingValue {value}^^xsd:decimal . 
+source		select "Id" as id,  "AccoCategoryId" as rating, (CASE WHEN "AccoCategoryId" = '1flowers' or "AccoCategoryId" = '1stars'  or "AccoCategoryId" = '1suns'   THEN 1 WHEN "AccoCategoryId" = '2flowers' or "AccoCategoryId" = '2stars'  or "AccoCategoryId" = '2suns'   THEN 2  WHEN "AccoCategoryId" = '3flowers' or "AccoCategoryId" = '3stars'  or "AccoCategoryId" = '3suns'  THEN 3 WHEN "AccoCategoryId" = '3sstars' THEN 3.5  WHEN "AccoCategoryId" = '4flowers' or "AccoCategoryId" = '4stars'  or "AccoCategoryId" = '4suns'   THEN 4 WHEN "AccoCategoryId" = '4sstars' THEN 4.5  WHEN "AccoCategoryId" = '5flowers' or "AccoCategoryId" = '5stars'  or "AccoCategoryId" = '5suns'   THEN 5 ELSE NULL END ) as value FROM "v_accommodationsopen"
+
+mappingId	Price range
+target		data:accommodation/{id} schema:priceRange {value}^^xsd:string . 
+source		select "Id" as id,  (CASE WHEN "AccoCategoryId" = '1flowers' or "AccoCategoryId" = '1stars'  or "AccoCategoryId" = '1suns' or "AccoCategoryId" = '2flowers' or "AccoCategoryId" = '2stars'  or "AccoCategoryId" = '2suns'   THEN '€'  WHEN "AccoCategoryId" = '3flowers' or "AccoCategoryId" = '3stars'  or "AccoCategoryId" = '3suns' or "AccoCategoryId" = '3sstars'  THEN '€€'  WHEN "AccoCategoryId" = '4flowers' or "AccoCategoryId" = '4stars'  or "AccoCategoryId" = '4suns'   THEN '€€€'  WHEN "AccoCategoryId" = '4sstars' or "AccoCategoryId" = '5flowers' or "AccoCategoryId" = '5stars'  or "AccoCategoryId" = '5suns' THEN '€€€€' ELSE NULL END ) as value FROM "v_accommodationsopen"
+
+
 ]]
 
