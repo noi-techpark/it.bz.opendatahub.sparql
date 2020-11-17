@@ -93,6 +93,16 @@ Current deployments:
  * Test: https://sparql.opendatahub.testingmachine.eu/
  * Production: https://sparql.opendatahub.bz.it/
 
+On these servers, one can find:
+* Front-end portal:  `/`
+* SPARQL endpoint: `/sparql`
+* Predefined queries: `/predefined/{queryId}?{param1=value1}*`
+  * Example: https://sparql.opendatahub.testingmachine.eu/predefined/accommodation?Id=86673280ABD13ADC4D521DF459C75474
+* Clone of the existing ODH API `/api/JsonLD/DetailInLD?type={value1}&{param2=value2}*`
+  * Example: https://sparql.opendatahub.testingmachine.eu/api/JsonLD/DetailInLD?type=accommodation&Id=32E7BE648E7B11D181AB006097B896BA&showid=false
+
+
+
 #### Database synchronization
 The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](docs/replication.md).
 
