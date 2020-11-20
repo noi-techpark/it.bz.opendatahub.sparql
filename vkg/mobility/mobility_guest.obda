@@ -36,8 +36,35 @@ target		:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:strin
 source		SELECT * FROM intimev2.type
 
 mappingId	measurement_observation
-target		:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} .
-source		SELECT * FROM intimev2.measurement
+target		:latest_observation/{me_id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} .
+source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurement me
+            WHERE s.id = me.station_id AND
+                  (
+                    -- station types that are always open, regardless of the origin
+                            s.stationtype in (
+                                              'NOI-Place',
+                                              'CreativeIndustry',
+                                              'BluetoothStation',
+                                              'CarpoolingHub',
+                                              'CarpoolingService',
+                                              'CarpoolingUser',
+                                              'CarsharingCar',
+                                              'CarsharingStation',
+                                              'EChargingPlug',
+                                              'EChargingStation',
+                                              'Streetstation',
+                                              'Culture')
+                        -- station types that are only partly open, constrained by the origin
+                        or (s.stationtype = 'Bicycle' and s.origin in ('ALGORAB', 'BIKE_SHARING_MERANO'))
+                        or (s.stationtype = 'BikesharingStation' and s.origin = 'ALGORAB')
+                        or (s.stationtype = 'EnvironmentStation' and s.origin = 'APPATN-open')
+                        or (s.stationtype = 'LinkStation' and (s.origin is null or s.origin = 'NOI'))
+                        or (s.stationtype = 'MeteoStation' and s.origin in ('meteotrentino', 'SIAG'))
+                        or (s.stationtype = 'ParkingStation' and s.origin in ('FAMAS', 'FBK', 'Municipality Merano'))
+                        or (s.stationtype = 'RWISstation' and s.origin = 'InfoMobility')
+                        -- special rules
+                        or (s.origin = 'APPABZ' and me.period = 3600)
+                    )
 
 mappingId	road_segment
 target		:road_segment/{id} a :RoadSegment ; :hasOriginStation :station/{origin_id} ; :hasDestinationStation :station/{destination_id} .
@@ -168,7 +195,35 @@ target		:station/{station_id} :hasStationMetadata {json}^^xsd:string .
 source		SELECT * FROM intimev2.metadata
 
 mappingId	measurement_history_observation
-target		:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} .
-source		SELECT * FROM intimev2.measurementhistory
+target		:observation/{me_id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor :station/{station_id} .
+source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurementhistory me
+            WHERE s.id = me.station_id AND
+                (
+                    -- station types that are always open, regardless of the origin
+                            s.stationtype in (
+                                              'NOI-Place',
+                                              'CreativeIndustry',
+                                              'BluetoothStation',
+                                              'CarpoolingHub',
+                                              'CarpoolingService',
+                                              'CarpoolingUser',
+                                              'CarsharingCar',
+                                              'CarsharingStation',
+                                              'EChargingPlug',
+                                              'EChargingStation',
+                                              'Streetstation',
+                                              'Culture')
+                        -- station types that are only partly open, constrained by the origin
+                        or (s.stationtype = 'Bicycle' and s.origin in ('ALGORAB', 'BIKE_SHARING_MERANO'))
+                        or (s.stationtype = 'BikesharingStation' and s.origin = 'ALGORAB')
+                        or (s.stationtype = 'EnvironmentStation' and s.origin = 'APPATN-open')
+                        or (s.stationtype = 'LinkStation' and (s.origin is null or s.origin = 'NOI'))
+                        or (s.stationtype = 'MeteoStation' and s.origin in ('meteotrentino', 'SIAG'))
+                        or (s.stationtype = 'ParkingStation' and s.origin in ('FAMAS', 'FBK', 'Municipality Merano'))
+                        or (s.stationtype = 'RWISstation' and s.origin = 'InfoMobility')
+                        -- special rules
+                        or (s.origin = 'APPABZ' and me.period = 3600)
+                    )
+            ;
 ]]
 
