@@ -16,10 +16,10 @@ pipeline {
         ORIGINAL_POSTGRES_DB = "postgres"
         ORIGINAL_POSTGRES_USER = credentials('odh-vkg-test-original-postgres-username')
         ORIGINAL_POSTGRES_PASSWORD = credentials('odh-vkg-test-original-postgres-password')
-        COPY_POSTGRES_HOST = "test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+        COPY_POSTGRES_HOST = "52.208.93.74"
         COPY_POSTGRES_DB = "odh_vkg"
-        COPY_POSTGRES_USER = credentials('odh-vkg-test-copy-postgres-username')
-        COPY_POSTGRES_PASSWORD = credentials('odh-vkg-test-copy-postgres-password')
+        COPY_POSTGRES_USER = credentials('odh-vkg-test-original-postgres-username')
+        COPY_POSTGRES_PASSWORD = credentials('odh-vkg-test-original-postgres-password')
 
         FLYWAY_URL = "jdbc:postgresql://${COPY_POSTGRES_HOST}/${COPY_POSTGRES_DB}"
         FLYWAY_USER = "${COPY_POSTGRES_USER}"
