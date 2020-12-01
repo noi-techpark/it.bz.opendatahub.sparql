@@ -13,12 +13,12 @@ BEGIN
     DROP SUBSCRIPTION ${subscription_name};
     CREATE SUBSCRIPTION ${subscription_name}
       CONNECTION 'host=${original_host_ip} dbname=${original_db} user=${original_user} password=${original_password}'
-      PUBLICATION vkgpublication
+      PUBLICATION ${publication_name}
       WITH (create_slot = false);
   ELSE
     CREATE SUBSCRIPTION ${subscription_name}
       CONNECTION 'host=${original_host_ip} dbname=${original_db} user=${original_user} password=${original_password}'
-      PUBLICATION vkgpublication
+      PUBLICATION ${publication_name}
       WITH (create_slot = true);
   END IF;
   ALTER SUBSCRIPTION ${subscription_name} DISABLE;
