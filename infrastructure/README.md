@@ -7,7 +7,7 @@ The Virtual Knowledge Graph is composed of a single VKG Postgres DB, from where 
 - Production:
   - SparQL endpoint: https://sparql.opendatahub.bz.it/sparql 
   - SparQL querying web application: https://sparql.opendatahub.bz.it
-  - Json-LD endpoint: https://sparql.opendatahub.testingmachine.eu/api/JsonLD
+  - Json-LD endpoint: https://sparql.opendatahub.bz.it/api/JsonLD
 - Testing:
   - SparQL endpoint: https://sparql.opendatahub.testingmachine.eu/sparql 
   - SparQL querying web application: https://sparql.opendatahub.testingmachine.eu

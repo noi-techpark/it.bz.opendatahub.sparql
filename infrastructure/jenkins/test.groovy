@@ -32,6 +32,7 @@ pipeline {
         FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD = "${ORIGINAL_POSTGRES_PASSWORD}"
         FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME = "tourism_replica_subscription"
         FLYWAY_PLACEHOLDERS_PUBLICATION_NAME = "vkgpublication"
+        FLYWAY_PLACEHOLDERS_COPY_USER_READONLY = "${COPY_POSTGRES_USER_READONLY}"
     }
 
     stages {
@@ -60,6 +61,7 @@ pipeline {
                     echo "FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD=${FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME=${FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_PUBLICATION_NAME=${FLYWAY_PLACEHOLDERS_PUBLICATION_NAME}" >> .env
+                    echo "FLYWAY_PLACEHOLDERS_COPY_USER_READONLY=${FLYWAY_PLACEHOLDERS_COPY_USER_READONLY}" >> .env
 
                     sed -i -e "s%\\(jdbc.url\\s*=\\).*\\$%\\1jdbc\\\\\\\\:postgresql\\\\\\\\://${COPY_POSTGRES_HOST}/${COPY_POSTGRES_DB}%" vkg/odh.docker.properties
                     sed -i -e "s%\\(jdbc.user\\s*=\\).*\\$%\\1${COPY_POSTGRES_USER_READONLY}%" vkg/odh.docker.properties
