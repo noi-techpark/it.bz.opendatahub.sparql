@@ -1,6 +1,6 @@
 
 --
--- Tourism Database Schema Dump from 2020-12-02T15:36:43+01:00
+-- Tourism Database Schema Dump
 --
 -- Please use the script infrastructure/utils/tourism-dump-schema.sh to update this dump
 --

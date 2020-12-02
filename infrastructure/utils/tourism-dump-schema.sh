@@ -1,20 +1,24 @@
 #!/bin/bash
 
-set -xeuo pipefail
+set -euo pipefail
+
 
 ORIGINAL_POSTGRES_HOST="prod-postgres-tourism-2.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
 ORIGINAL_POSTGRES_USERNAME="pmoser"
 ORIGINAL_POSTGRES_DB="tourism"
 
+echo "# Starting pg_dump of $ORIGINAL_POSTGRES_USERNAME@$ORIGINAL_POSTGRES_HOST/$ORIGINAL_POSTGRES_DB"
+
 echo "
--- 
--- Tourism Database Schema Dump from $(date -Is)
--- 
+--
+-- Tourism Database Schema Dump
+--
 -- Please use the script infrastructure/utils/tourism-dump-schema.sh to update this dump
 --
 " > orig-tourism-dump.sql
 
 pg_dump \
+    -v \
     --host="$ORIGINAL_POSTGRES_HOST" \
     --username="$ORIGINAL_POSTGRES_USERNAME" \
     --no-acl \
@@ -31,9 +35,8 @@ pg_dump \
     grep -v -e '^--.*$' | \
     grep -v -e '^[[:space:]]*$' >> orig-tourism-dump.sql
 
-echo "
-Please copy the output of this script (orig-tourism-dump.sql) to sql/V1__initial_setup.sql.
-
---> DONE <--
-"
+cat orig-tourism-dump.sql > ../../sql/V1__initial_setup.sql
+rm orig-tourism-dump.sql
+echo "# Updating sql/V1__initial_setup.sql"
+echo "> READY."
 exit 0
