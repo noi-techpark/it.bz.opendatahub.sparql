@@ -87,12 +87,20 @@ GRANT CONNECT ON DATABASE tourism_test TO vkguser;
 GRANT CREATE ON SCHEMA public TO vkguser;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO vkguser;
 GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO vkguser;
-ALTER ROLE vkguser CREATEROLE;
 ALTER ROLE vkguser SET statement_timeout TO '360s';
 ```
 
 In addition we need a read only user `vkguser_readonly`, to access the data.
-However, that user will be created automatically.
+
+```sql
+CREATE ROLE vkguser_readonly WITH LOGIN PASSWORD 's3cret';
+COMMENT ON ROLE vkguser_readonly IS 'Read-only account to access the virtual knowledge graph';
+GRANT CONNECT ON DATABASE tourism_test TO vkguser_readonly;
+GRANT USAGE ON SCHEMA public TO vkguser_readonly;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO vkguser_readonly;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO vkguser_readonly;
+ALTER ROLE vkguser_readonly SET statement_timeout TO '360s';
+```
 
 #### Databases
 
