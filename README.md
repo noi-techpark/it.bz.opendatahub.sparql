@@ -85,26 +85,11 @@ docker-compose down
 
 ## Deployment at NOI
 
-The databases used in the test and production environments of NOI are not managed by Docker, but are instead AWS RDS services.
-
-Deployment in these environments is achieved through Jenkins scripts (*Jenkinsfile-CI.groovy*, *Jenkinsfile-Production.groovy* and *Jenkinsfile-Test.groovy*). They use two dedicated Docker compose scripts: (*docker-compose.build.yml* and *docker-compose.run.yml*).
-
-Current deployments:
- * Test: https://sparql.opendatahub.testingmachine.eu/
- * Production: https://sparql.opendatahub.bz.it/
-
-On these servers, one can find:
-* Front-end portal:  `/`
-* SPARQL endpoint: `/sparql`
-* Predefined queries: `/predefined/{queryId}?{param1=value1}*`
-  * Example: https://sparql.opendatahub.testingmachine.eu/predefined/accommodation?Id=86673280ABD13ADC4D521DF459C75474
-* Clone of the existing ODH API `/api/JsonLD/DetailInLD?type={value1}&{param2=value2}*`
-  * Example: https://sparql.opendatahub.testingmachine.eu/api/JsonLD/DetailInLD?type=accommodation&Id=32E7BE648E7B11D181AB006097B896BA&showid=false
-
-
+All NOI specific infrastructure documentation and scripts can be found inside the `infrastructure` folder.
+See [infrastructure/README.md](infrastructure/README.md) for details.
 
 #### Database synchronization
-The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](docs/replication.md).
+The SPARQL endpoints do not query directly the production database but slave read-only instances, which are synchronized with the master database through logical replication. For more details, see [the dedicated page](https://github.com/noi-techpark/documentation/blob/master/logical-replication.md).
 
 
 ## Maintenance
@@ -124,7 +109,7 @@ This Docker image is published [on Docker Hub](https://hub.docker.com/r/ontopicv
 
 ### Support
 
-For support, please contact [info@opendatahub.bz.it](mailto:info@opendatahub.bz.it).
+For support, please contact [help@opendatahub.bz.it](mailto:help@opendatahub.bz.it).
 
 ### Contributing
 

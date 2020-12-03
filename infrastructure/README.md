@@ -10,17 +10,31 @@ Rules](https://github.com/noi-techpark/documentation/blob/master/FLIGHTRULES.md#
 
 ## Endpoints
 
-- Production:
-  - SparQL endpoint: https://sparql.opendatahub.bz.it/sparql 
-  - SparQL querying web application: https://sparql.opendatahub.bz.it
-  - Json-LD endpoint: https://sparql.opendatahub.bz.it/api/JsonLD
-- Testing:
-  - SparQL endpoint: https://sparql.opendatahub.testingmachine.eu/sparql 
-  - SparQL querying web application: https://sparql.opendatahub.testingmachine.eu
-  - Json-LD endpoint: https://sparql.opendatahub.testingmachine.eu/api/JsonLD
+Current deployments:
+ * Production: https://sparql.opendatahub.bz.it/
+ * Testing: https://sparql.opendatahub.testingmachine.eu/
 
-## Jenkins
+On these servers, one can find:
+* Front-end portal:  `/`
+* SPARQL endpoint: `/sparql`
+* Predefined queries: `/predefined/{queryId}?{param1=value1}*`
+  * Example: https://sparql.opendatahub.testingmachine.eu/predefined/accommodation?Id=86673280ABD13ADC4D521DF459C75474
+* Clone of the existing ODH API `/api/JsonLD/DetailInLD?type={value1}&{param2=value2}*`
+  * Example: https://sparql.opendatahub.testingmachine.eu/api/JsonLD/DetailInLD?type=accommodation&Id=32E7BE648E7B11D181AB006097B896BA&showid=false
 
+
+## Deployment
+
+Deployment in these environments is achieved through Jenkins scripts:
+- CI: `jenkins/ci.groovy`
+- CD for the testing enviroment: `jenkins/test.groovy`
+- CD for the production environment: `jenkins/prod.groovy`
+
+...and docker-compose scripts:
+- Build docker: `docker-compose.build.yml` 
+- Run docker: `docker-compose.run.yml`
+
+Jenkins
 - CI: https://ci.opendatahub.bz.it/job/it.bz.opendatahub.sparql
 - CD: https://jenkins.testingmachine.eu/job/it.bz.opendatahub.sparql
 
@@ -28,11 +42,21 @@ Rules](https://github.com/noi-techpark/documentation/blob/master/FLIGHTRULES.md#
 
 Prefix is `it.bz.opendatahub.sparql`.
 
+Jenkins:
 - `it.bz.opendatahub.sparql.db.vkg.password`
 - `it.bz.opendatahub.sparql.db.vkg.password.readonly`
 - `it.bz.opendatahub.sparql.db.tourism.password`
 
+Passbolt:
+- Resource = `it.bz.opendatahub.sparql.db.tourism`; Username = `vkgreplicate`
+- Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `vkguser`
+- Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `vkguser_readonly`
+- Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `postgres`
+
 ## Databases
+
+The databases used in the test and production environments of NOI are not
+managed by Docker, but are instead AWS RDS services.
 
 ### Tourism Postgres DB (source)
 This is the original source of tourism data. We access it through logical
