@@ -17,7 +17,7 @@ pipeline {
         ORIGINAL_POSTGRES_USER = "vkgreplicate"
         ORIGINAL_POSTGRES_PASSWORD = credentials('it.bz.opendatahub.sparql.db.tourism.password')
         COPY_POSTGRES_HOST = "prod-postgres-vkgreplication.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-        COPY_POSTGRES_DB = "tourism_replica"
+        COPY_POSTGRES_DB = "tourism_test"
         COPY_POSTGRES_USER = "vkguser"
         COPY_POSTGRES_PASSWORD = credentials('it.bz.opendatahub.sparql.db.vkg.password')
         COPY_POSTGRES_USER_READONLY = "vkguser_readonly"
@@ -30,8 +30,9 @@ pipeline {
         FLYWAY_PLACEHOLDERS_ORIGINAL_DB = "${ORIGINAL_POSTGRES_DB}"
         FLYWAY_PLACEHOLDERS_ORIGINAL_USER = "${ORIGINAL_POSTGRES_USER}"
         FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD = "${ORIGINAL_POSTGRES_PASSWORD}"
-        FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME = "tourism_replica_subscription"
+        FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME = "tourism_test_subscription"
         FLYWAY_PLACEHOLDERS_PUBLICATION_NAME = "vkgpublication"
+        FLYWAY_PLACEHOLDERS_COPY_DB = "${COPY_POSTGRES_DB}"
         FLYWAY_PLACEHOLDERS_COPY_USER_READONLY = "${COPY_POSTGRES_USER_READONLY}"
         FLYWAY_PLACEHOLDERS_COPY_PASSWORD_READONLY = "${COPY_POSTGRES_PASSWORD_READONLY}"
     }
@@ -62,6 +63,7 @@ pipeline {
                     echo "FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD=${FLYWAY_PLACEHOLDERS_ORIGINAL_PASSWORD}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME=${FLYWAY_PLACEHOLDERS_SUBSCRIPTION_NAME}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_PUBLICATION_NAME=${FLYWAY_PLACEHOLDERS_PUBLICATION_NAME}" >> .env
+                    echo "FLYWAY_PLACEHOLDERS_COPY_DB=${FLYWAY_PLACEHOLDERS_COPY_DB}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_COPY_USER_READONLY=${FLYWAY_PLACEHOLDERS_COPY_USER_READONLY}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_COPY_PASSWORD_READONLY=${FLYWAY_PLACEHOLDERS_COPY_PASSWORD_READONLY}" >> .env
 
