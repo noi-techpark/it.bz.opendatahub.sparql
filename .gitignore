@@ -215,3 +215,6 @@ tmp*.*
 *.local.properties
 *.sql.gz
 test/master/*.sql
+infrastructure/utils/*.sql
+.pgpass
+dbeaver/

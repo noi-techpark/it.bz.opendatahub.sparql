@@ -4,14 +4,15 @@
     <uri id="Imports Wizard Entry" name="http://www.ontology-of-units-of-measure.org/resource/om-2/" uri="library/om2.ttl"/>
     <uri id="User Entered Import Resolution" name="http://purl.org/dc/elements/1.1/" uri="library/dublin_core_elements.ttl"/>
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
-        <uri id="Automatically generated entry, Timestamp=1597617111986" name="http://ex.org/suedtirol" uri="mobility.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1597617111986" name="http://schema.org/" uri="library/schemaorg.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1597617111986" name="http://www.opengis.net/ont/geosparql" uri="library/geosparql.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1597617111986" name="http://www.opengis.net/ont/gml" uri="library/gml.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1597617111986" name="http://www.opengis.net/ont/sf" uri="library/sf.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1597617111986" name="http://www.w3.org/2004/02/skos/core" uri="library/core.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1597617111986" name="http://www.w3.org/ns/sosa/" uri="library/sosa.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1597617111986" name="http://www.w3.org/ns/ssn/" uri="library/ssn.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1597617111986" name="shadowed:http://ex.org/suedtirol" uri="library/suedtirol.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1602764558456" name="http://ex.org" uri="test.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1602764558456" name="http://ex.org/suedtirol" uri="mobility.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1602764558456" name="http://schema.org/" uri="library/schemaorg.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1602764558456" name="http://www.opengis.net/ont/geosparql" uri="library/geosparql.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1602764558456" name="http://www.opengis.net/ont/gml" uri="library/gml.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1602764558456" name="http://www.opengis.net/ont/sf" uri="library/sf.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1602764558456" name="http://www.w3.org/2004/02/skos/core" uri="library/core.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1602764558456" name="http://www.w3.org/ns/sosa/" uri="library/sosa.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1602764558456" name="http://www.w3.org/ns/ssn/" uri="library/ssn.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1602764558456" name="shadowed:http://ex.org/suedtirol" uri="library/suedtirol.owl"/>
     </group>
 </catalog>

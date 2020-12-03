@@ -1,10 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
-set -e
-set -o pipefail
+set -xeo pipefail
 
 echo "Entrypoint - Run Flyway Migrations"
-/usr/local/bin/flyway -X -locations=filesystem:/opt/ontop/sql ${EXTRA_FLYWAY_OPTIONS} migrate
+/usr/local/bin/flyway -locations=filesystem:/opt/ontop/sql migrate
 
 echo "Entrypoint - Starting Ontop Endpoint"
 /opt/ontop/entrypoint.sh
