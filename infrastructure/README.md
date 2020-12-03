@@ -1,6 +1,12 @@
 # Infrastructure
 
-The Virtual Knowledge Graph is composed of a single VKG Postgres DB, from where we subscribe to various source databases via logical replication. Then, we create a `SparQL endpoint` and `SparQL querying web application` with two docker containers, namely `Ontop` and `Nginx`.
+The Virtual Knowledge Graph is composed of a single VKG Postgres DB, from where
+we subscribe to various source databases via logical replication. Then, we
+create a `SparQL endpoint` and `SparQL querying web application` with two docker
+containers, namely `Ontop` and `Nginx`.
+
+If you want to know how to setup logical replication, have a look at our [Flight
+Rules](https://github.com/noi-techpark/documentation/blob/master/FLIGHTRULES.md#i-want-to-enable-logical-replication-on-an-awsrds-or-regular-postgres-instance).
 
 ## Endpoints
 
@@ -29,17 +35,18 @@ Prefix is `it.bz.opendatahub.sparql`.
 ## Databases
 
 ### Tourism Postgres DB (source)
-This is the original source of tourism data. We access it through logical replication. To do so, we need to activate logical replication within the Tourism DB.
+This is the original source of tourism data. We access it through logical
+replication as described in our [Flight
+Rules](https://github.com/noi-techpark/documentation/blob/master/FLIGHTRULES.md#i-want-to-enable-logical-replication-on-an-awsrds-or-regular-postgres-instance).
 
-- TODO describe the env variables related to this DB (link to jenkins/test/prod.groovy)
-- TODO Write flightrule for logical replication setup and link to it
-- TODO Put the most important SQL scripts here (or better add it to a general vkg CLI script)
-- TODO Add all passwords to passbolt 
+## Security
 
-We subscribe to this database, which exposes a logical replication publication with the following parameters:
+Open ports (Postgres' default is `5432`)
+- The VKG database must have access to the tourism db for the subscription
+- The Docker server must have access to the VKG database
 
-```
-```
+Create DB roles
+- See both database sections for further details
 
 ### Virtual Knowledge Graph Postgres DB (destination)
 
