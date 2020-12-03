@@ -53,6 +53,15 @@ Passbolt:
 - Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `vkguser_readonly`
 - Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `postgres`
 
+## Security
+
+Open ports (Postgres' default is `5432`)
+- The VKG database must have access to the tourism db for the subscription
+- The Docker server must have access to the VKG database
+
+Create DB roles
+- See both database sections for further details
+
 ## Databases
 
 The databases used in the test and production environments of NOI are not
@@ -63,16 +72,34 @@ This is the original source of tourism data. We access it through logical
 replication as described in our [Flight
 Rules](https://github.com/noi-techpark/documentation/blob/master/FLIGHTRULES.md#i-want-to-enable-logical-replication-on-an-awsrds-or-regular-postgres-instance).
 
-## Security
-
-Open ports (Postgres' default is `5432`)
-- The VKG database must have access to the tourism db for the subscription
-- The Docker server must have access to the VKG database
-
-Create DB roles
-- See both database sections for further details
-
 ### Virtual Knowledge Graph Postgres DB (destination)
+
+#### Users
+
+We need a superuser `vkguser`, that will run all our Flayway scripts. This
+example is about the `tourism_test` replication, but it will be similar for all
+other replications.
+
+```sql
+CREATE ROLE vkguser WITH LOGIN PASSWORD 's3cret';
+COMMENT ON ROLE vkguser IS 'Admin account to access the virtual knowledge graph';
+GRANT CONNECT ON DATABASE tourism_test TO vkguser;
+GRANT CREATE ON SCHEMA public TO vkguser;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO vkguser;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO vkguser;
+ALTER ROLE vkguser CREATEROLE;
+ALTER ROLE vkguser SET statement_timeout TO '360s';
+```
+
+In addition we need a read only user `vkguser_readonly`, to access the data.
+However, that user will be created automatically.
+
+#### Databases
+
+```sql
+CREATE DATABASE tourism_test;
+CREATE DATABASE tourism_prod;
+```
 
 ## Docker containers
 First, we start an `Ontop` container, which initially executes
