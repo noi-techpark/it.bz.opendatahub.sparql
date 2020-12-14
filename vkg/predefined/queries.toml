@@ -2,6 +2,7 @@
 query="""
 BASE <http://noi.example.org/data/accommodation/>
 PREFIX schema: <http://schema.org/>
+PREFIX : <http://noi.example.org/ontology/odh#>
  CONSTRUCT {
    ?idUrl a ?cl ; schema:name ?nameStr ; schema:description ?descStr ;
    schema:image ?imageUrl ; schema:email ?email ;
@@ -209,6 +210,13 @@ PREFIX schema: <http://schema.org/>
    OPTIONAL {
         ?h schema:image ?im .
         BIND(IF(STRSTARTS(str(?im) , "https://doc.lts.it/DocSite/ImageRender.aspx") , IRI(CONCAT (str(?im), "&W=800")), ?im ) AS ?image )
+        ?im :rankingValue ?minRanking .
+          {
+            SELECT (MIN(?position) AS ?minRanking)
+            WHERE {
+                ?h schema:image [:rankingValue ?position ].
+            } GROUP BY ?h
+          }
     }
 
    BIND(str(?name) AS ?nameStr)
