@@ -1,4 +1,4 @@
-FROM nginx:1.17.8-alpine
+FROM nginx:1.17.8-alpine as dev
 
 RUN apk add --update curl && \
     rm -rf /var/cache/apk/*
@@ -11,3 +11,6 @@ EXPOSE 80
 
 # run nginx
 CMD ["nginx", "-g", "daemon off;"]
+
+FROM dev as prod
+COPY infrastructure/docker/nginx/ontop.conf /etc/nginx/ontop.conf

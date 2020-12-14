@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   ontop:
@@ -9,6 +9,6 @@ services:
       target: build
   nginx:
     image: ${DOCKER_IMAGE_NGINX}:${DOCKER_TAG}
-    build: 
+    build:
       context: ../
       dockerfile: infrastructure/docker/nginx/Dockerfile
