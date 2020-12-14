@@ -212,7 +212,7 @@ PREFIX : <http://noi.example.org/ontology/odh#>
         BIND(IF(STRSTARTS(str(?im) , "https://doc.lts.it/DocSite/ImageRender.aspx") , IRI(CONCAT (str(?im), "&W=800")), ?im ) AS ?image )
         ?im :rankingValue ?minRanking .
           {
-            SELECT (MIN(?position) AS ?minRanking)
+            SELECT ?h (MIN(?position) AS ?minRanking)
             WHERE {
                 ?h schema:image [:rankingValue ?position ].
             } GROUP BY ?h
