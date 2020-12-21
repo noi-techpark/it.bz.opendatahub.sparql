@@ -21,7 +21,7 @@ source		SELECT "Id"
 mappingId	LodgingBusiness
 target		data:accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email {de_email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{id}/{rating} . 
 source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude,  "AccoDetail-de-Email" AS de_email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone,
-			"AccoDetail-de-Fax" AS  de_fax, "AccoDetail-it-Shortdesc" AS it_desc,  "AccoDetail-de-Shortdesc" AS de_desc,  "AccoDetail-en-Shortdesc" AS en_desc, "AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name, "AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
+			 "AccoDetail-de-Fax" AS  de_fax, "AccoDetail-it-Shortdesc" AS it_desc,  "AccoDetail-de-Shortdesc" AS de_desc,  "AccoDetail-en-Shortdesc" AS en_desc, "AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name, "AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
 			FROM "v_accommodationsopen"
 
 mappingId	Lodging business - geo
@@ -128,7 +128,7 @@ source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'caravan'
 
 mappingId	SkiResort
-target		data:skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf data:skiRegion/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} .
+target		data:skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf data:skiRegion/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} . 
 source		SELECT "Id", "Shortname", "Detail-en-Header", "Longitude", "Latitude", "AltitudeTo", "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
 
 mappingId	SkiRegion
@@ -284,10 +284,8 @@ target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{id}
 source		select "Id" as id, "TrustYouID" as trustId from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business - image
-target		data:accommodation/{id} schema:image <{image}> .
-source		select  "accommodationsopen_Id" as id , "ImageUrl" as image from "v_accommodationsopen_ImageGallery" where
-			( ("ValidTo" IS NULL OR "ValidTo" !~ '(?:(\d\d\d\d)-(0[1-9]|10|11|12)-([0-2]\d|30|31))T(([01]\d|2[0-3])(?:\:([0-5]\d)(?::([0-5]\d))))') OR (TO_TIMESTAMP("ValidTo", 'YYYY-MM-DDTHH24:MI:SS') > NOW()  ) )
-			AND (("ValidFrom" IS NULL OR "ValidFrom" !~ '(?:(\d\d\d\d)-(0[1-9]|10|11|12)-([0-2]\d|30|31))T(([01]\d|2[0-3])(?:\:([0-5]\d)(?::([0-5]\d))))') OR (TO_TIMESTAMP("ValidFrom", 'YYYY-MM-DDTHH24:MI:SS') < NOW()))
+target		data:accommodation/{id} schema:image <{image}> . 
+source		select  "accommodationsopen_Id" as id , "ImageUrl" as image from "v_accommodationsopen_ImageGallery" where TO_TIMESTAMP("ValidTo", 'YYYY-MM-DDTHH24:MI:SS') > NOW() AND TO_TIMESTAMP("ValidFrom", 'YYYY-MM-DDTHH24:MI:SS') < NOW()
 
 mappingId	MAPID-9dbd9116f9f84c78961099f0004a9690
 target		data:author/trustyou a schema:Organization ; schema:name "Trust you" ; schema:url <https://www.trustyou.com/> . 
@@ -301,8 +299,6 @@ mappingId	Price range
 target		data:accommodation/{id} schema:priceRange {value}^^xsd:string . 
 source		select "Id" as id,  (CASE WHEN "AccoCategoryId" = '1flowers' or "AccoCategoryId" = '1stars'  or "AccoCategoryId" = '1suns' or "AccoCategoryId" = '2flowers' or "AccoCategoryId" = '2stars'  or "AccoCategoryId" = '2suns'   THEN '€'  WHEN "AccoCategoryId" = '3flowers' or "AccoCategoryId" = '3stars'  or "AccoCategoryId" = '3suns' or "AccoCategoryId" = '3sstars'  THEN '€€'  WHEN "AccoCategoryId" = '4flowers' or "AccoCategoryId" = '4stars'  or "AccoCategoryId" = '4suns'   THEN '€€€'  WHEN "AccoCategoryId" = '4sstars' or "AccoCategoryId" = '5flowers' or "AccoCategoryId" = '5stars'  or "AccoCategoryId" = '5suns' THEN '€€€€' ELSE NULL END ) as value FROM "v_accommodationsopen"
 
-mappingId	Lodging Business - image rank
-target		<{image}> :rankingValue {rankValue}^^xsd:integer .
-source		select  "ImageUrl" as image, "ListPosition" as rankValue  from "v_accommodationsopen_ImageGallery"
+
 ]]
 
