@@ -31,7 +31,7 @@ pipeline {
 
         // VIRTUAL KNOWLEDGE GRAPH DB
         VKG_POSTGRES_HOST = "prod-postgres-vkgreplication.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-        VKG_POSTGRES_DB = "odh_vkg"
+        VKG_POSTGRES_DB = "test"
         VKG_POSTGRES_USER = "vkguser"
         VKG_POSTGRES_PASSWORD = credentials('it.bz.opendatahub.sparql.db.vkg.password')
         VKG_POSTGRES_USER_READONLY = "vkguser_readonly"
