@@ -98,9 +98,9 @@ The SPARQL endpoints do not query directly the production database but slave rea
 
 [See the dedicated page](docs/schema-evolution.md)
 
-### Test database image
+### Test database images
 
-For building a newer version of the Docker image of the test database out of a fresh dump, please refer to [the dedicated page](docs/test-master.md).
+For building a newer version of the Docker image of the test database out of a fresh dump, please refer to [Tourism master](docs/test-tourism-master.md).
 
 This Docker image is published [on Docker Hub](https://hub.docker.com/r/ontopicvkg/odh-tourism-db).
 

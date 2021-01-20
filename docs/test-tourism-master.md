@@ -54,7 +54,7 @@ In case the schema have changed.
 
 ### Build the Docker image
 
-#### Files to put in the `test/master` directory
+#### Files to put in the `test/tourism-master` directory
 
 * `original_schema.sql`
 * `dump-tourism-201911121025.sql.gz` (you can use the `gzip` to create it from the SQL file)
