@@ -10,6 +10,7 @@ services:
     restart: unless-stopped
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/ontop/input/odh.ttl
+      ONTOP_XML_CATALOG_FILE: /opt/ontop/input/catalog-v001.xml
       ONTOP_MAPPING_FILE: /opt/ontop/input/odh.obda
       ONTOP_PROPERTIES_FILE: /opt/ontop/input/odh.docker.properties
       ONTOP_PORTAL_FILE: /opt/ontop/input/odh.portal.toml
