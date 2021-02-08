@@ -23,7 +23,8 @@ services:
       - ./vkg:/opt/ontop/input
       - ./jdbc:/opt/ontop/jdbc
       - ./src:/opt/ontop/src
-    entrypoint: ["/wait-for-it.sh","master-db:5432","--timeout=0","--strict", "--", "/entrypoint.sh"]
+    entrypoint: ["/wait-for-it.sh","tourism-master-db:5432","--timeout=0","--strict", "--", "/wait-for-it.sh","mobility-master-db:5432","--timeout=0","--strict", "--", "/wait-for-it.sh","slave-db:5432","--timeout=0","--strict", "--","/entrypoint.sh"]
+    #entrypoint: "tail -f /dev/null"
   nginx:
     build:
       context: ./
@@ -36,14 +37,35 @@ services:
     environment:
       - POSTGRES_USER=tourismuser
       - POSTGRES_PASSWORD=postgres2
+    volumes:
+    - pgdata-tourism-master:/var/lib/postgresql/data
     ports:
-      - "${DEV_MASTER_POSTGRES_PORT}:5432"
+      - "${DEV_TOURISM_MASTER_POSTGRES_PORT}:5432"
+  mobility-master-db:
+    image: registry.gitlab.com/ontopic/odh-vkg-images/odh-mobility-db:master
+    environment:
+      - POSTGRES_DB=mobilitydb
+      - POSTGRES_USER=tourismuser
+      - POSTGRES_PASSWORD=postgres2
+    volumes:
+      - pgdata-mobility-master:/var/lib/postgresql/data
+    ports:
+      - "${DEV_MOBILITY_MASTER_POSTGRES_PORT}:5432"
   slave-db:
-    image: postgres:12.1
+    image: postgis/postgis:13-3.1-alpine
+    #image: postgres:13.1-alpine
     shm_size: 1g
     ports:
       - "${MAPPED_POSTGRES_PORT}:5432"
     command: ["postgres", "-c", "wal_level=logical"]
+    volumes:
+    - pgdata-replica:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=tourismuser
       - POSTGRES_PASSWORD=postgres2
+
+volumes:
+  pgdata-tourism-master: {}
+  pgdata-mobility-master: {}
+  pgdata-replica: {}
+
