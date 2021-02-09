@@ -68,7 +68,7 @@ services:
     ports:
       - "${DEV_TOURISM_MASTER_POSTGRES_PORT}:5432"
   mobility-master-db:
-    image: registry.gitlab.com/ontopic/odh-vkg-images/odh-mobility-db:master
+    image: ontopicvkg/odh-mobility-db-public:master
     environment:
       - POSTGRES_DB=mobilitydb
       - POSTGRES_USER=tourismuser
