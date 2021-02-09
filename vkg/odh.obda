@@ -449,5 +449,13 @@ source		SELECT * FROM intimev2.metadata
 mappingId	measurement_history_observation
 target		data:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
 source		SELECT * FROM intimev2.measurementhistory
+
+mappingId	municipality_geom
+target		:municipality/{istat_code} geo:defaultGeometry :municipality/geometry/{istat_code} . :municipality/geometry/{istat_code} geo:asWKT {wkt}^^geo:wktLiteral .
+source		SELECT istat_code, ST_AsText(geom_4326) AS wkt FROM odp_municipalities
+
+mappingId	municipality
+target		:municipality/{istat_code} a :Municipality ; rdfs:label {name_i}@it , {name_d}@de ; :hasIStatCode {istat_code}^^xsd:integer .
+source		SELECT istat_code, name_i, name_d FROM odp_municipalities
 ]]
 
