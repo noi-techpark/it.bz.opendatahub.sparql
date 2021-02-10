@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri id="User Entered Import Resolution" name="http://purl.org/dc/elements/1.1/" uri="library/dublin_core_elements.ttl"/>
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1612828487055" name="http://www.opengis.net/ont/geosparql" uri="library/geosparql.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1612828487055" name="http://www.opengis.net/ont/gml" uri="library/gml.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1612828487055" name="http://www.opengis.net/ont/sf" uri="library/sf.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1612828487055" name="http://www.w3.org/2004/02/skos/core" uri="library/core.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1612828487055" name="http://www.w3.org/ns/sosa/" uri="library/sosa.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1612828487055" name="http://www.w3.org/ns/ssn/" uri="library/ssn.owl"/>
+    </group>
+</catalog>
