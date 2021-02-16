@@ -31,7 +31,7 @@ source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Al
 			FROM "v_accommodationsopen"
 
 mappingId	LodgingBusiness - address
-target		data:address/accommodation/{id} a schema:PostalAddress ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . data:accommodation/{id} schema:address data:address/accommodation/{id} ; schema:email {email} ; schema:telephone {phone} ; schema:faxNumber {fax} . 
+target		data:address/accommodation/{id} a schema:PostalAddress ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . data:accommodation/{id} schema:address data:address/accommodation/{id} . 
 source		SELECT "Id" AS id,
 			"AccoDetail-de-City" AS de_city, "AccoDetail-de-Zip" AS de_zip, "AccoDetail-de-Street" AS de_street,
 			"AccoDetail-it-City" AS it_city, "AccoDetail-it-Street" AS it_street,
