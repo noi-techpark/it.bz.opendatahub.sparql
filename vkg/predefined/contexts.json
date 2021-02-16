@@ -1,10 +1,7 @@
 {
   "https://schema.org": {
     "@context": {
-      "@vocab": "http://schema.org/",
-      "email": {
-        "@type": "@id"
-      }
+      "@vocab": "http://schema.org/"
     }
   }
 }
