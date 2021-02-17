@@ -1,10 +1,8 @@
-FROM ontop/ontop-endpoint:4.1-snapshot as base
+FROM ontop/ontop-endpoint:4.1-snapshot-jre as base
 COPY --from=flyway/flyway:7.3-alpine /flyway /flyway
 COPY infrastructure/docker/ontop/entrypoint.sh /entrypoint.sh
 COPY sql /opt/ontop/sql
-RUN apk add --update curl && \
-    apk add --no-cache postgresql-client && \
-    rm -rf /var/cache/apk/* && \
+RUN apt-get update && apt-get install -y curl postgresql-client && \
     ln -s /flyway/flyway /usr/local/bin/flyway
 
 # Dev
