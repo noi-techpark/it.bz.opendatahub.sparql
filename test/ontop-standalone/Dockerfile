@@ -1,4 +1,4 @@
-FROM ontop/ontop-endpoint:4.1-snapshot
+FROM ontop/ontop-endpoint:4.1.0
 
 RUN apk add --update curl && \
     apk add --no-cache postgresql-client

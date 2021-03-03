@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   ontop:
@@ -24,11 +24,28 @@ services:
       - ./vkg:/opt/ontop/input
       - ./jdbc:/opt/ontop/jdbc
       - ./src:/opt/ontop/src
-    entrypoint: [ "/wait-for-it.sh","tourism-master-db:5432","--timeout=0","--strict", "--", "/wait-for-it.sh","mobility-master-db:5432","--timeout=0","--strict", "--", "/wait-for-it.sh","slave-db:5432","--timeout=0","--strict", "--","/entrypoint.sh" ]
+    entrypoint:
+      [
+        "/wait-for-it.sh",
+        "tourism-master-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/wait-for-it.sh",
+        "mobility-master-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/wait-for-it.sh",
+        "slave-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/entrypoint.sh",
+      ]
     #entrypoint: "tail -f /dev/null"
   ontop-guest:
-    image: 
-      ontop/ontop-endpoint:4.1-snapshot-jre
+    image: ontop/ontop-endpoint:4.1.0
     env_file: .env
     restart: unless-stopped
     environment:
@@ -48,13 +65,32 @@ services:
       - ./jdbc:/opt/ontop/jdbc
       - ./src:/opt/ontop/src
       - ./wait-for-it:/opt/wait-for-it
-    entrypoint: ["/opt/wait-for-it/wait-for-it.sh","tourism-master-db:5432","--timeout=0","--strict", "--", "/opt/wait-for-it/wait-for-it.sh","mobility-master-db:5432","--timeout=0","--strict", "--", "/opt/wait-for-it/wait-for-it.sh","slave-db:5432","--timeout=0","--strict", "--","/opt/ontop/entrypoint.sh"]
+    entrypoint:
+      [
+        "/opt/wait-for-it/wait-for-it.sh",
+        "tourism-master-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/opt/wait-for-it/wait-for-it.sh",
+        "mobility-master-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/opt/wait-for-it/wait-for-it.sh",
+        "slave-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/opt/ontop/entrypoint.sh",
+      ]
     ports:
-      - "8081:8080"    
+      - "8081:8080"
   nginx:
     build:
       context: ./
       dockerfile: infrastructure/docker/nginx/Dockerfile
+      target: dev
     env_file: .env
     ports:
       - "${SERVER_PORT}:80"
@@ -64,7 +100,7 @@ services:
       - POSTGRES_USER=tourismuser
       - POSTGRES_PASSWORD=postgres2
     volumes:
-    - pgdata-tourism-master:/var/lib/postgresql/data
+      - pgdata-tourism-master:/var/lib/postgresql/data
     ports:
       - "${DEV_TOURISM_MASTER_POSTGRES_PORT}:5432"
   mobility-master-db:
@@ -85,7 +121,7 @@ services:
       - "${MAPPED_POSTGRES_PORT}:5432"
     command: ["postgres", "-c", "wal_level=logical"]
     volumes:
-    - pgdata-replica:/var/lib/postgresql/data
+      - pgdata-replica:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=tourismuser
       - POSTGRES_PASSWORD=postgres2
@@ -94,4 +130,3 @@ volumes:
   pgdata-tourism-master: {}
   pgdata-mobility-master: {}
   pgdata-replica: {}
-

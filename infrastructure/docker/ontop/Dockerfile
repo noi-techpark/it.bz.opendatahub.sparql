@@ -1,4 +1,4 @@
-FROM ontop/ontop-endpoint:4.1-snapshot-jre as base
+FROM ontop/ontop-endpoint:4.1.0 as base
 COPY --from=flyway/flyway:7.3-alpine /flyway /flyway
 COPY infrastructure/docker/ontop/entrypoint.sh /entrypoint.sh
 COPY sql /opt/ontop/sql
