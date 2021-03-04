@@ -102,9 +102,9 @@ docker-compose down
 
 #### Authentication
 A second Docker-compose file (`docker-compose.auth.yml`) can be used for testing
-access control policies. At the moment, it requires having an instance of
-Keycloak locally. See https://github.com/noi-techpark/authentication-server for
-instructions on how to install it.
+access control policies. It requires a running and configurable instance of
+Keycloak. See https://github.com/noi-techpark/authentication-server for
+instructions on how to install it locally. Refer to [docs/authentication.md](docs/authentication.md) for instruction on how to configure Keycloak and the authentication proxy.
 
 ## Deployment at NOI
 
