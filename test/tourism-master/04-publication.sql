@@ -1,0 +1,4 @@
+CREATE ROLE vkgreplicate WITH LOGIN PASSWORD 'Azerty' REPLICATION;
+CREATE PUBLICATION vkg_tourism_publication_dev FOR ALL TABLES;
+-- GRANT SELECT ON ALL TABLES IN SCHEMA public TO vkgreplicate;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO vkgreplicate;

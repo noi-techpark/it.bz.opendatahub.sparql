@@ -1,0 +1,12 @@
+
+<http://www.ontology-of-units-of-measure.org/resource/om-2/> a <http://www.w3.org/2002/07/owl#Ontology> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "The Ontology of units of Measure (OM) 2.0 models concepts and relations important to scientific research. It has a strong focus on units, quantities, measurements, and dimensions."@en ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Ontology of units of Measure (OM)"@en ;
+	<http://purl.org/dc/elements/1.1/creator> "Hajo Rijgersberg, Don Willems, Xin-Ying Ren, Mari Wigham, Jan Top"@en ;
+	<http://purl.org/dc/elements/1.1/date> "2017/12/28" ;
+	<http://purl.org/dc/elements/1.1/identifier> "http://www.ontology-of-units-of-measure.org/vocabularies/om-2/" ;
+	<http://www.w3.org/2002/07/owl#versionInfo> "2.0.7"@en ;
+	<http://purl.org/dc/elements/1.1/license> "This document is available under Creative Common License. You are free to Share — to copy, distribute, display, and perform the work and to Remix — to make derivative works; under the condition of Attribution: You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work). The publisher does not accept any liability for the inaccuracies in this document."@en ;
+	<http://www.wurvoc.org/bibliography/om-2/reference> <http://www.openisbn.com/isbn/9789462280618/> ;
+	<http://www.wurvoc.org/vocabularies/WV/illustration> "http://www.wurvoc.org/images/vocabularies/om-illustration.jpg" ;
+	<http://www.wurvoc.org/vocabularies/WV/logo> "http://www.wurvoc.org/images/vocabularies/om-logo.jpg" .

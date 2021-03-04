@@ -1,0 +1,132 @@
+version: "3.4"
+
+services:
+  ontop:
+    build:
+      context: ./
+      dockerfile: infrastructure/docker/ontop/Dockerfile
+      target: dev
+    env_file: .env
+    restart: unless-stopped
+    environment:
+      ONTOP_ONTOLOGY_FILE: /opt/ontop/input/odh.ttl
+      ONTOP_XML_CATALOG_FILE: /opt/ontop/input/catalog-v001.xml
+      ONTOP_MAPPING_FILE: /opt/ontop/input/odh.obda
+      ONTOP_PROPERTIES_FILE: /opt/ontop/input/odh.docker.properties
+      ONTOP_PORTAL_FILE: /opt/ontop/input/odh.portal.toml
+      ONTOP_PREDEFINED_CONFIG: /opt/ontop/input/predefined/predefined.json
+      ONTOP_PREDEFINED_QUERIES: /opt/ontop/input/predefined/queries.toml
+      ONTOP_CONTEXTS: /opt/ontop/input/predefined/contexts.json
+      ONTOP_CORS_ALLOWED_ORIGINS: "*"
+      ONTOP_DEV_MODE: "true"
+      EXTRA_FLYWAY_OPTIONS: "-mixed=true"
+    volumes:
+      - ./vkg:/opt/ontop/input
+      - ./jdbc:/opt/ontop/jdbc
+      - ./src:/opt/ontop/src
+    entrypoint:
+      [
+        "/wait-for-it.sh",
+        "tourism-master-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/wait-for-it.sh",
+        "mobility-master-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/wait-for-it.sh",
+        "slave-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/entrypoint.sh",
+      ]
+    #entrypoint: "tail -f /dev/null"
+  ontop-guest:
+    image: ontop/ontop-endpoint:4.1.0
+    env_file: .env
+    restart: unless-stopped
+    environment:
+      ONTOP_ONTOLOGY_FILE: /opt/ontop/input/odh.ttl
+      ONTOP_XML_CATALOG_FILE: /opt/ontop/input/catalog-v001.xml
+      ONTOP_MAPPING_FILE: /opt/ontop/input/odh_guest.obda
+      ONTOP_PROPERTIES_FILE: /opt/ontop/input/odh.docker.properties
+      ONTOP_PORTAL_FILE: /opt/ontop/input/odh_guest.portal.toml
+      ONTOP_PREDEFINED_CONFIG: /opt/ontop/input/predefined/predefined.json
+      ONTOP_PREDEFINED_QUERIES: /opt/ontop/input/predefined/queries.toml
+      ONTOP_CONTEXTS: /opt/ontop/input/predefined/contexts.json
+      ONTOP_CORS_ALLOWED_ORIGINS: "*"
+      ONTOP_DEV_MODE: "true"
+      EXTRA_FLYWAY_OPTIONS: "-mixed=true"
+    volumes:
+      - ./vkg:/opt/ontop/input
+      - ./jdbc:/opt/ontop/jdbc
+      - ./src:/opt/ontop/src
+      - ./wait-for-it:/opt/wait-for-it
+    entrypoint:
+      [
+        "/opt/wait-for-it/wait-for-it.sh",
+        "tourism-master-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/opt/wait-for-it/wait-for-it.sh",
+        "mobility-master-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/opt/wait-for-it/wait-for-it.sh",
+        "slave-db:5432",
+        "--timeout=0",
+        "--strict",
+        "--",
+        "/opt/ontop/entrypoint.sh",
+      ]
+    ports:
+      - "8081:8080"
+  nginx:
+    build:
+      context: ./
+      dockerfile: infrastructure/docker/nginx/Dockerfile
+      target: dev
+    env_file: .env
+    ports:
+      - "${SERVER_PORT}:80"
+  tourism-master-db:
+    image: ontopicvkg/odh-tourism-db:master
+    environment:
+      - POSTGRES_USER=tourismuser
+      - POSTGRES_PASSWORD=postgres2
+    volumes:
+      - pgdata-tourism-master:/var/lib/postgresql/data
+    ports:
+      - "${DEV_TOURISM_MASTER_POSTGRES_PORT}:5432"
+  mobility-master-db:
+    image: ontopicvkg/odh-mobility-db-public:master
+    environment:
+      - POSTGRES_DB=mobilitydb
+      - POSTGRES_USER=tourismuser
+      - POSTGRES_PASSWORD=postgres2
+    volumes:
+      - pgdata-mobility-master:/var/lib/postgresql/data
+    ports:
+      - "${DEV_MOBILITY_MASTER_POSTGRES_PORT}:5432"
+  slave-db:
+    image: postgis/postgis:13-3.1-alpine
+    #image: postgres:13.1-alpine
+    shm_size: 1g
+    ports:
+      - "${MAPPED_POSTGRES_PORT}:5432"
+    command: ["postgres", "-c", "wal_level=logical"]
+    volumes:
+      - pgdata-replica:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=tourismuser
+      - POSTGRES_PASSWORD=postgres2
+
+volumes:
+  pgdata-tourism-master: {}
+  pgdata-mobility-master: {}
+  pgdata-replica: {}

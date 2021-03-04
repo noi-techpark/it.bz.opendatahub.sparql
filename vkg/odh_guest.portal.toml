@@ -1,0 +1,727 @@
+title="Open Data Hub Knowledge Graph Portal (Guest)"
+
+[[tabGroups]]
+
+name="Regular Queries"
+
+[[tabGroups.tabs]]
+
+name="Lodging businesses (limit 500)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel ?posColor
+WHERE {
+  ?h a schema:LodgingBusiness ;
+     geo:asWKT ?pos ;
+     schema:name ?posLabel ;
+     schema:address ?a .
+  # ?a schema:postalCode "39100" . # Uncomment for Bolzano only
+  FILTER (lang(?posLabel) = 'de')
+
+  # Colors
+  OPTIONAL {
+    ?h a schema:Campground .
+    BIND("chlorophyll,0.5" AS ?posColor) # Green
+  }
+    OPTIONAL {
+    ?h a schema:BedAndBreakfast .
+    BIND("viridis,0.1" AS ?posColor) # Purple
+  }
+  OPTIONAL {
+    ?h a schema:Hotel .
+    BIND("jet,0.3" AS ?posColor) # Light blue
+  }
+  OPTIONAL {
+    ?h a schema:Hostel .
+    BIND("jet,0.8" AS ?posColor) # Red
+  }
+}
+LIMIT 500
+"""
+
+[[tabGroups.tabs]]
+
+name="Biggest lodging businesses"
+query="""
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX schema: <http://schema.org/>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posColor ?bName
+      (SUM(?nb) AS ?countRoom)
+      (SUM(?maxPersons) AS ?countMaxPersons)
+      (CONCAT(?bName, ': ', str(?countRoom), ' accommodations, max ', str(?countMaxPersons), ' guests') AS ?posLabel)
+WHERE {
+  ?b a schema:LodgingBusiness ;
+     schema:name ?bName ;
+     geo:asWKT ?pos .
+
+  ?r a schema:Accommodation ;
+     schema:containedInPlace ?b ;
+     :numberOfUnits ?nb ;
+     schema:occupancy [ schema:maxValue ?maxOccupancyPerRoom ] .
+
+  # ?b schema:address [ schema:postalCode "39100" ] # For Bolzano only
+
+  BIND (?nb * ?maxOccupancyPerRoom AS ?maxPersons)
+  FILTER (lang(?bName)='en')
+
+  # Colors
+  OPTIONAL {
+    ?b a schema:Campground .
+    BIND("chlorophyll,0.5" AS ?posColor) # Green
+  }
+  OPTIONAL {
+    ?b a schema:BedAndBreakfast .
+    BIND("viridis,0.1" AS ?posColor) # Purple
+  }
+  OPTIONAL {
+    ?b a schema:Hotel .
+    BIND("jet,0.3" AS ?posColor) # Light blue
+  }
+  OPTIONAL {
+    ?b a schema:Hostel .
+    BIND("jet,0.8" AS ?posColor) # Red
+  }
+}
+GROUP BY ?b ?bName ?pos ?posColor
+ORDER BY DESC(?countRoom)
+LIMIT 50
+"""
+
+[[tabGroups.tabs]]
+name="Number of lodging businesses"
+query="""
+PREFIX schema: <http://schema.org/>
+
+SELECT (COUNT(?h) AS ?count)
+WHERE {
+  ?h a schema:LodgingBusiness
+}
+"""
+
+[[tabGroups.tabs]]
+name="Number of lodging businesses in Bolzano"
+query="""
+PREFIX schema: <http://schema.org/>
+
+SELECT (COUNT(DISTINCT ?h) AS ?count)
+WHERE {
+  ?h a schema:LodgingBusiness ;
+     schema:address ?a .
+  ?a schema:postalCode "39100" .
+}
+"""
+
+[[tabGroups.tabs]]
+name="Ski areas in the region with a custom label"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?pos ?posLabel
+WHERE {
+  ?s a schema:SkiResort ;
+     schema:name ?name ;
+     geo:asWKT ?pos ;
+     schema:geo [ schema:elevation ?maxElevation ] ;
+     schema:image ?img ;
+     schema:isPartOf ?skiRegion.
+
+  ?skiRegion a :SkiRegion ;
+     schema:name ?regionName.
+
+  BIND(concat(
+      '<h3>',str(?name),' </h3>',
+      ?regionName,
+      ', max elevation: ', str(?maxElevation), ' m ',
+      '<img src="',str(?img), '" height="300" width="300">'
+    ) as ?posLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Food establishments (limit 500)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?e ?pos ?posLabel ?posColor
+WHERE {
+  ?e a schema:FoodEstablishment ;
+     geo:asWKT ?pos ;
+     schema:name ?posLabel ;
+     schema:address ?a .
+  # ?a schema:postalCode "39100" . # Uncomment for Bolzano only
+  FILTER (lang(?posLabel) = 'de')
+
+  # Colors (with priority)
+  OPTIONAL {
+    ?e a schema:Restaurant .
+    BIND("jet,0.3" AS ?posColor) # Light blue
+  }
+  OPTIONAL {
+    ?e a schema:BarOrPub .
+    BIND("chlorophyll,0.5" AS ?posColor) # Green
+  }
+  OPTIONAL {
+    ?e a schema:Winery .
+    BIND("viridis,0.1" AS ?posColor) # Purple
+  }
+  OPTIONAL {
+    ?e a schema:FastFoodRestaurant .
+    BIND("jet,0.8" AS ?posColor) # Red
+  }
+}
+LIMIT 500
+"""
+
+[[tabGroups.tabs]]
+name="Restaurants above 1500 m"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?e
+       ?pos
+       (CONCAT(?name, " (", str(?altitude), " m)") AS ?posLabel)
+       ?posColor
+WHERE {
+  ?e a schema:Restaurant;
+     geo:asWKT ?pos ;
+     schema:name ?name ;
+     schema:geo ?geo .
+  ?geo schema:elevation ?altitude .
+  FILTER (lang(?name) = 'de')
+  FILTER (?altitude >= 1500)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Pizzerias"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posLabel
+WHERE {
+  ?p a :Pizzeria ;
+     geo:asWKT ?pos ;
+     schema:name ?posLabel ;
+     schema:geo ?geo .
+  FILTER (lang(?posLabel) = 'it')
+}
+"""
+
+[[tabGroups.tabs]]
+name="Asian cuisine (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posLabel ?desc
+WHERE {
+  ?p a schema:FoodEstablishment ;
+     geo:asWKT ?pos ;
+     schema:name ?name ;
+     schema:servesCuisine "asian"@en .
+     OPTIONAL {
+       ?p schema:description ?desc .
+       FILTER (lang(?desc) = 'it')
+     }
+  FILTER (lang(?name) = 'it')
+  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Mediterranean cuisine (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posLabel ?desc
+WHERE {
+  ?p a schema:FoodEstablishment ;
+     geo:asWKT ?pos ;
+     schema:name ?name ;
+     schema:servesCuisine "mediterranean"@en .
+     OPTIONAL {
+       ?p schema:description ?desc .
+       FILTER (lang(?desc) = 'de')
+     }
+  FILTER (lang(?name) = 'de')
+  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Apfelstrudel (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?pos ?posLabel ?desc
+WHERE {
+  ?p a schema:FoodEstablishment ;
+     geo:asWKT ?pos ;
+     schema:name ?name ;
+     schema:hasMenu [
+      schema:hasMenuItem [
+        schema:name "Apfelstrudel"@de
+        ]
+     ] .
+     OPTIONAL {
+       ?p schema:description ?desc .
+       FILTER (lang(?desc) = 'de')
+     }
+  FILTER (lang(?name) = 'de')
+  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Theater (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT * WHERE {
+  ?t a schema:PerformingArtsTheater ; geo:asWKT ?pos ; schema:name ?posLabel .
+}
+"""
+
+[[tabGroups.tabs]]
+name="Medical (alpha)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT * WHERE {
+  ?m a schema:MedicalOrganization ; geo:asWKT ?pos ; schema:name ?posLabel .
+}
+"""
+
+[[tabGroups]]
+
+name="Data Quality Queries"
+
+[[tabGroups.tabs]]
+
+name="Lodging businesses without accommodation"
+query="""
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?pos ?posColor ?bName (?bName AS ?posLabel)
+WHERE {
+  ?b a schema:LodgingBusiness ; schema:name ?bName ; geo:asWKT ?pos .
+  MINUS {
+     ?r schema:containedInPlace ?b .
+     ?r a schema:Accommodation
+  }
+  FILTER (lang(?bName) = 'en')
+
+  # Colors
+  OPTIONAL {
+    ?b a schema:Campground .
+    BIND("chlorophyll,0.5" AS ?posColor) # Green
+  }
+  OPTIONAL {
+    ?b a schema:BedAndBreakfast .
+    BIND("viridis,0.1" AS ?posColor) # Purple
+  }
+  OPTIONAL {
+    ?b a schema:Hotel .
+    BIND("jet,0.3" AS ?posColor) # Light blue
+  }
+  OPTIONAL {
+    ?b a schema:Hostel .
+    BIND("jet,0.8" AS ?posColor) # Red
+  }
+}
+"""
+
+[[tabGroups.tabs]]
+
+name="Lodging businesses with a non-South Tyrolean postal code"
+query="""
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel ?zip WHERE {
+  ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?posLabel ; schema:address ?a .
+  ?a schema:postalCode ?zip .
+  FILTER (lang(?posLabel)='de').
+  FILTER regex(?zip, '^(?!39+)', 'i').
+}
+"""
+
+[[tabGroups.tabs]]
+
+name="Lodging businesses outside the South-Tyrolean regions' bounding box"
+query="""
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel ?box ?boxColor ?posColor {
+?h a schema:LodgingBusiness ; schema:name ?posLabel ; schema:geo [ schema:latitude ?lat ; schema:longitude ?long ] ; geo:asWKT ?pos .
+FILTER (?lat < 46.2198 || ?lat > 47.0921 || ?long < 10.3818 || ?long > 12.4779) .
+FILTER (lang(?posLabel) = 'de') .
+BIND("MULTILINESTRING((10.3818 46.2198, 12.4779 46.2198, 12.4779 47.0921, 10.3818 47.0921, 10.3818 46.2198))"^^geo:wktLiteral AS ?box) .
+BIND("jet,0.8" AS ?posColor) .
+BIND("jet,0.8" AS ?boxColor) .
+}
+"""
+
+[[tabGroups.tabs]]
+
+name="Lodging businesses in Bolzano with the wrong German or Italian name"
+query="""
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?h ?pos ?posLabel ("jet,0.8" AS ?posColor) WHERE {
+  ?h a schema:LodgingBusiness ; geo:asWKT ?pos ; schema:name ?name ; schema:address ?a .
+  ?a schema:addressLocality ?deCity, ?itCity ; schema:postalCode "39100" .
+  FILTER ((lang(?name) = 'de') && (lang(?deCity) = 'de') && (lang(?itCity) = 'it')
+    && ((lcase(str(?itCity)) != "bolzano") || (lcase(str(?deCity)) != "bozen")))
+
+  BIND(concat(?name,'<hr/>de: ',?deCity, '<hr/> it: ',?itCity) AS ?posLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+
+name="Lodging businesses with too low Aggregate rating value (possible normalization issue)"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * WHERE {
+    ?accomodation schema:name ?name ; schema:aggregateRating [ a schema:AggregateRating ; schema:ratingValue ?value  ] .
+  FILTER (?value < 10 && langmatches(lang(?name), "de"))
+}
+"""
+
+
+[[tabGroups]]
+
+name="Mobility"
+[[tabGroups.tabs]]
+name="Stations"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * {
+?s a :Station .
+?s rdfs:label ?l .
+OPTIONAL {?s geo:defaultGeometry ?g .
+?g geo:asWKT ?wkt .}
+}
+"""
+
+
+[[tabGroups.tabs]]
+name="Stations per type"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?st (COUNT(?s) AS ?count)   WHERE {
+  ?s :hasStationType ?st .
+}
+GROUP BY ?st
+ORDER BY DESC(?count)
+"""
+
+[[tabGroups.tabs]]
+name="isHostedBy"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+
+SELECT DISTINCT ?t1 ?t2 {
+?s1 sosa:isHostedBy ?s2 .
+?s1 rdfs:label ?ll ; :hasStationType ?t1.
+#?s1 geo:defaultGeometry [geo:asWKT ?wkt1] .
+?s2 rdfs:label ?l2 ; :hasStationType ?t2 .
+#?s2 geo:defaultGeometry [geo:asWKT ?wkt2] .
+}
+"""
+
+[[tabGroups.tabs]]
+name="ObservableProperties"
+query="""
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+SELECT * WHERE {
+?p a sosa:ObservableProperty .
+?p rdfs:label ?l .
+?p rdfs:comment ?c.
+}
+"""
+
+[[tabGroups.tabs]]
+name="Observations"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+SELECT * WHERE {
+?s a sosa:Sensor .
+#?s sosa:isHostedBy ?p.
+?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+?s sosa:madeObservation ?o .
+?o sosa:hasSimpleResult ?v .
+?o sosa:resultTime ?t .
+?o sosa:observedProperty ?prop .
+?prop rdfs:comment ?pc .
+BIND(CONCAT( ?pc, ": ", str(?v)) AS ?wktLabel)
+}
+LIMIT 1000
+"""
+
+[[tabGroups.tabs]]
+name="Sensors"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+SELECT DISTINCT ?st WHERE {
+?s a sosa:Sensor .
+?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+  ?s :hasStationType ?st .
+#?s sosa:madeObservation ?o .
+}
+LIMIT 100
+"""
+
+[[tabGroups.tabs]]
+name="Road"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+SELECT * {
+?rs a :RoadSegment ; :hasOriginStation ?ss ; :hasDestinationStation ?ds .
+#?rs geo:defaultGeometry ?g .
+#?g geo:asWKT ?wkt .
+  ?ss geo:defaultGeometry [geo:asWKT ?oWKT] .
+  ?ds geo:defaultGeometry [geo:asWKT ?dWKT] .
+}
+"""
+
+[[tabGroups.tabs]]
+name="Traffic Sensors"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT * {
+?s a :TrafficSensor .
+?s rdfs:label ?wktLabel .
+OPTIONAL {?s geo:defaultGeometry ?g .
+?g geo:asWKT ?wkt .}
+}
+"""
+
+
+[[tabGroups.tabs]]
+name="Sensor/ObservableProperty/Observation statistics"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+SELECT ?st ?pc ?unit (COUNT(*) AS ?count)  (MIN(?t) AS ?min_t) (MAX(?t) AS ?max_t) (MIN(?v) AS ?min_v) (AVG(?v) AS ?avg_v) (MAX(?v) AS ?max_v)   WHERE {
+#?s a sosa:Sensor .
+#?s sosa:isHostedBy ?p.
+#  ?s a :TrafficSensor .
+  ?s :hasStationType ?st .
+?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+?s sosa:madeObservation ?o .
+?o sosa:hasSimpleResult ?v .
+?o sosa:resultTime ?t .
+?o sosa:observedProperty ?prop .
+?prop rdfs:label ?pc .
+  ?prop :hasUnit ?unit .
+#BIND(CONCAT(?st, "/", ?pc, "/",  str(?v), "/", ?unit) AS ?wktLabel)
+}
+GROUP BY ?st ?prop ?pc ?unit
+ORDER BY DESC(?count)
+"""
+
+[[tabGroups.tabs]]
+name="Observation of a station (siemens->Galilei_Palermo)"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+SELECT ?t ?v {
+  FILTER (?s = <http://noi.example.org/ontology/odh#station/342142>) # siemens->Galilei_Palermo
+  ?s a :Station .
+  ?s rdfs:label ?wktLabel .
+  OPTIONAL {  ?s sosa:madeObservation ?o . ?o sosa:hasSimpleResult ?v .
+  ?o sosa:resultTime ?t .
+  ?o sosa:observedProperty ?prop .
+  FILTER (?prop = <http://noi.example.org/ontology/odh#property/54>) # Velocita media dei veicoli
+  ?prop rdfs:comment ?pc .
+  ?prop :hasUnit ?unit .
+  }
+  OPTIONAL {?s geo:defaultGeometry ?g .
+  ?g geo:asWKT ?wkt .}
+}
+"""
+
+[[tabGroups.tabs]]
+name="Municipality"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+SELECT * {
+    ?s a :Municipality .
+    ?s rdfs:label ?wktLabel .
+    FILTER(LANG(?wktLabel)='it') .
+    OPTIONAL {
+        ?s geo:defaultGeometry ?g .
+        ?g geo:asWKT ?wkt .
+    }
+}
+"""
+
+[[tabGroups.tabs]]
+name="Covid-19"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+SELECT ?st ?pc ?unit ?wkt ?v ?wktLabel WHERE {
+  ?s a :Covid-19 .
+  ?s :hasStationType ?st .
+?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+?s sosa:madeObservation ?o .
+?o sosa:hasSimpleResult ?v .
+?o sosa:resultTime ?t .
+?o sosa:observedProperty ?prop .
+?prop rdfs:comment ?pc .
+  ?prop :hasUnit ?unit .
+BIND(CONCAT(?st, "/", ?pc, "/",  str(?v), "/", ?unit) AS ?wktLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Covid and Municipality"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+
+SELECT ?mWkt ?wkt ?wktLabel {
+    # Municipality
+    ?m a :Municipality .
+    ?m rdfs:label ?mWktLabel .
+    FILTER(LANG(?mWktLabel)='it') .
+    OPTIONAL {?m geo:defaultGeometry ?mg .
+    ?mg geo:asWKT ?mWkt .}
+
+    #Covid
+    ?s a :Covid-19 .
+    ?s :hasStationType ?st .
+    ?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+    ?s sosa:madeObservation ?o .
+    ?o sosa:hasSimpleResult ?v .
+    ?o sosa:resultTime ?t .
+    ?o sosa:observedProperty ?prop .
+    ?prop rdfs:comment ?pc .
+    ?prop :hasUnit ?unit .
+
+    #spatial join
+    FILTER(geof:sfWithin(?wkt, ?mWkt))
+
+    #label
+    BIND(CONCAT(?st, "<br>", ?mWktLabel , "<br>", ?pc, "<br>",  str(?v), "<br>", str(?t)) AS ?wktLabel)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Covid and Municipality (OPTIONAL)"
+query="""
+PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+SELECT ?wkt ?wktLabel {
+  {
+    # Municipality
+    ?m a :Municipality .
+    ?m rdfs:label ?mWktLabel .
+    FILTER(LANG(?mWktLabel)='it') .
+    ?m geo:defaultGeometry ?mg .
+    ?mg geo:asWKT ?mWkt .
+  }
+  OPTIONAL
+  {
+    #Covid
+    ?s a :Covid-19 .
+    ?s :hasStationType ?st .
+    ?s geo:defaultGeometry ?g . ?g geo:asWKT ?sWkt .
+    ?s sosa:madeObservation ?o .
+    ?o sosa:hasSimpleResult ?v .
+    ?o sosa:resultTime ?t .
+    ?o sosa:observedProperty ?prop .
+    ?prop rdfs:comment ?pc .
+    ?prop :hasUnit ?unit .
+    FILTER(?prop = <http://noi.example.org/ontology/odh#property/5973>)
+    #spatial join
+    FILTER(geof:sfWithin(?sWkt, ?mWkt))
+  }
+  #label
+  BIND(
+    COALESCE(
+	    CONCAT(?st, "<br>", ?mWktLabel , "<br>", ?pc, "<br>",  str(?v), "<br>", str(?t)),
+      	CONCAT(?mWktLabel, "<br> (missing value)"))
+    AS ?wktLabel)
+  # wkt
+  BIND(COALESCE(?mWkt, ?sWkt) AS ?wkt)
+}
+"""
