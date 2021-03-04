@@ -32,3 +32,20 @@ services:
       start_period: 30s
     ports:
       - "${SERVER_PORT}:80"
+  oauth2:
+    image: quay.io/oauth2-proxy/oauth2-proxy:v6.1.1
+    env_file:
+      - .env
+    environment:
+      OAUTH2_PROXY_PROVIDER: "keycloak"
+      OAUTH2_PROXY_CLIENT_ID: "$KEYCLOAK_CLIENT_ID"
+      OAUTH2_PROXY_CLIENT_SECRET: "$KEYCLOAK_CLIENT_SECRET"
+      OAUTH2_PROXY_COOKIE_SECRET: "$OAUTH2_COOKIE_SECRET"
+      OAUTH2_PROXY_LOGIN_URL: "$KEYCLOAK_REALM/protocol/openid-connect/auth"
+      OAUTH2_PROXY_REDEEM_URL: "$KEYCLOAK_REALM/protocol/openid-connect/token"
+      OAUTH2_PROXY_VALIDATE_URL: "$KEYCLOAK_REALM/protocol/openid-connect/userinfo"
+      OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
+      OAUTH2_PROXY_EMAIL_DOMAINS: "${OAUTH2_ALLOWED_EMAIL_DOMAINS}"
+      # development-only
+      OAUTH2_PROXY_COOKIE_SECURE: "false"
+      OAUTH2_PROXY_REDIRECT_URL: "http://localhost:${SERVER_PORT}/oauth2/callback"

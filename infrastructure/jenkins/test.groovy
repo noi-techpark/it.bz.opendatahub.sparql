@@ -41,6 +41,11 @@ pipeline {
         FLYWAY_USER = "${VKG_POSTGRES_USER}"
         FLYWAY_PASSWORD = "${VKG_POSTGRES_PASSWORD}"
         FLYWAY_PLACEHOLDERS_VKG_USER_READONLY = "${VKG_POSTGRES_USER_READONLY}"
+
+		KEYCLOAK_REALM = "https://auth.opendatahub.testingmachine.eu/auth/realms/noi"
+		KEYCLOAK_CLIENT_ID = "eu.testingmachine.opendatahub.sparql"
+		KEYCLOAK_CLIENT_SECRET = credentials('eu.testingmachine.opendatahub.sparql.KEYCLOAK_CLIENT_SECRET')
+		OAUTH2_COOKIE_SECRET = credentials('eu.testingmachine.opendatahub.sparql.OAUTH2_COOKIE_SECRET')
     }
 
     stages {
@@ -72,7 +77,7 @@ pipeline {
                     echo "FLYWAY_PLACEHOLDERS_TOURISM_SUBSCRIPTION_NAME=${FLYWAY_PLACEHOLDERS_TOURISM_SUBSCRIPTION_NAME}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_TOURISM_PUBLICATION_NAME=${FLYWAY_PLACEHOLDERS_TOURISM_PUBLICATION_NAME}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_TOURISM_SCHEMA_VKG=${FLYWAY_PLACEHOLDERS_TOURISM_SCHEMA_VKG}" >> .env
-                    
+
                     echo "FLYWAY_PLACEHOLDERS_MOBILITY_DB=${FLYWAY_PLACEHOLDERS_MOBILITY_DB}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_MOBILITY_HOST=${FLYWAY_PLACEHOLDERS_MOBILITY_HOST}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_MOBILITY_USER=${FLYWAY_PLACEHOLDERS_MOBILITY_USER}" >> .env
