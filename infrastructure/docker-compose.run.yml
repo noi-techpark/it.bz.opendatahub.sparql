@@ -62,6 +62,3 @@ services:
       OAUTH2_PROXY_VALIDATE_URL: "$KEYCLOAK_REALM/protocol/openid-connect/userinfo"
       OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
       OAUTH2_PROXY_EMAIL_DOMAINS: "${OAUTH2_ALLOWED_EMAIL_DOMAINS}"
-      # development-only
-      OAUTH2_PROXY_COOKIE_SECURE: "false"
-      OAUTH2_PROXY_REDIRECT_URL: "http://localhost:${SERVER_PORT}/oauth2/callback"
