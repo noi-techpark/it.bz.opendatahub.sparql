@@ -14,24 +14,24 @@ schema:		http://schema.org/
 
 [MappingDeclaration] @collection [[
 mappingId	Campground
-target		data:accommodation/{Id} a schema:Campground . 
+target		data:accommodation/{Id} a schema:Campground .
 source		SELECT "Id"
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'Camping'
 
 mappingId	LodgingBusiness
-target		data:accommodation/{id} a schema:LodgingBusiness ; geo:asWKT "POINT ({longitude} {latitude})"^^geo:wktLiteral ; schema:email {de_email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{id}/{rating} . 
-source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, NULLIF("AccoDetail-de-Email", '') AS de_email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone,
+target		data:accommodation/{id} a schema:LodgingBusiness ; geo:asWKT {wkt}^^geo:wktLiteral ; schema:email {de_email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{id}/{rating} .
+source		SELECT "Id" AS id, ST_AsText("Geometry") AS wkt, NULLIF("AccoDetail-de-Email", '') AS de_email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone,
 			"AccoDetail-de-Fax" AS  de_fax, "AccoDetail-it-Shortdesc" AS it_desc,  "AccoDetail-de-Shortdesc" AS de_desc,  "AccoDetail-en-Shortdesc" AS en_desc, "AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name, "AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
 			FROM "v_accommodationsopen"
 
 mappingId	Lodging business - geo
-target		data:geo/accommodation/{id} a schema:GeoCoordinates ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} . data:accommodation/{id} schema:geo data:geo/accommodation/{id} . 
+target		data:geo/accommodation/{id} a schema:GeoCoordinates ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} . data:accommodation/{id} schema:geo data:geo/accommodation/{id} .
 source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude
 			FROM "v_accommodationsopen"
 
 mappingId	LodgingBusiness - address
-target		data:address/accommodation/{id} a schema:PostalAddress ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . data:accommodation/{id} schema:address data:address/accommodation/{id} . 
+target		data:address/accommodation/{id} a schema:PostalAddress ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:streetAddress {de_street}@de , {it_street}@it , {en_street}@en ; schema:postalCode {de_zip} ; schema:addressLocality {de_city}@de , {it_city}@it , {en_city}@en . data:accommodation/{id} schema:address data:address/accommodation/{id} .
 source		SELECT "Id" AS id,
 			"AccoDetail-de-City" AS de_city, "AccoDetail-de-Zip" AS de_zip, "AccoDetail-de-Street" AS de_street,
 			"AccoDetail-it-City" AS it_city, "AccoDetail-it-Street" AS it_street,
@@ -41,413 +41,413 @@ source		SELECT "Id" AS id,
 			FROM "v_accommodationsopen"
 
 mappingId	PensionHotel
-target		data:accommodation/{id} a schema:Hotel . 
+target		data:accommodation/{id} a schema:Hotel .
 source		SELECT "Id" AS id
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'HotelPension'
 
 mappingId	Hostel
-target		data:accommodation/{id} a schema:Hostel . 
+target		data:accommodation/{id} a schema:Hostel .
 source		SELECT "Id" AS id
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'Youth'
 
 mappingId	BedAndBreakfast
-target		data:accommodation/{id} a schema:BedAndBreakfast . 
+target		data:accommodation/{id} a schema:BedAndBreakfast .
 source		SELECT "Id" AS id
 			FROM "v_accommodationsopen"
 			WHERE "AccoTypeId" = 'BedBreakfast'
 
 mappingId	POI
-target		data:poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string ; geo:asWKT "POINT ({GpsPoints-position-Longitude} {GpsPoints-position-Latitude})"^^geo:wktLiteral . 
-source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude" FROM v_poisopen
+target		data:poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string ; geo:asWKT {wkt}^^geo:wktLiteral .
+source		SELECT "Id", "Shortname", ST_AsText("Geometry") AS wkt FROM v_poisopen
 
 mappingId	Area
-target		data:area/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string . 
+target		data:area/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string .
 source		SELECT "Id", "Shortname" FROM v_areas
 
 mappingId	POI_Area
-target		data:poi/{Id} schema:isPartOf data:area/{data} . 
+target		data:poi/{Id} schema:isPartOf data:area/{data} .
 source		SELECT "Id", "data" FROM "v_poisopen_AreaId";
 
 mappingId	POI-geo
-target		data:poi/{Id} schema:geo data:geo/poi/{Id} . data:geo/poi/{Id} a schema:GeoCoordinates ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} . 
+target		data:poi/{Id} schema:geo data:geo/poi/{Id} . data:geo/poi/{Id} a schema:GeoCoordinates ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} .
 source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen
 
 mappingId	Accommodation
-target		data:room/{Id} a schema:Accommodation ; schema:containedInPlace data:accommodation/{A0RID} ; schema:name {AccoRoomDetail-it-Name}@it , {AccoRoomDetail-en-Name}@en , {AccoRoomDetail-de-Name}@de ; :numberOfUnits {RoomQuantity} ; schema:occupancy data:occupancy/room/{Id} . 
+target		data:room/{Id} a schema:Accommodation ; schema:containedInPlace data:accommodation/{A0RID} ; schema:name {AccoRoomDetail-it-Name}@it , {AccoRoomDetail-en-Name}@en , {AccoRoomDetail-de-Name}@de ; :numberOfUnits {RoomQuantity} ; schema:occupancy data:occupancy/room/{Id} .
 source		SELECT "Id", "A0RID", "AccoRoomDetail-en-Name", "AccoRoomDetail-de-Name", "AccoRoomDetail-it-Name", "RoomQuantity" FROM v_accommodationroomsopen
 
 mappingId	Room
-target		data:room/{Id} a schema:Room . 
+target		data:room/{Id} a schema:Room .
 source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'room'
 
 mappingId	Apartment
-target		data:room/{Id} a schema:Apartment . 
+target		data:room/{Id} a schema:Apartment .
 source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'apartment'
 
 mappingId	Camping pitch
-target		data:room/{Id} a schema:CampingPitch . 
+target		data:room/{Id} a schema:CampingPitch .
 source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'pitch' OR "Roomtype" = 'campsite'
 
 mappingId	Room occupancy
-target		data:occupancy/room/{Id} a schema:QuantitativeValue ; schema:minValue {Roommin} ; schema:maxValue {Roommax} ; schema:unitCode "C62" . 
+target		data:occupancy/room/{Id} a schema:QuantitativeValue ; schema:minValue {Roommin} ; schema:maxValue {Roommax} ; schema:unitCode "C62" .
 source		SELECT "Id", "Roommin", "Roommax"
 			FROM v_accommodationroomsopen
 
 mappingId	Event EURAC NOI
-target		data:event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location data:location/euracnoi/{EventLocation}/{AnchorVenue} ; schema:organizer data:organization/event/euracnoi/{Id} , data:contact/event/euracnoi/{Id} . 
+target		data:event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location data:location/euracnoi/{EventLocation}/{AnchorVenue} ; schema:organizer data:organization/event/euracnoi/{Id} , data:contact/event/euracnoi/{Id} .
 source		SELECT "Id", "StartDate", "EndDate", "EventDescriptionIT", "EventDescriptionEN", "AnchorVenue", "EventLocation", "EventDescriptionDE"
 			FROM v_eventeuracnoi
 
 mappingId	Event Organization
-target		data:organization/event/euracnoi/{Id} a schema:Organization ; schema:name {CompanyName} . 
+target		data:organization/event/euracnoi/{Id} a schema:Organization ; schema:name {CompanyName} .
 source		select "Id", "CompanyName"
 			from v_eventeuracnoi
 
 mappingId	Event Location
-target		data:location/euracnoi/{EventLocation}/{AnchorVenue} a schema:MeetingRoom ; schema:name {AnchorVenue} ; schema:containedInPlace data:place/euracnoi/{EventLocation} . 
+target		data:location/euracnoi/{EventLocation}/{AnchorVenue} a schema:MeetingRoom ; schema:name {AnchorVenue} ; schema:containedInPlace data:place/euracnoi/{EventLocation} .
 source		select "Id", "AnchorVenue", "EventLocation"
 			from v_eventeuracnoi
 
 mappingId	Event Contact Person
-target		data:contact/event/euracnoi/{Id} a schema:Person ; schema:familyName {ContactLastName} ; schema:givenName {ContactFirstName} ; schema:email <{email}> ; schema:telephone {ContactPhone} ; schema:worksFor data:organization/event/euracnoi/{Id} . 
+target		data:contact/event/euracnoi/{Id} a schema:Person ; schema:familyName {ContactLastName} ; schema:givenName {ContactFirstName} ; schema:email <{email}> ; schema:telephone {ContactPhone} ; schema:worksFor data:organization/event/euracnoi/{Id} .
 source		select "Id", "ContactFirstName", "ContactLastName", concat('mailto:',"ContactEmail") as email, "ContactPhone"
 			from v_eventeuracnoi
 
 mappingId	Event Organization - company address
-target		data:address/organization/event/euracnoi/{Id} a schema:PostalAddress ; schema:streetAddress {CompanyAddressLine1} ; schema:postalCode {CompanyPostalCode} ; schema:addressLocality {CompanyCity} ; schema:addressCountry {CompanyCountry} . data:organization/event/euracnoi/{Id} schema:address data:address/organization/event/euracnoi/{Id} . 
+target		data:address/organization/event/euracnoi/{Id} a schema:PostalAddress ; schema:streetAddress {CompanyAddressLine1} ; schema:postalCode {CompanyPostalCode} ; schema:addressLocality {CompanyCity} ; schema:addressCountry {CompanyCountry} . data:organization/event/euracnoi/{Id} schema:address data:address/organization/event/euracnoi/{Id} .
 source		select "Id", "CompanyAddressLine1", "CompanyCity", "CompanyCountry", "CompanyPostalCode"
 			from v_eventeuracnoi
 
 mappingId	Caravan pitch
-target		data:room/{Id} a :CaravanPitch . 
+target		data:room/{Id} a :CaravanPitch .
 source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'caravan'
 
 mappingId	SkiResort
-target		data:skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf data:skiRegion/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} . 
-source		SELECT "Id", "Shortname", "Detail-en-Header", "Longitude", "Latitude", "AltitudeTo", "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
+target		data:skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string ; geo:asWKT {wkt}^^geo:wktLiteral ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf data:skiRegion/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} .
+source		SELECT "Id", "Shortname", "Detail-en-Header", ST_AsText("Geometry") AS wkt, "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
 
 mappingId	SkiRegion
-target		data:skiRegion/{Id} a :SkiRegion ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:elevation {Altitude}^^xsd:decimal . 
-source		SELECT "Id", "Shortname", "Longitude", "Latitude", "Altitude" FROM v_skiregionsopen
+target		data:skiRegion/{Id} a :SkiRegion ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string ; geo:asWKT {wkt}^^geo:wktLiteral ; schema:elevation {Altitude}^^xsd:decimal .
+source		SELECT "Id", "Shortname", ST_AsText("Geometry") AS wkt, "Altitude" FROM v_skiregionsopen
 
 mappingId	SkiResort_Area
-target		data:skiResort/{Id} schema:isPartOf data:area/{data} . 
+target		data:skiResort/{Id} schema:isPartOf data:area/{data} .
 source		SELECT "Id", "data" FROM "v_skiareasopen_AreaId"
 
 mappingId	MedicalOrganization
-target		data:poi/{Id} a schema:MedicalOrganization . 
+target		data:poi/{Id} a schema:MedicalOrganization .
 source		SELECT * FROM v_poisopen WHERE "Type" = 'Ärzte, Apotheken'
 
 mappingId	Theater
-target		data:poi/{Id} a schema:PerformingArtsTheater . 
+target		data:poi/{Id} a schema:PerformingArtsTheater .
 source		SELECT * FROM v_poisopen WHERE "SubType" = 'Theater'
 
 mappingId	Activity
-target		data:Activity/{SubType} a :Activity ; rdfs:label {SubType}^^xsd:string ; schema:name {SubType}^^xsd:string ; :activityType {Type}^^xsd:string . 
+target		data:Activity/{SubType} a :Activity ; rdfs:label {SubType}^^xsd:string ; schema:name {SubType}^^xsd:string ; :activityType {Type}^^xsd:string .
 source		SELECT "Type", "SubType"
 			FROM v_smgpoisopen
 
 mappingId	Wine
-target		data:wine/{Id} a :Wine ; rdfs:label {Shortname} ; schema:name {Shortname} ; :wineVintageYear {Vintage} ; :wineAwardYear {Awardyear} . 
+target		data:wine/{Id} a :Wine ; rdfs:label {Shortname} ; schema:name {Shortname} ; :wineVintageYear {Vintage} ; :wineAwardYear {Awardyear} .
 source		SELECT * FROM v_wines
 
 mappingId	WineAward
-target		data:wine/{Id} a :Wine ; :receivesWineAward {data}^^xsd:string . 
+target		data:wine/{Id} a :Wine ; :receivesWineAward {data}^^xsd:string .
 source		SELECT * FROM "v_wines_Awards"
 
 mappingId	Ski resort - geo
-target		data:geo/skiResort/{Id} a schema:GeoCoordinates ; schema:latitude {Latitude} ; schema:elevation {AltitudeTo} ; schema:longitude {Longitude} . 
+target		data:geo/skiResort/{Id} a schema:GeoCoordinates ; schema:latitude {Latitude} ; schema:elevation {AltitudeTo} ; schema:longitude {Longitude} .
 source		SELECT "Id",  "Longitude", "Latitude", "AltitudeTo" FROM v_skiareasopen
 
 mappingId	Place EURAC NOI
-target		data:place/euracnoi/{EventLocation} a schema:Place . 
+target		data:place/euracnoi/{EventLocation} a schema:Place .
 source		select "EventLocation"
 			from v_eventeuracnoi
 
 mappingId	Food establishments
-target		data:gastronomy/{Id} a schema:FoodEstablishment ; geo:asWKT "POINT ({Longitude} {Latitude})"^^geo:wktLiteral ; schema:name {Detail-de-Title}@de , {Detail-it-Title}@it , {Detail-en-Title}@en ; schema:description {Detail-de-BaseText}@de , {Detail-it-BaseText}@it , {Detail-en-BaseText}@en ; schema:geo data:geo/gastronomy/{Id} ; schema:address data:address/gastronomy/{Id} ; schema:telephone {ContactInfos-de-Phonenumber} ; schema:hasMenu data:menu/gastronomy/{Id} . 
-source		SELECT * FROM v_gastronomiesopen
+target		data:gastronomy/{Id} a schema:FoodEstablishment ; geo:asWKT {wkt}^^geo:wktLiteral ; schema:name {Detail-de-Title}@de , {Detail-it-Title}@it , {Detail-en-Title}@en ; schema:description {Detail-de-BaseText}@de , {Detail-it-BaseText}@it , {Detail-en-BaseText}@en ; schema:geo data:geo/gastronomy/{Id} ; schema:address data:address/gastronomy/{Id} ; schema:telephone {ContactInfos-de-Phonenumber} ; schema:hasMenu data:menu/gastronomy/{Id} .
+source		SELECT *, ST_AsText("Geometry") AS wkt FROM v_gastronomiesopen
 
 mappingId	Food establishments - geo
-target		data:geo/gastronomy/{Id} a schema:GeoCoordinates ; schema:latitude {Latitude} ; schema:elevation {Altitude} ; schema:longitude {Longitude} . 
+target		data:geo/gastronomy/{Id} a schema:GeoCoordinates ; schema:latitude {Latitude} ; schema:elevation {Altitude} ; schema:longitude {Longitude} .
 source		SELECT * FROM v_gastronomiesopen
 
 mappingId	Food establishments - address
-target		data:address/gastronomy/{Id} a schema:PostalAddress ; schema:streetAddress {ContactInfos-de-Address}@de , {ContactInfos-it-Address}@it , {ContactInfos-en-Address}@en ; schema:postalCode {ContactInfos-de-ZipCode} ; schema:addressLocality {ContactInfos-de-City}@de , {ContactInfos-it-City}@it , {ContactInfos-en-City}@en . 
+target		data:address/gastronomy/{Id} a schema:PostalAddress ; schema:streetAddress {ContactInfos-de-Address}@de , {ContactInfos-it-Address}@it , {ContactInfos-en-Address}@en ; schema:postalCode {ContactInfos-de-ZipCode} ; schema:addressLocality {ContactInfos-de-City}@de , {ContactInfos-it-City}@it , {ContactInfos-en-City}@en .
 source		SELECT * FROM v_gastronomiesopen
 
 mappingId	Restaurants
-target		data:gastronomy/{gastronomiesopen_Id} a schema:Restaurant . 
+target		data:gastronomy/{gastronomiesopen_Id} a schema:Restaurant .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Restaurant' OR "Shortname" = 'Gasthof'
 
 mappingId	Bar/pub
-target		data:gastronomy/{gastronomiesopen_Id} a schema:BarOrPub . 
+target		data:gastronomy/{gastronomiesopen_Id} a schema:BarOrPub .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Bar / Coffee Shop / Bistro' OR "Shortname" = 'Pub / Disco' OR "Shortname" = 'Braugarten'  OR "Shortname" = 'Apres Ski'
 
 mappingId	Fast food
-target		data:gastronomy/{gastronomiesopen_Id} a schema:FastFoodRestaurant . 
+target		data:gastronomy/{gastronomiesopen_Id} a schema:FastFoodRestaurant .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Schnellimbiss'
 
 mappingId	Winery
-target		data:gastronomy/{gastronomiesopen_Id} a schema:Winery . 
+target		data:gastronomy/{gastronomiesopen_Id} a schema:Winery .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Vinothek / Weinhaus / Taverne'
 
 mappingId	Ice cream shops
-target		data:gastronomy/{gastronomiesopen_Id} a schema:IceCreamShop . 
+target		data:gastronomy/{gastronomiesopen_Id} a schema:IceCreamShop .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Eisdiele'
 
 mappingId	Food establishments - URL
-target		data:gastronomy/{Id} schema:sameAs <{url}> ; schema:url <{url}> . 
+target		data:gastronomy/{Id} schema:sameAs <{url}> ; schema:url <{url}> .
 source		SELECT "Id",  NULLIF("ContactInfos-de-Url", '') AS url FROM v_gastronomiesopen
 
 mappingId	Pizzeria
-target		data:gastronomy/{gastronomiesopen_Id} a :Pizzeria . 
+target		data:gastronomy/{gastronomiesopen_Id} a :Pizzeria .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Pizzeria'
 
 mappingId	Mountain restaurant
-target		data:gastronomy/{gastronomiesopen_Id} a :MountainRestaurant . 
+target		data:gastronomy/{gastronomiesopen_Id} a :MountainRestaurant .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Alm'
 
 mappingId	Skihütte
-target		data:gastronomy/{gastronomiesopen_Id} a :SkiHütte . 
+target		data:gastronomy/{gastronomiesopen_Id} a :SkiHütte .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Skihütte'
 
 mappingId	Mensa
-target		data:gastronomy/{gastronomiesopen_Id} a :Canteen . 
+target		data:gastronomy/{gastronomiesopen_Id} a :Canteen .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Mensa'
 
 mappingId	Après ski
-target		data:gastronomy/{gastronomiesopen_Id} a :AprèsSki . 
+target		data:gastronomy/{gastronomiesopen_Id} a :AprèsSki .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Apres Ski'
 
 mappingId	Jausenstation
-target		data:gastronomy/{gastronomiesopen_Id} a :Jausenstation . 
+target		data:gastronomy/{gastronomiesopen_Id} a :Jausenstation .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Jausenstation'
 
 mappingId	Beer garden
-target		data:gastronomy/{gastronomiesopen_Id} a :BeerGarden . 
+target		data:gastronomy/{gastronomiesopen_Id} a :BeerGarden .
 source		SELECT *
 			FROM "v_gastronomiesopen_CategoryCodes"
 			WHERE "Shortname" = 'Braugarten'
 
 mappingId	Asian cuisine
-target		data:gastronomy/{Id} schema:servesCuisine "asian"@en , "asiatisch"@de , "asiatica"@it . 
+target		data:gastronomy/{Id} schema:servesCuisine "asian"@en , "asiatisch"@de , "asiatica"@it .
 source		SELECT "Id", "Detail-it-BaseText", "Detail-de-BaseText"
 			FROM "v_gastronomiesopen"
 			WHERE "Detail-it-BaseText" like '%asiat%' OR "Detail-de-BaseText" like '%asiat%'
 
 mappingId	Mediterranean cuisine
-target		data:gastronomy/{Id} schema:servesCuisine "mediterranean"@en , "mediterrane"@de , "mediterranea"@it . 
+target		data:gastronomy/{Id} schema:servesCuisine "mediterranean"@en , "mediterrane"@de , "mediterranea"@it .
 source		SELECT "Id", "Detail-it-BaseText", "Detail-de-BaseText"
 			FROM "v_gastronomiesopen"
 			WHERE "Detail-it-BaseText" like '%mediterra%' OR "Detail-de-BaseText" like '%mediterra%'
 
 mappingId	Apfelstrudel
-target		data:menu/gastronomy/{Id} schema:hasMenuItem data:menuitem/apfelstrudel/{Id} . data:menuitem/apfelstrudel/{Id} schema:name "Apfelstrudel"@de , "strudel di mela"@it , "Apfelstrudel"@en . 
+target		data:menu/gastronomy/{Id} schema:hasMenuItem data:menuitem/apfelstrudel/{Id} . data:menuitem/apfelstrudel/{Id} schema:name "Apfelstrudel"@de , "strudel di mela"@it , "Apfelstrudel"@en .
 source		SELECT "Id"
 			FROM public.v_gastronomiesopen
 			WHERE "Detail-de-BaseText" ~ 'Apfelstrudel'
 
 mappingId	Lodging Business - aggregate rating
-target		data:rating/trustyou/{id}/{trustId} a schema:AggregateRating ; schema:author data:author/trustyou ; schema:bestRating "100"^^xsd:integer ; schema:ratingValue {score}^^xsd:integer ; schema:reviewCount {reviews}^^xsd:integer . 
+target		data:rating/trustyou/{id}/{trustId} a schema:AggregateRating ; schema:author data:author/trustyou ; schema:bestRating "100"^^xsd:integer ; schema:ratingValue {score}^^xsd:integer ; schema:reviewCount {reviews}^^xsd:integer .
 source		select "Id" as id, "TrustYouID" as trustId, "TrustYouScore"/10 as  score , "TrustYouResults" as reviews from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business -hasAggregateRating
-target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{id}/{trustId} . 
+target		data:accommodation/{id} schema:aggregateRating data:rating/trustyou/{id}/{trustId} .
 source		select "Id" as id, "TrustYouID" as trustId from "v_accommodationsopen" where "TrustYouActive"=true and "TrustYouScore" > 0
 
 mappingId	Lodging Business - image
-target		data:accommodation/{id} schema:image <{image}> . 
+target		data:accommodation/{id} schema:image <{image}> .
 source		select  "accommodationsopen_Id" as id , "ImageUrl" as image from "v_accommodationsopen_ImageGallery" where
 			( ("ValidTo" IS NULL OR "ValidTo" !~ '(?:(\d\d\d\d)-(0[1-9]|10|11|12)-([0-2]\d|30|31))T(([01]\d|2[0-3])(?:\:([0-5]\d)(?::([0-5]\d))))') OR (TO_TIMESTAMP("ValidTo", 'YYYY-MM-DDTHH24:MI:SS') > NOW()  ) )
 			AND (("ValidFrom" IS NULL OR "ValidFrom" !~ '(?:(\d\d\d\d)-(0[1-9]|10|11|12)-([0-2]\d|30|31))T(([01]\d|2[0-3])(?:\:([0-5]\d)(?::([0-5]\d))))') OR (TO_TIMESTAMP("ValidFrom", 'YYYY-MM-DDTHH24:MI:SS') < NOW()))
 
 mappingId	MAPID-9dbd9116f9f84c78961099f0004a9690
-target		data:author/trustyou a schema:Organization ; schema:name "Trust you" ; schema:url <https://www.trustyou.com/> . 
+target		data:author/trustyou a schema:Organization ; schema:name "Trust you" ; schema:url <https://www.trustyou.com/> .
 source		select  1
 
 mappingId	AccomodationRating
-target		data:category/accommodation/{id}/{rating} a schema:Rating ; schema:ratingValue {value}^^xsd:decimal . 
+target		data:category/accommodation/{id}/{rating} a schema:Rating ; schema:ratingValue {value}^^xsd:decimal .
 source		select "Id" as id,  "AccoCategoryId" as rating, (CASE WHEN "AccoCategoryId" = '1flowers' or "AccoCategoryId" = '1stars'  or "AccoCategoryId" = '1suns'   THEN 1 WHEN "AccoCategoryId" = '2flowers' or "AccoCategoryId" = '2stars'  or "AccoCategoryId" = '2suns'   THEN 2  WHEN "AccoCategoryId" = '3flowers' or "AccoCategoryId" = '3stars'  or "AccoCategoryId" = '3suns'  THEN 3 WHEN "AccoCategoryId" = '3sstars' THEN 3.5  WHEN "AccoCategoryId" = '4flowers' or "AccoCategoryId" = '4stars'  or "AccoCategoryId" = '4suns'   THEN 4 WHEN "AccoCategoryId" = '4sstars' THEN 4.5  WHEN "AccoCategoryId" = '5flowers' or "AccoCategoryId" = '5stars'  or "AccoCategoryId" = '5suns'   THEN 5 ELSE NULL END ) as value FROM "v_accommodationsopen"
 
 mappingId	Price range
-target		data:accommodation/{id} schema:priceRange {value}^^xsd:string . 
+target		data:accommodation/{id} schema:priceRange {value}^^xsd:string .
 source		select "Id" as id,  (CASE WHEN "AccoCategoryId" = '1flowers' or "AccoCategoryId" = '1stars'  or "AccoCategoryId" = '1suns' or "AccoCategoryId" = '2flowers' or "AccoCategoryId" = '2stars'  or "AccoCategoryId" = '2suns'   THEN '€'  WHEN "AccoCategoryId" = '3flowers' or "AccoCategoryId" = '3stars'  or "AccoCategoryId" = '3suns' or "AccoCategoryId" = '3sstars'  THEN '€€'  WHEN "AccoCategoryId" = '4flowers' or "AccoCategoryId" = '4stars'  or "AccoCategoryId" = '4suns'   THEN '€€€'  WHEN "AccoCategoryId" = '4sstars' or "AccoCategoryId" = '5flowers' or "AccoCategoryId" = '5stars'  or "AccoCategoryId" = '5suns' THEN '€€€€' ELSE NULL END ) as value FROM "v_accommodationsopen"
 
 mappingId	Lodging Business - image rank
-target		<{image}> :rankingValue {rankValue}^^xsd:integer . 
+target		<{image}> :rankingValue {rankValue}^^xsd:integer .
 source		select  "ImageUrl" as image, "ListPosition" as rankValue  from "v_accommodationsopen_ImageGallery"
 
 mappingId	road_segment_geom
-target		data:road_segment/{id} geo:defaultGeometry data:road_segment/geometry/{id} . data:road_segment/geometry/{id} geo:asWKT {wkt}^^geo:wktLiteral . 
+target		data:road_segment/{id} geo:defaultGeometry data:road_segment/geometry/{id} . data:road_segment/geometry/{id} geo:asWKT {wkt}^^geo:wktLiteral .
 source		SELECT id, ST_ASTEXT(linegeometry) AS wkt FROM intimev2.edge
 
 mappingId	station
-target		data:station/{id} a :Station ; :isActive {active} ; :isAvailable {available} ; rdfs:label {name}^^xsd:string ; :hasOrigin {origin} ; :hasStationCode {stationcode} ; :hasStationType {stationtype}^^xsd:string . 
+target		data:station/{id} a :Station ; :isActive {active} ; :isAvailable {available} ; rdfs:label {name}^^xsd:string ; :hasOrigin {origin} ; :hasStationCode {stationcode} ; :hasStationType {stationtype}^^xsd:string .
 source		SELECT * FROM intimev2.station WHERE active='t'
 
 mappingId	station_geom
-target		data:station/{id} geo:defaultGeometry data:station/geometry/{id} . data:station/geometry/{id} geo:asWKT {wkt}^^geo:wktLiteral . 
+target		data:station/{id} geo:defaultGeometry data:station/geometry/{id} . data:station/geometry/{id} geo:asWKT {wkt}^^geo:wktLiteral .
 source		SELECT id, ST_ASTEXT(pointprojection) AS wkt FROM intimev2.station WHERE pointprojection IS NOT NULL
 
 mappingId	type_observableProperty
-target		data:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:string ; :hasUnit {cunit} ; :hasRType {rtype} ; rdfs:comment {description}^^xsd:string . 
+target		data:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:string ; :hasUnit {cunit} ; :hasRType {rtype} ; rdfs:comment {description}^^xsd:string .
 source		SELECT * FROM intimev2.type
 
 mappingId	measurement_observation
-target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
+target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} .
 source		SELECT * FROM intimev2.measurement
 
 mappingId	road_segment
-target		data:road_segment/{id} a :RoadSegment ; :hasOriginStation data:station/{origin_id} ; :hasDestinationStation data:station/{destination_id} . 
+target		data:road_segment/{id} a :RoadSegment ; :hasOriginStation data:station/{origin_id} ; :hasDestinationStation data:station/{destination_id} .
 source		SELECT * FROM intimev2.edge
 
 mappingId	station_hosts
-target		data:station/{id} a :Station ; sosa:isHostedBy data:station/{parent_id} . 
+target		data:station/{id} a :Station ; sosa:isHostedBy data:station/{parent_id} .
 source		SELECT * FROM intimev2.station
 
 mappingId	station-CarpoolingUser
-target		data:station/{id} a :CarpoolingUser . 
+target		data:station/{id} a :CarpoolingUser .
 source		SELECT * FROM intimev2.station WHERE stationtype='CarpoolingUser'
 
 mappingId	station-EChargingStation
-target		data:station/{id} a :EChargingStation . 
+target		data:station/{id} a :EChargingStation .
 source		SELECT * FROM intimev2.station WHERE stationtype='EChargingStation'
 
 mappingId	station-NOI-Place
-target		data:station/{id} a :NOI-Place . 
+target		data:station/{id} a :NOI-Place .
 source		SELECT * FROM intimev2.station WHERE stationtype='NOI-Place'
 
 mappingId	station-LinkStation
-target		data:station/{id} a :LinkStation . 
+target		data:station/{id} a :LinkStation .
 source		SELECT * FROM intimev2.station WHERE stationtype='LinkStation'
 
 mappingId	station-Covid-19
-target		data:station/{id} a :Covid-19 . 
+target		data:station/{id} a :Covid-19 .
 source		SELECT * FROM intimev2.station WHERE stationtype='Covid-19'
 
 mappingId	station-VMS
-target		data:station/{id} a :VMS . 
+target		data:station/{id} a :VMS .
 source		SELECT * FROM intimev2.station WHERE stationtype='VMS'
 
 mappingId	station-BluetoothStation
-target		data:station/{id} a :BluetoothStation . 
+target		data:station/{id} a :BluetoothStation .
 source		SELECT * FROM intimev2.station WHERE stationtype='BluetoothStation'
 
 mappingId	station-TrafficSensor
-target		data:station/{id} a :TrafficSensor . 
+target		data:station/{id} a :TrafficSensor .
 source		SELECT * FROM intimev2.station WHERE stationtype='TrafficSensor'
 
 mappingId	station-EChargingPlug
-target		data:station/{id} a :EChargingPlug . 
+target		data:station/{id} a :EChargingPlug .
 source		SELECT * FROM intimev2.station WHERE stationtype='EChargingPlug'
 
 mappingId	station-TrafficStreetFactor
-target		data:station/{id} a :TrafficStreetFactor . 
+target		data:station/{id} a :TrafficStreetFactor .
 source		SELECT * FROM intimev2.station WHERE stationtype='TrafficStreetFactor'
 
 mappingId	station-CreativeIndustry
-target		data:station/{id} a :CreativeIndustry . 
+target		data:station/{id} a :CreativeIndustry .
 source		SELECT * FROM intimev2.station WHERE stationtype='CreativeIndustry'
 
 mappingId	station-Bicycle
-target		data:station/{id} a :Bicycle . 
+target		data:station/{id} a :Bicycle .
 source		SELECT * FROM intimev2.station WHERE stationtype='Bicycle'
 
 mappingId	station-EnvironmentStation
-target		data:station/{id} a :EnvironmentStation . 
+target		data:station/{id} a :EnvironmentStation .
 source		SELECT * FROM intimev2.station WHERE stationtype='EnvironmentStation'
 
 mappingId	station-CarsharingStation
-target		data:station/{id} a :CarsharingStation . 
+target		data:station/{id} a :CarsharingStation .
 source		SELECT * FROM intimev2.station WHERE stationtype='CarsharingStation'
 
 mappingId	station-CarsharingCar
-target		data:station/{id} a :CarsharingCar . 
+target		data:station/{id} a :CarsharingCar .
 source		SELECT * FROM intimev2.station WHERE stationtype='CarsharingCar'
 
 mappingId	station-CarpoolingService
-target		data:station/{id} a :CarpoolingService . 
+target		data:station/{id} a :CarpoolingService .
 source		SELECT * FROM intimev2.station WHERE stationtype='CarpoolingService'
 
 mappingId	station-CarpoolingHub
-target		data:station/{id} a :CarpoolingHub . 
+target		data:station/{id} a :CarpoolingHub .
 source		SELECT * FROM intimev2.station WHERE stationtype='CarpoolingHub'
 
 mappingId	station-Streetstation
-target		data:station/{id} a :Streetstation . 
+target		data:station/{id} a :Streetstation .
 source		SELECT * FROM intimev2.station WHERE stationtype='Streetstation'
 
 mappingId	station-MeteoStation
-target		data:station/{id} a :MeteoStation . 
+target		data:station/{id} a :MeteoStation .
 source		SELECT * FROM intimev2.station WHERE stationtype='MeteoStation'
 
 mappingId	station-ParkingSensor
-target		data:station/{id} a :ParkingSensor . 
+target		data:station/{id} a :ParkingSensor .
 source		SELECT * FROM intimev2.station WHERE stationtype='ParkingSensor'
 
 mappingId	station-BikesharingStation
-target		data:station/{id} a :BikesharingStation . 
+target		data:station/{id} a :BikesharingStation .
 source		SELECT * FROM intimev2.station WHERE stationtype='BikesharingStation'
 
 mappingId	station-Bicyclestationbay
-target		data:station/{id} a :Bicyclestationbay . 
+target		data:station/{id} a :Bicyclestationbay .
 source		SELECT * FROM intimev2.station WHERE stationtype='Bicyclestationbay'
 
 mappingId	station-RWISstation
-target		data:station/{id} a :RWISstation . 
+target		data:station/{id} a :RWISstation .
 source		SELECT * FROM intimev2.station WHERE stationtype='RWISstation'
 
 mappingId	station-Trafficstation
-target		data:station/{id} a :Trafficstation . 
+target		data:station/{id} a :Trafficstation .
 source		SELECT * FROM intimev2.station WHERE stationtype='Trafficstation'
 
 mappingId	station-Mobilestation
-target		data:station/{id} a :Mobilestation . 
+target		data:station/{id} a :Mobilestation .
 source		SELECT * FROM intimev2.station WHERE stationtype='Mobilestation'
 
 mappingId	station-traffic
-target		data:station/{id} a :traffic . 
+target		data:station/{id} a :traffic .
 source		SELECT * FROM intimev2.station WHERE stationtype='traffic'
 
 mappingId	station-ParkingStation
-target		data:station/{id} a :ParkingStation . 
+target		data:station/{id} a :ParkingStation .
 source		SELECT * FROM intimev2.station WHERE stationtype='ParkingStation'
 
 mappingId	metadata
-target		data:station/{station_id} :hasStationMetadata {json}^^xsd:string . 
+target		data:station/{station_id} :hasStationMetadata {json}^^xsd:string .
 source		SELECT * FROM intimev2.metadata
 
 mappingId	measurement_history_observation
-target		data:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
+target		data:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor data:station/{station_id} .
 source		SELECT * FROM intimev2.measurementhistory
 
 mappingId	municipality_geom
