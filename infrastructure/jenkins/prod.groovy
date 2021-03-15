@@ -46,8 +46,8 @@ pipeline {
         KEYCLOAK_REALM_URL = "https://auth.opendatahub.bz.it/auth/realms/noi"
         KEYCLOAK_CLIENT_ID = "it.bz.opendatahub.sparql"
         KEYCLOAK_CLIENT_SECRET = credentials('it.bz.opendatahub.sparql.KEYCLOAK_CLIENT_SECRET')
-        KEYCLOAK_ALLOWED_GROUPS = credentials('it.bz.opendatahub.sparql.KEYCLOAK_ALLOWED_GROUPS')
-        AUTH_PROXY_COOKIE_SECRET = credentials('it.bz.opendatahub.sparql.AUTH_PROXY_COOKIE_SECRET')
+        KEYCLOAK_ALLOWED_GROUPS = "/VKG Full Access"
+        AUTH_PROXY_COOKIE_SECRET = credentials('it.bz.opendatahub.sparql.OAUTH2_COOKIE_SECRET')
     }
 
     stages {
