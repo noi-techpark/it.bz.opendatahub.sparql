@@ -1,0 +1,66 @@
+# ontop, behind oauth2 proxy
+location /restricted/ {
+  auth_request /oauth2/auth;
+  error_page 401 = /oauth2/sign_in;
+
+  auth_request_set $auth_cookie $upstream_http_set_cookie;
+  add_header Set-Cookie $auth_cookie;
+
+  proxy_pass http://ontop:8080/;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "upgrade";
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+
+  # kill cache (avoid showing stale data when not authenticted)
+  add_header Cache-Control 'no-store';
+
+  access_log /dev/stdout json_combined if=$is_sparql;
+  access_log /dev/stdout combined if=$not_sparql;
+}
+
+# static files can be cached, but serve them under authentication
+location /restricted/ {
+  auth_request /oauth2/auth;
+  error_page 401 = /oauth2/sign_in;
+
+  proxy_pass http://ontop:8080/;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "upgrade";
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+# preflight endpoint used during client-side authentication
+location /restricted/ontop/preflight {
+  auth_request /oauth2/auth;
+  error_page 401 = /oauth2/sign_in;
+
+  auth_request_set $token $upstream_http_x_auth_request_access_token;
+  add_header X-Access-Token $token;
+
+  add_header X-OpenID-Configuration "${KEYCLOAK_REALM_URL}/.well-known/openid-configuration";
+  proxy_pass http://ontop:8080/;
+}
+
+location /oauth2/ {
+  proxy_pass http://oauth2:4180;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Scheme $scheme;
+  proxy_set_header X-Auth-Request-Redirect $request_uri;
+}
+
+location = /oauth2/auth {
+  proxy_pass http://oauth2:4180;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Scheme $scheme;
+  # nginx auth_request includes headers but not body
+  proxy_set_header Content-Length "";
+  proxy_pass_request_body off;
+}

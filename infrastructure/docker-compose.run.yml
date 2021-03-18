@@ -53,14 +53,18 @@ services:
     env_file: .env
     command:
       [
-        "--provider=keycloak",
-        "--login-url=${KEYCLOAK_REALM_URL}/protocol/openid-connect/auth",
-        "--redeem-url=${KEYCLOAK_REALM_URL}/protocol/openid-connect/token",
-        "--profile-url=${KEYCLOAK_REALM_URL}/protocol/openid-connect/userinfo",
+        "--provider=oidc",
+        "--oidc-issuer-url=${KEYCLOAK_REALM_URL}",
         "--allowed-group=${KEYCLOAK_ALLOWED_GROUPS}",
-        "--scope=openid",
+        "--scope=openid email profile",
         "--email-domain=*",
         "--http-address=0.0.0.0:4180",
+        "--set-xauthrequest",
+        "--pass-access-token",
+        "--skip-provider-button",
+        "--cookie-refresh=1m",
+        "--insecure-oidc-allow-unverified-email",
+        "--whitelist-domain=${KEYCLOAK_DOMAIN_NAME}",
       ]
     environment:
       OAUTH2_PROXY_CLIENT_ID: "${KEYCLOAK_CLIENT_ID}"
