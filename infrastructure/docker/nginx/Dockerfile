@@ -14,3 +14,4 @@ CMD ["/bin/sh", "-c", "envsubst '$KEYCLOAK_REALM_URL' < /etc/nginx/ontop.conf.te
 
 FROM dev as prod
 COPY infrastructure/docker/nginx/ontop.conf.template /etc/nginx/ontop.conf.template
+COPY infrastructure/docker/nginx/index.js /www/restricted/index.js

@@ -1,8 +1,8 @@
 title="Open Data Hub Knowledge Graph Portal"
 
 [authentication]
-preflight_url="ontop/preflight"
-sign_out_url="/oauth2/sign_out"
+logout_endpoint="ontop/logout"
+userinfo_endpoint="ontop/userinfo"
 
 [[tabGroups]]
 
