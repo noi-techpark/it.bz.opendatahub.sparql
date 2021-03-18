@@ -87,14 +87,18 @@ services:
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.0.1
     env_file: .env
     command: [
-        "--provider=keycloak",
-        "--login-url=${KEYCLOAK_REALM_URL}/protocol/openid-connect/auth",
-        "--redeem-url=${KEYCLOAK_REALM_URL}/protocol/openid-connect/token",
-        "--profile-url=${KEYCLOAK_REALM_URL}/protocol/openid-connect/userinfo",
+        "--provider=oidc",
+        "--oidc-issuer-url=${KEYCLOAK_REALM_URL}",
         "--allowed-group=${KEYCLOAK_ALLOWED_GROUPS}",
-        "--scope=openid",
+        "--scope=openid email profile",
         "--email-domain=*",
         "--http-address=0.0.0.0:4180",
+        "--set-xauthrequest",
+        "--pass-access-token",
+        "--skip-provider-button",
+        "--cookie-refresh=1m",
+        "--insecure-oidc-allow-unverified-email",
+        "--whitelist-domain=${KEYCLOAK_DOMAIN_NAME}",
         # local development-only
         "--cookie-secure=false",
         "--redirect-url=http://localhost:${SERVER_PORT}/oauth2/callback",

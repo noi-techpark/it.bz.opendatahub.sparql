@@ -44,6 +44,7 @@ pipeline {
 
         // Authentication proxy
         KEYCLOAK_REALM_URL = "https://auth.opendatahub.testingmachine.eu/auth/realms/noi"
+        KEYCLOAK_DOMAIN_NAME = "auth.opendatahub.testingmachine.eu"
         KEYCLOAK_CLIENT_ID = "eu.testingmachine.opendatahub.sparql"
         KEYCLOAK_CLIENT_SECRET = credentials('eu.testingmachine.opendatahub.sparql.KEYCLOAK_CLIENT_SECRET')
         KEYCLOAK_ALLOWED_GROUPS = "/VKG Full Access"
@@ -89,6 +90,7 @@ pipeline {
                     echo "FLYWAY_PLACEHOLDERS_MOBILITY_SCHEMA_VKG=${FLYWAY_PLACEHOLDERS_MOBILITY_SCHEMA_VKG}" >> .env
 
                     echo "KEYCLOAK_REALM_URL=${KEYCLOAK_REALM_URL}" >> .env
+                    echo "KEYCLOAK_DOMAIN_NAME=${KEYCLOAK_DOMAIN_NAME}" >> .env
                     echo "KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}" >> .env
                     echo "KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}" >> .env
                     echo "KEYCLOAK_ALLOWED_GROUPS=${KEYCLOAK_ALLOWED_GROUPS}" >> .env

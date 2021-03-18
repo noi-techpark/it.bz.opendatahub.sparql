@@ -1,5 +1,9 @@
 title="Open Data Hub Knowledge Graph Portal"
 
+[authentication]
+preflight_url="ontop/preflight"
+sign_out_url="/oauth2/sign_out"
+
 [[tabGroups]]
 
 name="Regular Queries"
