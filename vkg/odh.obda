@@ -20,14 +20,14 @@ source		SELECT "Id"
 			WHERE "AccoTypeId" = 'Camping'
 
 mappingId	LodgingBusiness
-target		data:accommodation/{id} a schema:LodgingBusiness ; geo:asWKT {wkt}^^geo:wktLiteral ; schema:email {de_email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{id}/{rating} .
-source		SELECT "Id" AS id, ST_AsText("Geometry") AS wkt, NULLIF("AccoDetail-de-Email", '') AS de_email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone,
+target		data:accommodation/{id} a schema:LodgingBusiness ; schema:email {de_email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{id}/{rating} .
+source		SELECT "Id" AS id, NULLIF("AccoDetail-de-Email", '') AS de_email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone,
 			"AccoDetail-de-Fax" AS  de_fax, "AccoDetail-it-Shortdesc" AS it_desc,  "AccoDetail-de-Shortdesc" AS de_desc,  "AccoDetail-en-Shortdesc" AS en_desc, "AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name, "AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
 			FROM "v_accommodationsopen"
 
 mappingId	Lodging business - geo
-target		data:geo/accommodation/{id} a schema:GeoCoordinates ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} . data:accommodation/{id} schema:geo data:geo/accommodation/{id} .
-source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude
+target		data:geo/accommodation/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} ; geo:asWKT {wkt}^^geo:wktLiteral . data:accommodation/{id} schema:geo data:geo/accommodation/{id} ; geo:defaultGeometry data:geo/accommodation/{id} .
+source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude, ST_AsText("Geometry") AS wkt
 			FROM "v_accommodationsopen"
 
 mappingId	LodgingBusiness - address
@@ -59,8 +59,8 @@ source		SELECT "Id" AS id
 			WHERE "AccoTypeId" = 'BedBreakfast'
 
 mappingId	POI
-target		data:poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string ; geo:asWKT {wkt}^^geo:wktLiteral .
-source		SELECT "Id", "Shortname", ST_AsText("Geometry") AS wkt FROM v_poisopen
+target		data:poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string  .
+source		SELECT "Id", "Shortname" FROM v_poisopen
 
 mappingId	Area
 target		data:area/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string .
@@ -71,8 +71,8 @@ target		data:poi/{Id} schema:isPartOf data:area/{data} .
 source		SELECT "Id", "data" FROM "v_poisopen_AreaId";
 
 mappingId	POI-geo
-target		data:poi/{Id} schema:geo data:geo/poi/{Id} . data:geo/poi/{Id} a schema:GeoCoordinates ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} .
-source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen
+target		data:poi/{Id} schema:geo data:geo/poi/{Id} . data:geo/poi/{Id} a schema:GeoCoordinates, geo:Geometry ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} ; geo:asWKT {wkt}^^geo:wktLiteral.
+source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude", ST_AsText("Geometry") AS wkt FROM v_poisopen
 
 mappingId	Accommodation
 target		data:room/{Id} a schema:Accommodation ; schema:containedInPlace data:accommodation/{A0RID} ; schema:name {AccoRoomDetail-it-Name}@it , {AccoRoomDetail-en-Name}@en , {AccoRoomDetail-de-Name}@de ; :numberOfUnits {RoomQuantity} ; schema:occupancy data:occupancy/room/{Id} .
@@ -94,7 +94,7 @@ source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'pitch' OR "Roomtype" = 'campsite'
 
 mappingId	Room occupancy
-target		data:occupancy/room/{Id} a schema:QuantitativeValue ; schema:minValue {Roommin} ; schema:maxValue {Roommax} ; schema:unitCode "C62" .
+target		data:occupancy/room/{Id} a schema:QuantitativeValue ; schema:minValue {Roommin} ; schema:maxValue {Roommax} ; schema:unitCode "C62"^^xsd:string .
 source		SELECT "Id", "Roommin", "Roommax"
 			FROM v_accommodationroomsopen
 
@@ -129,12 +129,22 @@ source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'caravan'
 
 mappingId	SkiResort
-target		data:skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string ; geo:asWKT {wkt}^^geo:wktLiteral ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf data:skiRegion/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} .
+target		data:skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string  ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf data:skiRegion/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} .
 source		SELECT "Id", "Shortname", "Detail-en-Header", ST_AsText("Geometry") AS wkt, "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
 
+mappingId	SkiResort - geo
+target		data:geo/skiResort/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:longitude {longitude} ; schema:elevation {AltitudeTo}; geo:asWKT {wkt}^^geo:wktLiteral . data:skiResort/{id} schema:geo data:geo/skiResort/{id} ; geo:defaultGeometry data:geo/skiResort/{id} .
+source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "AltitudeTo" AS AltitudeTo, ST_AsText("Geometry") AS wkt
+			FROM "v_skiareasopen"
+
 mappingId	SkiRegion
-target		data:skiRegion/{Id} a :SkiRegion ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string ; geo:asWKT {wkt}^^geo:wktLiteral ; schema:elevation {Altitude}^^xsd:decimal .
+target		data:skiRegion/{Id} a :SkiRegion ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string  ; schema:elevation {Altitude}^^xsd:decimal .
 source		SELECT "Id", "Shortname", ST_AsText("Geometry") AS wkt, "Altitude" FROM v_skiregionsopen
+
+mappingId	SkiRegion - geo
+target		data:geo/skiRegion/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:longitude {longitude} ; geo:asWKT {wkt}^^geo:wktLiteral . data:skiRegion/{id} schema:geo data:geo/skiRegion/{id} ; geo:defaultGeometry data:geo/skiResort/{id} .
+source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude, ST_AsText("Geometry") AS wkt
+			FROM "v_skiregionsopen"
 
 mappingId	SkiResort_Area
 target		data:skiResort/{Id} schema:isPartOf data:area/{data} .
@@ -161,22 +171,18 @@ mappingId	WineAward
 target		data:wine/{Id} a :Wine ; :receivesWineAward {data}^^xsd:string .
 source		SELECT * FROM "v_wines_Awards"
 
-mappingId	Ski resort - geo
-target		data:geo/skiResort/{Id} a schema:GeoCoordinates ; schema:latitude {Latitude} ; schema:elevation {AltitudeTo} ; schema:longitude {Longitude} .
-source		SELECT "Id",  "Longitude", "Latitude", "AltitudeTo" FROM v_skiareasopen
-
 mappingId	Place EURAC NOI
 target		data:place/euracnoi/{EventLocation} a schema:Place .
 source		select "EventLocation"
 			from v_eventeuracnoi
 
 mappingId	Food establishments
-target		data:gastronomy/{Id} a schema:FoodEstablishment ; geo:asWKT {wkt}^^geo:wktLiteral ; schema:name {Detail-de-Title}@de , {Detail-it-Title}@it , {Detail-en-Title}@en ; schema:description {Detail-de-BaseText}@de , {Detail-it-BaseText}@it , {Detail-en-BaseText}@en ; schema:geo data:geo/gastronomy/{Id} ; schema:address data:address/gastronomy/{Id} ; schema:telephone {ContactInfos-de-Phonenumber} ; schema:hasMenu data:menu/gastronomy/{Id} .
-source		SELECT *, ST_AsText("Geometry") AS wkt FROM v_gastronomiesopen
+target		data:gastronomy/{Id} a schema:FoodEstablishment ; schema:name {Detail-de-Title}@de , {Detail-it-Title}@it , {Detail-en-Title}@en ; schema:description {Detail-de-BaseText}@de , {Detail-it-BaseText}@it , {Detail-en-BaseText}@en ; schema:geo data:geo/gastronomy/{Id} ; geo:defaultGeometry data:geo/gastronomy/{Id} ; schema:address data:address/gastronomy/{Id} ; schema:telephone {ContactInfos-de-Phonenumber} ; schema:hasMenu data:menu/gastronomy/{Id} .
+source		SELECT * FROM v_gastronomiesopen
 
 mappingId	Food establishments - geo
-target		data:geo/gastronomy/{Id} a schema:GeoCoordinates ; schema:latitude {Latitude} ; schema:elevation {Altitude} ; schema:longitude {Longitude} .
-source		SELECT * FROM v_gastronomiesopen
+target		data:geo/gastronomy/{Id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {Latitude} ; schema:elevation {Altitude} ; schema:longitude {Longitude} ; geo:asWKT {wkt}^^geo:wktLiteral .
+source		SELECT *, ST_AsText("Geometry") AS wkt FROM v_gastronomiesopen
 
 mappingId	Food establishments - address
 target		data:address/gastronomy/{Id} a schema:PostalAddress ; schema:streetAddress {ContactInfos-de-Address}@de , {ContactInfos-it-Address}@it , {ContactInfos-en-Address}@en ; schema:postalCode {ContactInfos-de-ZipCode} ; schema:addressLocality {ContactInfos-de-City}@de , {ContactInfos-it-City}@it , {ContactInfos-en-City}@en .
@@ -291,7 +297,7 @@ source		select  "accommodationsopen_Id" as id , "ImageUrl" as image from "v_acco
 			AND (("ValidFrom" IS NULL OR "ValidFrom" !~ '(?:(\d\d\d\d)-(0[1-9]|10|11|12)-([0-2]\d|30|31))T(([01]\d|2[0-3])(?:\:([0-5]\d)(?::([0-5]\d))))') OR (TO_TIMESTAMP("ValidFrom", 'YYYY-MM-DDTHH24:MI:SS') < NOW()))
 
 mappingId	MAPID-9dbd9116f9f84c78961099f0004a9690
-target		data:author/trustyou a schema:Organization ; schema:name "Trust you" ; schema:url <https://www.trustyou.com/> .
+target		data:author/trustyou a schema:Organization ; schema:name "Trust you"^^xsd:string ; schema:url <https://www.trustyou.com/> .
 source		select  1
 
 mappingId	AccomodationRating
@@ -311,7 +317,7 @@ target		data:road_segment/{id} geo:defaultGeometry data:road_segment/geometry/{i
 source		SELECT id, ST_ASTEXT(linegeometry) AS wkt FROM intimev2.edge
 
 mappingId	station
-target		data:station/{id} a :Station ; :isActive {active} ; :isAvailable {available} ; rdfs:label {name}^^xsd:string ; :hasOrigin {origin} ; :hasStationCode {stationcode} ; :hasStationType {stationtype}^^xsd:string .
+target		data:station/{id} a :Station ; :isActive {active} ; :isAvailable {available} ; rdfs:label {name}^^xsd:string ; schema:name {name}^^xsd:string ; :hasOrigin {origin} ; :hasStationCode {stationcode} ; :hasStationType {stationtype}^^xsd:string .
 source		SELECT * FROM intimev2.station WHERE active='t'
 
 mappingId	station_geom

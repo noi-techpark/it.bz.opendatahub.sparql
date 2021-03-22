@@ -5,7 +5,6 @@ SELECT * {
  ?s ?p ?o .
 }
 LIMIT 100
-
 [QueryItem="Lodging businesses"]
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX schema: <http://schema.org/>
@@ -13,7 +12,6 @@ PREFIX schema: <http://schema.org/>
 SELECT * {
 <http://noi.example.org/ontology/odh#data/accommodation/745EB990148B974EBB057DF103E5D7D3> a schema:LodgingBusiness ; ?p ?o .
 }
-
 [QueryGroup="Visual"] @collection [[
 [QueryItem="lodging-bz-city-quality-issues"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -29,7 +27,6 @@ SELECT ?h ?pos ?posLabel ("jet,0.8" AS ?posColor) WHERE {
   
   BIND(concat(?name,'<hr/>de: ',?deCity, '<hr/> it: ',?itCity) AS ?posLabel)
 }
-
 [QueryItem="lodging-bz"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -41,7 +38,6 @@ SELECT ?h ?pos ?posLabel WHERE {
   ?a schema:postalCode "39100" .
   FILTER (lang(?posLabel) = 'de')
 }
-
 [QueryItem="lodging-st"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -62,7 +58,6 @@ SELECT ?h ?pos ?posLabel ?posColor WHERE {
   FILTER (lang(?posLabel) = 'de')
 }
 LIMIT 500
-
 [QueryItem="lodging-st-count"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -71,7 +66,6 @@ PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 SELECT (COUNT(*) AS ?count) WHERE {
   ?h a schema:LodgingBusiness .
 }
-
 [QueryItem="lodging-bz-count"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -83,7 +77,6 @@ SELECT (COUNT(DISTINCT ?h) AS ?count) WHERE {
   # ?a schema:addressLocality "Bolzano"@it .
   ?a schema:postalCode "39100" .
 }
-
 [QueryItem="lodging-st-biggest"]
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX schema: <http://schema.org/>
@@ -115,7 +108,6 @@ SELECT ?pos ?posColor ?bName
 GROUP BY ?b ?bName ?pos ?posColor
 ORDER BY DESC(?countRoom)
 LIMIT 50
-
 [QueryItem="lodging-without-accommodation"]
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX schema: <http://schema.org/>
@@ -141,7 +133,6 @@ SELECT ?pos ?posColor ?bName
     }
   }
 }
-
 [QueryItem="lodging-not-in-st"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -154,7 +145,6 @@ SELECT ?h ?pos ?posLabel WHERE {
   FILTER (lang(?posLabel) = 'de').
   FILTER regex(?zip, '^(?!39+)', 'i').
 }
-
 [QueryItem="lodging-not-in-st-clean"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -169,7 +159,6 @@ SELECT ?h ?pos ?posLabel WHERE {
   FILTER regex(?zip, '^(?!\\s*$).+', 'i').
 }
 ]]
-
 [QueryGroup="POI"] @collection [[
 [QueryItem="poi"]
 PREFIX : <http://noi.example.org/ontology/odh#>
@@ -188,7 +177,6 @@ SELECT * {
 }
 LIMIT 50
 ]]
-
 [QueryGroup="Area"] @collection [[
 [QueryItem="area"]
 PREFIX : <http://noi.example.org/ontology/odh#>
@@ -206,7 +194,6 @@ SELECT * WHERE {
 ?a a schema:AdministrativeArea ; rdfs:label ?name .
 }
 ]]
-
 [QueryGroup="Quality"] @collection [[
 [QueryItem="Pitch not in Campground"]
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -222,7 +209,6 @@ SELECT DISTINCT ?b WHERE {
   }
 }
 ]]
-
 [QueryItem="Event"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -233,7 +219,6 @@ SELECT * WHERE {
   ?location schema:containedInPlace ?place ; schema:name ?name .
   FILTER(langMatches(lang(?desc), 'de'))
 }
-
 [QueryItem="Event contact person"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -243,7 +228,6 @@ SELECT * WHERE {
   ?contactP a schema:Person ; schema:familyName ?surname ; schema:givenName ?name ; schema:email ?email ; schema:telephone ?telNr ; schema:worksFor ?company .
   ?company schema:name ?cname .
 }
-
 [QueryItem="Meeting Rooms"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -254,7 +238,6 @@ SELECT * WHERE {
   ?meetingRoom a schema:MeetingRoom ; schema:name ?name .
 }
 ORDER BY ?name
-
 [QueryItem="Test"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -282,7 +265,6 @@ SELECT ?h ?pos ?posLabel ?posColor WHERE {
   FILTER (lang(?posLabel) = 'de')
 }
 LIMIT 500
-
 [QueryItem="Outside of ST"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -295,7 +277,6 @@ SELECT ?h ?pos ?posLabel WHERE {
   FILTER (lang(?posLabel) = 'de').
   FILTER regex(?zip, '^(?!39+)', 'i').
 }
-
 [QueryItem="Outside of ST w/ ZIP"]
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -309,7 +290,6 @@ SELECT ?h ?pos ?posLabel WHERE {
   FILTER regex(?zip, '^(?!39+)', 'i').
   FILTER regex(?zip, '^(?!\\s*$).+', 'i').
 }
-
 [QueryItem="Outside of ST bounding box"]
 PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX schema: <http://schema.org/>
@@ -320,7 +300,6 @@ SELECT ?h WHERE {
   ?h a schema:LodgingBusiness ; schema:geo [ schema:latitude ?lat ; schema:longitude ?long ] .
   FILTER (?lat < 46.2198 || ?lat > 47.0921 || ?long < 10.3818 || ?long > 12.4779) .
 }
-
 [QueryGroup="ski"] @collection [[
 [QueryItem="SkiResort"]
 PREFIX : <http://noi.example.org/ontology/odh#>
@@ -346,7 +325,6 @@ SELECT * WHERE {
 #  bind(strdt(?lex,rdf:HTML) as ?widget)
 }
 ]]
-
 [QueryGroup="ActivityType"] @collection [[
 [QueryItem="activityType"]
 PREFIX : <http://noi.example.org/ontology/odh#>
@@ -364,7 +342,6 @@ SELECT * WHERE {
 ?a a :Activity ; :activityType ?t .
 }
 ]]
-
 [QueryGroup="Wine"] @collection [[
 [QueryItem="wine"]
 PREFIX : <http://noi.example.org/ontology/odh#>
@@ -381,7 +358,6 @@ PREFIX schema: <http://schema.org/>
 SELECT * WHERE {
 ?wine a :Wine.
 }
-
 [QueryItem="wineAward"]
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX dc: <http://purl.org/dc/terms/>
