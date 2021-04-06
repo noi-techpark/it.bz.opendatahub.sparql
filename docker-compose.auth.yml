@@ -97,10 +97,10 @@ services:
         "--pass-access-token",
         "--skip-provider-button",
         "--cookie-refresh=1m",
-        "--insecure-oidc-allow-unverified-email",
         "--whitelist-domain=${KEYCLOAK_DOMAIN_NAME}",
         # local development-only
         "--cookie-secure=false",
+        "--insecure-oidc-allow-unverified-email",
         "--redirect-url=http://localhost:${SERVER_PORT}/oauth2/callback",
       ]
     environment:

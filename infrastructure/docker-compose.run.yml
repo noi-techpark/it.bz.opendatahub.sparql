@@ -63,7 +63,6 @@ services:
         "--pass-access-token",
         "--skip-provider-button",
         "--cookie-refresh=1m",
-        "--insecure-oidc-allow-unverified-email",
         "--whitelist-domain=${KEYCLOAK_DOMAIN_NAME}",
       ]
     environment:
