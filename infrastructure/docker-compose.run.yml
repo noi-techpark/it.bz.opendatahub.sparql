@@ -40,6 +40,8 @@ services:
   nginx:
     image: ${DOCKER_IMAGE_NGINX}:${DOCKER_TAG}
     restart: unless-stopped
+    env_file:
+      - .env
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/actuator/health"]
       interval: 20s
