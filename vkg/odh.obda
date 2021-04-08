@@ -71,7 +71,7 @@ target		data:poi/{Id} schema:isPartOf data:area/{data} .
 source		SELECT "Id", "data" FROM "v_poisopen_AreaId";
 
 mappingId	POI-geo
-target		data:poi/{Id} schema:geo data:geo/poi/{Id} . data:geo/poi/{Id} a schema:GeoCoordinates, geo:Geometry ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} ; geo:asWKT {wkt}^^geo:wktLiteral.
+target		data:poi/{Id} schema:geo data:geo/poi/{Id} ; geo:defaultGeometry data:geo/poi/{Id} . data:geo/poi/{Id} a schema:GeoCoordinates, geo:Geometry ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} ; geo:asWKT {wkt}^^geo:wktLiteral.
 source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude", ST_AsText("Geometry") AS wkt FROM v_poisopen
 
 mappingId	Accommodation
@@ -129,7 +129,7 @@ source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'caravan'
 
 mappingId	SkiResort
-target		data:skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string  ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf data:skiRegion/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} .
+target		data:skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string  ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf data:skiRegion/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} ; geo:defaultGeometry data:geo/skiResort/{Id} .
 source		SELECT "Id", "Shortname", "Detail-en-Header", ST_AsText("Geometry") AS wkt, "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
 
 mappingId	SkiResort - geo
