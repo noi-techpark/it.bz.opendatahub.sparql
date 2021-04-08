@@ -1,24 +1,36 @@
 # Authentication
 
-`odh-vkg` authenticates users trying to access the `/restricted` path via a local authentication proxy, which is configured to connect to a Keycloak instance. Access is granted via membership of specified groups. The configuration is a two step process: first, we configure the Keycloak instance by creating a client application, then we configure the access policies on the authentication proxy.
+`odh-vkg` authenticates users trying to access the `/restricted` path via a
+local authentication proxy, which is configured to connect to a Keycloak
+instance. Access is granted via membership of specified groups. The
+configuration is a two step process: first, we configure the Keycloak instance
+by creating a client application, then we configure the access policies on the
+authentication proxy.
 
 Table of contents
 
--   [Authentication](#authentication)
-    -   [Keycloak configuration](#keycloak-configuration)
-    -   [Authentication proxy configuration](#authentication-proxy-configuration)
+- [Authentication](#authentication)
+	- [Keycloak configuration](#keycloak-configuration)
+	- [Authentication proxy configuration](#authentication-proxy-configuration)
 
 ## Keycloak configuration
 
-In your realm of choice, create a new client with **Access Type** `confidential`. Add `https://<odh-vkg endpoint>` and `https://<odh-vkg endpoint>/oauth2/callback` as **Valid Redirect URIs**. Take note of the **Secret** in the Credentials tab of the client.
+In your realm of choice, create a new client with **Access Type**
+`confidential`. Add `https://<odh-vkg endpoint>` and `https://<odh-vkg
+endpoint>/oauth2/callback` as **Valid Redirect URIs**. If you get an error
+during logout saying that the redirect_uri is invalid, try to remove the final
+`/` from each URI. Take note of the **Secret** in the Credentials tab of the client.
 
 ![Keycloak client configuration](images/client-configuration.png)
 
-Next, navigate to the Mappers tab of the client and create a new mapper with **Mapper Type** `Group Membership` and **Token Claim Name** `groups`.
+Next, navigate to the Mappers tab of the client and create a new mapper with
+**Mapper Type** `Group Membership` and **Token Claim Name** `groups`.
 
 ![Keycloak client mapper configuration](images/client-mapper-configuration.png)
 
-Last, decide which groups will have access to the `/restricted` endpoint and note their name down. Only users which are members of at least one of these groups will be granted access.
+Last, decide which groups will have access to the `/restricted` endpoint and
+note their name down. Only users which are members of at least one of these
+groups will be granted access.
 
 | :exclamation: Email address is required                                                                                                                                                                             |
 | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -34,7 +46,7 @@ The authentication proxy is local to the `odh-vkg` deployment and is therefore c
 
 | Env variable               | Description                                                                                                                                                                                                                                  |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `KEYCLOAK_REALM_URL`       | URL of the Keycloak realm. In default installations of Keycloak is `https://<keycloak endpoint>/auth/reals/<realm>`.                                                                                                                         |
+| `KEYCLOAK_REALM_URL`       | URL of the Keycloak realm. In default installations of Keycloak is `https://<keycloak endpoint>/auth/realms/<realm>`.                                                                                                                         |
 | `KEYCLOAK_DOMAIN_NAME`     | Domain name of the Keycloak server. Equivalent to `<keycloak endpoint>` above.                                                                                                                                                               |
 | `KEYCLOAK_CLIENT_ID`       | ID of the client created during Keycloak configuration.                                                                                                                                                                                      |
 | `KEYCLOAK_CLIENT_SECRET`   | The **Secret** in the Credential tab of the client.                                                                                                                                                                                          |
