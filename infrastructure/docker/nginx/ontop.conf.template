@@ -1,0 +1,74 @@
+# ontop, behind oauth2 proxy
+location = /restricted/ {
+  auth_request /oauth2/auth;
+  error_page 401 = /oauth2/sign_in;
+
+  auth_request_set $auth_cookie $upstream_http_set_cookie;
+  add_header Set-Cookie $auth_cookie;
+
+  proxy_pass http://ontop:8080/;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "upgrade";
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+
+  # kill cache (avoid showing stale data when not authenticted)
+  add_header Cache-Control 'no-store';
+
+  access_log /dev/stdout json_combined if=$is_sparql;
+  access_log /dev/stdout combined if=$not_sparql;
+}
+
+# static files can be cached, but serve them under authentication
+location /restricted/ {
+  auth_request /oauth2/auth;
+  error_page 401 = /oauth2/sign_in;
+
+  proxy_pass http://ontop:8080/;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "upgrade";
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+# endpoints used to display credentials
+location /restricted/ontop/userinfo {
+  auth_request /oauth2/auth;
+  error_page 401 = /oauth2/sign_in;
+
+  auth_request_set $token $upstream_http_x_auth_request_access_token;
+  proxy_set_header Authorization "Bearer $token";
+
+  proxy_pass ${KEYCLOAK_REALM_URL}/protocol/openid-connect/userinfo;
+}
+
+location /restricted/ontop/logout {
+  default_type application/json;
+  return 200 '{"outer": "/oauth2/sign_out?rd=", "inner": "${KEYCLOAK_REALM_URL}/protocol/openid-connect/logout?post_logout_redirect_uri="}';
+}
+
+location = /restricted/index.js {
+  root /www/;
+}
+
+location /oauth2/ {
+  proxy_pass http://oauth2:4180;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Scheme $scheme;
+  proxy_set_header X-Auth-Request-Redirect $request_uri;
+}
+
+location = /oauth2/auth {
+  proxy_pass http://oauth2:4180;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Scheme $scheme;
+  # nginx auth_request includes headers but not body
+  proxy_set_header Content-Length "";
+  proxy_pass_request_body off;
+}

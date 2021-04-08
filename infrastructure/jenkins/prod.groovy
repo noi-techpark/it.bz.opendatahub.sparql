@@ -6,7 +6,7 @@ pipeline {
         DOCKER_IMAGE_ONTOP = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/odh-vkg-ontop"
         DOCKER_IMAGE_NGINX = "755952719952.dkr.ecr.eu-west-1.amazonaws.com/odh-vkg-nginx"
         DOCKER_TAG = "prod-$BUILD_NUMBER"
-		ANSIBLE_LIMIT = "prod"
+        ANSIBLE_LIMIT = "prod"
 
         SERVER_PORT = "1008"
         ONTOP_QUERY_TIMEOUT = 15
@@ -41,6 +41,14 @@ pipeline {
         FLYWAY_USER = "${VKG_POSTGRES_USER}"
         FLYWAY_PASSWORD = "${VKG_POSTGRES_PASSWORD}"
         FLYWAY_PLACEHOLDERS_VKG_USER_READONLY = "${VKG_POSTGRES_USER_READONLY}"
+
+        // Authentication proxy
+        KEYCLOAK_REALM_URL = "https://auth.opendatahub.bz.it/auth/realms/noi"
+        KEYCLOAK_DOMAIN_NAME = "auth.opendatahub.bz.it"
+        KEYCLOAK_CLIENT_ID = "it.bz.opendatahub.sparql"
+        KEYCLOAK_CLIENT_SECRET = credentials('it.bz.opendatahub.sparql.KEYCLOAK_CLIENT_SECRET')
+        KEYCLOAK_ALLOWED_GROUPS = "/VKG Full Access"
+        AUTH_PROXY_COOKIE_SECRET = credentials('it.bz.opendatahub.sparql.OAUTH2_COOKIE_SECRET')
     }
 
     stages {
@@ -72,7 +80,7 @@ pipeline {
                     echo "FLYWAY_PLACEHOLDERS_TOURISM_SUBSCRIPTION_NAME=${FLYWAY_PLACEHOLDERS_TOURISM_SUBSCRIPTION_NAME}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_TOURISM_PUBLICATION_NAME=${FLYWAY_PLACEHOLDERS_TOURISM_PUBLICATION_NAME}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_TOURISM_SCHEMA_VKG=${FLYWAY_PLACEHOLDERS_TOURISM_SCHEMA_VKG}" >> .env
-                    
+
                     echo "FLYWAY_PLACEHOLDERS_MOBILITY_DB=${FLYWAY_PLACEHOLDERS_MOBILITY_DB}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_MOBILITY_HOST=${FLYWAY_PLACEHOLDERS_MOBILITY_HOST}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_MOBILITY_USER=${FLYWAY_PLACEHOLDERS_MOBILITY_USER}" >> .env
@@ -80,6 +88,13 @@ pipeline {
                     echo "FLYWAY_PLACEHOLDERS_MOBILITY_SUBSCRIPTION_NAME=${FLYWAY_PLACEHOLDERS_MOBILITY_SUBSCRIPTION_NAME}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_MOBILITY_PUBLICATION_NAME=${FLYWAY_PLACEHOLDERS_MOBILITY_PUBLICATION_NAME}" >> .env
                     echo "FLYWAY_PLACEHOLDERS_MOBILITY_SCHEMA_VKG=${FLYWAY_PLACEHOLDERS_MOBILITY_SCHEMA_VKG}" >> .env
+
+                    echo "KEYCLOAK_REALM_URL=${KEYCLOAK_REALM_URL}" >> .env
+                    echo "KEYCLOAK_DOMAIN_NAME=${KEYCLOAK_DOMAIN_NAME}" >> .env
+                    echo "KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}" >> .env
+                    echo "KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}" >> .env
+                    echo "KEYCLOAK_ALLOWED_GROUPS=${KEYCLOAK_ALLOWED_GROUPS}" >> .env
+                    echo "AUTH_PROXY_COOKIE_SECRET=${AUTH_PROXY_COOKIE_SECRET}" >> .env
 
                     sed -i -e "s%\\(jdbc.url\\s*=\\).*\\$%\\1jdbc\\\\\\\\:postgresql\\\\\\\\://${VKG_POSTGRES_HOST}/${VKG_POSTGRES_DB}%" vkg/odh.docker.properties
                     sed -i -e "s%\\(jdbc.user\\s*=\\).*\\$%\\1${VKG_POSTGRES_USER_READONLY}%" vkg/odh.docker.properties
@@ -102,7 +117,7 @@ pipeline {
                sshagent(['jenkins-ssh-key']) {
                     sh """
                         cd infrastructure/ansible
-						ansible-galaxy install -f -r requirements.yml
+                        ansible-galaxy install -f -r requirements.yml
                         ansible-playbook --limit=${ANSIBLE_LIMIT} deploy.yml --extra-vars "release_name=${BUILD_NUMBER}"
                     """
                 }

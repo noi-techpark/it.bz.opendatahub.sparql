@@ -1,5 +1,9 @@
 title="Open Data Hub Knowledge Graph Portal"
 
+[authentication]
+logout_endpoint="ontop/logout"
+userinfo_endpoint="ontop/userinfo"
+
 [[tabGroups]]
 
 name="Regular Queries"

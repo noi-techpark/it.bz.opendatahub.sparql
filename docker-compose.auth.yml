@@ -84,20 +84,29 @@ services:
         "/opt/ontop/entrypoint.sh",
       ]
   oauth2:
-    image: quay.io/oauth2-proxy/oauth2-proxy:v6.1.1
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.0.1
+    env_file: .env
+    command: [
+        "--provider=oidc",
+        "--oidc-issuer-url=${KEYCLOAK_REALM_URL}",
+        "--allowed-group=${KEYCLOAK_ALLOWED_GROUPS}",
+        "--scope=openid email profile",
+        "--email-domain=*",
+        "--http-address=0.0.0.0:4180",
+        "--set-xauthrequest",
+        "--pass-access-token",
+        "--skip-provider-button",
+        "--cookie-refresh=1m",
+        "--whitelist-domain=${KEYCLOAK_DOMAIN_NAME}",
+        # local development-only
+        "--cookie-secure=false",
+        "--insecure-oidc-allow-unverified-email",
+        "--redirect-url=http://localhost:${SERVER_PORT}/oauth2/callback",
+      ]
     environment:
-      OAUTH2_PROXY_PROVIDER: "keycloak"
-      OAUTH2_PROXY_CLIENT_ID: "$KEYCLOAK_CLIENT_ID"
-      OAUTH2_PROXY_CLIENT_SECRET: "$KEYCLOAK_CLIENT_SECRET"
-      OAUTH2_PROXY_COOKIE_SECRET: "$OAUTH2_COOKIE_SECRET"
-      OAUTH2_PROXY_LOGIN_URL: "$KEYCLOAK_REALM/protocol/openid-connect/auth"
-      OAUTH2_PROXY_REDEEM_URL: "$KEYCLOAK_REALM/protocol/openid-connect/token"
-      OAUTH2_PROXY_VALIDATE_URL: "$KEYCLOAK_REALM/protocol/openid-connect/userinfo"
-      OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
-      OAUTH2_PROXY_EMAIL_DOMAINS: "${OAUTH2_ALLOWED_EMAIL_DOMAINS}"
-      # development-only
-      OAUTH2_PROXY_COOKIE_SECURE: "false"
-      OAUTH2_PROXY_REDIRECT_URL: "http://localhost:${SERVER_PORT}/oauth2/callback"
+      OAUTH2_PROXY_CLIENT_ID: "${KEYCLOAK_CLIENT_ID}"
+      OAUTH2_PROXY_CLIENT_SECRET: "${KEYCLOAK_CLIENT_SECRET}"
+      OAUTH2_PROXY_COOKIE_SECRET: "${AUTH_PROXY_COOKIE_SECRET}"
   nginx:
     build:
       context: ./
