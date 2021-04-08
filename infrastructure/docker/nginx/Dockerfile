@@ -10,8 +10,10 @@ COPY infrastructure/docker/nginx/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
 # run nginx
-CMD ["/bin/sh", "-c", "envsubst '$KEYCLOAK_REALM_URL' < /etc/nginx/ontop.conf.template > /etc/nginx/ontop.conf && nginx -g 'daemon off;'"]
+CMD ["nginx", "-g", "daemon off;"]
 
 FROM dev as prod
+
 COPY infrastructure/docker/nginx/ontop.conf.template /etc/nginx/ontop.conf.template
 COPY infrastructure/docker/nginx/index.js /www/restricted/index.js
+CMD ["/bin/sh", "-c", "envsubst '$KEYCLOAK_REALM_URL' < /etc/nginx/ontop.conf.template > /etc/nginx/ontop.conf && nginx -g 'daemon off;'"]
