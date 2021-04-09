@@ -12,6 +12,7 @@ Table of contents
 - [Authentication](#authentication)
 	- [Keycloak configuration](#keycloak-configuration)
 	- [Authentication proxy configuration](#authentication-proxy-configuration)
+	- [Give access to the restricted area](#give-access-to-the-restricted-area)
 
 ## Keycloak configuration
 
@@ -52,3 +53,14 @@ The authentication proxy is local to the `odh-vkg` deployment and is therefore c
 | `KEYCLOAK_CLIENT_SECRET`   | The **Secret** in the Credential tab of the client.                                                                                                                                                                                          |
 | `KEYCLOAK_ALLOWED_GROUPS`  | List of comma-separated Keycloak groups which should have access to the `/restricted` endpoint. Keycloak groups are implemented as a tree, so you must specify their full path here instead of only their names. Example: `/VKG Full Access` |
 | `AUTH_PROXY_COOKIE_SECRET` | Key which is used by the proxy to secure cookies. Must be 16, 32 or 64 strong random bytes, optionally base64 encoded. Changing this value will invalidate all sessions, requiring re-authentication.                                        |
+
+## Give access to the restricted area
+
+Go to your Keycloak Authentication server console
+(`https://<keycloak-endpoint>/auth/admin/master/console/`), and open the
+`Manage/Users` subsection. Choose the user and click on `Groups` beneath the
+user name. Under `Available Groups` choose the `VKG Full Access` group and click
+join.
+
+NB: If that group or a similar one does not exist, follow the configuration
+steps described above.
