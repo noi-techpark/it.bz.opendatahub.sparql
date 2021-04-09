@@ -64,3 +64,8 @@ join.
 
 NB: If that group or a similar one does not exist, follow the configuration
 steps described above.
+
+To test it, open the `/restricted` path and go to mobility queries. There
+execute the query called `Sensor/ObservableProperty/Observation statistics`, if
+the sensor return measurements your login was successful, if the response set is
+empty, it did not work.
