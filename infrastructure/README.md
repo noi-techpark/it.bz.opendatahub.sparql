@@ -8,6 +8,22 @@ containers, namely `Ontop` and `Nginx`.
 If you want to know how to setup logical replication, have a look at our [Flight
 Rules](https://github.com/noi-techpark/documentation/blob/master/FLIGHTRULES.md#i-want-to-enable-logical-replication-on-an-awsrds-or-regular-postgres-instance).
 
+- [Infrastructure](#infrastructure)
+	- [Endpoints](#endpoints)
+	- [Deployment](#deployment)
+	- [Credentials](#credentials)
+	- [Security](#security)
+	- [Databases](#databases)
+		- [Tourism Postgres DB (source)](#tourism-postgres-db-source)
+		- [Virtual Knowledge Graph Postgres DB (destination)](#virtual-knowledge-graph-postgres-db-destination)
+			- [Users](#users)
+			- [Databases](#databases-1)
+	- [Docker containers](#docker-containers)
+	- [Flight Rules](#flight-rules)
+		- [I want to update the tourism DB dump](#i-want-to-update-the-tourism-db-dump)
+		- [I have a Flyway schema error, which I want to repair](#i-have-a-flyway-schema-error-which-i-want-to-repair)
+		- [I want to login into the Ontop container](#i-want-to-login-into-the-ontop-container)
+
 ## Endpoints
 
 Current deployments:
@@ -21,7 +37,9 @@ On these servers, one can find:
   * Example: https://sparql.opendatahub.testingmachine.eu/predefined/accommodation?Id=86673280ABD13ADC4D521DF459C75474
 * Clone of the existing ODH API `/api/JsonLD/DetailInLD?type={value1}&{param2=value2}*`
   * Example: https://sparql.opendatahub.testingmachine.eu/api/JsonLD/DetailInLD?type=accommodation&Id=32E7BE648E7B11D181AB006097B896BA&showid=false
-
+* `/restricted` to enter a restricted area which needs a login. From here you
+  can access also closed data. See [docs/authentication.md](docs/authentication.md)
+  for details.
 
 ## Deployment
 
@@ -31,7 +49,7 @@ Deployment in these environments is achieved through Jenkins scripts:
 - CD for the production environment: `jenkins/prod.groovy`
 
 ...and docker-compose scripts:
-- Build docker: `docker-compose.build.yml` 
+- Build docker: `docker-compose.build.yml`
 - Run docker: `docker-compose.run.yml`
 
 Jenkins
