@@ -511,11 +511,23 @@ source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM
                     )
 
 mappingId	municipality_geom
-target		:municipality/{istat_code} geo:defaultGeometry :municipality/geometry/{istat_code} . :municipality/geometry/{istat_code} geo:asWKT {wkt}^^geo:wktLiteral .
+target		:municipality/0{istat_code} geo:defaultGeometry :municipality/geometry/0{istat_code} . :municipality/geometry/0{istat_code} geo:asWKT {wkt}^^geo:wktLiteral .
 source		SELECT istat_code, ST_AsText(geom_4326) AS wkt FROM odp_municipalities
 
 mappingId	municipality
-target		:municipality/{istat_code} a :Municipality ; rdfs:label {name_i}@it , {name_d}@de ; :hasIStatCode {istat_code}^^xsd:integer .
+target		:municipality/0{istat_code} a :Municipality ; rdfs:label {name_i}@it , {name_d}@de ; :hasIStatCode {istat_code}^^xsd:integer .
 source		SELECT istat_code, name_i, name_d FROM odp_municipalities
+
+mappingId	LodgingBusiness-municipality
+target		data:accommodation/{Id} :hasMunicipality data:municipality/{LocationInfo-MunicipalityInfo-Id}. data:municipality/{LocationInfo-MunicipalityInfo-Id} a :Municipality ; schema:name {LocationInfo-MunicipalityInfo-Name-en}@en , {LocationInfo-MunicipalityInfo-Name-it}@it , {LocationInfo-MunicipalityInfo-Name-de}@de .
+source		SELECT * FROM "v_accommodationsopen" 
+
+mappingId	municipalityOpen
+target		data:municipality/{Id} a :Municipality ; schema:name {Detail-en-Title}@en , {Detail-it-Title}@it , {Detail-de-Title}@de ; :hasIStatCode {IstatNumber}^^xsd:integer ; :population {Inhabitants}^^xsd:integer.
+source		SELECT * FROM "v_municipalitiesopen"
+
+mappingId	municipalityOpen
+target		:municipality/{IstatNumber} obda:isCanonicalIRIOf data:municipality/{Id} .
+source		SELECT * FROM "v_municipalitiesopen"
 ]]
 
