@@ -10,14 +10,14 @@ name="Lodging businesses (limit 500)"
 query="""
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
 
 SELECT ?h ?pos ?posLabel ?posColor
 WHERE {
   ?h a schema:LodgingBusiness ;
-     geo:hasGeometry/geo:asWKT ?pos ;
-     schema:name ?posLabel ;
-     schema:address ?a .
-  # ?a schema:postalCode "39100" . # Uncomment for Bolzano only
+     geo:defaultGeometry/geo:asWKT ?pos ;
+     schema:name ?posLabel .
+  #?h :hasMunicipality/schema:name "Bozen"@de . # Uncomment for restricting to a municipality
   FILTER (lang(?posLabel) = 'de')
 
   # Colors

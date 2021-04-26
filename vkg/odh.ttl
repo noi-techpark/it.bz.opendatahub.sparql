@@ -1613,7 +1613,6 @@ Used for instance for specifying how many units of a given suite \"category\" ar
 
 ###  http://noi.example.org/ontology/odh#population
 :population rdf:type owl:DatatypeProperty ;
-            rdfs:domain :Municipality ;
             rdfs:range xsd:integer .
 
 
@@ -2002,7 +2001,7 @@ geo:asWKT rdf:type owl:DatatypeProperty .
 
 ###  http://noi.example.org/ontology/odh#Municipality
 :Municipality rdf:type owl:Class ;
-              rdfs:subClassOf geo:Feature .
+              rdfs:subClassOf schema:AdministrativeArea .
 
 
 ###  http://noi.example.org/ontology/odh#NOI-Place
