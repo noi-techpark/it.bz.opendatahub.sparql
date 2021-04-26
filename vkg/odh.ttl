@@ -1366,12 +1366,6 @@ geo:wktLiteral rdf:type rdfs:Datatype .
 :hasDestinationStation rdf:type owl:ObjectProperty .
 
 
-###  http://noi.example.org/ontology/odh#hasMunicipality
-:hasMunicipality rdf:type owl:ObjectProperty ;
-                 rdfs:domain schema:Place ;
-                 rdfs:range :Municipality .
-
-
 ###  http://noi.example.org/ontology/odh#hasOriginStation
 :hasOriginStation rdf:type owl:ObjectProperty .
 

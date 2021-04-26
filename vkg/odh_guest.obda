@@ -515,7 +515,7 @@ target		:municipality/0{istat_code} geo:defaultGeometry :municipality/geometry/0
 source		SELECT istat_code, ST_AsText(geom_4326) AS wkt FROM odp_municipalities
 
 mappingId	LodgingBusiness-municipality
-target		data:accommodation/{Id} :hasMunicipality data:municipality/{LocationInfo-MunicipalityInfo-Id} . 
+target		data:accommodation/{Id} schema:containedInPlace data:municipality/{LocationInfo-MunicipalityInfo-Id} . 
 source		SELECT * FROM "v_accommodationsopen" 
 
 mappingId	v_municipalitiesopen
