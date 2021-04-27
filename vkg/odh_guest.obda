@@ -519,7 +519,7 @@ target		data:accommodation/{Id} schema:containedInPlace data:municipality/{Locat
 source		SELECT * FROM "v_accommodationsopen" 
 
 mappingId	v_municipalitiesopen
-target		data:municipality/{Id} a :Municipality ; schema:name {Detail-en-Title}@en , {Detail-it-Title}@it , {Detail-de-Title}@de ; :hasIStatCode {IstatNumber}^^xsd:integer ; :population {Inhabitants}^^xsd:integer.
+target		data:municipality/{Id} a :Municipality ; schema:name {Detail-en-Title}@en , {Detail-it-Title}@it , {Detail-de-Title}@de ; :hasIStatCode {IstatNumber}^^xsd:integer ; :populationCount {Inhabitants}^^xsd:integer.
 source		SELECT * FROM "v_municipalitiesopen"
 
 mappingId	v_municipalitiesopen-ISTATnumber
