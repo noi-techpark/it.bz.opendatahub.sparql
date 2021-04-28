@@ -689,6 +689,27 @@ SELECT * {
 }
 """
 
+[[tabGroups.tabs]]
+
+name="Non-public weather observations"
+query="""
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT * WHERE {
+  ?s a :MeteoStation ; :hasOrigin ?origin .
+  FILTER (?origin !='SIAG' && ?origin != 'meteotrentino')
+  ?s sosa:madeObservation ?o .
+  ?o sosa:hasSimpleResult ?v .
+  ?o sosa:resultTime ?t .
+  ?o sosa:observedProperty ?prop .
+  ?prop rdfs:comment ?pc .
+}
+LIMIT 10
+"""
+
 [[tabGroups]]
 
 name="Tourims and Mobility"
