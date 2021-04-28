@@ -457,11 +457,19 @@ target		data:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ;
 source		SELECT * FROM intimev2.measurementhistory
 
 mappingId	municipality_geom
-target		:municipality/{istat_code} geo:defaultGeometry :municipality/geometry/{istat_code} . :municipality/geometry/{istat_code} geo:asWKT {wkt}^^geo:wktLiteral .
+target		:municipality/0{istat_code} geo:defaultGeometry :municipality/geometry/0{istat_code} . :municipality/geometry/0{istat_code} geo:asWKT {wkt}^^geo:wktLiteral .
 source		SELECT istat_code, ST_AsText(geom_4326) AS wkt FROM odp_municipalities
 
-mappingId	municipality
-target		:municipality/{istat_code} a :Municipality ; rdfs:label {name_i}@it , {name_d}@de ; :hasIStatCode {istat_code}^^xsd:integer .
-source		SELECT istat_code, name_i, name_d FROM odp_municipalities
+mappingId	LodgingBusiness-municipality
+target		data:accommodation/{Id} schema:containedInPlace data:municipality/{LocationInfo-MunicipalityInfo-Id} . 
+source		SELECT * FROM "v_accommodationsopen" 
+
+mappingId	v_municipalitiesopen
+target		data:municipality/{Id} a :Municipality ; schema:name {Detail-en-Title}@en , {Detail-it-Title}@it , {Detail-de-Title}@de ; :hasIStatCode {IstatNumber}^^xsd:integer ; :populationCount {Inhabitants}^^xsd:integer.
+source		SELECT * FROM "v_municipalitiesopen"
+
+mappingId	v_municipalitiesopen-ISTATnumber
+target		data:municipality/{Id} obda:isCanonicalIRIOf :municipality/{IstatNumber} .
+source		SELECT * FROM "v_municipalitiesopen"
 ]]
 

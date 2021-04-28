@@ -10,14 +10,14 @@ name="Lodging businesses (limit 500)"
 query="""
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
 
 SELECT ?h ?pos ?posLabel ?posColor
 WHERE {
   ?h a schema:LodgingBusiness ;
-     geo:hasGeometry/geo:asWKT ?pos ;
-     schema:name ?posLabel ;
-     schema:address ?a .
-  # ?a schema:postalCode "39100" . # Uncomment for Bolzano only
+     geo:defaultGeometry/geo:asWKT ?pos ;
+     schema:name ?posLabel .
+  #?h schema:containedInPlace/schema:name "Bozen"@de . # Uncomment for restricting to a municipality
   FILTER (lang(?posLabel) = 'de')
 
   # Colors
@@ -329,6 +329,46 @@ WHERE {
   BIND(geof:distance(?hPos, ?fPos, uom:metre) AS ?distance)
   FILTER (?h != ?f)
   FILTER (?distance < 100)
+}
+"""
+
+[[tabGroups.tabs]]
+name="Lodging businesses in Castelrotto"
+query="""
+PREFIX schema: <http://schema.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT ?h ?pos ?posLabel ?posColor ?com
+WHERE {
+  ?h a schema:LodgingBusiness ;
+     geo:defaultGeometry/geo:asWKT ?pos ;
+     schema:name ?posLabel ;
+     schema:containedInPlace ?mun .
+
+  FILTER (lang(?posLabel) = 'de')
+
+  ?mun a :Municipality ;
+     geo:defaultGeometry/geo:asWKT ?com ;
+     schema:name "Castelrotto"@it .
+
+  # Colors
+  OPTIONAL {
+    ?h a schema:Campground .
+    BIND("chlorophyll,0.5" AS ?posColor) # Green
+  }
+    OPTIONAL {
+    ?h a schema:BedAndBreakfast .
+    BIND("viridis,0.1" AS ?posColor) # Purple
+  }
+  OPTIONAL {
+    ?h a schema:Hotel .
+    BIND("jet,0.3" AS ?posColor) # Light blue
+  }
+  OPTIONAL {
+    ?h a schema:Hostel .
+    BIND("jet,0.8" AS ?posColor) # Red
+  }
 }
 """
 

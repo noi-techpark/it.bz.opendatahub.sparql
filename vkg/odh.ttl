@@ -1366,12 +1366,6 @@ geo:wktLiteral rdf:type rdfs:Datatype .
 :hasDestinationStation rdf:type owl:ObjectProperty .
 
 
-###  http://noi.example.org/ontology/odh#hasMunicipality
-:hasMunicipality rdf:type owl:ObjectProperty ;
-                 rdfs:domain schema:Place ;
-                 rdfs:range :Municipality .
-
-
 ###  http://noi.example.org/ontology/odh#hasOriginStation
 :hasOriginStation rdf:type owl:ObjectProperty .
 
@@ -1611,9 +1605,8 @@ Used for instance for specifying how many units of a given suite \"category\" ar
 :organizationType rdf:type owl:DatatypeProperty .
 
 
-###  http://noi.example.org/ontology/odh#population
-:population rdf:type owl:DatatypeProperty ;
-            rdfs:domain :Municipality ;
+###  http://noi.example.org/ontology/odh#populationCount
+:populationCount rdf:type owl:DatatypeProperty ;
             rdfs:range xsd:integer .
 
 
@@ -2002,7 +1995,7 @@ geo:asWKT rdf:type owl:DatatypeProperty .
 
 ###  http://noi.example.org/ontology/odh#Municipality
 :Municipality rdf:type owl:Class ;
-              rdfs:subClassOf geo:Feature .
+              rdfs:subClassOf schema:AdministrativeArea .
 
 
 ###  http://noi.example.org/ontology/odh#NOI-Place
