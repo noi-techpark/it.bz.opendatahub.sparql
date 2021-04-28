@@ -1605,8 +1605,8 @@ Used for instance for specifying how many units of a given suite \"category\" ar
 :organizationType rdf:type owl:DatatypeProperty .
 
 
-###  http://noi.example.org/ontology/odh#population
-:population rdf:type owl:DatatypeProperty ;
+###  http://noi.example.org/ontology/odh#populationCount
+:populationCount rdf:type owl:DatatypeProperty ;
             rdfs:range xsd:integer .
 
 
