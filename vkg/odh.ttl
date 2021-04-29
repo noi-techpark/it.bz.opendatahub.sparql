@@ -1923,12 +1923,6 @@ geo:asWKT rdf:type owl:DatatypeProperty .
                                    sosa:Sensor .
 
 
-###  http://noi.example.org/ontology/odh#Covid-19
-:Covid-19 rdf:type owl:Class ;
-          rdfs:subClassOf :Station ,
-                          sosa:Sensor .
-
-
 ###  http://noi.example.org/ontology/odh#CreativeIndustry
 :CreativeIndustry rdf:type owl:Class ;
                   rdfs:subClassOf :Station .

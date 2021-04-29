@@ -356,10 +356,6 @@ mappingId	station-LinkStation
 target		data:station/{id} a :LinkStation .
 source		SELECT * FROM intimev2.station WHERE stationtype='LinkStation'
 
-mappingId	station-Covid-19
-target		data:station/{id} a :Covid-19 .
-source		SELECT * FROM intimev2.station WHERE stationtype='Covid-19'
-
 mappingId	station-VMS
 target		data:station/{id} a :VMS .
 source		SELECT * FROM intimev2.station WHERE stationtype='VMS'
