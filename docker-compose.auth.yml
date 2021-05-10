@@ -98,6 +98,8 @@ services:
         "--skip-provider-button",
         "--cookie-refresh=1m",
         "--whitelist-domain=${KEYCLOAK_DOMAIN_NAME}",
+        "--session-store-type=redis",
+        "--redis-connection-url=redis://redis",
         # local development-only
         "--cookie-secure=false",
         "--insecure-oidc-allow-unverified-email",
@@ -107,6 +109,13 @@ services:
       OAUTH2_PROXY_CLIENT_ID: "${KEYCLOAK_CLIENT_ID}"
       OAUTH2_PROXY_CLIENT_SECRET: "${KEYCLOAK_CLIENT_SECRET}"
       OAUTH2_PROXY_COOKIE_SECRET: "${AUTH_PROXY_COOKIE_SECRET}"
+    networks:
+      - default
+      - redis-internal
+  redis:
+    image: redis:6.2-alpine
+    networks:
+      - redis-internal
   nginx:
     build:
       context: ./
@@ -145,6 +154,9 @@ services:
     environment:
       - POSTGRES_USER=tourismuser
       - POSTGRES_PASSWORD=postgres2
+
+networks:
+  redis-internal:
 
 volumes:
   pgdata-tourism-master: {}
