@@ -60,14 +60,14 @@ SELECT ?pos ?posColor ?bName
 WHERE {
   ?b a schema:LodgingBusiness ;
      schema:name ?bName ;
-     geo:hasGeometry/geo:asWKT ?pos .
+     geo:defaultGeometry/geo:asWKT ?pos .
 
   ?r a schema:Accommodation ;
      schema:containedInPlace ?b ;
      :numberOfUnits ?nb ;
-     schema:occupancy [ schema:maxValue ?maxOccupancyPerRoom ] .
+     schema:occupancy/schema:maxValue ?maxOccupancyPerRoom .
 
-  # ?b schema:address [ schema:postalCode "39100" ] # For Bolzano only
+  # ?b schema:containedInPlace/schema:name "Bozen"@de . # Uncomment for restricting to a municipality
 
   BIND (?nb * ?maxOccupancyPerRoom AS ?maxPersons)
   FILTER (lang(?bName)='en')
@@ -130,8 +130,8 @@ SELECT ?pos ?posLabel
 WHERE {
   ?s a schema:SkiResort ;
      schema:name ?name ;
-     geo:hasGeometry/geo:asWKT ?pos ;
-     schema:geo [ schema:elevation ?maxElevation ] ;
+     geo:defaultGeometry/geo:asWKT ?pos ;
+     schema:geo/schema:elevation ?maxElevation ;
      schema:image ?img ;
      schema:isPartOf ?skiRegion.
 
@@ -156,10 +156,8 @@ PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 SELECT ?e ?pos ?posLabel ?posColor
 WHERE {
   ?e a schema:FoodEstablishment ;
-     geo:hasGeometry/geo:asWKT ?pos ;
-     schema:name ?posLabel ;
-     schema:address ?a .
-  # ?a schema:postalCode "39100" . # Uncomment for Bolzano only
+     geo:defaultGeometry/geo:asWKT ?pos ;
+     schema:name ?posLabel .
   FILTER (lang(?posLabel) = 'de')
 
   # Colors (with priority)
@@ -195,7 +193,7 @@ SELECT ?e
        ?posColor
 WHERE {
   ?e a schema:Restaurant;
-     geo:hasGeometry/geo:asWKT ?pos ;
+     geo:defaultGeometry/geo:asWKT ?pos ;
      schema:name ?name ;
      schema:geo ?geo .
   ?geo schema:elevation ?altitude .
@@ -214,7 +212,7 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 SELECT ?pos ?posLabel
 WHERE {
   ?p a :Pizzeria ;
-     geo:hasGeometry/geo:asWKT ?pos ;
+     geo:defaultGeometry/geo:asWKT ?pos ;
      schema:name ?posLabel ;
      schema:geo ?geo .
   FILTER (lang(?posLabel) = 'it')
@@ -231,7 +229,7 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 SELECT ?pos ?posLabel ?desc
 WHERE {
   ?p a schema:FoodEstablishment ;
-     geo:hasGeometry/geo:asWKT ?pos ;
+     geo:defaultGeometry/geo:asWKT ?pos ;
      schema:name ?name ;
      schema:servesCuisine "asian"@en .
      OPTIONAL {
@@ -253,7 +251,7 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 SELECT ?pos ?posLabel ?desc
 WHERE {
   ?p a schema:FoodEstablishment ;
-     geo:hasGeometry/geo:asWKT ?pos ;
+     geo:defaultGeometry/geo:asWKT ?pos ;
      schema:name ?name ;
      schema:servesCuisine "mediterranean"@en .
      OPTIONAL {
@@ -275,7 +273,7 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 SELECT ?pos ?posLabel ?desc
 WHERE {
   ?p a schema:FoodEstablishment ;
-     geo:hasGeometry/geo:asWKT ?pos ;
+     geo:defaultGeometry/geo:asWKT ?pos ;
      schema:name ?name ;
      schema:hasMenu [
       schema:hasMenuItem [
@@ -298,7 +296,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
 SELECT * WHERE {
-  ?t a schema:PerformingArtsTheater ; geo:hasGeometry/geo:asWKT ?pos ; schema:name ?posLabel .
+  ?t a schema:PerformingArtsTheater ; geo:defaultGeometry/geo:asWKT ?pos ; schema:name ?posLabel .
 }
 """
 
@@ -309,7 +307,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
 SELECT * WHERE {
-  ?m a schema:MedicalOrganization ; geo:hasGeometry/geo:asWKT ?pos ; schema:name ?posLabel .
+  ?m a schema:MedicalOrganization ; geo:defaultGeometry/geo:asWKT ?pos ; schema:name ?posLabel .
 }
 """
 
@@ -325,10 +323,10 @@ PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
 SELECT *
 WHERE {
   ?h a schema:LodgingBusiness ;
-     geo:hasGeometry/geo:asWKT ?hPos ;
+     geo:defaultGeometry/geo:asWKT ?hPos ;
      schema:name ?hPosLabel .
   ?f a schema:FoodEstablishment ;
-     geo:hasGeometry/geo:asWKT ?fPos ;
+     geo:defaultGeometry/geo:asWKT ?fPos ;
      schema:name ?fPosLabel .
   BIND(geof:distance(?hPos, ?fPos, uom:metre) AS ?distance)
   FILTER (?h != ?f)
@@ -389,7 +387,7 @@ PREFIX schema: <http://schema.org/>
 
 SELECT ?pos ?posColor ?bName (?bName AS ?posLabel)
 WHERE {
-  ?b a schema:LodgingBusiness ; schema:name ?bName ; geo:hasGeometry/geo:asWKT ?pos .
+  ?b a schema:LodgingBusiness ; schema:name ?bName ; geo:defaultGeometry/geo:asWKT ?pos .
   MINUS {
      ?r schema:containedInPlace ?b .
      ?r a schema:Accommodation
@@ -426,7 +424,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
 SELECT ?h ?pos ?posLabel ?zip WHERE {
-  ?h a schema:LodgingBusiness ; geo:hasGeometry/geo:asWKT ?pos ; schema:name ?posLabel ; schema:address ?a .
+  ?h a schema:LodgingBusiness ; geo:defaultGeometry/geo:asWKT ?pos ; schema:name ?posLabel ; schema:address ?a .
   ?a schema:postalCode ?zip .
   FILTER (lang(?posLabel)='de').
   FILTER regex(?zip, '^(?!39+)', 'i').
@@ -443,7 +441,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
 SELECT ?h ?pos ?posLabel ?box ?boxColor ?posColor {
-?h a schema:LodgingBusiness ; schema:name ?posLabel ; schema:geo [ schema:latitude ?lat ; schema:longitude ?long ] ; geo:hasGeometry/geo:asWKT ?pos .
+?h a schema:LodgingBusiness ; schema:name ?posLabel ; schema:geo [ schema:latitude ?lat ; schema:longitude ?long ] ; geo:defaultGeometry/geo:asWKT ?pos .
 FILTER (?lat < 46.2198 || ?lat > 47.0921 || ?long < 10.3818 || ?long > 12.4779) .
 FILTER (lang(?posLabel) = 'de') .
 BIND("MULTILINESTRING((10.3818 46.2198, 12.4779 46.2198, 12.4779 47.0921, 10.3818 47.0921, 10.3818 46.2198))"^^geo:wktLiteral AS ?box) .
@@ -462,7 +460,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
 SELECT ?h ?pos ?posLabel ("jet,0.8" AS ?posColor) WHERE {
-  ?h a schema:LodgingBusiness ; geo:hasGeometry/geo:asWKT ?pos ; schema:name ?name ; schema:address ?a .
+  ?h a schema:LodgingBusiness ; geo:defaultGeometry/geo:asWKT ?pos ; schema:name ?name ; schema:address ?a .
   ?a schema:addressLocality ?deCity, ?itCity ; schema:postalCode "39100" .
   FILTER ((lang(?name) = 'de') && (lang(?deCity) = 'de') && (lang(?itCity) = 'it')
     && ((lcase(str(?itCity)) != "bolzano") || (lcase(str(?deCity)) != "bozen")))
@@ -499,7 +497,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT * {
 ?s a :Station .
 ?s rdfs:label ?l .
-OPTIONAL {?s geo:hasGeometry ?g .
+OPTIONAL {?s geo:defaultGeometry ?g .
 ?g geo:asWKT ?wkt .}
 }
 """
@@ -529,9 +527,9 @@ PREFIX sosa: <http://www.w3.org/ns/sosa/>
 SELECT DISTINCT ?t1 ?t2 {
 ?s1 sosa:isHostedBy ?s2 .
 ?s1 rdfs:label ?ll ; :hasStationType ?t1.
-#?s1 geo:hasGeometry [geo:asWKT ?wkt1] .
+#?s1 geo:defaultGeometry [geo:asWKT ?wkt1] .
 ?s2 rdfs:label ?l2 ; :hasStationType ?t2 .
-#?s2 geo:hasGeometry [geo:asWKT ?wkt2] .
+#?s2 geo:defaultGeometry [geo:asWKT ?wkt2] .
 }
 """
 
@@ -559,7 +557,7 @@ PREFIX sosa: <http://www.w3.org/ns/sosa/>
 SELECT * WHERE {
 ?s a sosa:Sensor .
 #?s sosa:isHostedBy ?p.
-?s geo:hasGeometry ?g . ?g geo:asWKT ?wkt .
+?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
 ?s sosa:madeObservation ?o .
 ?o sosa:hasSimpleResult ?v .
 ?o sosa:resultTime ?t .
@@ -580,7 +578,7 @@ PREFIX sosa: <http://www.w3.org/ns/sosa/>
 
 SELECT DISTINCT ?st WHERE {
 ?s a sosa:Sensor .
-?s geo:hasGeometry ?g . ?g geo:asWKT ?wkt .
+?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
   ?s :hasStationType ?st .
 #?s sosa:madeObservation ?o .
 }
@@ -597,10 +595,10 @@ PREFIX sosa: <http://www.w3.org/ns/sosa/>
 
 SELECT * {
 ?rs a :RoadSegment ; :hasOriginStation ?ss ; :hasDestinationStation ?ds .
-#?rs geo:hasGeometry ?g .
+#?rs geo:defaultGeometry ?g .
 #?g geo:asWKT ?wkt .
-  ?ss geo:hasGeometry [geo:asWKT ?oWKT] .
-  ?ds geo:hasGeometry [geo:asWKT ?dWKT] .
+  ?ss geo:defaultGeometry [geo:asWKT ?oWKT] .
+  ?ds geo:defaultGeometry [geo:asWKT ?dWKT] .
 }
 """
 
@@ -614,7 +612,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT * {
 ?s a :TrafficSensor .
 ?s rdfs:label ?wktLabel .
-OPTIONAL {?s geo:hasGeometry ?g .
+OPTIONAL {?s geo:defaultGeometry ?g .
 ?g geo:asWKT ?wkt .}
 }
 """
@@ -633,7 +631,7 @@ SELECT ?st ?pc ?unit (COUNT(*) AS ?count)  (MIN(?t) AS ?min_t) (MAX(?t) AS ?max_
 #?s sosa:isHostedBy ?p.
 #  ?s a :TrafficSensor .
   ?s :hasStationType ?st .
-?s geo:hasGeometry ?g . ?g geo:asWKT ?wkt .
+?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
 ?s sosa:madeObservation ?o .
 ?o sosa:hasSimpleResult ?v .
 ?o sosa:resultTime ?t .
@@ -665,7 +663,7 @@ SELECT ?t ?v {
   ?prop rdfs:comment ?pc .
   ?prop :hasUnit ?unit .
   }
-  OPTIONAL {?s geo:hasGeometry ?g .
+  OPTIONAL {?s geo:defaultGeometry ?g .
   ?g geo:asWKT ?wkt .}
 }
 """
@@ -683,7 +681,7 @@ SELECT * {
     ?s rdfs:label ?wktLabel .
     FILTER(LANG(?wktLabel)='it') .
     OPTIONAL {
-        ?s geo:hasGeometry ?g .
+        ?s geo:defaultGeometry ?g .
         ?g geo:asWKT ?wkt .
     }
 }
@@ -728,11 +726,11 @@ PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
 SELECT *
 WHERE {
   # Restaurants
-  ?h a schema:Restaurant ; geo:hasGeometry/geo:asWKT ?hPos ; schema:name ?hPosLabel .
+  ?h a schema:Restaurant ; geo:defaultGeometry/geo:asWKT ?hPos ; schema:name ?hPosLabel .
   FILTER(LANG(?hPosLabel)='it')
   BIND('red' AS ?hPosColor)
   # MeteoStations
-  ?s a :MeteoStation ; geo:hasGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
+  ?s a :MeteoStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
   BIND('blue' AS ?sPosColor)
   # spatial correlation
   BIND(geof:distance(?hPos, ?sPos, uom:metre) AS ?distance)
