@@ -1,16 +1,20 @@
 [PrefixDeclaration]
-:		http://noi.example.org/ontology/odh#
-dc:		http://purl.org/dc/terms/
-geo:		http://www.opengis.net/ont/geosparql#
-owl:		http://www.w3.org/2002/07/owl#
-rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
-xml:		http://www.w3.org/XML/1998/namespace
-xsd:		http://www.w3.org/2001/XMLSchema#
-data:		http://noi.example.org/data/
-obda:		https://w3id.org/obda/vocabulary#
-rdfs:		http://www.w3.org/2000/01/rdf-schema#
-sosa:		http://www.w3.org/ns/sosa/
-schema:		http://schema.org/
+:	        	http://noi.example.org/ontology/odh#
+dc:	        	http://purl.org/dc/terms/
+geo:    	 	http://www.opengis.net/ont/geosparql#
+owl:    		http://www.w3.org/2002/07/owl#
+rdf:	    	http://www.w3.org/1999/02/22-rdf-syntax-ns#
+xml:    	   	http://www.w3.org/XML/1998/namespace
+xsd:    	 	http://www.w3.org/2001/XMLSchema#
+data:   	 	http://noi.example.org/data/
+obda:   		https://w3id.org/obda/vocabulary#
+rdfs:   	  	http://www.w3.org/2000/01/rdf-schema#
+sosa:   		http://www.w3.org/ns/sosa/
+schema:	   	    http://schema.org/
+qudt:	     	http://qudt.org/schema/qudt#
+qudt-1-1:   	http://qudt.org/1.1/schema/qudt#
+qudt-unit:   	http://qudt.org/vocab/unit#
+qudt-1-1-unit:	http://qudt.org/1.1/vocab/unit#
 
 [MappingDeclaration] @collection [[
 mappingId	Campground
@@ -329,7 +333,7 @@ target		data:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:s
 source		SELECT * FROM intimev2.type
 
 mappingId	measurement_observation
-target		data:latest_observation/{me_id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} .
+target		data:latest_observation/{me_id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{me_id}; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} .
 source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurement me
             WHERE s.id = me.station_id AND
                   (
@@ -358,6 +362,53 @@ source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM
                         -- special rules
                         or (s.origin = 'APPABZ' and me.period = 3600)
                     )
+
+mappingId	measurement_history_observation
+target		data:observation/{me_id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{me_id}; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} .
+source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurementhistory me
+            WHERE s.id = me.station_id AND
+                (
+                    -- station types that are always open, regardless of the origin
+                            s.stationtype in (
+                                              'NOI-Place',
+                                              'CreativeIndustry',
+                                              'BluetoothStation',
+                                              'CarpoolingHub',
+                                              'CarpoolingService',
+                                              'CarpoolingUser',
+                                              'CarsharingCar',
+                                              'CarsharingStation',
+                                              'EChargingPlug',
+                                              'EChargingStation',
+                                              'Streetstation',
+                                              'Culture')
+                        -- station types that are only partly open, constrained by the origin
+                        or (s.stationtype = 'Bicycle' and s.origin in ('ALGORAB', 'BIKE_SHARING_MERANO'))
+                        or (s.stationtype = 'BikesharingStation' and s.origin = 'ALGORAB')
+                        or (s.stationtype = 'EnvironmentStation' and s.origin = 'APPATN-open')
+                        or (s.stationtype = 'LinkStation' and (s.origin is null or s.origin = 'NOI'))
+                        or (s.stationtype = 'MeteoStation' and s.origin in ('meteotrentino', 'SIAG'))
+                        or (s.stationtype = 'ParkingStation' and s.origin in ('FAMAS', 'FBK', 'Municipality Merano'))
+                        or (s.stationtype = 'RWISstation' and s.origin = 'InfoMobility')
+                        -- special rules
+                        or (s.origin = 'APPABZ' and me.period = 3600)
+                    )
+
+mappingId   result_observation
+target      data:latest_observation/result/{id} a sosa:Result ; qudt:numericValue {double_value}^^xsd:double .
+source		SELECT * FROM intimev2.measurement
+
+mappingId   result_history_observation
+target      data:observation/result/{id} a sosa:Result ; qudt:numericValue {double_value}^^xsd:double .
+source		SELECT * FROM intimev2.measurementhistory
+
+mappingId   result_observation_unit
+target      data:latest_observation/result/{id} qudt:unit qudt-unit:MilliSEC, qudt-unit:MicroGM-PER-M3, qudt-unit:PERCENT, qudt-unit:DegreeCelsius, qudt-unit:MeterPerSecond, qudt-unit:KiloM-PER-HR, qudt-unit:NUM, qudt-unit:KiloGM. 
+source		SELECT * FROM intimev2.measurement
+
+mappingId   result_history_observation_unit
+target      data:observation/result/{id} qudt:unit qudt-unit:MilliSEC, qudt-unit:MicroGM-PER-M3, qudt-unit:PERCENT, qudt-unit:DegreeCelsius, qudt-unit:MeterPerSecond, qudt-unit:KiloM-PER-HR, qudt-unit:NUM, qudt-unit:KiloGM. 
+source		SELECT * FROM intimev2.measurement
 
 mappingId	road_segment
 target		data:road_segment/{id} a :RoadSegment ; :hasOriginStation data:station/{origin_id} ; :hasDestinationStation data:station/{destination_id} .
@@ -435,9 +486,9 @@ mappingId	station-Streetstation
 target		data:station/{id} a :Streetstation .
 source		SELECT * FROM intimev2.station WHERE stationtype='Streetstation'
 
-mappingId	station-MeteoStation
-target		data:station/{id} a :MeteoStation .
-source		SELECT * FROM intimev2.station WHERE stationtype='MeteoStation'
+mappingId	station-WeatherStation
+target		data:station/{id} a :WeatherStation .
+source		SELECT * FROM intimev2.station WHERE stationtype='WeatherStation'
 
 mappingId	station-ParkingSensor
 target		data:station/{id} a :ParkingSensor .
@@ -474,37 +525,6 @@ source		SELECT * FROM intimev2.station WHERE stationtype='ParkingStation'
 mappingId	metadata
 target		data:station/{station_id} :hasStationMetadata {json}^^xsd:string .
 source		SELECT * FROM intimev2.metadata
-
-mappingId	measurement_history_observation
-target		data:observation/{me_id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} .
-source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurementhistory me
-            WHERE s.id = me.station_id AND
-                (
-                    -- station types that are always open, regardless of the origin
-                            s.stationtype in (
-                                              'NOI-Place',
-                                              'CreativeIndustry',
-                                              'BluetoothStation',
-                                              'CarpoolingHub',
-                                              'CarpoolingService',
-                                              'CarpoolingUser',
-                                              'CarsharingCar',
-                                              'CarsharingStation',
-                                              'EChargingPlug',
-                                              'EChargingStation',
-                                              'Streetstation',
-                                              'Culture')
-                        -- station types that are only partly open, constrained by the origin
-                        or (s.stationtype = 'Bicycle' and s.origin in ('ALGORAB', 'BIKE_SHARING_MERANO'))
-                        or (s.stationtype = 'BikesharingStation' and s.origin = 'ALGORAB')
-                        or (s.stationtype = 'EnvironmentStation' and s.origin = 'APPATN-open')
-                        or (s.stationtype = 'LinkStation' and (s.origin is null or s.origin = 'NOI'))
-                        or (s.stationtype = 'MeteoStation' and s.origin in ('meteotrentino', 'SIAG'))
-                        or (s.stationtype = 'ParkingStation' and s.origin in ('FAMAS', 'FBK', 'Municipality Merano'))
-                        or (s.stationtype = 'RWISstation' and s.origin = 'InfoMobility')
-                        -- special rules
-                        or (s.origin = 'APPABZ' and me.period = 3600)
-                    )
 
 mappingId	municipality_geom
 target		data:municipality/0{istat_code} geo:defaultGeometry data:municipality/geometry/0{istat_code} . data:municipality/geometry/0{istat_code} geo:asWKT {wkt}^^geo:wktLiteral .

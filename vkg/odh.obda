@@ -8,10 +8,13 @@ xml:		http://www.w3.org/XML/1998/namespace
 xsd:		http://www.w3.org/2001/XMLSchema#
 data:		http://noi.example.org/data/
 obda:		https://w3id.org/obda/vocabulary#
-qudt:		http://qudt.org/schema/qudt/
+qudt:		http://qudt.org/schema/qudt#
 rdfs:		http://www.w3.org/2000/01/rdf-schema#
 sosa:		http://www.w3.org/ns/sosa/
 schema:		http://schema.org/
+qudt-1-1:	http://qudt.org/1.1/schema/qudt#
+qudt-unit:	http://qudt.org/vocab/unit#
+qudt-1-1-unit:	http://qudt.org/1.1/vocab/unit#
 
 [MappingDeclaration] @collection [[
 mappingId	Campground
@@ -330,8 +333,28 @@ target		data:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:s
 source		SELECT * FROM intimev2.type
 
 mappingId	measurement_observation
-target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
+target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
 source		SELECT * FROM intimev2.measurement
+
+mappingId	measurement_history_observation
+target		data:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
+source		SELECT * FROM intimev2.measurementhistory
+
+mappingId	result_observation
+target		data:latest_observation/result/{id} a sosa:Result ; qudt:numericValue {double_value}^^xsd:double . 
+source		SELECT * FROM intimev2.measurement
+
+mappingId	result_history_observation
+target		data:observation/result/{id} a sosa:Result ; qudt:numericValue {double_value}^^xsd:double . 
+source		SELECT * FROM intimev2.measurementhistory
+
+mappingId	result_observation_unit
+target		data:latest_observation/result/{id} qudt:unit qudt-unit:MilliSEC , qudt-unit:MicroGM-PER-M3 , qudt-unit:PERCENT , qudt-unit:DegreeCelsius , qudt-unit:MeterPerSecond , qudt-unit:KiloM-PER-HR , qudt-unit:NUM , qudt-unit:KiloGM . 
+source		SELECT * FROM intimev2.measurement
+
+mappingId	result_history_observation_unit
+target		data:observation/result/{id} qudt:unit qudt-unit:MilliSEC , qudt-unit:MicroGM-PER-M3 , qudt-unit:PERCENT , qudt-unit:DegreeCelsius , qudt-unit:MeterPerSecond , qudt-unit:KiloM-PER-HR , qudt-unit:NUM , qudt-unit:KiloGM . 
+source		SELECT * FROM intimev2.measurementhistory
 
 mappingId	road_segment
 target		data:road_segment/{id} a :RoadSegment ; :hasOriginStation data:station/{origin_id} ; :hasDestinationStation data:station/{destination_id} . 
@@ -409,9 +432,9 @@ mappingId	station-Streetstation
 target		data:station/{id} a :Streetstation . 
 source		SELECT * FROM intimev2.station WHERE stationtype='Streetstation'
 
-mappingId	station-MeteoStation
+mappingId	station-WeatherStation
 target		data:station/{id} a :WeatherStation . 
-source		SELECT * FROM intimev2.station WHERE stationtype='MeteoStation'
+source		SELECT * FROM intimev2.station WHERE stationtype='WeatherStation'
 
 mappingId	station-ParkingSensor
 target		data:station/{id} a :ParkingSensor . 
@@ -448,10 +471,6 @@ source		SELECT * FROM intimev2.station WHERE stationtype='ParkingStation'
 mappingId	metadata
 target		data:station/{station_id} :hasStationMetadata {json}^^xsd:string . 
 source		SELECT * FROM intimev2.metadata
-
-mappingId	measurement_history_observation
-target		data:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasSimpleResult {double_value}^^xsd:double ; sosa:observedProperty :property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
-source		SELECT * FROM intimev2.measurementhistory
 
 mappingId	municipality_geom
 target		data:municipality/0{istat_code} geo:defaultGeometry data:municipality/geometry/0{istat_code} . data:municipality/geometry/0{istat_code} geo:asWKT {wkt}^^geo:wktLiteral . 
