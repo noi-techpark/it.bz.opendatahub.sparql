@@ -364,7 +364,7 @@ source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM
                     )
 
 mappingId	measurement_history_observation
-target		data:observation/{me_id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{me_id}; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} .
+target		data:observation/{me_id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasResult data:observation/result/{me_id}; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} .
 source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurementhistory me
             WHERE s.id = me.station_id AND
                 (
