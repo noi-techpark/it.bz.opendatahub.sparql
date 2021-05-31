@@ -424,6 +424,7 @@ source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM
                         -- special rules
                         or (s.origin = 'APPABZ' and me.period = 3600)
                     )
+
 mappingId   result_history_observation
 target      data:observation/result/{me_id} a sosa:Result ; qudt:numericValue {double_value}^^xsd:double .
 source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurementhistory me
@@ -454,6 +455,7 @@ source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM
                         -- special rules
                         or (s.origin = 'APPABZ' and me.period = 3600)
                     )
+
 mappingId   result_observation_unit
 target      data:latest_observation/result/{me_id} qudt:unit qudt-unit:MilliSEC, qudt-unit:MicroGM-PER-M3, qudt-unit:PERCENT, qudt-unit:DegreeCelsius, qudt-unit:MeterPerSecond, qudt-unit:KiloM-PER-HR, qudt-unit:NUM, qudt-unit:KiloGM. 
 source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurementhistory me
@@ -484,6 +486,7 @@ source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM
                         -- special rules
                         or (s.origin = 'APPABZ' and me.period = 3600)
                     )
+
 mappingId   result_history_observation_unit
 target      data:observation/result/{me_id} qudt:unit qudt-unit:MilliSEC, qudt-unit:MicroGM-PER-M3, qudt-unit:PERCENT, qudt-unit:DegreeCelsius, qudt-unit:MeterPerSecond, qudt-unit:KiloM-PER-HR, qudt-unit:NUM, qudt-unit:KiloGM. 
 source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurementhistory me
@@ -514,6 +517,7 @@ source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM
                         -- special rules
                         or (s.origin = 'APPABZ' and me.period = 3600)
                     )
+
 mappingId	road_segment
 target		data:road_segment/{id} a :RoadSegment ; :hasOriginStation data:station/{origin_id} ; :hasDestinationStation data:station/{destination_id} .
 source		SELECT * FROM intimev2.edge
