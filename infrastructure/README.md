@@ -5,8 +5,8 @@ we subscribe to various source databases via logical replication. Then, we
 create a `SparQL endpoint` and `SparQL querying web application` with two docker
 containers, namely `Ontop` and `Nginx`.
 
-If you want to know how to setup logical replication, have a look at our [Flight
-Rules](https://github.com/noi-techpark/documentation/blob/master/FLIGHTRULES.md#i-want-to-enable-logical-replication-on-an-awsrds-or-regular-postgres-instance).
+If you want to know how to setup logical replication, have a look at our
+[Flight Rules].
 
 - [Infrastructure](#infrastructure)
 	- [Endpoints](#endpoints)
@@ -87,8 +87,7 @@ managed by Docker, but are instead AWS RDS services.
 
 ### Tourism Postgres DB (source)
 This is the original source of tourism data. We access it through logical
-replication as described in our [Flight
-Rules](https://github.com/noi-techpark/documentation/blob/master/FLIGHTRULES.md#i-want-to-enable-logical-replication-on-an-awsrds-or-regular-postgres-instance).
+replication as described in our [Flight Rules].
 
 ### Virtual Knowledge Graph Postgres DB (destination)
 
@@ -165,3 +164,6 @@ ssh dockertest2
 cd /var/docker/odh-vkg/current
 docker-compose run --entrypoint=/bin/bash ontop
 ```
+
+
+[Flight Rules]: https://github.com/noi-techpark/documentation/blob/master/README.md#i-want-to-enable-logical-replication-on-an-awsrds-or-regular-postgres-instance
