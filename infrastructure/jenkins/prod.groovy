@@ -17,7 +17,7 @@ pipeline {
         FLYWAY_PLACEHOLDERS_TOURISM_USER = "vkgreplicate"
         FLYWAY_PLACEHOLDERS_TOURISM_PASSWORD = credentials('it.bz.opendatahub.sparql.db.tourism.password')
         FLYWAY_PLACEHOLDERS_TOURISM_PUBLICATION_NAME = "vkgpublication"
-        FLYWAY_PLACEHOLDERS_TOURISM_SUBSCRIPTION_NAME = "tourism_prod_subscription"
+        FLYWAY_PLACEHOLDERS_TOURISM_SUBSCRIPTION_NAME = "vkg1_tourism_prod_subscription"
         FLYWAY_PLACEHOLDERS_TOURISM_SCHEMA_VKG = "public"
 
         // MOBILITY PROD DB
@@ -26,11 +26,11 @@ pipeline {
         FLYWAY_PLACEHOLDERS_MOBILITY_USER = "vkgreplicate"
         FLYWAY_PLACEHOLDERS_MOBILITY_PASSWORD = credentials('it.bz.opendatahub.sparql.db.mobility.password')
         FLYWAY_PLACEHOLDERS_MOBILITY_PUBLICATION_NAME = "vkgpublication"
-        FLYWAY_PLACEHOLDERS_MOBILITY_SUBSCRIPTION_NAME = "mobility_prod_subscription"
+        FLYWAY_PLACEHOLDERS_MOBILITY_SUBSCRIPTION_NAME = "vkg1_mobility_prod_subscription"
         FLYWAY_PLACEHOLDERS_MOBILITY_SCHEMA_VKG = "intimev2"
 
         // VIRTUAL KNOWLEDGE GRAPH DB
-        VKG_POSTGRES_HOST = "prod-postgres-vkgreplication.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+        VKG_POSTGRES_HOST = "prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
         VKG_POSTGRES_DB = "prod"
         VKG_POSTGRES_USER = "vkguser"
         VKG_POSTGRES_PASSWORD = credentials('it.bz.opendatahub.sparql.db.vkg.password')
