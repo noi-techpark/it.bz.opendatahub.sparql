@@ -167,7 +167,7 @@ docker-compose run --entrypoint=/bin/bash ontop
 ```
 
 ### I want to migrate to a new VKG database instance
-Follow instruction inside [infrastructure/utils/README_MIGRATION.md](infrastructure/utils/README_MIGRATION.md).
+Follow instruction inside [utils/README_MIGRATION.md](utils/README_MIGRATION.md).
 
 
 [Flight Rules]: https://github.com/noi-techpark/documentation/blob/master/README.md#i-want-to-enable-logical-replication-on-an-awsrds-or-regular-postgres-instance

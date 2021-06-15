@@ -166,8 +166,8 @@ GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO vkguser;
 
 Install flyway on your local machine: https://flywaydb.org
 
-Go to [infrastructure/utils/flywayconf](/infrastructure/utils/flywayconf) and
-fill missing values in or set them via environmental variables.
+Go to [flywayconf](flywayconf) and fill missing values in or set them via
+environmental variables.
 
 If the old replication slot was prefixed with `vkg1` use `vkg2`, or vice-versa,
 for the new instance.
