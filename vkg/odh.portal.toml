@@ -774,7 +774,7 @@ WHERE {
   ?o sosa:observedProperty ?prop .
   ?prop rdfs:comment ?pc .
   #  Temperatura acqua
-  FILTER (?prop = <http://noi.example.org/data/property/1949>)
+  FILTER (?prop = <https://kg.opendatahub.bz.it/data/property/1949>)
 }
 """
 
@@ -808,7 +808,7 @@ WHERE {
   ?o sosa:hasSimpleResult ?v ; sosa:resultTime ?t ; sosa:observedProperty ?prop .
   ?prop rdfs:comment ?pc .
   #  Temperatura acqua
-  FILTER (?prop = <http://noi.example.org/data/property/1949>)
+  FILTER (?prop = <https://kg.opendatahub.bz.it/data/property/1949>)
   #
 }
 GROUP BY ?h ?hPos ?hPosLabel ?s ?sPos ?sPosLabel
