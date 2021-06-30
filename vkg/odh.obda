@@ -350,134 +350,374 @@ target		data:observation/result/{id} a sosa:Result ; qudt:numericValue {double_v
 source		SELECT * FROM intimev2.measurementhistory
 
 mappingId	result_observation_unit Percent
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:PERCENT.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:PERCENT.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('perc', '%', '[%]')
 
 mappingId	result_observation_unit Watt per square metre 
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:W-PER-M2.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:W-PER-M2.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('W/m2', 'W/mq', 'W/m²')
 
 mappingId	result_observation_unit Gram per cubic metre 
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:GM-PER-M3.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:GM-PER-M3.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('[g/m^3]')
 
 mappingId	result_observation_unit Kilometre per hour
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:KiloM-PER-HR.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:KiloM-PER-HR.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('[km/h]', 'km/h')
 
 mappingId	result_observation_unit Millibar
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:MilliBAR.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MilliBAR.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('[mbar]')
 
 mappingId	result_observation_unit Millimetre
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:MilliM.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MilliM.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('[mm]', 'mm')
 
 mappingId	result_observation_unit Second
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:SEC.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:SEC.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('[s]','s','sec')
 
 mappingId	result_observation_unit Micrometre
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:MicroM.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MicroM.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('[uM]')
 
 mappingId	result_observation_unit Degree Celsius
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:DegreeCelsius.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:DegreeCelsius.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('°C','[°C]')
 
 mappingId	result_observation_unit Centimetre
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:CentiM.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:CentiM.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('cm')
 
 mappingId	result_observation_unit HectoPascal
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:HectoPA.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:HectoPA.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('hPa')
 
 mappingId	result_observation_unit Kilogram
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:KiloGM . 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:KiloGM . 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('kg')
 
 mappingId	result_observation_unit Kilometre
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:KiloM . 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:KiloM . 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('km')
 
 mappingId	result_observation_unit Metre
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:M . 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:M . 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('m')
 
 mappingId	result_observation_unit Metre per second
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:M-PER-SEC. 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:M-PER-SEC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('m/s', 'm/sec')
 
 mappingId	result_observation_unit Milligram per litre
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:MilliGM-PER-L. 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MilliGM-PER-L. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('mg/l')
 
 mappingId	result_observation_unit Milligram per cubic metre
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:MilliGM-PER-M3. 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MilliGM-PER-M3. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('mg/m³')
 
 mappingId	result_observation_unit MilliSecond
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:MilliSEC. 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MilliSEC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit = 'ms'
 
 mappingId	result_observation_unit  Cubic metre per second
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:M3-PER-SEC. 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:M3-PER-SEC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('m³/s')
 
 mappingId	result_observation_unit  Nanogram per cubic metre
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:NanoGM-PER-M3. 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:NanoGM-PER-M3. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('ng/m³')
 
 mappingId	result_observation_unit Number
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:NUM.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:NUM.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('nr.', 'n', 'number')
 
 mappingId	result_observation_unit  Parts per billion
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:PPB. 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:PPB. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('ppb')
 
 mappingId	result_observation_unit  Parts per millon
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:PPM. 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:PPM. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('ppm')
 
 mappingId	result_observation_unit Microgram per cubic metre
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:MicroGM-PER-M3.
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MicroGM-PER-M3.
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('µg/m³', 'ug/m3')
 
 mappingId	result_observation_unit  Microsievert per hour
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:MicroSV-PER-HR. 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MicroSV-PER-HR. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('µSv/h')
 
 mappingId	result_observation_unit  Microgram per cubic metre
-target		data:latest_observation/result/{id} qudt:unit qudt-unit:MicroGM-PER-M3. 
-source		SELECT m.id FROM intimev2.measurement m, intimev2.type t
+target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MicroGM-PER-M3. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('µg/m³')
+
+mappingId	result_observation_unit  Milligram per millic
+target		data:latest_observation/result/{m_id} qudt:unit :MiliGM-PER-MilliC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('mg/mc')
+
+mappingId	result_observation_unit  V
+target		data:latest_observation/result/{m_id} qudt:unit :V. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('V')
+
+mappingId	result_observation_unit  Boolean
+target		data:latest_observation/result/{m_id} qudt:unit :Boolean. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('boolean')
+
+mappingId	result_observation_unit Gram per kilometre per hour
+target		data:latest_observation/result/{m_id} qudt:unit :GM-PER-KiloM-PER-HR. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('g/km/h')
+
+mappingId	result_observation_unit  Grid North
+target		data:latest_observation/result/{m_id} qudt:unit :GridNorth. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('gN')
+
+mappingId	result_observation_unit  Milligram per millic
+target		data:latest_observation/result/{m_id} qudt:unit :MiliGM-PER-MilliC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('mg/mc')
+
+mappingId	result_observation_unit  Nanogram per millic
+target		data:latest_observation/result/{m_id} qudt:unit :NanoGM-PER-MilliC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('ng/mc')
+
+mappingId	result_observation_unit  Number per kilometre
+target		data:latest_observation/result/{m_id} qudt:unit :NUM-PER-KiloM. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('nr/km')
+
+mappingId	result_observation_unit  Vehicles per hour
+target		data:latest_observation/result/{m_id} qudt:unit :Vehicle-PER-HR. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('vehicles/hour')
+
+mappingId	result_observation_unit  Vehicles per kilometre
+target		data:latest_observation/result/{m_id} qudt:unit :Vehicle-PER-KiloM. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('vehicles/km')
+
+mappingId	result_observation_unit  Degree
+target		data:latest_observation/result/{m_id} qudt:unit :Degree. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('°')
+
+mappingId	result_history_observation_unit Percent
+target		data:observation/result/{m_id} qudt:unit qudt-unit:PERCENT.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('perc', '%', '[%]')
+
+mappingId	result_history_observation_unit Watt per square metre 
+target		data:observation/result/{m_id} qudt:unit qudt-unit:W-PER-M2.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('W/m2', 'W/mq', 'W/m²')
+
+mappingId	result_history_observation_unit Gram per cubic metre 
+target		data:observation/result/{m_id} qudt:unit qudt-unit:GM-PER-M3.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('[g/m^3]')
+
+mappingId	result_history_observation_unit Kilometre per hour
+target		data:observation/result/{m_id} qudt:unit qudt-unit:KiloM-PER-HR.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('[km/h]', 'km/h')
+
+mappingId	result_history_observation_unit Millibar
+target		data:observation/result/{m_id} qudt:unit qudt-unit:MilliBAR.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('[mbar]')
+
+mappingId	result_history_observation_unit Millimetre
+target		data:observation/result/{m_id} qudt:unit qudt-unit:MilliM.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('[mm]', 'mm')
+
+mappingId	result_history_observation_unit Second
+target		data:observation/result/{m_id} qudt:unit qudt-unit:SEC.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('[s]','s','sec')
+
+mappingId	result_history_observation_unit Micrometre
+target		data:observation/result/{m_id} qudt:unit qudt-unit:MicroM.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('[uM]')
+
+mappingId	result_history_observation_unit Degree Celsius
+target		data:observation/result/{m_id} qudt:unit qudt-unit:DegreeCelsius.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('°C','[°C]')
+
+mappingId	result_history_observation_unit Centimetre
+target		data:observation/result/{m_id} qudt:unit qudt-unit:CentiM.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('cm')
+
+mappingId	result_history_observation_unit HectoPascal
+target		data:observation/result/{m_id} qudt:unit qudt-unit:HectoPA.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('hPa')
+
+mappingId	result_history_observation_unit Kilogram
+target		data:observation/result/{m_id} qudt:unit qudt-unit:KiloGM . 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('kg')
+
+mappingId	result_history_observation_unit Kilometre
+target		data:observation/result/{m_id} qudt:unit qudt-unit:KiloM . 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('km')
+
+mappingId	result_history_observation_unit Metre
+target		data:observation/result/{m_id} qudt:unit qudt-unit:M . 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('m')
+
+mappingId	result_history_observation_unit Metre per second
+target		data:observation/result/{m_id} qudt:unit qudt-unit:M-PER-SEC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('m/s', 'm/sec')
+
+mappingId	result_history_observation_unit Milligram per litre
+target		data:observation/result/{m_id} qudt:unit qudt-unit:MilliGM-PER-L. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('mg/l')
+
+mappingId	result_history_observation_unit Milligram per cubic metre
+target		data:observation/result/{m_id} qudt:unit qudt-unit:MilliGM-PER-M3. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('mg/m³')
+
+mappingId	result_history_observation_unit MilliSecond
+target		data:observation/result/{m_id} qudt:unit qudt-unit:MilliSEC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit = 'ms'
+
+mappingId	result_history_observation_unit  Cubic metre per second
+target		data:observation/result/{m_id} qudt:unit qudt-unit:M3-PER-SEC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('m³/s')
+
+mappingId	result_history_observation_unit  Nanogram per cubic metre
+target		data:observation/result/{m_id} qudt:unit qudt-unit:NanoGM-PER-M3. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('ng/m³')
+
+mappingId	result_history_observation_unit Number
+target		data:observation/result/{m_id} qudt:unit qudt-unit:NUM.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('nr.', 'n', 'number')
+
+mappingId	result_history_observation_unit  Parts per billion
+target		data:observation/result/{m_id} qudt:unit qudt-unit:PPB. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('ppb')
+
+mappingId	result_history_observation_unit  Parts per millon
+target		data:observation/result/{m_id} qudt:unit qudt-unit:PPM. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('ppm')
+
+mappingId	result_history_observation_unit Microgram per cubic metre
+target		data:observation/result/{m_id} qudt:unit qudt-unit:MicroGM-PER-M3.
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('µg/m³', 'ug/m3')
+
+mappingId	result_history_observation_unit  Microsievert per hour
+target		data:observation/result/{m_id} qudt:unit qudt-unit:MicroSV-PER-HR. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('µSv/h')
+
+mappingId	result_history_observation_unit  Microgram per cubic metre
+target		data:observation/result/{m_id} qudt:unit qudt-unit:MicroGM-PER-M3. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('µg/m³')
+
+mappingId	result_history_observation_unit  Milligram per millic
+target		data:observation/result/{m_id} qudt:unit :MiliGM-PER-MilliC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('mg/mc')
+
+mappingId	result_history_observation_unit  V
+target		data:observation/result/{m_id} qudt:unit :V. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('V')
+
+mappingId	result_history_observation_unit  Boolean
+target		data:observation/result/{m_id} qudt:unit :Boolean. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('boolean')
+
+mappingId	result_history_observation_unit Gram per kilometre per hour
+target		data:observation/result/{m_id} qudt:unit :GM-PER-KiloM-PER-HR. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('g/km/h')
+
+mappingId	result_history_observation_unit  Grid North
+target		data:observation/result/{m_id} qudt:unit :GridNorth. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('gN')
+
+mappingId	result_history_observation_unit  Milligram per millic
+target		data:observation/result/{m_id} qudt:unit :MiliGM-PER-MilliC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('mg/mc')
+
+mappingId	result_history_observation_unit  Nanogram per millic
+target		data:observation/result/{m_id} qudt:unit :NanoGM-PER-MilliC. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('ng/mc')
+
+mappingId	result_history_observation_unit  Number per kilometre
+target		data:observation/result/{m_id} qudt:unit :NUM-PER-KiloM. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('nr/km')
+
+mappingId	result_history_observation_unit  Vehicles per hour
+target		data:observation/result/{m_id} qudt:unit :Vehicle-PER-HR. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('vehicles/hour')
+
+mappingId	result_history_observation_unit  Vehicles per kilometre
+target		data:observation/result/{m_id} qudt:unit :Vehicle-PER-KiloM. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('vehicles/km')
+
+mappingId	result_history_observation_unit  Degree
+target		data:observation/result/{m_id} qudt:unit :Degree. 
+source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
+			WHERE m.type_id = t.id and t.cunit IN ('°')
 
 mappingId	road_segment
 target		data:road_segment/{id} a :RoadSegment ; :hasOriginStation data:station/{origin_id} ; :hasDestinationStation data:station/{destination_id} .
