@@ -7021,7 +7021,7 @@ rdfs:Class rdf:type owl:Class .
 
 ###  http://noi.example.org/ontology/odh#unit/boolean
 <http://noi.example.org/ontology/odh#unit/boolean> rdf:type owl:NamedIndividual ,
-                                                      qudt:Unit.
+                                                            qudt:Unit.
 
 
 ###  http://noi.example.org/ontology/odh#unit/GM-PER-KiloM-PER-HR
@@ -7060,7 +7060,7 @@ rdfs:Class rdf:type owl:Class .
 
 
 ###  http://noi.example.org/ontology/odh#unit/vehicle-PER-KiloM
-<http://noi.example.org/ontology/odh#unit/vehicle-PER-KiloM> rdf:type owl:NamedIndividual ,                                                      qudt:Unit.
+<http://noi.example.org/ontology/odh#unit/vehicle-PER-KiloM> rdf:type owl:NamedIndividual ,                                                  
                                                                       qudt:Unit.
 
 
