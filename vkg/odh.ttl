@@ -7014,6 +7014,61 @@ rdfs:Class rdf:type owl:Class .
                                                                                 sosa:ObservableProperty .
 
 
+###  http://noi.example.org/ontology/odh#unit/V
+<http://noi.example.org/ontology/odh#unit/v> rdf:type owl:NamedIndividual ,
+                                                      qudt:Unit.
+
+
+###  http://noi.example.org/ontology/odh#unit/boolean
+<http://noi.example.org/ontology/odh#unit/boolean> rdf:type owl:NamedIndividual ,
+                                                      qudt:Unit.
+
+
+###  http://noi.example.org/ontology/odh#unit/GM-PER-KiloM-PER-HR
+<http://noi.example.org/ontology/odh#unit/GM-PER-KiloM-PER-HR> rdf:type owl:NamedIndividual ,
+                                                                        qudt:Unit.
+
+
+###  http://noi.example.org/ontology/odh#unit/gridNorth
+<http://noi.example.org/ontology/odh#unit/gridNorth> rdf:type owl:NamedIndividual ,
+                                                              qudt:Unit.
+
+
+###  http://noi.example.org/ontology/odh#unit/NanoGM-PER-MilliC
+<http://noi.example.org/ontology/odh#unit/NanoGM-PER-MilliC> rdf:type owl:NamedIndividual ,
+                                                                      qudt:Unit.
+
+
+###  http://noi.example.org/ontology/odh#unit/MiliGM-PER-MilliC
+<http://noi.example.org/ontology/odh#unit/v> rdf:type owl:NamedIndividual ,
+                                                      qudt:Unit.
+
+
+###  http://noi.example.org/ontology/odh#unit/NanoGM-PER-MilliC
+<http://noi.example.org/ontology/odh#unit/NanoGM-PER-MilliC> rdf:type owl:NamedIndividual ,
+                                                                      qudt:Unit.
+
+
+###  http://noi.example.org/ontology/odh#unit/NUM-PER-KiloM
+<http://noi.example.org/ontology/odh#unit/NUM-PER-KiloM> rdf:type owl:NamedIndividual ,
+                                                                  qudt:Unit.
+
+
+###  http://noi.example.org/ontology/odh#unit/vehicle-PER-HR
+<http://noi.example.org/ontology/odh#unit/vehicle-PER-HR> rdf:type owl:NamedIndividual ,
+                                                                   qudt:Unit.
+
+
+###  http://noi.example.org/ontology/odh#unit/vehicle-PER-KiloM
+<http://noi.example.org/ontology/odh#unit/vehicle-PER-KiloM> rdf:type owl:NamedIndividual ,                                                      qudt:Unit.
+                                                                      qudt:Unit.
+
+
+###  http://noi.example.org/ontology/odh#unit/degree
+<http://noi.example.org/ontology/odh#unit/degree> rdf:type owl:NamedIndividual ,
+                                                           qudt:Unit.
+
+                                                   
 ###  http://schema.org/ActiveActionStatus
 schema:ActiveActionStatus rdf:type owl:NamedIndividual ,
                                    schema:ActionStatusType ;
