@@ -332,7 +332,6 @@ mappingId	type_observableProperty
 target		data:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:string ; :hasUnit {cunit} ; :hasRType {rtype} ; rdfs:comment {description}^^xsd:string .
 source		SELECT * FROM intimev2.type
 
-
 mappingId	measurement_observation
 target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
 source		SELECT * FROM intimev2.measurement
@@ -437,7 +436,7 @@ source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 mappingId	result_observation_unit MilliSecond
 target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MilliSEC. 
 source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
-			WHERE m.type_id = t.id and t.cunit = 'ms'
+			WHERE m.type_id = t.id and t.cunit IN ('ms')
 
 mappingId	result_observation_unit  Cubic metre per second
 target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:M3-PER-SEC. 
@@ -474,11 +473,6 @@ target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MicroSV-PER-HR
 source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('µSv/h')
 
-mappingId	result_observation_unit  Microgram per cubic metre
-target		data:latest_observation/result/{m_id} qudt:unit qudt-unit:MicroGM-PER-M3. 
-source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
-			WHERE m.type_id = t.id and t.cunit IN ('µg/m³')
-
 mappingId	result_observation_unit  Milligram per millic
 target		data:latest_observation/result/{m_id} qudt:unit :MiliGM-PER-MilliC. 
 source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
@@ -504,11 +498,6 @@ target		data:latest_observation/result/{m_id} qudt:unit :GridNorth.
 source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('gN')
 
-mappingId	result_observation_unit  Milligram per millic
-target		data:latest_observation/result/{m_id} qudt:unit :MiliGM-PER-MilliC. 
-source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
-			WHERE m.type_id = t.id and t.cunit IN ('mg/mc')
-
 mappingId	result_observation_unit  Nanogram per millic
 target		data:latest_observation/result/{m_id} qudt:unit :NanoGM-PER-MilliC. 
 source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
@@ -532,7 +521,7 @@ source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
 mappingId	result_observation_unit  Degree
 target		data:latest_observation/result/{m_id} qudt:unit :Degree. 
 source		SELECT *, m.id AS m_id FROM intimev2.measurement m, intimev2.type t
-			WHERE m.type_id = t.id and t.cunit IN ('°')
+			WHERE m.type_id = t.id and t.cunit IN ('°', '[°]')
 
 mappingId	result_history_observation_unit Percent
 target		data:observation/result/{m_id} qudt:unit qudt-unit:PERCENT.
@@ -717,7 +706,7 @@ source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type
 mappingId	result_history_observation_unit  Degree
 target		data:observation/result/{m_id} qudt:unit :Degree. 
 source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
-			WHERE m.type_id = t.id and t.cunit IN ('°')
+			WHERE m.type_id = t.id and t.cunit IN ('°', '[°]')
 
 mappingId	road_segment
 target		data:road_segment/{id} a :RoadSegment ; :hasOriginStation data:station/{origin_id} ; :hasDestinationStation data:station/{destination_id} .
