@@ -218,3 +218,5 @@ test/master/*.sql
 infrastructure/utils/*.sql
 .pgpass
 dbeaver/
+infrastructure/utils/flyway-*.conf
+infrastructure/utils/sql-scripts/*.sql
