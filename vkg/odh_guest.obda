@@ -396,7 +396,7 @@ source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM
 
 mappingId   result_observation
 target      data:latest_observation/result/{me_id} a sosa:Result ; qudt:numericValue {double_value}^^xsd:double .
-source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurementhistory me
+source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurement me
             WHERE s.id = me.station_id AND
                 (
                     -- station types that are always open, regardless of the origin
