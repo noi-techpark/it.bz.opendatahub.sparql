@@ -786,7 +786,7 @@ source		SELECT * FROM intimev2.station WHERE stationtype='Streetstation'
 
 mappingId	station-WeatherStation
 target		data:station/{id} a :WeatherStation .
-source		SELECT * FROM intimev2.station WHERE stationtype='WeatherStation'
+source		SELECT * FROM intimev2.station WHERE stationtype='MeteoStation'
 
 mappingId	station-ParkingSensor
 target		data:station/{id} a :ParkingSensor .
