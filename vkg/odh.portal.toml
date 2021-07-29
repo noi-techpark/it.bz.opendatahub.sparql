@@ -553,16 +553,18 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT * WHERE {
 ?s a sosa:Sensor .
 #?s sosa:isHostedBy ?p.
 ?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
 ?s sosa:madeObservation ?o .
-?o sosa:hasSimpleResult ?v .
+?o sosa:hasResult ?r .
 ?o sosa:resultTime ?t .
 ?o sosa:observedProperty ?prop .
 ?prop rdfs:comment ?pc .
+?r qudt:numericValue ?v .
 BIND(CONCAT( ?pc, ": ", str(?v)) AS ?wktLabel)
 }
 LIMIT 1000
@@ -625,6 +627,7 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT ?st ?pc ?unit (COUNT(*) AS ?count)  (MIN(?t) AS ?min_t) (MAX(?t) AS ?max_t) (MIN(?v) AS ?min_v) (AVG(?v) AS ?avg_v) (MAX(?v) AS ?max_v)   WHERE {
 #?s a sosa:Sensor .
@@ -633,9 +636,10 @@ SELECT ?st ?pc ?unit (COUNT(*) AS ?count)  (MIN(?t) AS ?min_t) (MAX(?t) AS ?max_
   ?s :hasStationType ?st .
 ?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
 ?s sosa:madeObservation ?o .
-?o sosa:hasSimpleResult ?v .
+?o sosa:hasResult ?r .
 ?o sosa:resultTime ?t .
 ?o sosa:observedProperty ?prop .
+?r qudt:numericValue ?v .
 ?prop rdfs:label ?pc .
   ?prop :hasUnit ?unit .
 #BIND(CONCAT(?st, "/", ?pc, "/",  str(?v), "/", ?unit) AS ?wktLabel)
@@ -651,15 +655,17 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT ?t ?v {
-  FILTER (?s = <http://noi.example.org/ontology/odh#station/342142>) # siemens->Galilei_Palermo
+  FILTER (?s = <https://kg.opendatahub.bz.it/data/station/342142>) # siemens->Galilei_Palermo
   ?s a :Station .
   ?s rdfs:label ?wktLabel .
-  OPTIONAL {  ?s sosa:madeObservation ?o . ?o sosa:hasSimpleResult ?v .
+  OPTIONAL {  ?s sosa:madeObservation ?o . ?o sosa:hasResult ?r .
+  ?r qudt:numericValue ?v .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
-  FILTER (?prop = <http://noi.example.org/ontology/odh#property/54>) # Velocita media dei veicoli
+  FILTER (?prop = <https://kg.opendatahub.bz.it/data/property/54>) # Velocita media dei veicoli
   ?prop rdfs:comment ?pc .
   ?prop :hasUnit ?unit .
   }
@@ -695,15 +701,17 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT * WHERE {
   ?s a :WeatherStation ; :hasOrigin ?origin .
   FILTER (?origin !='SIAG' && ?origin != 'meteotrentino')
   ?s sosa:madeObservation ?o .
-  ?o sosa:hasSimpleResult ?v .
+  ?o sosa:hasResult ?r .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
   ?prop rdfs:comment ?pc .
+  ?r qudt:numericValue ?v .
 }
 LIMIT 10
 """
@@ -752,6 +760,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT *
 WHERE {
@@ -769,10 +778,11 @@ WHERE {
   # observations
   ?s sosa:madeObservation ?o .
   ?o a :LatestObservation .
-  ?o sosa:hasSimpleResult ?v .
+  ?o sosa:hasResult ?r .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
   ?prop rdfs:comment ?pc .
+  ?r qudt:numericValue ?v .
   #  Temperatura acqua
   FILTER (?prop = <https://kg.opendatahub.bz.it/data/property/1949>)
 }
@@ -789,6 +799,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT ?hPos ?hPosLabel ?sPos ?sPosLabel (AVG(?v) AS ?av) (COUNT(?v) AS ?nv) (SAMPLE(?t) AS ?at)
 WHERE {
@@ -805,7 +816,8 @@ WHERE {
   # observations
   ?s sosa:madeObservation ?o .
   ?o a :LatestObservation .
-  ?o sosa:hasSimpleResult ?v ; sosa:resultTime ?t ; sosa:observedProperty ?prop .
+  ?o sosa:hasResult ?r ; sosa:resultTime ?t ; sosa:observedProperty ?prop .
+  ?r qudt:numericValue ?v .
   ?prop rdfs:comment ?pc .
   #  Temperatura acqua
   FILTER (?prop = <https://kg.opendatahub.bz.it/data/property/1949>)
