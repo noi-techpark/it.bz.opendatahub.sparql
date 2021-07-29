@@ -697,7 +697,7 @@ PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
 
 SELECT * WHERE {
-  ?s a :MeteoStation ; :hasOrigin ?origin .
+  ?s a :WeatherStation ; :hasOrigin ?origin .
   FILTER (?origin !='SIAG' && ?origin != 'meteotrentino')
   ?s sosa:madeObservation ?o .
   ?o sosa:hasSimpleResult ?v .
@@ -714,7 +714,7 @@ name="Tourims and Mobility"
 
 [[tabGroups.tabs]]
 
-name="Nearby Restaurants and Meteo Stations"
+name="Nearby Restaurants and Weather Stations"
 query="""
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
@@ -729,8 +729,8 @@ WHERE {
   ?h a schema:Restaurant ; geo:defaultGeometry/geo:asWKT ?hPos ; schema:name ?hPosLabel .
   FILTER(LANG(?hPosLabel)='it')
   BIND('red' AS ?hPosColor)
-  # MeteoStations
-  ?s a :MeteoStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
+  # WeatherStations
+  ?s a :WeatherStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
   BIND('blue' AS ?sPosColor)
   # spatial correlation
   BIND(geof:distance(?hPos, ?sPos, uom:metre) AS ?distance)
@@ -742,7 +742,7 @@ WHERE {
 """
 
 [[tabGroups.tabs]]
-name="Nearby Restaurants and Meteo Stations, and observations"
+name="Nearby Restaurants and Weather Stations, and observations"
 query="""
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -759,8 +759,8 @@ WHERE {
   ?h a schema:Restaurant ; geo:defaultGeometry/geo:asWKT ?hPos ; schema:name ?hPosLabel .
   FILTER(LANG(?hPosLabel)='it')
   BIND('red' AS ?hPosColor)
-  # MeteoStations
-  ?s a :MeteoStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
+  # WeatherStations
+  ?s a :WeatherStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
   BIND('blue' AS ?sPosColor)
   # spatial correlation
   BIND(geof:distance(?hPos, ?sPos, uom:metre) AS ?distance)
@@ -779,7 +779,7 @@ WHERE {
 """
 
 [[tabGroups.tabs]]
-name="Nearby Restaurants and Meteo Stations, and average observations"
+name="Nearby Restaurants and Weather Stations, and average observations"
 query="""
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -796,8 +796,8 @@ WHERE {
   ?h a schema:Restaurant ; geo:defaultGeometry/geo:asWKT ?hPos ; schema:name ?hPosLabel .
   FILTER(LANG(?hPosLabel)='it')
   BIND('red' AS ?hPosColor)
-  # MeteoStations
-  ?s a :MeteoStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
+  # WeatherStations
+  ?s a :WeatherStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
   BIND('blue' AS ?sPosColor)
   # spatial correlation
   BIND(geof:distance(?hPos, ?sPos, uom:metre) AS ?distance)
