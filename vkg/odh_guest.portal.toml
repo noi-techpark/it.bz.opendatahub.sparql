@@ -553,8 +553,8 @@ PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT * WHERE {
 ?s a sosa:Sensor .
-#?s sosa:isHostedBy ?p.
-?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+?s sosa:isHostedBy ?p.
+?p geo:defaultGeometry/geo:asWKT ?wkt .
 ?s sosa:madeObservation ?o .
 ?o sosa:hasResult ?r .
 ?o sosa:resultTime ?t .
@@ -576,8 +576,9 @@ PREFIX sosa: <http://www.w3.org/ns/sosa/>
 
 SELECT DISTINCT ?st WHERE {
 ?s a sosa:Sensor .
-?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
-  ?s :hasStationType ?st .
+?s sosa:isHostedBy ?p . 
+?p geo:defaultGeometry/geo:asWKT ?wkt .
+?p :hasStationType ?st .
 #?s sosa:madeObservation ?o .
 }
 LIMIT 100
@@ -627,10 +628,10 @@ PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT ?st ?pc ?unit (COUNT(*) AS ?count)  (MIN(?t) AS ?min_t) (MAX(?t) AS ?max_t) (MIN(?v) AS ?min_v) (AVG(?v) AS ?avg_v) (MAX(?v) AS ?max_v)   WHERE {
 #?s a sosa:Sensor .
-#?s sosa:isHostedBy ?p.
+?s sosa:isHostedBy ?p.
 #  ?s a :TrafficSensor .
-  ?s :hasStationType ?st .
-?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+?p :hasStationType ?st .
+?p geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
 ?s sosa:madeObservation ?o .
 ?o sosa:hasResult ?r .
 ?o sosa:resultTime ?t .
@@ -657,7 +658,7 @@ SELECT ?t ?v {
   FILTER (?s = <https://kg.opendatahub.bz.it/data/station/342142>) # siemens->Galilei_Palermo
   ?s a :Station .
   ?s rdfs:label ?wktLabel .
-  OPTIONAL {  ?s sosa:madeObservation ?o . ?o sosa:hasResult ?r .
+  OPTIONAL {  ?s sosa:hosts/sosa:madeObservation ?o . ?o sosa:hasResult ?r .
   ?r qudt:numericValue ?v .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
@@ -702,7 +703,7 @@ PREFIX qudt: <http://qudt.org/schema/qudt#>
 SELECT * WHERE {
   ?s a :WeatherStation ; :hasOrigin ?origin .
   FILTER (?origin !='SIAG' && ?origin != 'meteotrentino')
-  ?s sosa:madeObservation ?o .
+  ?s sosa:hosts/sosa:madeObservation ?o .
   ?o sosa:hasResult ?r .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
@@ -772,7 +773,7 @@ WHERE {
   FILTER (?h != ?s)
   FILTER (?distance <= 101)
   # observations
-  ?s sosa:madeObservation ?o .
+  ?s sosa:hosts/sosa:madeObservation ?o .
   ?o a :LatestObservation .
   ?o sosa:hasResult ?r .
   ?o sosa:resultTime ?t .
@@ -810,7 +811,7 @@ WHERE {
   BIND(geof:distance(?hPos, ?sPos, uom:metre) AS ?distance)
   FILTER (?distance <= 100)
   # observations
-  ?s sosa:madeObservation ?o .
+  ?s sosa:hosts/sosa:madeObservation ?o .
   ?o a :LatestObservation .
   ?o sosa:hasResult ?r ; sosa:resultTime ?t ; sosa:observedProperty ?prop .
   ?r qudt:numericValue ?v .

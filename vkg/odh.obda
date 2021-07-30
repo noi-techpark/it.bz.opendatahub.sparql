@@ -332,12 +332,15 @@ mappingId	type_observableProperty
 target		data:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:string ; :hasUnit {cunit} ; :hasRType {rtype} ; rdfs:comment {description}^^xsd:string .
 source		SELECT * FROM intimev2.type
 
+mappingId	Sensor
+target		data:sensor/{type_id}/{station_id} a sosa:Sensor ; sosa:isHostedBy data:station/{station_id} .
+
 mappingId	measurement_observation
-target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
+target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} . 
 source		SELECT * FROM intimev2.measurement
 
 mappingId	measurement_history_observation
-target		data:observation/{id} a :HistoricalObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
+target		data:observation/{id} a :HistoricalObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} . 
 source		SELECT * FROM intimev2.measurementhistory
 
 mappingId	result_observation
@@ -713,7 +716,7 @@ target		data:road_segment/{id} a :RoadSegment ; :hasOriginStation data:station/{
 source		SELECT * FROM intimev2.edge
 
 mappingId	station_hosts
-target		data:station/{id} a :Station ; sosa:isHostedBy data:station/{parent_id} .
+target		data:station/{id} a sosa:Platform , :Station ; sosa:isHostedBy data:station/{parent_id} .
 source		SELECT * FROM intimev2.station
 
 mappingId	station-CarpoolingUser
