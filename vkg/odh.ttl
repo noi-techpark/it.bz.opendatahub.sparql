@@ -2014,6 +2014,16 @@ geo:asWKT rdf:type owl:DatatypeProperty .
 :NOIMeasurementCategory rdf:type owl:Class .
 
 
+###  http://noi.example.org/ontology/odh#OutdoorAir
+:OutdoorAir rdf:type owl:Class ;
+            rdfs:subClassOf sosa:FeatureOfInterest .
+
+
+###  http://noi.example.org/ontology/odh#OutdoorWater
+:OutdoorWater rdf:type owl:Class ;
+              rdfs:subClassOf sosa:FeatureOfInterest .
+
+
 ###  http://noi.example.org/ontology/odh#POI
 :POI rdf:type owl:Class ;
      rdfs:subClassOf schema:Place .
@@ -2062,6 +2072,11 @@ geo:asWKT rdf:type owl:DatatypeProperty .
            rdfs:subClassOf schema:SportsActivityLocation .
 
 
+###  http://noi.example.org/ontology/odh#Speed
+:Speed rdf:type owl:Class ;
+       rdfs:subClassOf sosa:ObservableProperty .
+
+
 ###  http://noi.example.org/ontology/odh#Station
 :Station rdf:type owl:Class ;
          rdfs:subClassOf geo:Feature .
@@ -2070,6 +2085,11 @@ geo:asWKT rdf:type owl:DatatypeProperty .
 ###  http://noi.example.org/ontology/odh#Streetstation
 :Streetstation rdf:type owl:Class ;
                rdfs:subClassOf :Station .
+
+
+###  http://noi.example.org/ontology/odh#Temperature
+:Temperature rdf:type owl:Class ;
+             rdfs:subClassOf sosa:ObservableProperty .
 
 
 ###  http://noi.example.org/ontology/odh#TrafficSensor
@@ -2099,10 +2119,20 @@ geo:asWKT rdf:type owl:DatatypeProperty .
      rdfs:subClassOf :Station .
 
 
+###  http://noi.example.org/ontology/odh#WaterTemperature
+:WaterTemperature rdf:type owl:Class ;
+                  rdfs:subClassOf :Temperature .
+
+
 ###  http://noi.example.org/ontology/odh#WeatherStation
 :WeatherStation rdf:type owl:Class ;
                 rdfs:subClassOf :Station ,
                                 sosa:Sensor .
+
+
+###  http://noi.example.org/ontology/odh#WindSpeed
+:WindSpeed rdf:type owl:Class ;
+           rdfs:subClassOf :Speed .
 
 
 ###  http://noi.example.org/ontology/odh#Wine
