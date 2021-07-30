@@ -337,7 +337,7 @@ target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {tim
 source		SELECT * FROM intimev2.measurement
 
 mappingId	measurement_history_observation
-target		data:observation/{id} a sosa:Observation ; sosa:resultTime {timestamp} ; sosa:hasResult data:observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
+target		data:observation/{id} a :HistoricalObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:station/{station_id} . 
 source		SELECT * FROM intimev2.measurementhistory
 
 mappingId	result_observation
