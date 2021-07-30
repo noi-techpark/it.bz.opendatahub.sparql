@@ -334,6 +334,7 @@ source		SELECT * FROM intimev2.type
 
 mappingId	Sensor
 target		data:sensor/{type_id}/{station_id} a sosa:Sensor ; sosa:isHostedBy data:station/{station_id} .
+source		SELECT * FROM intimev2.measurement
 
 mappingId	measurement_observation
 target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} . 
