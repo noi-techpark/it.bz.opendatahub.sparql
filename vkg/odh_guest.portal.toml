@@ -798,27 +798,29 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
 PREFIX qudt: <http://qudt.org/schema/qudt#>
 
-SELECT ?hPos ?hPosLabel ?sPos ?sPosLabel (AVG(?v) AS ?av) (COUNT(?v) AS ?nv) (SAMPLE(?t) AS ?at)
+SELECT ?hPos ?hPosLabel ?pPos ?pPosLabel (AVG(?v) AS ?av) (COUNT(?v) AS ?nv) (SAMPLE(?t) AS ?at)
 WHERE {
   # Restaurants
   ?h a schema:Restaurant ; geo:defaultGeometry/geo:asWKT ?hPos ; schema:name ?hPosLabel .
   FILTER(LANG(?hPosLabel)='it')
   BIND('red' AS ?hPosColor)
-  # WeatherStations
-  ?s a :WeatherStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
+  # Platforms
+  ?p a sosa:Platform ; schema:name ?pPosLabel .
   BIND('blue' AS ?sPosColor)
-  # spatial correlation
-  BIND(geof:distance(?hPos, ?sPos, uom:metre) AS ?distance)
-  FILTER (?distance <= 100)
-  # observations
-  ?s sosa:hosts/sosa:madeObservation ?o .
+  # Observations
+  ?p sosa:hosts/sosa:madeObservation ?o .
   ?o a :LatestObservation .
-  ?o sosa:hasResult ?r ; sosa:resultTime ?t ; sosa:observedProperty ?prop .
+  ?o sosa:hasResult ?r ; sosa:resultTime ?t ; sosa:observedProperty ?prop ; sosa:hasFeatureOfInterest ?f .       
   ?r qudt:numericValue ?v .
   ?prop rdfs:comment ?pc .
-  #  Temperatura acqua
-  FILTER (?prop = <https://kg.opendatahub.bz.it/data/property/1949>)
-  #
+
+  # Features of interest
+  ?f a :OutdoorWater ; geo:defaultGeometry/geo:asWKT ?pPos .
+  ?f geo:defaultGeometry/geo:asWKT ?pPos .
+  
+    # spatial correlation
+  BIND(geof:distance(?hPos, ?pPos, uom:metre) AS ?distance)
+  FILTER (?distance <= 100)
 }
-GROUP BY ?h ?hPos ?hPosLabel ?s ?sPos ?sPosLabel
+GROUP BY ?h ?hPos ?hPosLabel ?p ?pPos ?pPosLabel
 """

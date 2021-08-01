@@ -951,4 +951,29 @@ source		SELECT * FROM "v_municipalitiesopen"
 mappingId	type_NOIMeasurementCategory
 target		data:NOIMeasurementCategory/{id} a :NOIMeasurementCategory ; schema:name {cname}^^xsd:string ; schema:description {description}^^xsd:string . 
 source		SELECT * FROM intimev2.type
+
+mappingId	Feature of Interest
+target		data:featureOfInterest/{station_id}/{type_id} a sosa:FeatureOfInterest .
+source		SELECT * FROM intimev2.measurement
+
+mappingId	Feature of Interest - latest observation
+target		data:latest_observation/{id} sosa:hasFeatureOfInterest data:featureOfInterest/{station_id}/{type_id} .
+source		SELECT * FROM intimev2.measurement
+
+mappingId	Feature of Interest - historical observation
+target		data:observation/{id} sosa:hasFeatureOfInterest data:featureOfInterest/{station_id}/{type_id} .
+source		SELECT * FROM intimev2.measurementhistory
+
+mappingId	Feature of Interest - geo
+target		data:featureOfInterest/{station_id}/{type_id} geo:defaultGeometry data:station/geometry/{station_id} .
+source		SELECT * FROM intimev2.measurement
+
+mappingId	Outdoor water
+target		data:featureOfInterest/{station_id}/{type_id} a :OutdoorWater .
+source		SELECT * FROM intimev2.measurement WHERE type_id IN (50, 53, 1949)
+
+mappingId	Outdoor air
+target		data:featureOfInterest/{station_id}/{type_id} a :OutdoorAir .
+source		SELECT * FROM intimev2.measurement WHERE type_id IN (2, 7, 8, 9)
+
 ]]
