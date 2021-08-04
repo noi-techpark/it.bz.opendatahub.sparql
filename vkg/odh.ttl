@@ -2009,11 +2009,6 @@ geo:asWKT rdf:type owl:DatatypeProperty .
 :NOI-Place rdf:type owl:Class ;
            rdfs:subClassOf :Station .
 
-
-###  http://noi.example.org/ontology/odh#NOIMeasurementCategory
-:NOIMeasurementCategory rdf:type owl:Class .
-
-
 ###  http://noi.example.org/ontology/odh#OutdoorAir
 :OutdoorAir rdf:type owl:Class ;
             rdfs:subClassOf sosa:FeatureOfInterest .

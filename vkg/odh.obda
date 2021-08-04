@@ -840,10 +840,6 @@ mappingId	v_municipalitiesopen
 target		data:municipality/{IstatNumber} a :Municipality ; schema:name {Detail-en-Title}@en , {Detail-it-Title}@it , {Detail-de-Title}@de ; rdfs:label {Detail-en-Title}@en , {Detail-it-Title}@it , {Detail-de-Title}@de ; :hasIStatCode {IstatNumber}^^xsd:integer ; :populationCount {Inhabitants}^^xsd:integer .
 source		SELECT * FROM "v_municipalitiesopen"
 
-mappingId	type_NOIMeasurementCategory
-target		data:NOIMeasurementCategory/{id} a :NOIMeasurementCategory ; schema:name {cname}^^xsd:string ; schema:description {description}^^xsd:string . 
-source		SELECT * FROM intimev2.type
-
 mappingId	Feature of Interest
 target		data:featureOfInterest/{station_id}/{type_id} a sosa:FeatureOfInterest .
 source		SELECT * FROM intimev2.measurement
