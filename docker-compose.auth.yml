@@ -14,6 +14,7 @@ services:
       ONTOP_MAPPING_FILE: /opt/ontop/input/odh.obda
       ONTOP_PROPERTIES_FILE: /opt/ontop/input/odh.docker.properties
       ONTOP_PORTAL_FILE: /opt/ontop/input/odh.portal.toml
+      ONTOP_CONSTRAINT_FILE: /opt/ontop/input/odh.constraints
       ONTOP_PREDEFINED_CONFIG: /opt/ontop/input/predefined/predefined.json
       ONTOP_PREDEFINED_QUERIES: /opt/ontop/input/predefined/queries.toml
       ONTOP_CONTEXTS: /opt/ontop/input/predefined/contexts.json
@@ -53,6 +54,7 @@ services:
       ONTOP_MAPPING_FILE: /opt/ontop/input/odh_guest.obda
       ONTOP_PROPERTIES_FILE: /opt/ontop/input/odh.docker.properties
       ONTOP_PORTAL_FILE: /opt/ontop/input/odh_guest.portal.toml
+      ONTOP_CONSTRAINT_FILE: /opt/ontop/input/odh.constraints
       ONTOP_PREDEFINED_CONFIG: /opt/ontop/input/predefined/predefined.json
       ONTOP_PREDEFINED_QUERIES: /opt/ontop/input/predefined/queries.toml
       ONTOP_CONTEXTS: /opt/ontop/input/predefined/contexts.json
