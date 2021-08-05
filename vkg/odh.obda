@@ -329,7 +329,7 @@ target		data:station/{id} geo:defaultGeometry data:station/geometry/{id} . data:
 source		SELECT id, ST_ASTEXT(pointprojection) AS wkt FROM intimev2.station WHERE pointprojection IS NOT NULL
 
 mappingId	type_observableProperty
-target		data:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:string ; :hasUnit {cunit} ; :hasRType {rtype} ; rdfs:comment {description}^^xsd:string .
+target		data:property/{id} a sosa:ObservableProperty ; rdfs:label {cname}^^xsd:string ; :hasUnit {cunit} ; :hasRType {rtype} ; rdfs:comment {description}^^xsd:string ; schema:name {cname} ; schema:description {description} .
 source		SELECT * FROM intimev2.type
 
 mappingId	Sensor
