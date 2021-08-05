@@ -786,7 +786,7 @@ WHERE {
 """
 
 [[tabGroups.tabs]]
-name="Nearby Restaurants and Weather Stations, and average observations"
+name="Restaurants nearby water above 18°C"
 query="""
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -798,7 +798,7 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
 PREFIX qudt: <http://qudt.org/schema/qudt#>
 
-SELECT ?hPos ?hPosLabel ?pPos ?pPosLabel (AVG(?v) AS ?av) (COUNT(?v) AS ?nv) (SAMPLE(?t) AS ?at)
+SELECT ?hPos ?hPosLabel ?pPos ?pPosLabel ?v ?t
 WHERE {
   # Restaurants
   ?h a schema:Restaurant ; geo:defaultGeometry/geo:asWKT ?hPos ; schema:name ?hPosLabel .
@@ -810,17 +810,18 @@ WHERE {
   # Observations
   ?p sosa:hosts/sosa:madeObservation ?o .
   ?o a :LatestObservation .
-  ?o sosa:hasResult ?r ; sosa:resultTime ?t ; sosa:observedProperty ?prop ; sosa:hasFeatureOfInterest ?f .       
+  ?o sosa:hasResult ?r ; sosa:resultTime ?t ; sosa:hasFeatureOfInterest ?f ; sosa:observedProperty [ a :Temperature ] .
   ?r qudt:numericValue ?v .
-  ?prop rdfs:comment ?pc .
 
   # Features of interest
   ?f a :OutdoorWater ; geo:defaultGeometry/geo:asWKT ?pPos .
   ?f geo:defaultGeometry/geo:asWKT ?pPos .
-  
-    # spatial correlation
+
+  # Max spatial distance
   BIND(geof:distance(?hPos, ?pPos, uom:metre) AS ?distance)
-  FILTER (?distance <= 100)
+  FILTER (?distance <= 1000)
+  
+  # Min temperature
+  FILTER (?v > 18)
 }
-GROUP BY ?h ?hPos ?hPosLabel ?p ?pPos ?pPosLabel
 """
