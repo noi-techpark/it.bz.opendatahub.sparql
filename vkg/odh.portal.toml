@@ -745,8 +745,6 @@ WHERE {
   BIND(geof:distance(?hPos, ?sPos, uom:metre) AS ?distance)
   FILTER (?h != ?s)
   FILTER (?distance <= 1000)
-  # observations
-#  ?s sosa:hosts ?sensor .
 }
 """
 
@@ -782,10 +780,8 @@ WHERE {
   ?o sosa:hasResult ?r .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
-  ?prop rdfs:comment ?pc .
+  ?prop rdfs:comment ?pc ; a :WaterTemperature .
   ?r qudt:numericValue ?v .
-  #  Temperatura acqua
-  FILTER (?prop = <https://kg.opendatahub.bz.it/data/property/1949>)
 }
 """
 
