@@ -801,6 +801,7 @@ PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
 PREFIX qudt: <http://qudt.org/schema/qudt#>
+PREFIX qudt-unit: <http://qudt.org/vocab/unit#>
 
 SELECT ?hPos ?hPosLabel ?pPos ?pPosLabel ?v ?t
 WHERE {
@@ -815,11 +816,10 @@ WHERE {
   ?p sosa:hosts/sosa:madeObservation ?o .
   ?o a :LatestObservation .
   ?o sosa:hasResult ?r ; sosa:resultTime ?t ; sosa:hasFeatureOfInterest ?f ; sosa:observedProperty [ a :Temperature ] .
-  ?r qudt:numericValue ?v .
+  ?r qudt:numericValue ?v ; qudt:unit qudt-unit:DegreeCelsius .
 
   # Features of interest
   ?f a :OutdoorWater ; geo:defaultGeometry/geo:asWKT ?pPos .
-  ?f geo:defaultGeometry/geo:asWKT ?pPos .
 
   # Max spatial distance
   BIND(geof:distance(?hPos, ?pPos, uom:metre) AS ?distance)
