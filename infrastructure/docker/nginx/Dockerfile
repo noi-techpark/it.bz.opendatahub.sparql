@@ -3,8 +3,17 @@ FROM nginx:1.17.8-alpine as dev
 RUN apk add --update curl && \
     rm -rf /var/cache/apk/*
 
+
+
 COPY infrastructure/docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY infrastructure/docker/nginx/nginx.conf /etc/nginx/nginx.conf
+
+RUN mkdir /dashboard
+
+COPY infrastructure/docker/nginx/odh-vkg-frontpage.zip /tmp
+RUN cd /tmp && unzip odh-vkg-frontpage.zip -d /dashboard
+RUN rm /tmp/odh-vkg-frontpage.zip
+RUN cd /dashboard
 
 # expose port 80
 EXPOSE 80
