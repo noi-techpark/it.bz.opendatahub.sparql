@@ -1,0 +1,71 @@
+@import "variables";
+@import "mixins";
+
+header {
+  background-color: $colors--white;
+  box-shadow: 0 8px 8px 0px $colors--greyish;
+  height: 72px;
+
+  #header-contents {
+    @include hflex(center);
+
+    margin: 0 auto;
+    max-width: $layouts--boxed;
+
+    #header-logo {
+      img {
+        height: 56px;
+        margin: 8px 16px 8px 0;
+        padding: 0 16px 0 0;
+
+        @include breakpoint($bp-medium) {
+          border-right: 1px solid $colors--greyish;
+        }
+      }
+    }
+
+    nav {
+      display: none;
+
+      @include breakpoint($bp-medium) {
+        display: block;
+      }
+
+      ul {
+        @include hflex(center);
+  
+        margin: 0;
+        padding: 0;
+  
+        li {
+          list-style-type: none;
+
+          a {
+            @include regular-font(12px, 72px);
+
+            border-top: 3px solid $colors--white;
+            color: $colors--black;
+            display: inline-block;
+            height: 72px;
+            letter-spacing: 2px;
+            padding: 0 16px;
+            text-decoration: none;
+            transition: border-top 0.25s ease-in-out;
+
+            &:hover {
+              border-top: 3px solid $colors--green;
+            }
+          }
+
+          &.is-active {
+            a {
+              @include semibold-font(12px, 72px);
+
+              border-top: 3px solid $colors--green;
+            }
+          }
+        }
+      }
+    }
+  }
+}

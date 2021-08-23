@@ -1,0 +1,47 @@
+@mixin light-font($size, $line) {
+  font-family: $font;
+  font-size: $size;
+  font-weight: 300;
+  line-height: $line;
+}
+
+@mixin regular-font($size, $line) {
+  font-family: $font;
+  font-size: $size;
+  font-weight: 400;
+  line-height: $line;
+}
+
+@mixin semibold-font($size, $line) {
+  font-family: $font;
+  font-size: $size;
+  font-weight: 600;
+  line-height: $line;
+}
+
+@mixin bold-font($size, $line) {
+  font-family: $font;
+  font-size: $size;
+  font-weight: 700;
+  line-height: $line;
+}
+
+@mixin hflex($align: stretch, $wrap: nowrap) {
+  align-items: $align;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: $wrap;
+}
+
+@mixin vflex($align: stretch, $wrap: nowrap) {
+  align-items: $align;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: $wrap;
+}
+
+@mixin breakpoint($width) {
+  @media only screen and (min-width: #{$width}) {
+      @content
+  }
+}

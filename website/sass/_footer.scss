@@ -1,0 +1,188 @@
+@import "variables";
+@import "mixins";
+
+footer {
+  background-color: $colors--green;
+  padding: 32px 16px;
+
+  @include breakpoint($bp-medium) {
+    padding: 96px;
+  }
+
+  #footer-support {
+    margin-bottom: 96px;
+
+    @include breakpoint($bp-medium) {
+      margin-bottom: 240px;
+    }
+
+    #footer-support-subtitle {
+      @include regular-font(12px, 14px);
+
+      color: $colors--white;
+    }
+
+    #footer-support-title {
+      @include semibold-font(24px, 26px);
+
+      color: $colors--white;
+      padding: 8px 0;
+    }
+
+    #footer-support-text {
+      @include regular-font(17px, 25px);
+
+      color: $colors--white;
+      max-width: 576px;
+    }
+
+    #footer-support-link {
+      @include semibold-font(12px, 18px);
+
+      background-color: $colors--white;
+      box-sizing: border-box;
+      color: $colors--black;
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 24px;
+      padding: 12px 16px;
+      text-decoration: none;
+
+      svg {
+        display: inline-block;
+        margin-left: 8px;
+        position: relative;
+        left: 0;
+        transition: left 0.25s ease-in-out;
+      }
+
+      &:hover {
+        svg {
+          left: 3px;
+        }
+      }
+    }
+  }
+
+  #footer-contents {
+    @include vflex();
+
+    @include breakpoint($bp-regular) {
+      @include hflex();
+
+      margin-top: 64px;
+    }
+
+    #footer-logo {
+      display: block;
+    }
+
+    #footer-navigation {
+      @include vflex();
+      
+      flex: 1;
+      margin: 24px 0;
+
+      @include breakpoint($bp-medium) {
+        @include hflex();
+      }
+
+      @include breakpoint($bp-regular) {
+        margin: 0 96px;
+      }
+
+      .footer-navigation-section {
+        flex: 1;
+        margin: 0;
+
+        @include breakpoint($bp-regular) {
+          margin: 0 32px;
+        }
+
+        .footer-navigation-section-heading {
+          @include semibold-font(20px, 25px);
+
+          color: $colors--white;
+          margin: 24px 0 4px 0;
+
+          @include breakpoint($bp-medium) {
+            margin-bottom: 16px;
+          }
+        }
+
+        .footer-navigation-section-links {
+          ul {
+            margin: 0;
+            padding: 0;
+
+            li {
+              list-style-type: none;
+
+              a {
+                @include regular-font(17px, 25px);
+
+                color: $colors--white;
+                text-decoration: none;
+
+                &:hover {
+                  text-decoration: underline;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #footer-social {
+      @include hflex();
+
+      margin: 16px 0;
+      
+      @include breakpoint($bp-regular) {
+        @include vflex();
+
+        margin: 0;
+      }
+
+      a {
+        display: block;
+        margin: 4px 8px 4px 4px;
+
+        svg {
+          height: 32px;
+          width: 32px;
+
+          path {
+            fill: rgba($colors--white, 0.85);
+          }
+        }
+
+        @include breakpoint($bp-medium) {
+          margin: 4px;
+
+          svg {
+            height: 48px;
+            width: 48px;
+          }
+        }
+      }
+
+      #facebook {
+        rect {
+          fill: rgba($colors--white, 0.85);
+        }
+
+        path {
+          fill: $colors--green;
+        }
+      }
+    }
+  }
+
+  #footer-copyright {
+    @include regular-font(12px, 17px);
+
+    color: $colors--white;
+  }
+}

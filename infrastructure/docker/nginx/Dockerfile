@@ -10,9 +10,7 @@ COPY infrastructure/docker/nginx/nginx.conf /etc/nginx/nginx.conf
 
 RUN mkdir /dashboard
 
-COPY infrastructure/docker/nginx/odh-vkg-frontpage.zip /tmp
-RUN cd /tmp && unzip odh-vkg-frontpage.zip -d /dashboard
-RUN rm /tmp/odh-vkg-frontpage.zip
+ADD website /dashboard
 RUN cd /dashboard
 
 # expose port 80
