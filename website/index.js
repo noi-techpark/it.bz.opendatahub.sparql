@@ -66,7 +66,8 @@ function changeTab(tabNumber) {
 	// scrollToElement('#queries-tabs', 600)
 }
 
-function runQuery(menu, buttonNumber, output) {
+function runQuery(menu, buttonNumber) {
+
 	//queryList["Tourism"][1].query for example
 
 	currentQuery = queryList[menu][buttonNumber];
@@ -74,7 +75,9 @@ function runQuery(menu, buttonNumber, output) {
 	tab.rename(currentQuery.tabName);
 	tab.setQuery(currentQuery.query);
 
-	// tab.query();
+	//output options: table, error, boolean, rawResponse, pivot, gchart, leaflet
+	//google chart options: LineChart, AreaChart, Histogram(column), BarChart,
+	// 						ScatterChart, PieChart, GeoChart, ImageSparkline, Gauge, ...
 
 	tab.yasr.options.output = currentQuery.output;
 	switch (currentQuery.output) {
@@ -84,10 +87,14 @@ function runQuery(menu, buttonNumber, output) {
 		case 'leaflet':
 			$("button.yasr_btn.select_leaflet").click();
 			break;
+		case 'gchart':
+			$("button.yasr_btn.select_gchart").click();
+			// $("button.openGchartBtn.yasr_btn").click();
+			// tab.yasr.plugins.gchart.options.chartConfig = currentQuery.chartConfig;
+			break;
 
 	}
 	scrollToElement('#yasgui', 600);
-
 	if (tab.yasr.somethingDrawn()) {
 		// query to override the results
 		tab.query();
@@ -96,3 +103,9 @@ function runQuery(menu, buttonNumber, output) {
 		animateButton();
 	}
 }
+
+
+$(document).on('click','.openGchartBtn',function(){
+	console.log('tab.yasr: ', tab.yasr.plugins.gchart.options.chartConfig);
+});
+

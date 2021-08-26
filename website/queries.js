@@ -27,16 +27,100 @@ var queryList = {
 	],
 	"Environment": [
 		{
-			"query": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX sosa: <http://www.w3.org/ns/sosa/>\nPREFIX : <http://noi.example.org/ontology/odh#>\n\nSELECT DISTINCT ?sensor ?sensorLabel ?stationCode (MIN(?resultTime) as ?resultsStart) (MAX(?resultTime) as ?resultsEnd) WHERE {\n  ?observation a sosa:Observation ;\n  \tsosa:observedProperty ?observableProperty ;\n  \tsosa:madeBySensor ?sensor ;\n  \tsosa:resultTime ?resultTime ;\n  \tsosa:hasSimpleResult ?resultValue .\n  ?sensor rdfs:label ?sensorLabel ;\n      \t:hasStationCode ?stationCode .\n  ?observableProperty rdfs:label \"nitrogen-dioxide\"\n}\nGROUP BY ?sensor ?sensorLabel ?stationCode\n",
+			"query": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+				"PREFIX sosa: <http://www.w3.org/ns/sosa/>\n" +
+				"PREFIX : <http://noi.example.org/ontology/odh#>\n" +
+				"\n" +
+				"SELECT DISTINCT ?station ?stationLabel ?stationCode (MIN(?resultTime) as ?resultsStart) (MAX(?resultTime) as ?resultsEnd) WHERE {\n" +
+				"  ?observation a sosa:Observation ;\n" +
+				"  \tsosa:observedProperty ?observableProperty ;\n" +
+				"  \tsosa:madeBySensor ?sensor ;\n" +
+				"  \tsosa:resultTime ?resultTime ;\n" +
+				"  \tsosa:hasResult ?resultValue .\n" +
+				" ?sensor sosa:isHostedBy ?station .\n" +
+				"    ?station  rdfs:label ?stationLabel ;\n" +
+				"      \t:hasStationCode ?stationCode .\n" +
+				"  ?observableProperty rdfs:label \"nitrogen-dioxide\"\n" +
+				"}\n" +
+				"GROUP BY ?station ?stationLabel ?stationCode\n" +
+				"\n",
 			"tabName": "Sensors",
 			"tabId": "sn",
-			"output": "table",
+			"output": "gchart",
+			// "chartConfig": {
+			// 	"chartType": "LineChart",
+			// 	"isDefaultVisualization": false,
+			// 	"state": {},
+			// 	"view": {
+			// 		"rows": null,
+			// 		"columns": [
+			// 			0,
+			// 			{
+			// 				"label": "sensorLabel",
+			// 				"properties": {"role": "annotation"},
+			// 				"sourceColumn": 1
+			// 			},
+			// 			{
+			// 				"label": "stationCode",
+			// 				"properties": {"role": "annotationText"},
+			// 				"sourceColumn": 2
+			// 			},
+			// 			3,
+			// 			4],
+			// 	},
+			// 	"options": {
+			// 		booleanRole: "certainty",
+			// 		curveType: "",
+			// 		legacyScatterChartLabels: true,
+			// 		legend: "right",
+			// 		lineWidth: 2,
+			// 		annotations: {domain: {style: "line"}},
+			// 		hAxis: {
+			// 			maxValue: null,
+			// 			minValue: null,
+			// 			useFormatFromData: true,
+			// 			viewWindow: null,
+			// 			viewWindowMode: null,
+			// 		},
+			// 		vAxes: [
+			// 			{
+			// 				maxValue: null,
+			// 				minValue: null,
+			// 				useFormatFromData: true,
+			// 				viewWindow: {max: null, min: null},
+			// 			},
+			// 			{
+			// 				maxValue: null,
+			// 				minValue: null,
+			// 				useFormatFromData: true,
+			// 				viewWindow: {max: null, min: null},
+			// 			},
+			// 		],
+			// 	},
+			// },
 		},
 		{
-			"query": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX sosa: <http://www.w3.org/ns/sosa/>\nPREFIX : <http://noi.example.org/ontology/odh#>\n\nSELECT DISTINCT ?valueBin (COUNT(*) AS ?count) WHERE {\n  ?observation a :LatestObservation ;\n  \tsosa:observedProperty ?observableProperty ;\n  \tsosa:madeBySensor ?sensor ;\n  \tsosa:resultTime ?resultTime ;\n  \tsosa:hasSimpleResult ?resultValue .\n  ?sensor rdfs:label ?sensorLabel .\n  ?observableProperty rdfs:label \"air-temperature\" .\n  BIND (FLOOR(ROUND(?resultValue) / 5) * 5 AS ?valueBin)\n}\nGROUP BY ?valueBin\nORDER BY ?valueBin\n",
+			"query": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+				"PREFIX sosa: <http://www.w3.org/ns/sosa/>\n" +
+				"PREFIX : <http://noi.example.org/ontology/odh#>\n" +
+				"PREFIX qudt: <http://qudt.org/schema/qudt#>\n" +
+				"\n" +
+				"SELECT DISTINCT ?valueBin (COUNT(*) AS ?count) WHERE {\n" +
+				"  ?observation a :LatestObservation ;\n" +
+				"  \tsosa:observedProperty ?observableProperty ;\n" +
+				"  \tsosa:madeBySensor ?sensor ;\n" +
+				"  \tsosa:resultTime ?resultTime ;\n" +
+				"  \tsosa:hasResult/qudt:numericValue ?resultValue .\n" +
+				"  ?observableProperty rdfs:label \"air-temperature\" .\n" +
+				"  BIND (FLOOR(ROUND(?resultValue) / 5) * 5 AS ?valueBin)\n" +
+				"}\n" +
+				"GROUP BY ?valueBin\n" +
+				"ORDER BY ?valueBin\n" +
+				"\n",
 			"tabName": "Temperature",
 			"tabId": "tp",
-			"output": "table",
+			"output": "gchart",
+			// "chartType": "Histogram",
 		}
 	],
 	"Mobility": []
