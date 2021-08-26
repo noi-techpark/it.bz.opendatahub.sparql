@@ -19,13 +19,13 @@ var animateButton = function(){
 	}, 600);
 }
 
-	// open and select tab specifing id of element and optional scroll speed as arguments
+// open and select tab specifing id of element and optional scroll speed as arguments
 var openTab = function(el){
 
 	oldTab= yasgui.tabs[el];
 	//check if there is already a tab open for this query
 	if (!oldTab) {
-	yasgui.addTab(el);
+		yasgui.addTab(el);
 	}
 
 	return yasgui.selectTab(el);
@@ -67,28 +67,32 @@ function changeTab(tabNumber) {
 }
 
 function runQuery(menu, buttonNumber, output) {
-	tab = yasgui.selectTab("");
-	switch (menu) {
-		case 'Tourism':
-			currentQuery = queryList.Tourism[buttonNumber];
-			break;
-		case 'Environment':
-			currentQuery = queryList.Environment[buttonNumber];
-			break;
-		case 'Mobility':
-			currentQuery = queryList.Mobility[buttonNumber];
-			break;
-	}
-	tab.setQuery(currentQuery);
+	//queryList["Tourism"][1].query for example
+
+	currentQuery = queryList[menu][buttonNumber];
+	tab = openTab(currentQuery.tabId);
+	tab.rename(currentQuery.tabName);
+	tab.setQuery(currentQuery.query);
+
 	// tab.query();
-	switch (output) {
+
+	tab.yasr.options.output = currentQuery.output;
+	switch (currentQuery.output) {
 		case 'table':
-			tab.yasr.options.output = "table";
+			$("button.yasr_btn.select_table").click();
 			break;
 		case 'leaflet':
-			tab.yasr.options.output = "leaflet";
+			$("button.yasr_btn.select_leaflet").click();
 			break;
 
 	}
 	scrollToElement('#yasgui', 600);
+
+	if (tab.yasr.somethingDrawn()) {
+		// query to override the results
+		tab.query();
+	} else {
+		tab.yasr.warn("Press the play button to test the query.")
+		animateButton();
+	}
 }
