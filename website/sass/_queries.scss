@@ -8,6 +8,10 @@ section#queries {
 
   > .text {
     padding: 0 16px;
+
+	p, h2 {
+	color: $colors--white;
+	 }
   }
 
   #queries-tabs {
@@ -52,14 +56,14 @@ section#queries {
             @include regular-font(24px, 26px);
 
             box-sizing: border-box;
-            color: rgba($colors--black, 0.3);
+            color: rgba($colors--white, 0.3);
             display: inline-block;
             padding: 8px 12px;
             text-decoration: none;
             transition: color 0.25s ease-in-out;
 
             &:hover {
-              color: rgba($colors--black, 0.5);
+              color: rgba($colors--white, 0.5);
             }
           }
 
@@ -91,7 +95,7 @@ section#queries {
       @include breakpoint($bp-medium) {
         padding: 0 32px;
       }
-      
+
       .queries-tab-content {
         display: none;
 
