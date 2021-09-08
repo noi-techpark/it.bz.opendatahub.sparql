@@ -1,0 +1,189 @@
+@import "variables";
+@import "mixins";
+
+section#queries {
+  background-color: $colors--green;
+  box-sizing: border-box;
+  padding: 32px 0;
+
+  > .text {
+    padding: 0 16px;
+
+	p, h2 {
+	color: $colors--white;
+	 }
+  }
+
+  #queries-tabs {
+    padding: 32px 0;
+
+    @include breakpoint($bp-medium) {
+      padding: 64px 0;
+    }
+
+    #queries-tab-links {
+      border-bottom: 1px solid $colors--white;
+      margin-bottom: 0;
+      overflow-x: auto;
+
+      @include breakpoint($bp-medium) {
+        margin-bottom: 32px;
+        overflow: hidden;
+      }
+
+      ul {
+        @include hflex();
+
+        margin: 0;
+        padding: 0 16px;
+
+        @include breakpoint($bp-medium) {
+          padding: 0 48px;
+        }
+
+        li {
+          border-bottom: 1px solid rgba($colors--white, 0.5);
+          border-right: 1px solid rgba($colors--white, 0.5);
+          border-top: 1px solid rgba($colors--white, 0.5);
+          list-style-type: none;
+          margin-bottom: -1px;
+
+          &:first-of-type {
+            border-left: 1px solid rgba($colors--white, 0.5);
+          }
+
+          a {
+            @include regular-font(24px, 26px);
+
+            box-sizing: border-box;
+            color: rgba($colors--white, 0.3);
+            display: inline-block;
+            padding: 8px 12px;
+            text-decoration: none;
+            transition: color 0.25s ease-in-out;
+
+            &:hover {
+              color: rgba($colors--white, 0.5);
+            }
+          }
+
+          &.is-active {
+            border-bottom: 1px solid $colors--green;
+            border-right: 1px solid $colors--white;
+            border-top: 1px solid $colors--white;
+
+            &:first-of-type {
+              border-left: 1px solid $colors--white;
+            }
+
+            a {
+              color: $colors--white;
+
+              &:hover {
+                color: $colors--white;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #queries-tab-contents {
+      box-sizing: border-box;
+      padding: 0;
+
+      @include breakpoint($bp-medium) {
+        padding: 0 32px;
+      }
+
+      .queries-tab-content {
+        display: none;
+
+        &.is-active {
+          @include hflex(stretch, wrap);
+        }
+
+        .query {
+          box-sizing: border-box;
+          flex: 0 0 percentage(1 / 1);
+          padding: 16px 16px 0 16px;
+          width: percentage(1 / 1);
+
+          @include breakpoint($bp-medium) {
+            flex: 0 0 percentage(1 / 2);
+            padding: 16px;
+            width: percentage(1 / 2);
+          }
+
+          @include breakpoint($bp-regular) {
+            flex: 0 0 percentage(1 / 3);
+            padding: 16px;
+            width: percentage(1 / 3);
+          }
+
+          .query-contents {
+            border: 1px solid $colors--white;
+            box-sizing: border-box;
+            height: 100%;
+            padding: 16px;
+
+            .query-icon {
+              display: none;
+              margin-bottom: 16px;
+              width: 72px;
+
+              path, polygon, rect, line {
+                fill: $colors--white;
+              }
+            }
+
+            .query-title {
+              @include semibold-font(24px, 26px);
+
+              color: $colors--white;
+              margin-bottom: 8px;
+            }
+
+            .query-text {
+              @include regular-font(17px, 25px);
+
+              color: $colors--white;
+            }
+
+            .query-action {
+              @include semibold-font(12px, 18px);
+
+              background-color: $colors--white;
+              box-sizing: border-box;
+              color: $colors--black;
+              cursor: pointer;
+              display: inline-block;
+              margin-top: 8px;
+              padding: 12px 16px;
+
+              svg {
+                display: inline-block;
+                margin-left: 8px;
+                position: relative;
+                top: 0;
+                transition: top 0.25s ease-in-out;
+              }
+
+              &:hover {
+                svg {
+                  top: 3px;
+                }
+              }
+            }
+
+            @include breakpoint($bp-medium) {
+              .query-icon {
+                display: block;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

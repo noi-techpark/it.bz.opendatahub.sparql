@@ -1,0 +1,66 @@
+@import "variables";
+@import "mixins";
+
+html, body {
+  font-family: $font;
+}
+
+main {
+  .text {
+    box-sizing: border-box;
+    margin: 0 auto;
+
+    h1, h2, h3 {
+      @include semibold-font(24px, 26px);
+
+      color: $colors--black;
+      margin: 16px auto;
+      max-width: 680px;
+      text-align: left;
+      
+      @include breakpoint($bp-medium) {
+        text-align: center;
+      }
+    }
+
+    p {
+      @include regular-font(17px, 25px);
+
+      color: $colors--black;
+      margin: 0 auto;
+      max-width: 578px;
+      text-align: left;
+      
+      @include breakpoint($bp-medium) {
+        text-align: center;
+      }
+
+      a {
+        color: $colors--black;
+        text-decoration: underline;
+        transition: color 0.25s ease-in-out;
+
+        &:hover {
+          color: $colors--green;
+        }
+      }
+    }
+
+    &.is-inverted {
+      p a:hover {
+        color: $colors--white;
+      }
+    }
+  }
+
+  .images {
+    @include hflex(center, wrap);
+
+    justify-content: center;
+    padding: 32px 0;
+
+    img {
+      margin: 8px;
+    }
+  }
+}

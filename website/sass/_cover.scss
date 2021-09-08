@@ -1,0 +1,14 @@
+@import "variables";
+@import "mixins";
+
+section.cover {
+  @include vflex(center);
+
+  height: 56vh;
+  justify-content: center;
+  padding: 0 16px;
+
+  &.is-alternate {
+    background-color: $colors--greyish;
+  }
+}

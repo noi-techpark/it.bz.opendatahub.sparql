@@ -1,0 +1,149 @@
+@import "variables";
+@import "mixins";
+
+section#playground {
+  background-color: $colors--green;
+  box-sizing: border-box;
+  padding: 32px 0;
+
+  > .text {
+    padding: 0 16px;
+
+    p, h2 {
+    color: $colors--white;
+     }
+  }
+
+  #playground-editor {
+    background-color: $colors--white;
+    box-sizing: border-box;
+    margin: 16px 0;
+
+    @include breakpoint($bp-medium) {
+      margin: 48px;
+    }
+
+    #playground-query {
+      border-bottom: 3px solid $colors--grey;
+      display: none;
+      padding: 8px;
+
+      @include breakpoint($bp-medium) {
+        @include hflex();
+      }
+
+      #playground-query-field {
+        border: 0;
+        box-sizing: border-box;
+        font-family: monospace;
+        flex: 1;
+        margin: 0 48px;
+        min-height: 240px;
+        padding: 8px;
+        resize: none;
+
+        @include breakpoint($bp-regular) {
+          margin: 0 96px;
+        }
+      }
+
+      #playground-query-actions {
+        @include vflex();
+
+        a {
+          margin: 8px 0;
+          text-decoration: none;
+        }
+      }
+    }
+
+    #playground-results {
+      #playground-results-types {
+        border-bottom: 1px solid $colors--grey;
+        margin: 16px 0 0 16px;
+        overflow-x: auto;
+        padding: 16px 0;
+
+        @include breakpoint($bp-medium) {
+          margin: 24px 48px 0 48px;
+          padding: 24px 0;
+        }
+
+        @include breakpoint($bp-regular) {
+          margin: 24px 96px 0 96px;
+          padding: 24px 0;
+        }
+
+        ul {
+          @include hflex();
+
+          margin: 0;
+          padding: 0;
+
+          li {
+            @include semibold-font(13px, 17px);
+
+            background-color: $colors--grey;
+            border-radius: 12px;
+            color: $colors--black;
+            cursor: pointer;
+            display: inline-block;
+            list-style-type: none;
+            margin-right: 8px;
+            padding: 4px 16px;
+            text-transform: uppercase;
+            white-space: nowrap;
+
+            &.is-active {
+              background-color: $colors--black;
+              color: $colors--white;
+            }
+          }
+        }
+      }
+
+      #playground-results-contents {
+        @include hflex();
+
+        flex: 1;
+        padding: 0;
+
+        #playground-results-output {
+          margin: 0 16px 16px 16px;
+
+          @include breakpoint($bp-medium) {
+            margin: 0 48px 48px 48px;
+          }
+
+          @include breakpoint($bp-regular) {
+            margin: 0 96px 48px 96px;
+          }
+
+          pre {
+            white-space: normal;
+            word-break: break-all;
+          }
+
+          img {
+            max-width: 100%;
+            width: 100%;
+          }
+        }
+
+        #playground-results-actions {
+          display: none;
+          padding: 8px;
+
+          @include breakpoint($bp-medium) {
+            @include vflex();
+          }
+
+          a {
+            margin: 8px 0;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+}
