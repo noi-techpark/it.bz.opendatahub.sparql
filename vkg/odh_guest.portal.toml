@@ -549,16 +549,18 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT * WHERE {
 ?s a sosa:Sensor .
-#?s sosa:isHostedBy ?p.
-?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+?s sosa:isHostedBy ?p.
+?p geo:defaultGeometry/geo:asWKT ?wkt .
 ?s sosa:madeObservation ?o .
-?o sosa:hasSimpleResult ?v .
+?o sosa:hasResult ?r .
 ?o sosa:resultTime ?t .
 ?o sosa:observedProperty ?prop .
 ?prop rdfs:comment ?pc .
+?r qudt:numericValue ?v .
 BIND(CONCAT( ?pc, ": ", str(?v)) AS ?wktLabel)
 }
 LIMIT 1000
@@ -574,8 +576,9 @@ PREFIX sosa: <http://www.w3.org/ns/sosa/>
 
 SELECT DISTINCT ?st WHERE {
 ?s a sosa:Sensor .
-?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
-  ?s :hasStationType ?st .
+?s sosa:isHostedBy ?p . 
+?p geo:defaultGeometry/geo:asWKT ?wkt .
+?p :hasStationType ?st .
 #?s sosa:madeObservation ?o .
 }
 LIMIT 100
@@ -621,17 +624,19 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT ?st ?pc ?unit (COUNT(*) AS ?count)  (MIN(?t) AS ?min_t) (MAX(?t) AS ?max_t) (MIN(?v) AS ?min_v) (AVG(?v) AS ?avg_v) (MAX(?v) AS ?max_v)   WHERE {
 #?s a sosa:Sensor .
-#?s sosa:isHostedBy ?p.
+?s sosa:isHostedBy ?p.
 #  ?s a :TrafficSensor .
-  ?s :hasStationType ?st .
-?s geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+?p :hasStationType ?st .
+?p geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
 ?s sosa:madeObservation ?o .
-?o sosa:hasSimpleResult ?v .
+?o sosa:hasResult ?r .
 ?o sosa:resultTime ?t .
 ?o sosa:observedProperty ?prop .
+?r qudt:numericValue ?v .
 ?prop rdfs:label ?pc .
   ?prop :hasUnit ?unit .
 #BIND(CONCAT(?st, "/", ?pc, "/",  str(?v), "/", ?unit) AS ?wktLabel)
@@ -647,15 +652,17 @@ PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT ?t ?v {
-  FILTER (?s = <http://noi.example.org/ontology/odh#station/342142>) # siemens->Galilei_Palermo
+  FILTER (?s = <https://kg.opendatahub.bz.it/data/station/342142>) # siemens->Galilei_Palermo
   ?s a :Station .
   ?s rdfs:label ?wktLabel .
-  OPTIONAL {  ?s sosa:madeObservation ?o . ?o sosa:hasSimpleResult ?v .
+  OPTIONAL {  ?s sosa:hosts/sosa:madeObservation ?o . ?o sosa:hasResult ?r .
+  ?r qudt:numericValue ?v .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
-  FILTER (?prop = <http://noi.example.org/ontology/odh#property/54>) # Velocita media dei veicoli
+  FILTER (?prop = <https://kg.opendatahub.bz.it/data/property/54>) # Velocita media dei veicoli
   ?prop rdfs:comment ?pc .
   ?prop :hasUnit ?unit .
   }
@@ -691,15 +698,17 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT * WHERE {
-  ?s a :MeteoStation ; :hasOrigin ?origin .
+  ?s a :WeatherStation ; :hasOrigin ?origin .
   FILTER (?origin !='SIAG' && ?origin != 'meteotrentino')
-  ?s sosa:madeObservation ?o .
-  ?o sosa:hasSimpleResult ?v .
+  ?s sosa:hosts/sosa:madeObservation ?o .
+  ?o sosa:hasResult ?r .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
   ?prop rdfs:comment ?pc .
+  ?r qudt:numericValue ?v .
 }
 LIMIT 10
 """
@@ -710,7 +719,7 @@ name="Tourims and Mobility"
 
 [[tabGroups.tabs]]
 
-name="Nearby Restaurants and Meteo Stations"
+name="Nearby Restaurants and Weather Stations"
 query="""
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
@@ -725,20 +734,18 @@ WHERE {
   ?h a schema:Restaurant ; geo:defaultGeometry/geo:asWKT ?hPos ; schema:name ?hPosLabel .
   FILTER(LANG(?hPosLabel)='it')
   BIND('red' AS ?hPosColor)
-  # MeteoStations
-  ?s a :MeteoStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
+  # WeatherStations
+  ?s a :WeatherStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
   BIND('blue' AS ?sPosColor)
   # spatial correlation
   BIND(geof:distance(?hPos, ?sPos, uom:metre) AS ?distance)
   FILTER (?h != ?s)
   FILTER (?distance <= 1000)
-  # observations
-#  ?s sosa:hosts ?sensor .
 }
 """
 
 [[tabGroups.tabs]]
-name="Nearby Restaurants and Meteo Stations, and observations"
+name="Nearby Restaurants and Weather Stations, and observations"
 query="""
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -748,6 +755,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT *
 WHERE {
@@ -755,27 +763,26 @@ WHERE {
   ?h a schema:Restaurant ; geo:defaultGeometry/geo:asWKT ?hPos ; schema:name ?hPosLabel .
   FILTER(LANG(?hPosLabel)='it')
   BIND('red' AS ?hPosColor)
-  # MeteoStations
-  ?s a :MeteoStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
+  # WeatherStations
+  ?s a :WeatherStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
   BIND('blue' AS ?sPosColor)
   # spatial correlation
   BIND(geof:distance(?hPos, ?sPos, uom:metre) AS ?distance)
   FILTER (?h != ?s)
   FILTER (?distance <= 101)
   # observations
-  ?s sosa:madeObservation ?o .
+  ?s sosa:hosts/sosa:madeObservation ?o .
   ?o a :LatestObservation .
-  ?o sosa:hasSimpleResult ?v .
+  ?o sosa:hasResult ?r .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
-  ?prop rdfs:comment ?pc .
-  #  Temperatura acqua
-  FILTER (?prop = <http://noi.example.org/data/property/1949>)
+  ?prop rdfs:comment ?pc ; a :WaterTemperature .
+  ?r qudt:numericValue ?v .
 }
 """
 
 [[tabGroups.tabs]]
-name="Nearby Restaurants and Meteo Stations, and average observations"
+name="Restaurants nearby water above 18°C"
 query="""
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -785,27 +792,32 @@ PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
+PREFIX qudt-unit: <http://qudt.org/vocab/unit#>
 
-SELECT ?hPos ?hPosLabel ?sPos ?sPosLabel (AVG(?v) AS ?av) (COUNT(?v) AS ?nv) (SAMPLE(?t) AS ?at)
+SELECT ?hPos ?hPosLabel ?pPos ?pPosLabel ?v ?t
 WHERE {
   # Restaurants
   ?h a schema:Restaurant ; geo:defaultGeometry/geo:asWKT ?hPos ; schema:name ?hPosLabel .
   FILTER(LANG(?hPosLabel)='it')
   BIND('red' AS ?hPosColor)
-  # MeteoStations
-  ?s a :MeteoStation ; geo:defaultGeometry/geo:asWKT ?sPos ; schema:name ?sPosLabel .
+  # Platforms
+  ?p a sosa:Platform ; schema:name ?pPosLabel .
   BIND('blue' AS ?sPosColor)
-  # spatial correlation
-  BIND(geof:distance(?hPos, ?sPos, uom:metre) AS ?distance)
-  FILTER (?distance <= 100)
-  # observations
-  ?s sosa:madeObservation ?o .
+  # Observations
+  ?p sosa:hosts/sosa:madeObservation ?o .
   ?o a :LatestObservation .
-  ?o sosa:hasSimpleResult ?v ; sosa:resultTime ?t ; sosa:observedProperty ?prop .
-  ?prop rdfs:comment ?pc .
-  #  Temperatura acqua
-  FILTER (?prop = <http://noi.example.org/data/property/1949>)
-  #
+  ?o sosa:hasResult ?r ; sosa:resultTime ?t ; sosa:hasFeatureOfInterest ?f ; sosa:observedProperty [ a :Temperature ] .
+  ?r qudt:numericValue ?v ; qudt:unit qudt-unit:DegreeCelsius .
+
+  # Features of interest
+  ?f a :OutdoorWater ; geo:defaultGeometry/geo:asWKT ?pPos .
+
+  # Max spatial distance
+  BIND(geof:distance(?hPos, ?pPos, uom:metre) AS ?distance)
+  FILTER (?distance <= 1000)
+  
+  # Min temperature
+  FILTER (?v > 18)
 }
-GROUP BY ?h ?hPos ?hPosLabel ?s ?sPos ?sPosLabel
 """
