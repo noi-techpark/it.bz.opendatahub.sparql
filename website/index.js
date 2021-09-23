@@ -1,8 +1,8 @@
-
 var action;
+let tempData = [];
 
 
-      // specify id of element and optional scroll speed as arguments
+// specify id of element and optional scroll speed as arguments
 var scrollToElement = function(el, ms){
   	clearTimeout(action);
 	var speed = (ms) ? ms : 600;
@@ -33,6 +33,7 @@ var openTab = function(el){
 
 
 function changeTab(tabNumber) {
+	// getInitData();
 	var queryTab01 = document.getElementById('queryTab01');
 	var queryTab02 = document.getElementById('queryTab02');
 	var queryTab03 = document.getElementById('queryTab03');
@@ -104,8 +105,49 @@ function runQuery(menu, buttonNumber) {
 	}
 }
 
+function queryTemperatures(temperatureListQuery, bolzanoTemperatureQuery) {
+	var url = 'https://sparql.opendatahub.bz.it/sparql/'
 
-$(document).on('click','.openGchartBtn',function(){
+	var temperatureListQueryUrl = url+"?query="+ encodeURIComponent(temperatureListQuery) +"&format=json";
+	var bolzanoTempQueryUrl = url+"?query="+ encodeURIComponent(bolzanoTemperatureQuery) +"&format=json";
+	var xhttp = new XMLHttpRequest();
+	var temperatureData = [];
+	xhttp.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			var data = JSON.parse(this.responseText).results.bindings;
+			// console.log(data);
+			data.forEach((element) => {
+				// console.log(element.resultValue.value);
+				temperatureData.push(parseInt(element.resultValue.value));
+			});
+
+			// chain the calls, trying to make an artificial async await logic
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText).results.bindings;
+					const bolzanoTemp = data[0].resultValue.value;
+					handleGraph(temperatureData, bolzanoTemp);
+				}
+			}
+
+			xhttp.open("GET", bolzanoTempQueryUrl, true);
+			xhttp.send();
+		}
+	};
+
+	xhttp.open("GET", temperatureListQueryUrl, true);
+	xhttp.send();
+}
+
+(function (){
+	temperatureListQuery = queryList["Temperature"][0];
+	bolzanoTemperatureQuery = queryList["Temperature"][1];
+	queryTemperatures(temperatureListQuery, bolzanoTemperatureQuery);
+})()
+
+
+$(document).on('click','.openGchartBtn', function(){
 	console.log('tab.yasr: ', tab.yasr.plugins.gchart.options.chartConfig);
 });
 

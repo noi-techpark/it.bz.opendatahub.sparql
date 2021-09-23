@@ -1,3 +1,8 @@
+<!-- html changes that need to be checked -->
+<!-- inline style, search for " style= "  -->
+<!-- added the noi logo by hand -->
+<!-- changed the color from green to a darker shade -->
+<!-- commented out the tile section -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -11,6 +16,7 @@
     <link rel="stylesheet" href="./css/index.css" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
 
     <link href="yasgui/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="yasgui/yasgui.min.js"></script>
@@ -19,11 +25,8 @@
     <!-- <link href="https://unpkg.com/@triply/yasgui/build/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@triply/yasgui/build/yasgui.min.js"></script> -->
 
-	<script src="queries.js"></script>
+	  <script src="queries.js"></script>
     <script src="./index.js"></script>
-
-
-
   </head>
   <body>
 
@@ -32,15 +35,21 @@
         <a id="header-logo" href="https://opendatahub.bz.it/" target="_blank" rel="noopener noreferrer">
           <img src="./images/logo-open-data-hub-black.png" alt="OpenDataHub" />
         </a>
-		<nav>
-		 <ul>
-		 <li >
-		  <a id="header-text" href="/portal/" target="_blank" rel="noopener noreferrer">
-		Open Data Hub Knowledge Graph
-		 </a>
-		 </li>
-		</ul>
-		</nav>
+        <nav>
+          <ul>
+            <li>
+              <a id="header-text" href="/portal/" target="_blank" rel="noopener noreferrer">
+            Open Data Hub Knowledge Graph
+            </a>
+            </li>
+          </ul>
+        </nav>
+		  <div style="height:57px; margin-left: auto">
+			  <a style="height: inherit" id="" href="https://noi.bz.it/en" target="_blank" rel="noopener noreferrer">
+				  <img style="height: inherit" src="./images/noi.svg" alt="NOI" />
+			  </a>
+
+		  </div>
       </div>
     </header>
 
@@ -59,8 +68,8 @@
 
       <section id="queries">
         <div class="text is-inverted">
-			<h2>Get a taste of our queries</h2>
-			<p>
+			<h2 style="color:white">Get a taste of our queries</h2>
+			<p style="color:white">
 				Start exploring the data using the following example queries. Build your own queries expanding the existing.
 			</p>
         </div>
@@ -519,8 +528,8 @@
 
       <section id="playground">
         <div class="text">
-			<h2>Let's play!</h2>
-			<p>
+			<h2 style="color:white">Let's play!</h2>
+			<p style="color:white">
 				Write your SPARQL code in the form below. Color-highlighted and syntax-checking help you in creating powerful and flexible queries. Run the queries by pressing the triangle shaped “play” button.
 			</p>
         </div>
@@ -594,14 +603,16 @@ LIMIT 10
       </section>
 
       <section class="tile">
-        <div class="tile-image">
-          <img src="images/Air-Graph.png" />
+        <div style='margin-right: 90px;'>
+          <!-- <img src="images/Air-Graph.png" /> -->
+          <canvas id="myChart" width="400" height="400"></canvas>
         </div>
-		  <div class="tile-content">
-			  <h3>Why choose this service</h3>
-			  <p>The use of a query language gives an extremely powerful and flexible tool to explore the data available from the OpenDataHub without having to download large amounts of data. Data can already be combined and filtered on the server, so all the heavy duty work is kept off your computer and only the truly wanted data is transferred..</p>
-			  <p>Being a W3C standard, support for SPARQL is provided by almost any tool and programming language used for working with data.</p>
-		  </div>
+
+        <div class="tile-content">
+          <h3>Why choose this service</h3>
+          <p>The use of a query language gives an extremely powerful and flexible tool to explore the data available from the OpenDataHub without having to download large amounts of data. Data can already be combined and filtered on the server, so all the heavy duty work is kept off your computer and only the truly wanted data is transferred..</p>
+          <p>Being a W3C standard, support for SPARQL is provided by almost any tool and programming language used for working with data.</p>
+        </div>
       </section>
 
       <section class="tile is-alternate">
@@ -625,24 +636,24 @@ LIMIT 10
         </div>
       </section>
 
-      <section class="tile">
-        <div class="tile-image">
-          <img src="https://via.placeholder.com/360x280" />
-        </div>
-        <div class="tile-content">
-          <div class="tile-subtitle">Aenean Purus</div>
-          <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit?</h3>
-          <p>Nulla vitae elit libero, a pharetra augue. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
-          <a class="tile-action">
-            Browse the data
-            <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.0075 2.25024H0V3.75024H9.0075V6.00024L12 3.00024L9.0075 0.000244141V2.25024Z" fill="white"/>
-            </svg>
-          </a>
-        </div>
-      </section>
+<!--      <section class="tile">-->
+<!--        <div class="tile-image">-->
+<!--          <img src="https://via.placeholder.com/360x280" />-->
+<!--        </div>-->
+<!--        <div class="tile-content">-->
+<!--          <div class="tile-subtitle">Aenean Purus</div>-->
+<!--          <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit?</h3>-->
+<!--          <p>Nulla vitae elit libero, a pharetra augue. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>-->
+<!--          <a class="tile-action">-->
+<!--            Browse the data-->
+<!--            <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--              <path d="M9.0075 2.25024H0V3.75024H9.0075V6.00024L12 3.00024L9.0075 0.000244141V2.25024Z" fill="white"/>-->
+<!--            </svg>-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </section>-->
 
-      <section class="cover is-alternate">
+      <section class="cover">
         <div class="text">
           <h3>How can I use it?</h3>
 			<p>
@@ -789,6 +800,8 @@ LIMIT 10
         copyEndpointOnNewTab: false,
       });
     </script>
+
+    <script src="./graph.js"></script>
 
   </body>
 </html>

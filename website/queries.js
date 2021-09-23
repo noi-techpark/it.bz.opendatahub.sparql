@@ -123,5 +123,35 @@ var queryList = {
 			// "chartType": "Histogram",
 		}
 	],
-	"Mobility": []
+	"Mobility": [],
+	"Temperature": [
+		`PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+		PREFIX sosa: <http://www.w3.org/ns/sosa/>
+		PREFIX : <http://noi.example.org/ontology/odh#>
+
+		SELECT DISTINCT ?resultValue WHERE {
+			?observation a :LatestObservation ;
+				sosa:observedProperty ?observableProperty ;
+				sosa:madeBySensor ?sensor ;
+				sosa:resultTime ?resultTime ;
+				sosa:hasSimpleResult ?resultValue .
+			?sensor rdfs:label ?sensorLabel .
+			?observableProperty rdfs:label "air-temperature" .
+		}`,
+		`PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX : <http://noi.example.org/ontology/odh#>
+
+SELECT DISTINCT ?sensor ?sensorLabel ?resultValue WHERE {
+  ?observation a :LatestObservation ;
+      sosa:observedProperty ?observableProperty ;
+      sosa:madeBySensor ?sensor ;
+      sosa:hasSimpleResult ?resultValue .
+  ?sensor rdfs:label ?sensorLabel .
+  ?observableProperty rdfs:label "air-temperature" .
+  FILTER (?sensorLabel = "Bolzano")
+}`
+
+	]
+
 }
