@@ -8,6 +8,10 @@ section#playground {
 
   > .text {
     padding: 0 16px;
+
+    p, h2 {
+    color: $colors--white;
+     }
   }
 
   #playground-editor {
@@ -133,7 +137,7 @@ section#playground {
           @include breakpoint($bp-medium) {
             @include vflex();
           }
-    
+
           a {
             margin: 8px 0;
             text-decoration: none;
