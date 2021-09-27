@@ -17,6 +17,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+	  <script src="https://cdn.webcomponents.opendatahub.bz.it/dist/567cb2e2-3e5d-421a-bf85-b8ecc500aab9/v0.6.0/webcomp-kg.js"></script>
 
     <link href="yasgui/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="yasgui/yasgui.min.js"></script>
@@ -632,7 +633,7 @@ LIMIT 10
 			</a>
         </div>
         <div class="tile-image">
-          <img src="https://via.placeholder.com/360x280" />
+			<kg-widget view="map" endpoint="https://sparql.opendatahub.bz.it/portal/sparql" query='PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX geo: <http://www.opengis.net/ont/geosparql#> PREFIX sosa: <http://www.w3.org/ns/sosa/> PREFIX : <http://noi.example.org/ontology/odh#> PREFIX qudt: <http://qudt.org/schema/qudt#>  SELECT ?hPos ?stationLabel ?resultValue    ?hPosLabel ?hPosColor ?minValue ?maxValue ?avgValue ?resultTime    WHERE {   ?observation a :LatestObservation ;      sosa:observedProperty/rdfs:label "air-temperature" ;      sosa:madeBySensor/sosa:isHostedBy ?station ;      sosa:resultTime ?resultTime ;      sosa:hasResult/qudt:numericValue ?resultValue .      ?station  rdfs:label ?stationLabel ;       geo:defaultGeometry/geo:asWKT ?hPos . #  FILTER (year(?resultTime) = year(NOW()))   FILTER (year(?resultTime) = 2020)        {     SELECT (MIN(?v) AS ?minValue) (MAX(?v) AS ?maxValue) (AVG(?v) AS ?avgValue) {       ?observation a :LatestObservation ;       sosa:observedProperty/rdfs:label "air-temperature" ;       sosa:hasResult/qudt:numericValue ?v ;       sosa:resultTime ?resultTime . #  FILTER (year(?resultTime) = year(NOW()))   FILTER (year(?resultTime) = 2020)          }   }         BIND(CONCAT(?stationLabel, " (", STR(?resultValue), "°C)") AS ?hPosLabel)   BIND( IF(?stationLabel = "Bolzano", "green",       IF(?resultValue = ?minValue, "blue",         IF(?resultValue = ?maxValue,  "red","grey"))) AS ?hPosColor)        BIND(IF(year(?resultTime) < YEAR(NOW()), "black",      IF(?sensorLabel = "Bolzano", "green",        IF(?resultValue = ?minValue, "blue",         IF(?resultValue < ?avgValue, "#8080FF",           IF(?resultValue = ?maxValue, "red",             IF(?resultValue > ?avgValue, "#FF8080","grey")))))) AS ?hPosColor)      }'></kg-widget>
         </div>
       </section>
 
@@ -799,6 +800,8 @@ LIMIT 10
 
         copyEndpointOnNewTab: false,
       });
+
+      document.getElementsByTagName("kg-widget")[0].setAttribute("endpoint", endpointUrl);
     </script>
 
     <script src="./graph.js"></script>
