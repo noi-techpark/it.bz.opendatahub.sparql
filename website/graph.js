@@ -89,7 +89,7 @@ function handleGraph(temperatureData, bolzanoTemp) {
             },
             title: {
                 display: true,
-                text: 'How warm is it in South Tyrol',
+                text: 'How warm is it in South Tyrol?',
 				font: 'Open Sans, sans-serif'
             },
             arbitraryLine: {

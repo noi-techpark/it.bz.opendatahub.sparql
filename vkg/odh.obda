@@ -872,4 +872,7 @@ mappingId	Wind speed
 target		data:property/{id} a :WindSpeed .
 source		SELECT * FROM intimev2.type WHERE id IN (2)
 
+target		data:featureOfInterest/{station_id}/{type_id} a :AirTemperature .
+source		SELECT * FROM intimev2.measurement WHERE type_id IN (8)
+
 ]]

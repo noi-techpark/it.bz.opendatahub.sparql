@@ -2118,6 +2118,10 @@ geo:asWKT rdf:type owl:DatatypeProperty .
 :WaterTemperature rdf:type owl:Class ;
                   rdfs:subClassOf :Temperature .
 
+###  http://noi.example.org/ontology/odh#AirTemperature
+:AirTemperature rdf:type owl:Class ;
+                   rdfs:subClassOf :Temperature .
+
 
 ###  http://noi.example.org/ontology/odh#WeatherStation
 :WeatherStation rdf:type owl:Class ;
