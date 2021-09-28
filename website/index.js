@@ -106,7 +106,7 @@ function runQuery(menu, buttonNumber) {
 }
 
 function queryTemperatures(temperatureListQuery, bolzanoTemperatureQuery) {
-	var url = 'https://sparql.opendatahub.bz.it/sparql/'
+ 	var url =  new Request("portal/sparql").url;
 
 	var temperatureListQueryUrl = url+"?query="+ encodeURIComponent(temperatureListQuery) +"&format=json";
 	var bolzanoTempQueryUrl = url+"?query="+ encodeURIComponent(bolzanoTemperatureQuery) +"&format=json";

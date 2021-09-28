@@ -17,7 +17,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
-	  <script src="https://cdn.webcomponents.opendatahub.bz.it/dist/567cb2e2-3e5d-421a-bf85-b8ecc500aab9/v0.6.0/webcomp-kg.js"></script>
+
 
     <link href="yasgui/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="yasgui/yasgui.min.js"></script>
@@ -68,9 +68,9 @@
       </section>
 
       <section id="queries">
-        <div class="text is-inverted">
-			<h2 style="color:white">Get a taste of our queries</h2>
-			<p style="color:white">
+        <div class="text">
+			<h2>Get a taste of our queries</h2>
+			<p>
 				Start exploring the data using the following example queries. Build your own queries expanding the existing.
 			</p>
         </div>
@@ -132,7 +132,7 @@
 								<rect x="3" y="14" width="2" height="2"/>
                   </svg>
 							<div class="query-title">Tourism - List of Lodging Businesses</div>
-							<div class="query-text">You want a list of all lodging businesses in a specific locality</div>
+							<div class="query-text">You want a list of all lodging businesses in a specific locality above a given altitude.</div>
 							<a class="query-action" onclick='runQuery("Tourism", 0)'>
 								See it in action
 								<svg width="6" height="12" viewBox="0 0 6 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -514,8 +514,8 @@
 
       <section id="playground">
         <div class="text">
-			<h2 style="color:white">Let's play!</h2>
-			<p style="color:white">
+			<h2>Let's play!</h2>
+			<p>
 				Write your SPARQL code in the form below. Color-highlighted and syntax-checking help you in creating powerful and flexible queries. Run the queries by pressing the triangle shaped “play” button.
 			</p>
         </div>
@@ -586,22 +586,23 @@ LIMIT 10
             </div>
           </div> -->
         </div>
+		  <div class="tile">
+			  <div class="tile-image">
+				  <div style="background-color: white">
+					  <!-- <img src="images/Air-Graph.png" /> -->
+					  <canvas id="myChart" style="width=400px; height=400px"></canvas>
+				  </div>
+			  </div>
+			  <div class="tile-content">
+				  <h3>How warm is it right now in South Tyrol?</h3>
+				  <p> No single value would tell the whole story. </p>
+				  <p>Temperature is influenced by local weather, altitude and other geographical factors.</p>
+				  <p>Get an overview on the current temperature distribution from the graph beside.
+				  </p>
+			  </div>
+		  </div>
       </section>
 
-      <section class="tile is-alternate">
-        <div style='margin-right: 90px;'>
-          <!-- <img src="images/Air-Graph.png" /> -->
-          <canvas id="myChart" width="400" height="400"></canvas>
-        </div>
-
-        <div class="tile-content">
-          <h3>How warm is it right now in South Tyrol?</h3>
-          <p> No single value would tell the whole story. </p>
-			<p>Temperature is influenced by local weather, altitude and other geographical factors.</p>
-			<p>Get an overview on the current temperature distribution from the graph beside.
-		  </p>
-        </div>
-      </section>
 
 		<section class="cover">
 			<div class="text">
@@ -629,7 +630,8 @@ LIMIT 10
 			</a>
         </div>
         <div class="tile-image">
-			<kg-widget view="map" endpoint="https://sparql.opendatahub.bz.it/portal/sparql" query='PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX geo: <http://www.opengis.net/ont/geosparql#> PREFIX sosa: <http://www.w3.org/ns/sosa/> PREFIX : <http://noi.example.org/ontology/odh#> PREFIX qudt: <http://qudt.org/schema/qudt#> SELECT ?hPos ?stationLabel ?resultValue    ?hPosLabel ?hPosColor ?minValue ?maxValue ?avgValue ?resultTime WHERE {   ?observation a :LatestObservation ;                sosa:hasFeatureOfInterest ?interest ;                 sosa:observedProperty/:hasUnit ?unit ;   sosa:resultTime ?resultTime ;   sosa:hasResult/qudt:numericValue ?resultValue ;    sosa:madeBySensor/sosa:isHostedBy ?station .   ?interest a :AirTemperature ;       geo:defaultGeometry/geo:asWKT ?hPos .    ?station  rdfs:label ?stationLabel;     # FILTER (year(?resultTime) = 2020)              FILTER (year(?resultTime) = year(NOW()))     {     SELECT (MIN(?v) AS ?minValue) (MAX(?v) AS ?maxValue) (AVG(?v) AS ?avgValue) {       ?observation a :LatestObservation ;       sosa:hasFeatureOfInterest ?interest ;       sosa:hasResult/qudt:numericValue ?v ;       sosa:resultTime ?resultTime .        ?interest a :AirTemperature ;  FILTER (year(?resultTime) = year(NOW()))   # FILTER (year(?resultTime) = 2020)     }     }   BIND(CONCAT(?stationLabel, " (", STR(?resultValue), ?unit,")") AS ?hPosLabel)   BIND(IF(year(?resultTime) < year(NOW()), "black",      IF(?stationLabel = "Bolzano", "green",        IF(?resultValue = ?minValue, "blue",         IF(?resultValue < ?avgValue, "#8080FF",           IF(?resultValue = ?maxValue, "red",             IF(?resultValue > ?avgValue, "#FF8080","grey")))))) AS ?hPosColor) } '></kg-widget>
+			<div class="title">How warm is it right now in South Tyrol?</div>
+			<kg-widget view="map" endpoint="https://sparql.opendatahub.testingmachine.eu/portal/sparql" query='PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX geo: <http://www.opengis.net/ont/geosparql#> PREFIX sosa: <http://www.w3.org/ns/sosa/> PREFIX : <http://noi.example.org/ontology/odh#> PREFIX qudt: <http://qudt.org/schema/qudt#> SELECT ?hPos ?stationLabel ?resultValue    ?hPosLabel ?hPosColor ?minValue ?maxValue ?avgValue ?resultTime WHERE {   ?observation a :LatestObservation ;                sosa:hasFeatureOfInterest ?interest ;                 sosa:observedProperty/:hasUnit ?unit ;   sosa:resultTime ?resultTime ;   sosa:hasResult/qudt:numericValue ?resultValue ;    sosa:madeBySensor/sosa:isHostedBy ?station .   ?interest a :AirTemperature ;       geo:defaultGeometry/geo:asWKT ?hPos .    ?station  rdfs:label ?stationLabel;     FILTER (year(?resultTime) = year( NOW())) {     SELECT (MIN(?v) AS ?minValue) (MAX(?v) AS ?maxValue) (AVG(?v) AS ?avgValue) {       ?observation a :LatestObservation ;       sosa:hasFeatureOfInterest ?interest ;       sosa:hasResult/qudt:numericValue ?v ;       sosa:resultTime ?resultTime .        ?interest a :AirTemperature ;  FILTER (year(?resultTime) = year( NOW()))     }     }   BIND(CONCAT(?stationLabel, " (", STR(?resultValue), ?unit,")") AS ?hPosLabel)   BIND(IF(year(?resultTime) < year( NOW()), "black",      IF(?stationLabel = "Bolzano", "green",        IF(?resultValue = ?minValue, "blue",         IF(?resultValue < ?avgValue, "#8080FF",           IF(?resultValue = ?maxValue, "red",             IF(?resultValue > ?avgValue, "#FF8080","grey")))))) AS ?hPosColor) }'></kg-widget>
         </div>
       </section>
 
@@ -801,6 +803,6 @@ LIMIT 10
     </script>
 
     <script src="./graph.js"></script>
-
+	<script src="https://cdn.webcomponents.opendatahub.bz.it/dist/567cb2e2-3e5d-421a-bf85-b8ecc500aab9/v0.6.0/webcomp-kg.js"></script>
   </body>
 </html>

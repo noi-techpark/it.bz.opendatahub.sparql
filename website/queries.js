@@ -31,18 +31,17 @@ var queryList = {
 				"PREFIX sosa: <http://www.w3.org/ns/sosa/>\n" +
 				"PREFIX : <http://noi.example.org/ontology/odh#>\n" +
 				"\n" +
-				"SELECT DISTINCT ?station ?stationLabel ?stationCode (MIN(?resultTime) as ?resultsStart) (MAX(?resultTime) as ?resultsEnd) WHERE {\n" +
-				"  ?observation a sosa:Observation ;\n" +
+				"SELECT DISTINCT ?station ?stationLabel  (MIN(?resultTime) as ?resultsStart) (MAX(?resultTime) as ?resultsEnd) WHERE {\n" +
+				"  ?observation a :HistoricalObservation ;\n" +
 				"  \tsosa:observedProperty ?observableProperty ;\n" +
 				"  \tsosa:madeBySensor ?sensor ;\n" +
 				"  \tsosa:resultTime ?resultTime ;\n" +
 				"  \tsosa:hasResult ?resultValue .\n" +
 				" ?sensor sosa:isHostedBy ?station .\n" +
-				"    ?station  rdfs:label ?stationLabel ;\n" +
-				"      \t:hasStationCode ?stationCode .\n" +
+				"    ?station  rdfs:label ?stationLabel .\n" +
 				"  ?observableProperty rdfs:label \"nitrogen-dioxide\"\n" +
 				"}\n" +
-				"GROUP BY ?station ?stationLabel ?stationCode\n" +
+				"GROUP BY ?station ?stationLabel\n" +
 				"\n",
 			"tabName": "Sensors",
 			"tabId": "sn",
@@ -98,29 +97,6 @@ var queryList = {
 			// 		],
 			// 	},
 			// },
-		},
-		{
-			"query": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-				"PREFIX sosa: <http://www.w3.org/ns/sosa/>\n" +
-				"PREFIX : <http://noi.example.org/ontology/odh#>\n" +
-				"PREFIX qudt: <http://qudt.org/schema/qudt#>\n" +
-				"\n" +
-				"SELECT DISTINCT ?valueBin (COUNT(*) AS ?count) WHERE {\n" +
-				"  ?observation a :LatestObservation ;\n" +
-				"  \tsosa:observedProperty ?observableProperty ;\n" +
-				"  \tsosa:madeBySensor ?sensor ;\n" +
-				"  \tsosa:resultTime ?resultTime ;\n" +
-				"  \tsosa:hasResult/qudt:numericValue ?resultValue .\n" +
-				"  ?observableProperty rdfs:label \"air-temperature\" .\n" +
-				"  BIND (FLOOR(ROUND(?resultValue) / 5) * 5 AS ?valueBin)\n" +
-				"}\n" +
-				"GROUP BY ?valueBin\n" +
-				"ORDER BY ?valueBin\n" +
-				"\n",
-			"tabName": "Temperature",
-			"tabId": "tp",
-			"output": "gchart",
-			// "chartType": "Histogram",
 		}
 	],
 	"Mobility": [],
@@ -128,28 +104,28 @@ var queryList = {
 		`PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 		PREFIX sosa: <http://www.w3.org/ns/sosa/>
 		PREFIX : <http://noi.example.org/ontology/odh#>
+		PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 		SELECT DISTINCT ?resultValue WHERE {
 			?observation a :LatestObservation ;
-				sosa:observedProperty ?observableProperty ;
-				sosa:madeBySensor ?sensor ;
+				sosa:hasFeatureOfInterest [a :AirTemperature ] ;
+				sosa:madeBySensor/sosa:isHostedBy ?station ;
 				sosa:resultTime ?resultTime ;
-				sosa:hasSimpleResult ?resultValue .
-			?sensor rdfs:label ?sensorLabel .
-			?observableProperty rdfs:label "air-temperature" .
+				sosa:hasResult/qudt:numericValue ?resultValue .
+			?station rdfs:label ?stationLabel .
 		}`,
 		`PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT DISTINCT ?sensor ?sensorLabel ?resultValue WHERE {
   ?observation a :LatestObservation ;
-      sosa:observedProperty ?observableProperty ;
-      sosa:madeBySensor ?sensor ;
-      sosa:hasSimpleResult ?resultValue .
-  ?sensor rdfs:label ?sensorLabel .
-  ?observableProperty rdfs:label "air-temperature" .
-  FILTER (?sensorLabel = "Bolzano")
+    sosa:hasFeatureOfInterest [a :AirTemperature ] ;
+      sosa:madeBySensor/sosa:isHostedBy ?station ;
+      sosa:hasResult/qudt:numericValue ?resultValue .
+  ?station rdfs:label ?stationLabel .
+  FILTER (?stationLabel = "Bolzano")
 }`
 
 	]

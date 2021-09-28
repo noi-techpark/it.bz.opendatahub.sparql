@@ -20,6 +20,12 @@ section.tile {
     img {
       max-width: 100%;
     }
+    .title {
+         @include semibold-font(17px, 25px);
+
+          color: $colors--black;
+           margin: 16px 0;
+        }
   }
 
   .tile-content {
@@ -64,7 +70,7 @@ section.tile {
       display: inline-block;
       margin-top: 8px;
       padding: 12px 16px;
-      
+
       svg {
         display: inline-block;
         margin-left: 8px;
@@ -85,7 +91,7 @@ section.tile {
   .tile-content + .tile-image {
     margin-top: 32px;
     margin-left: 0;
-    
+
     @include breakpoint($bp-medium) {
       margin-top: 0;
       margin-left: 48px;
