@@ -587,18 +587,18 @@ LIMIT 10
           </div> -->
         </div>
 		  <div class="tile">
-			  <div class="tile-image">
-				  <div style="background-color: white">
-					  <!-- <img src="images/Air-Graph.png" /> -->
-					  <canvas id="myChart" style="width=400px; height=400px"></canvas>
-				  </div>
-			  </div>
 			  <div class="tile-content">
 				  <h3>How warm is it right now in South Tyrol?</h3>
 				  <p> No single value would tell the whole story. </p>
 				  <p>Temperature is influenced by local weather, altitude and other geographical factors.</p>
-				  <p>Get an overview on the current temperature distribution from the graph beside.
+				  <p>Get an overview on the current temperature distribution from the graph below.
 				  </p>
+				  <div class="tile-image" style="background-color: white">
+					  <canvas id="myChart"></canvas>
+				  </div>
+			  </div>
+			  <div class="tile-image">
+				  <kg-widget view="map" endpoint="https://sparql.opendatahub.testingmachine.eu/portal/sparql" query='PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX geo: <http://www.opengis.net/ont/geosparql#> PREFIX sosa: <http://www.w3.org/ns/sosa/> PREFIX : <http://noi.example.org/ontology/odh#> PREFIX qudt: <http://qudt.org/schema/qudt#> SELECT ?hPos ?stationLabel ?resultValue    ?hPosLabel ?hPosColor ?minValue ?maxValue ?avgValue ?resultTime WHERE {   ?observation a :LatestObservation ;                sosa:hasFeatureOfInterest ?interest ;                 sosa:observedProperty ?prop ;  sosa:resultTime ?resultTime ;   sosa:hasResult/qudt:numericValue ?resultValue ;    sosa:madeBySensor/sosa:isHostedBy ?station .   ?interest a :OutdoorAir ;       geo:defaultGeometry/geo:asWKT ?hPos .    ?station  rdfs:label ?stationLabel. ?prop a :Temperature ; :hasUnit ?unit.      FILTER (year(?resultTime) = year(NOW())) {     SELECT (MIN(?v) AS ?minValue) (MAX(?v) AS ?maxValue) (AVG(?v) AS ?avgValue) {       ?observation a :LatestObservation ;                 sosa:observedProperty [a :Temperature] ;      sosa:hasFeatureOfInterest [ a :OutdoorAir ]  ;     sosa:hasResult/qudt:numericValue ?v ;       sosa:resultTime ?resultTime .   FILTER (year(?resultTime) = year(NOW()))     }     }   BIND(CONCAT(?stationLabel, " (", STR(?resultValue), ?unit,")") AS ?hPosLabel)   BIND(IF(year(?resultTime) < year(NOW()), "black",      IF(?stationLabel = "Bolzano", "green",        IF(?resultValue = ?minValue, "blue",         IF(?resultValue < ?avgValue, "#8080FF",           IF(?resultValue = ?maxValue, "red",             IF(?resultValue > ?avgValue, "#FF8080","grey")))))) AS ?hPosColor) }'></kg-widget>
 			  </div>
 		  </div>
       </section>
@@ -629,10 +629,7 @@ LIMIT 10
 				</svg>
 			</a>
         </div>
-        <div class="tile-image">
-			<div class="title">How warm is it right now in South Tyrol?</div>
-			<kg-widget view="map" endpoint="https://sparql.opendatahub.testingmachine.eu/portal/sparql" query='PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX geo: <http://www.opengis.net/ont/geosparql#> PREFIX sosa: <http://www.w3.org/ns/sosa/> PREFIX : <http://noi.example.org/ontology/odh#> PREFIX qudt: <http://qudt.org/schema/qudt#> SELECT ?hPos ?stationLabel ?resultValue    ?hPosLabel ?hPosColor ?minValue ?maxValue ?avgValue ?resultTime WHERE {   ?observation a :LatestObservation ;                sosa:hasFeatureOfInterest ?interest ;                 sosa:observedProperty/:hasUnit ?unit ;   sosa:resultTime ?resultTime ;   sosa:hasResult/qudt:numericValue ?resultValue ;    sosa:madeBySensor/sosa:isHostedBy ?station .   ?interest a :AirTemperature ;       geo:defaultGeometry/geo:asWKT ?hPos .    ?station  rdfs:label ?stationLabel;     FILTER (year(?resultTime) = year( NOW())) {     SELECT (MIN(?v) AS ?minValue) (MAX(?v) AS ?maxValue) (AVG(?v) AS ?avgValue) {       ?observation a :LatestObservation ;       sosa:hasFeatureOfInterest ?interest ;       sosa:hasResult/qudt:numericValue ?v ;       sosa:resultTime ?resultTime .        ?interest a :AirTemperature ;  FILTER (year(?resultTime) = year( NOW()))     }     }   BIND(CONCAT(?stationLabel, " (", STR(?resultValue), ?unit,")") AS ?hPosLabel)   BIND(IF(year(?resultTime) < year( NOW()), "black",      IF(?stationLabel = "Bolzano", "green",        IF(?resultValue = ?minValue, "blue",         IF(?resultValue < ?avgValue, "#8080FF",           IF(?resultValue = ?maxValue, "red",             IF(?resultValue > ?avgValue, "#FF8080","grey")))))) AS ?hPosColor) }'></kg-widget>
-        </div>
+
       </section>
 
 <!--      <section class="tile">-->
@@ -697,7 +694,7 @@ LIMIT 10
         <div id="footer-support-subtitle">Support</div>
         <div id="footer-support-title">Looking for help?</div>
         <div id="footer-support-text">Do you have any questions or any suggestions on this site? Please contact us...</div>
-        <a id="footer-support-link" href="#">
+        <a id="footer-support-link" href="https://opendatahub.bz.it/help/">
           Contact
           <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.00751 2.24969H0V3.74982H9.00751V6L12 2.99976L9.00751 -0.000488281V2.24969Z" fill="black"/>
@@ -706,7 +703,7 @@ LIMIT 10
       </div>
 
       <div id="footer-contents">
-        <a id="footer-logo" href="#">
+        <a id="footer-logo" href="https://opendatahub.bz.it/">
           <img src="./images/logo-open-data-hub_white.png"/>
         </a>
         <div id="footer-navigation">
@@ -715,10 +712,10 @@ LIMIT 10
             <div class="footer-navigation-section-links">
               <ul>
                 <li>
-                  <a href="#">Datasets</a>
+                  <a href="https://opendatahub.bz.it/datasets/">Datasets</a>
                 </li>
                 <li>
-                  <a href="#">Web components</a>
+                  <a href="https://webcomponents.opendatahub.bz.it/">Web components</a>
                 </li>
               </ul>
             </div>
@@ -728,8 +725,11 @@ LIMIT 10
             <div class="footer-navigation-section-heading">Community</div>
             <div class="footer-navigation-section-links">
               <ul>
+				  <li>
+					  <a href="https://opendatahub.bz.it/community/">Community</a>
+				  </li>
                 <li>
-                  <a href="#">Events</a>
+                  <a href="https://opendatahub.bz.it/events/">Events</a>
                 </li>
               </ul>
             </div>
@@ -740,13 +740,13 @@ LIMIT 10
             <div class="footer-navigation-section-links">
               <ul>
                 <li>
-                  <a href="#">Data Access</a>
+                  <a href="https://opendatahub.bz.it/data-access/">Data Access</a>
                 </li>
                 <li>
-                  <a href="#">Data Sharing</a>
+                  <a href="https://opendatahub.bz.it/data-sharing/">Data Sharing</a>
                 </li>
                 <li>
-                  <a href="#">Data Visualization</a>
+                  <a href="https://opendatahub.bz.it/services/#app-dev">Data Visualization</a>
                 </li>
               </ul>
             </div>
@@ -754,7 +754,7 @@ LIMIT 10
         </div>
 
         <div id="footer-social">
-          <a id="facebook" href="#">
+          <a id="facebook" href="https://www.facebook.com/opendatahub/">
             <svg viewBox="0 0 72 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Social-Icons---Rounded-Black" transform="translate(-152.000000, -43.000000)">
@@ -766,7 +766,7 @@ LIMIT 10
                 </g>
             </svg>
           </a>
-          <a href="#">
+          <a href="https://github.com/noi-techpark/">
             <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="#000000">
@@ -777,7 +777,7 @@ LIMIT 10
               </g>
           </svg>
           </a>
-          <a href="#">
+          <a href="https://t.me/OpenDataHub">
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M0 24C0 37.2548 10.7452 48 24 48C37.2548 48 48 37.2548 48 24C48 10.7452 37.2548 0 24 0C10.7452 0 0 10.7452 0 24ZM19.6 35L20.0083 28.8823L20.008 28.882L31.1369 18.839C31.6253 18.4055 31.0303 18.1941 30.3819 18.5873L16.6473 27.2523L10.7147 25.4007C9.4335 25.0084 9.4243 24.128 11.0023 23.4951L34.1203 14.5809C35.1762 14.1015 36.1953 14.8345 35.7922 16.4505L31.8552 35.0031C31.5803 36.3215 30.7837 36.6368 29.68 36.0278L23.6827 31.5969L20.8 34.4C20.7909 34.4088 20.7819 34.4176 20.7729 34.4264C20.4505 34.7403 20.1837 35 19.6 35Z" fill="black"/>
             </svg>
@@ -785,7 +785,7 @@ LIMIT 10
         </div>
       </div>
       <div id="footer-copyright">
-        &copy; 2021 Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+		  NOI AG - Via Volta 13/A, I-39100 Bolzano - VAT No.: 02595720216 - Endowment capital 110.740.000 € - Privacy
       </div>
     </footer>
 

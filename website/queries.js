@@ -33,13 +33,11 @@ var queryList = {
 				"\n" +
 				"SELECT DISTINCT ?station ?stationLabel  (MIN(?resultTime) as ?resultsStart) (MAX(?resultTime) as ?resultsEnd) WHERE {\n" +
 				"  ?observation a :HistoricalObservation ;\n" +
-				"  \tsosa:observedProperty ?observableProperty ;\n" +
-				"  \tsosa:madeBySensor ?sensor ;\n" +
+				"  \tsosa:observedProperty [a :NitrogenDioxideConcentration ] ;\n" +
+				"  \tsosa:madeBySensor/sosa:isHostedBy ?station ;\n" +
 				"  \tsosa:resultTime ?resultTime ;\n" +
 				"  \tsosa:hasResult ?resultValue .\n" +
-				" ?sensor sosa:isHostedBy ?station .\n" +
-				"    ?station  rdfs:label ?stationLabel .\n" +
-				"  ?observableProperty rdfs:label \"nitrogen-dioxide\"\n" +
+				"  \t?station  rdfs:label ?stationLabel .\n" +
 				"}\n" +
 				"GROUP BY ?station ?stationLabel\n" +
 				"\n",
@@ -108,7 +106,7 @@ var queryList = {
 
 		SELECT DISTINCT ?resultValue WHERE {
 			?observation a :LatestObservation ;
-				sosa:hasFeatureOfInterest [a :AirTemperature ] ;
+				sosa:observedProperty [a :AirTemperature ] ;
 				sosa:madeBySensor/sosa:isHostedBy ?station ;
 				sosa:resultTime ?resultTime ;
 				sosa:hasResult/qudt:numericValue ?resultValue .
@@ -121,7 +119,7 @@ PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT DISTINCT ?sensor ?sensorLabel ?resultValue WHERE {
   ?observation a :LatestObservation ;
-    sosa:hasFeatureOfInterest [a :AirTemperature ] ;
+    sosa:observedProperty [a :AirTemperature ] ;
       sosa:madeBySensor/sosa:isHostedBy ?station ;
       sosa:hasResult/qudt:numericValue ?resultValue .
   ?station rdfs:label ?stationLabel .

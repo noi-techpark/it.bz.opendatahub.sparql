@@ -862,7 +862,7 @@ source		SELECT * FROM intimev2.measurement WHERE type_id IN (50, 53, 1949)
 
 mappingId	Outdoor air
 target		data:featureOfInterest/{station_id}/{type_id} a :OutdoorAir .
-source		SELECT * FROM intimev2.measurement WHERE type_id IN (2, 7, 8, 9)
+source		SELECT * FROM intimev2.measurement WHERE type_id IN (2, 7, 8, 9, 12)
 
 mappingId	Water temperature
 target		data:property/{id} a :WaterTemperature .
@@ -872,7 +872,12 @@ mappingId	Wind speed
 target		data:property/{id} a :WindSpeed .
 source		SELECT * FROM intimev2.type WHERE id IN (2)
 
-target		data:featureOfInterest/{station_id}/{type_id} a :AirTemperature .
-source		SELECT * FROM intimev2.measurement WHERE type_id IN (8)
+mappingId	Air temperature
+target		data:property/{id} a :AirTemperature .
+source		SELECT * FROM intimev2.type WHERE id IN (8)
+
+mappingId	Nitrogen-dioxide concentration
+target		data:property/{id} a :NitrogenDioxideConcentration .
+source		SELECT * FROM intimev2.type WHERE id IN (12)
 
 ]]
