@@ -36,17 +36,17 @@ function changeTab(tabNumber) {
 	// getInitData();
 	var queryTab01 = document.getElementById('queryTab01');
 	var queryTab02 = document.getElementById('queryTab02');
-	var queryTab03 = document.getElementById('queryTab03');
+//	var queryTab03 = document.getElementById('queryTab03');
 	var tab01 = document.getElementById('tab01');
 	var tab02 = document.getElementById('tab02');
-	var tab03 = document.getElementById('tab03');
+//	var tab03 = document.getElementById('tab03');
 
 	queryTab01.classList.remove('is-active');
 	queryTab02.classList.remove('is-active');
-	queryTab03.classList.remove('is-active');
+//	queryTab03.classList.remove('is-active');
 	tab01.classList.remove('is-active');
 	tab02.classList.remove('is-active');
-	tab03.classList.remove('is-active');
+//	tab03.classList.remove('is-active');
 	switch (tabNumber) {
 		case '01' :
 			queryTab01.classList.add('is-active');

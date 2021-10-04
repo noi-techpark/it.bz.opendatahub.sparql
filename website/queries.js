@@ -7,13 +7,13 @@ var queryList = {
 			"output": "leaflet",
 		},
 		{
-			"query": "PREFIX sosa: <http://www.w3.org/ns/sosa/>\nPREFIX : <http://noi.example.org/ontology/odh#>\nPREFIX geo: <http://www.opengis.net/ont/geosparql#>\nPREFIX schema: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX geof: <http://www.opengis.net/def/function/geosparql/>\nPREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>\nPREFIX qudt: <http://qudt.org/schema/qudt#>\nPREFIX qudt-unit: <http://qudt.org/vocab/unit#>\n \nSELECT ?nameStat ?posStat ?temp ?t ?nameFood ?tel\nWHERE {\n  ?o  a :LatestObservation;\n      sosa:hasResult ?r;\n      sosa:resultTime ?t;\n      sosa:hasFeatureOfInterest ?f;\n      sosa:observedProperty ?p .\n  ?r qudt:numericValue ?temp ; \n     qudt:unit qudt-unit:DegreeCelsius .\n  FILTER (?temp > 18)\n  ?f a :OutdoorWater ; geo:defaultGeometry/geo:asWKT ?posStat .\n  ?p a :Temperature .\n  # Weather platform\n  ?stat sosa:hosts/sosa:madeObservation ?o.\n  ?stat rdfs:label ?nameStat .\n  # Food establishment\n  ?e a schema:FoodEstablishment;\n     schema:name ?nameFood;\n     schema:telephone ?tel;\n     geo:defaultGeometry/geo:asWKT ?posFood.\n  FILTER(lang(?nameFood) = \"it\")\n  #Spatial correlation between food establishment and weather stations\n  BIND(geof:distance(?posFood, ?posStat, uom:metre) AS ?distanceFoodWeather)\n  FILTER (?distanceFoodWeather < 2000)\n}\n",
+			"query": "PREFIX sosa: <http://www.w3.org/ns/sosa/>\nPREFIX : <http://noi.example.org/ontology/odh#>\nPREFIX geo: <http://www.opengis.net/ont/geosparql#>\nPREFIX schema: <http://schema.org/>\nPREFIX geof: <http://www.opengis.net/def/function/geosparql/>\nPREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>\nPREFIX qudt: <http://qudt.org/schema/qudt#>\nPREFIX qudt-unit: <http://qudt.org/vocab/unit#>\n \nSELECT ?statPosLabel ?statPos ?foodPosColor ?temp ?t ?foodPos ?foodPosLabel ?tel\nWHERE {\n  ?o  a :LatestObservation;\n      sosa:hasResult ?r;\n      sosa:resultTime ?t;\n      sosa:hasFeatureOfInterest ?f;\n      sosa:observedProperty ?p .\n  ?r qudt:numericValue ?temp ; \n     qudt:unit qudt-unit:DegreeCelsius .\n  FILTER (?temp > 18)\n  ?f a :OutdoorWater ; geo:defaultGeometry/geo:asWKT ?statPos .\n  ?p a :Temperature .\n  # Weather platform\n  ?stat sosa:hosts/sosa:madeObservation ?o.\n  ?stat schema:name ?statPosLabel .\n  # Food establishment\n  ?e a schema:FoodEstablishment;\n     schema:name ?foodPosLabel;\n     schema:telephone ?tel;\n     geo:defaultGeometry/geo:asWKT ?foodPos.\n  FILTER(lang(?foodPosLabel) = \"it\")\n  #Spatial correlation between food establishment and weather stations\n  BIND(geof:distance(?foodPos, ?statPos, uom:metre) AS ?distanceFoodWeather)\n  FILTER (?distanceFoodWeather < 2000)\n BIND('red' AS ?foodPosColor)\n}\n",
 			"tabName": "Restaurants",
 			"tabId": "rt",
 			"output": "leaflet",
 		},
 		{
-			"query": "PREFIX geo: <http://www.opengis.net/ont/geosparql#>\nPREFIX schema: <http://schema.org/>\nPREFIX : <http://noi.example.org/ontology/odh#>\n \nSELECT ?pos ?name\n    (SUM(?numberUnits) AS ?accommodationCount) #Sums all the accommodation units\n    (SUM(?maxPersons) AS ?countMaxPersons) #Sum the hosting capabilities\nWHERE {\n # LodgingBusiness\n ?lb a schema:LodgingBusiness ; \n    schema:name ?name ; \n    geo:defaultGeometry/geo:asWKT ?pos .\n \n # Accommodation\n ?a a schema:Accommodation ;\n    schema:containedInPlace ?lb ; \n    :numberOfUnits ?numberUnits ;\n    schema:occupancy/schema:maxValue ?maxOccupancyPerRoom .\n \n # Computation of maxPersons per accommodation\n BIND (?numberUnits * ?maxOccupancyPerRoom AS ?maxPersons)\n FILTER (lang(?name)='en')\n}\nGROUP BY ?lb ?name ?pos\nORDER BY DESC(?countMaxPersons)\nLIMIT 50\n",
+			"query": "PREFIX geo: <http://www.opengis.net/ont/geosparql#>\nPREFIX schema: <http://schema.org/>\nPREFIX : <http://noi.example.org/ontology/odh#>\n \nSELECT ?pos ?posLabel\n    (SUM(?numberUnits) AS ?accommodationCount) #Sums all the accommodation units\n    (SUM(?maxPersons) AS ?countMaxPersons) #Sum the hosting capabilities\nWHERE {\n # LodgingBusiness\n ?lb a schema:LodgingBusiness ; \n    schema:name ?posLabel ; \n    geo:defaultGeometry/geo:asWKT ?pos .\n \n # Accommodation\n ?a a schema:Accommodation ;\n    schema:containedInPlace ?lb ; \n    :numberOfUnits ?numberUnits ;\n    schema:occupancy/schema:maxValue ?maxOccupancyPerRoom .\n \n # Computation of maxPersons per accommodation\n BIND (?numberUnits * ?maxOccupancyPerRoom AS ?maxPersons)\n FILTER (lang(?posLabel)='en')\n}\nGROUP BY ?lb ?posLabel ?pos\nORDER BY DESC(?countMaxPersons)\nLIMIT 50\n",
 			"tabName": "Facilities",
 			"tabId": "fc",
 			"output": "leaflet",
@@ -27,9 +27,9 @@ var queryList = {
 	],
 	"Environment": [
 		{
-			"query": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-				"PREFIX sosa: <http://www.w3.org/ns/sosa/>\n" +
+			"query": "PREFIX sosa: <http://www.w3.org/ns/sosa/>\n" +
 				"PREFIX : <http://noi.example.org/ontology/odh#>\n" +
+				"PREFIX schema: <http://schema.org/>\n" +
 				"\n" +
 				"SELECT DISTINCT ?station ?stationLabel  (MIN(?resultTime) as ?resultsStart) (MAX(?resultTime) as ?resultsEnd) WHERE {\n" +
 				"  ?observation a :HistoricalObservation ;\n" +
@@ -37,7 +37,7 @@ var queryList = {
 				"  \tsosa:madeBySensor/sosa:isHostedBy ?station ;\n" +
 				"  \tsosa:resultTime ?resultTime ;\n" +
 				"  \tsosa:hasResult ?resultValue .\n" +
-				"  \t?station  rdfs:label ?stationLabel .\n" +
+				"  \t?station  schema:name ?stationLabel .\n" +
 				"}\n" +
 				"GROUP BY ?station ?stationLabel\n" +
 				"\n",
@@ -99,10 +99,10 @@ var queryList = {
 	],
 	"Mobility": [],
 	"Temperature": [
-		`PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-		PREFIX sosa: <http://www.w3.org/ns/sosa/>
+		`PREFIX sosa: <http://www.w3.org/ns/sosa/>
 		PREFIX : <http://noi.example.org/ontology/odh#>
 		PREFIX qudt: <http://qudt.org/schema/qudt#>
+		PREFIX schema: <http://schema.org/>
 
 		SELECT DISTINCT ?resultValue WHERE {
 			?observation a :LatestObservation ;
@@ -110,19 +110,19 @@ var queryList = {
 				sosa:madeBySensor/sosa:isHostedBy ?station ;
 				sosa:resultTime ?resultTime ;
 				sosa:hasResult/qudt:numericValue ?resultValue .
-			?station rdfs:label ?stationLabel .
+			?station schema:name ?stationLabel .
 		}`,
-		`PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX sosa: <http://www.w3.org/ns/sosa/>
+		`PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX qudt: <http://qudt.org/schema/qudt#>
+PREFIX schema: <http://schema.org/>
 
 SELECT DISTINCT ?sensor ?sensorLabel ?resultValue WHERE {
   ?observation a :LatestObservation ;
     sosa:observedProperty [a :AirTemperature ] ;
       sosa:madeBySensor/sosa:isHostedBy ?station ;
       sosa:hasResult/qudt:numericValue ?resultValue .
-  ?station rdfs:label ?stationLabel .
+  ?station schema:name ?stationLabel .
   FILTER (?stationLabel = "Bolzano")
 }`
 
