@@ -7,6 +7,7 @@ RUN apk add --update curl && \
 
 COPY infrastructure/docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY infrastructure/docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY infrastructure/docker/nginx/proxy-config-guest.conf /etc/nginx/proxy-config-guest.conf
 
 RUN mkdir /dashboard
 

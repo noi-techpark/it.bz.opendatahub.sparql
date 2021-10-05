@@ -59,7 +59,7 @@ cd odh-vkg/
    * `cp .env.example .env`
 2. Start the Docker container (see [the dedicated section](#Start-and-stop-the-containers))
 3. Visit the SPARQL endpoint
-   * Now we can open the link <http://localhost:8080> in the browser and test
+   * Now we can open the link <http://localhost:8080/portal/> in the browser and test
      some SPARQL queries
    * Note that synchronisation between the master and the slave takes some time.
      Until it is finished, some queries may return empty results.
@@ -117,6 +117,17 @@ The SPARQL endpoints do not query directly the production database but slave
 read-only instances, which are synchronized with the master database through
 logical replication. For more details, see [the dedicated
 page](https://github.com/noi-techpark/documentation/blob/master/logical-replication.md).
+
+## Endpoints
+
+ - Landing page: `/`
+ - Public SPARQL endpoint: `/sparql`
+ - Public portal: `/portal/`
+ - Public predefined queries: `/predefined/`
+ - Portal with restricted access: `/restricted/`
+ - SPARQL endpoint with restricted access: `/restricted/sparql`
+ - Predefined queries with restricted access: `/restricted/predefined/`
+
 
 
 ## Maintenance

@@ -1,3 +1,8 @@
+<!-- html changes that need to be checked -->
+<!-- inline style, search for " style= "  -->
+<!-- added the noi logo by hand -->
+<!-- changed the color from green to a darker shade -->
+<!-- commented out the tile section -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -11,6 +16,8 @@
     <link rel="stylesheet" href="./css/index.css" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+
 
     <link href="yasgui/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="yasgui/yasgui.min.js"></script>
@@ -19,11 +26,8 @@
     <!-- <link href="https://unpkg.com/@triply/yasgui/build/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@triply/yasgui/build/yasgui.min.js"></script> -->
 
-	<script src="queries.js"></script>
+	  <script src="queries.js"></script>
     <script src="./index.js"></script>
-
-
-
   </head>
   <body>
 
@@ -32,15 +36,21 @@
         <a id="header-logo" href="https://opendatahub.bz.it/" target="_blank" rel="noopener noreferrer">
           <img src="./images/logo-open-data-hub-black.png" alt="OpenDataHub" />
         </a>
-		<nav>
-		 <ul>
-		 <li >
-		  <a id="header-text" href="/portal/" target="_blank" rel="noopener noreferrer">
-		Open Data Hub Knowledge Graph
-		 </a>
-		 </li>
-		</ul>
-		</nav>
+        <nav>
+          <ul>
+            <li>
+              <a id="header-text" href="/portal/" target="_blank" rel="noopener noreferrer">
+            Open Data Hub Knowledge Graph
+            </a>
+            </li>
+          </ul>
+        </nav>
+		  <div style="height:57px; margin-left: auto">
+			  <a style="height: inherit" id="" href="https://noi.bz.it/en" target="_blank" rel="noopener noreferrer">
+				  <img style="height: inherit" src="./images/noi.svg" alt="NOI" />
+			  </a>
+
+		  </div>
       </div>
     </header>
 
@@ -74,9 +84,9 @@
 				<li id="queryTab02" onclick="changeTab('02')" >
 					<a>Environment</a>
 				</li>
-				<li id="queryTab03" onclick="changeTab('03')" >
-					<a>Mobility</a>
-				</li>
+<!--				<li id="queryTab03" onclick="changeTab('03')" >-->
+<!--					<a>Mobility</a>-->
+<!--				</li>-->
             </ul>
           </div>
 
@@ -121,8 +131,8 @@
 								<rect x="11" y="14" width="2" height="2"/>
 								<rect x="3" y="14" width="2" height="2"/>
                   </svg>
-							<div class="query-title">Tourism - List of Lodging Businesses</div>
-							<div class="query-text">You want a list of all lodging businesses in a specific locality</div>
+							<div class="query-title">Tourism - List of lodging businesses</div>
+							<div class="query-text">You want a list of all lodging businesses in a specific locality above a given altitude.</div>
 							<a class="query-action" onclick='runQuery("Tourism", 0)'>
 								See it in action
 								<svg width="6" height="12" viewBox="0 0 6 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -149,8 +159,8 @@
                       c2.8,0,4.3,0.1,5.5,2.3c1,1.7,0.3,2.4-2.7,4.5c-3.2,2.1-7.9,5.4-4.6,12.7c3.6,7.8,7.6,7.5,10.6,7.2c1.7-0.1,2.5-0.2,3.3,0.8
                       C85.1,57.3,84,68,82.7,71C75.9,81.2,64.2,88,51,88z"/>
                   </svg>
-							<div class="query-title">Tourism - Find all restaurant near to a warm lake or river</div>
-							<div class="query-text">You want to know all restaurants near to a warm enough outdoor water, so you can have a nice swim and go directly to lunch afterwards.</div>
+							<div class="query-title">Tourism - Find all food establishments near to a warm lake or river</div>
+							<div class="query-text">You want to know all food establishments near to a warm enough outdoor water, so you can have a nice swim and go directly to lunch afterwards.</div>
 							<a class="query-action" onclick='runQuery("Tourism", 1)'>
 								See it in action
 								<svg width="6" height="12" viewBox="0 0 6 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -164,7 +174,7 @@
 							<svg class="query-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 101">
 								<path d="M88.43,81.83,55.13,15.21a1.5,1.5,0,0,0-2.68,0L43.9,32.29,32,8.5a1.5,1.5,0,0,0-2.68,0L18.14,30.86v0L2.66,61.83A1.5,1.5,0,0,0,4,64H28L19.14,81.83A1.5,1.5,0,0,0,20.48,84H87.08a1.5,1.5,0,0,0,1.34-2.17ZM53.78,19.23l14.7,29.42c-5.95,2.4-9,.62-12.55-1.46C53.4,45.69,50.52,44,46.5,44a13.44,13.44,0,0,0-5.7,1.21ZM30.67,12.52,39,29.24c-3.29,1.3-4.83.37-6.76-.8a9.51,9.51,0,0,0-5.16-1.79,10.6,10.6,0,0,0-3.92.82ZM6.43,61,20.71,32.44c.75-.62,3.54-2.78,6.4-2.78A6.82,6.82,0,0,1,30.71,31c2.15,1.3,4.82,2.91,9.66.92l1.86,3.71L29.55,61ZM22.9,81l8.81-17.63a1.49,1.49,0,0,0,.2-.4l4.85-9.7a1.45,1.45,0,0,0,.11-.17A10.69,10.69,0,0,1,46.5,47c3.2,0,5.49,1.35,7.92,2.77,3.73,2.19,8,4.67,15.42,1.57L84.66,81Z"/>
 							</svg>
-							<div class="query-title">Tourism - Find the largest Accommodation facilities</div>
+							<div class="query-title">Tourism - Find the largest accommodation facilities</div>
 							<div class="query-text">Out of the many accommodation facilities in South Tyrol, some are larger, some are smaller. Do you know the largest ones?</div>
 							<a class="query-action" onclick='runQuery("Tourism", 2)'>
 								See it in action
@@ -213,7 +223,7 @@
 								<rect x="11" y="14" width="2" height="2"/>
 								<rect x="3" y="14" width="2" height="2"/>
                   </svg>
-							<div class="query-title">Tourism - Highest Mountain Shelters</div>
+							<div class="query-title">Tourism - Highest mountain shelters</div>
 							<div class="query-text">You always wanted to visit one of the highest mountain shelters in South Tyrol and wondered where they are.</div>
 							<a class="query-action" onclick='runQuery("Tourism", 3)'>
 								See it in action
@@ -254,64 +264,21 @@
 							</a>
 						</div>
 					</div>
-					<div class="query">
-						<div class="query-contents">
-							<svg class="query-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 101">
-								<path d="M88.43,81.83,55.13,15.21a1.5,1.5,0,0,0-2.68,0L43.9,32.29,32,8.5a1.5,1.5,0,0,0-2.68,0L18.14,30.86v0L2.66,61.83A1.5,1.5,0,0,0,4,64H28L19.14,81.83A1.5,1.5,0,0,0,20.48,84H87.08a1.5,1.5,0,0,0,1.34-2.17ZM53.78,19.23l14.7,29.42c-5.95,2.4-9,.62-12.55-1.46C53.4,45.69,50.52,44,46.5,44a13.44,13.44,0,0,0-5.7,1.21ZM30.67,12.52,39,29.24c-3.29,1.3-4.83.37-6.76-.8a9.51,9.51,0,0,0-5.16-1.79,10.6,10.6,0,0,0-3.92.82ZM6.43,61,20.71,32.44c.75-.62,3.54-2.78,6.4-2.78A6.82,6.82,0,0,1,30.71,31c2.15,1.3,4.82,2.91,9.66.92l1.86,3.71L29.55,61ZM22.9,81l8.81-17.63a1.49,1.49,0,0,0,.2-.4l4.85-9.7a1.45,1.45,0,0,0,.11-.17A10.69,10.69,0,0,1,46.5,47c3.2,0,5.49,1.35,7.92,2.77,3.73,2.19,8,4.67,15.42,1.57L84.66,81Z"/>
-							</svg>
-							<div class="query-title">Environment - Air Temperature</div>
-							<div class="query-text">How warm is it right now in South Tyrol? No single value would tell the whole story. Temperature is influenced by local weather, altitude and other geographical factors. Get an overview on the current temperature distribution from the graph beside.</div>
-							<a class="query-action" onclick='runQuery("Environment", 1)'>
-								See it in action
-								<svg width="6" height="12" viewBox="0 0 6 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M3.75023 9.0075L3.75023 -9.83566e-08L2.25014 -1.63928e-07L2.25014 9.0075L-3.9373e-07 9.0075L3.00018 12L6.00037 9.0075L3.75023 9.0075Z" fill="black"/>
-								</svg>
-							</a>
-						</div>
-					</div>
-					<div class="query">
-						<div class="query-contents">
-							<svg class="query-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 101 101" xml:space="preserve">
-                    <path d="M85.1,72.7C89.5,66.2,92,58.4,92,50C92,27.4,73.6,9,51,9S10,27.4,10,50s18.4,41,41,41c13.8,0,26-6.9,33.5-17.4
-                      c0.1-0.1,0.1-0.1,0.2-0.2C84.8,73.3,85,73,85.1,72.7z M89,50c0,4.2-0.7,8.2-1.9,11.9c0.1-3.8-0.5-7.6-2.2-9.7
-                      c-1.8-2.2-4.1-2.1-5.9-1.9c-2.5,0.2-4.9,0.4-7.7-5.5c-2.2-4.7-0.1-6.5,3.5-8.9c2.6-1.7,6-4.1,3.6-8.4c-2.2-3.9-5.5-3.8-8.2-3.8
-                      c-1.7,0-3.3,0-4.7-0.9c-2.2-1.4-3.9-4.4-5.6-7.2c-0.6-1-1.2-2-1.7-2.9C75.8,16.2,89,31.6,89,50z M40.4,13.5c0,0,0.1,0.1,0.1,0.1
-                      c2.3,1.9,8,7.8,7.4,12.8c-0.2,1.7-3.6,3.1-6.5,4.5c-4.1,1.8-8.8,3.9-9.7,8c-0.6,2.7,0.6,5.7,3.8,9.3c7.2,8.2,13.2,10,17.6,11.4
-                      c3.3,1,5.5,1.7,7,4.6c1.9,3.5,0.5,4.9-3.3,8.2c-3.5,3.1-8.3,7.3-8.9,15.6c-2.5-0.2-4.9-0.6-7.3-1.3c0.4-12-4.7-15.9-8.5-18.8
-                      c-1.2-0.9-2.3-1.8-2.9-2.7c-0.5-0.8,0.6-2.7,1.6-4.4c1.5-2.6,3.2-5.6,2.1-8.5c-0.8-2.1-2.8-3.6-6.2-4.8c-11.4-3.8-9.9-14-9.8-14.4
-                      c0,0,0,0,0-0.1C21.8,23.6,30.2,16.5,40.4,13.5z M13,50c0-3.8,0.6-7.5,1.6-10.9c1.1,4,4,8.8,11.3,11.2c2.5,0.8,4,1.8,4.4,3
-                      c0.6,1.6-0.7,3.8-1.9,6c-1.5,2.5-3,5.2-1.6,7.5c0.8,1.4,2.2,2.4,3.6,3.5c3.3,2.5,7.4,5.6,7.3,15.4C23.3,80.2,13,66.3,13,50z M51,88
-                      C51,88,51,88,51,88c0.5-7,4.4-10.4,7.8-13.5c3.4-3,7-6.2,3.9-11.9c-2.2-4-5.2-4.9-8.8-6c-4.2-1.3-9.5-3-16.2-10.5
-                      c-2.4-2.7-3.5-5-3.1-6.7c0.6-2.6,4.5-4.3,8-5.9c4-1.8,7.9-3.5,8.3-6.8c0.7-5.8-4.4-11.6-7-14.1c2.3-0.4,4.7-0.7,7.1-0.7
-                      c1.1,0,2.2,0.1,3.2,0.1c0.1,0.1,0.1,0.2,0.2,0.2c1,1.1,2.1,2.9,3.2,4.7c1.7,3,3.7,6.4,6.5,8.2c2.1,1.4,4.3,1.4,6.3,1.3
-                      c2.8,0,4.3,0.1,5.5,2.3c1,1.7,0.3,2.4-2.7,4.5c-3.2,2.1-7.9,5.4-4.6,12.7c3.6,7.8,7.6,7.5,10.6,7.2c1.7-0.1,2.5-0.2,3.3,0.8
-                      C85.1,57.3,84,68,82.7,71C75.9,81.2,64.2,88,51,88z"/>
-                  </svg>
-							<div class="query-title">Environment - Bonus 1</div>
-							<div class="query-text">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Maecenas sed diam eget risus varius blandit sit amet non magna.</div>
-							<a class="query-action">
-								See it in action
-								<svg width="6" height="12" viewBox="0 0 6 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M3.75023 9.0075L3.75023 -9.83566e-08L2.25014 -1.63928e-07L2.25014 9.0075L-3.9373e-07 9.0075L3.00018 12L6.00037 9.0075L3.75023 9.0075Z" fill="black"/>
-								</svg>
-							</a>
-						</div>
-					</div>
-					<div class="query">
-						<div class="query-contents">
-							<svg class="query-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 101">
-								<path d="M88.43,81.83,55.13,15.21a1.5,1.5,0,0,0-2.68,0L43.9,32.29,32,8.5a1.5,1.5,0,0,0-2.68,0L18.14,30.86v0L2.66,61.83A1.5,1.5,0,0,0,4,64H28L19.14,81.83A1.5,1.5,0,0,0,20.48,84H87.08a1.5,1.5,0,0,0,1.34-2.17ZM53.78,19.23l14.7,29.42c-5.95,2.4-9,.62-12.55-1.46C53.4,45.69,50.52,44,46.5,44a13.44,13.44,0,0,0-5.7,1.21ZM30.67,12.52,39,29.24c-3.29,1.3-4.83.37-6.76-.8a9.51,9.51,0,0,0-5.16-1.79,10.6,10.6,0,0,0-3.92.82ZM6.43,61,20.71,32.44c.75-.62,3.54-2.78,6.4-2.78A6.82,6.82,0,0,1,30.71,31c2.15,1.3,4.82,2.91,9.66.92l1.86,3.71L29.55,61ZM22.9,81l8.81-17.63a1.49,1.49,0,0,0,.2-.4l4.85-9.7a1.45,1.45,0,0,0,.11-.17A10.69,10.69,0,0,1,46.5,47c3.2,0,5.49,1.35,7.92,2.77,3.73,2.19,8,4.67,15.42,1.57L84.66,81Z"/>
-							</svg>
-							<div class="query-title">Environment - Bonus 2</div>
-							<div class="query-text">Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</div>
-							<a class="query-action">
-								See it in action
-								<svg width="6" height="12" viewBox="0 0 6 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M3.75023 9.0075L3.75023 -9.83566e-08L2.25014 -1.63928e-07L2.25014 9.0075L-3.9373e-07 9.0075L3.00018 12L6.00037 9.0075L3.75023 9.0075Z" fill="black"/>
-								</svg>
-							</a>
-						</div>
-					</div>
+<!--					<div class="query">-->
+<!--						<div class="query-contents">-->
+<!--							<svg class="query-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 101">-->
+<!--								<path d="M88.43,81.83,55.13,15.21a1.5,1.5,0,0,0-2.68,0L43.9,32.29,32,8.5a1.5,1.5,0,0,0-2.68,0L18.14,30.86v0L2.66,61.83A1.5,1.5,0,0,0,4,64H28L19.14,81.83A1.5,1.5,0,0,0,20.48,84H87.08a1.5,1.5,0,0,0,1.34-2.17ZM53.78,19.23l14.7,29.42c-5.95,2.4-9,.62-12.55-1.46C53.4,45.69,50.52,44,46.5,44a13.44,13.44,0,0,0-5.7,1.21ZM30.67,12.52,39,29.24c-3.29,1.3-4.83.37-6.76-.8a9.51,9.51,0,0,0-5.16-1.79,10.6,10.6,0,0,0-3.92.82ZM6.43,61,20.71,32.44c.75-.62,3.54-2.78,6.4-2.78A6.82,6.82,0,0,1,30.71,31c2.15,1.3,4.82,2.91,9.66.92l1.86,3.71L29.55,61ZM22.9,81l8.81-17.63a1.49,1.49,0,0,0,.2-.4l4.85-9.7a1.45,1.45,0,0,0,.11-.17A10.69,10.69,0,0,1,46.5,47c3.2,0,5.49,1.35,7.92,2.77,3.73,2.19,8,4.67,15.42,1.57L84.66,81Z"/>-->
+<!--							</svg>-->
+<!--							<div class="query-title">Environment - Bonus 2</div>-->
+<!--							<div class="query-text">Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</div>-->
+<!--							<a class="query-action">-->
+<!--								See it in action-->
+<!--								<svg width="6" height="12" viewBox="0 0 6 12" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--									<path d="M3.75023 9.0075L3.75023 -9.83566e-08L2.25014 -1.63928e-07L2.25014 9.0075L-3.9373e-07 9.0075L3.00018 12L6.00037 9.0075L3.75023 9.0075Z" fill="black"/>-->
+<!--								</svg>-->
+<!--							</a>-->
+<!--						</div>-->
+<!--					</div>-->
 				</div>
 
 				<div id="tab03" class="queries-tab-content">
@@ -591,18 +558,32 @@ LIMIT 10
             </div>
           </div> -->
         </div>
-      </section>
-
-      <section class="tile">
-        <div class="tile-image">
-          <img src="images/Air-Graph.png" />
-        </div>
-		  <div class="tile-content">
-			  <h3>Why choose this service</h3>
-			  <p>The use of a query language gives an extremely powerful and flexible tool to explore the data available from the OpenDataHub without having to download large amounts of data. Data can already be combined and filtered on the server, so all the heavy duty work is kept off your computer and only the truly wanted data is transferred..</p>
-			  <p>Being a W3C standard, support for SPARQL is provided by almost any tool and programming language used for working with data.</p>
+		  <div class="tile">
+			  <div class="tile-content">
+				  <h3>How warm is it right now in South Tyrol?</h3>
+				  <p> No single value would tell the whole story. </p>
+				  <p>Temperature is influenced by local weather, altitude and other geographical factors.</p>
+				  <p>Get an overview on the current temperature distribution from the graph below.
+				  </p>
+				  <div class="tile-image" style="background-color: white">
+					  <canvas id="myChart"></canvas>
+				  </div>
+			  </div>
+			  <div class="tile-image">
+				  <kg-widget view="map" endpoint="https://sparql.opendatahub.testingmachine.eu/portal/sparql" query='PREFIX geo: <http://www.opengis.net/ont/geosparql#> PREFIX sosa: <http://www.w3.org/ns/sosa/> PREFIX : <http://noi.example.org/ontology/odh#> PREFIX schema: <http://schema.org/> PREFIX qudt: <http://qudt.org/schema/qudt#> SELECT ?hPos ?stationLabel ?resultValue    ?hPosLabel ?hPosColor ?minValue ?maxValue ?avgValue ?resultTime WHERE {   ?observation a :LatestObservation ;                sosa:hasFeatureOfInterest ?interest ;                 sosa:observedProperty ?prop ;  sosa:resultTime ?resultTime ;   sosa:hasResult/qudt:numericValue ?resultValue ;    sosa:madeBySensor/sosa:isHostedBy ?station .   ?interest a :OutdoorAir ;       geo:defaultGeometry/geo:asWKT ?hPos .    ?station  schema:name ?stationLabel. ?prop a :Temperature ; :hasUnit ?unit.      FILTER (year(?resultTime) = year(NOW())) {     SELECT (MIN(?v) AS ?minValue) (MAX(?v) AS ?maxValue) (AVG(?v) AS ?avgValue) {       ?observation a :LatestObservation ;                 sosa:observedProperty [a :Temperature] ;      sosa:hasFeatureOfInterest [ a :OutdoorAir ]  ;     sosa:hasResult/qudt:numericValue ?v ;       sosa:resultTime ?resultTime .   FILTER (year(?resultTime) = year(NOW()))     }     }   BIND(CONCAT(?stationLabel, " (", STR(?resultValue), ?unit,")") AS ?hPosLabel)   BIND(IF(year(?resultTime) < year(NOW()), "black",      IF(?stationLabel = "Bolzano", "green",        IF(?resultValue = ?minValue, "blue",         IF(?resultValue < ?avgValue, "#8080FF",           IF(?resultValue = ?maxValue, "red",             IF(?resultValue > ?avgValue, "#FF8080","grey")))))) AS ?hPosColor) }'></kg-widget>
+			  </div>
 		  </div>
       </section>
+
+
+		<section class="cover">
+			<div class="text">
+				<h3>Why choose this service</h3>
+				<p>The use of a query language gives an extremely powerful and flexible tool to explore the data available from the OpenDataHub without having to download large amounts of data.</p>
+				<p>Data can already be combined and filtered on the server, so all the heavy duty work is kept off your computer and only the truly wanted data is transferred..</p>
+				<p>Being a W3C standard, support for SPARQL is provided by almost any tool and programming language used for working with data.</p>
+			</div>
+		</section>
 
       <section class="tile is-alternate">
         <div class="tile-content">
@@ -610,9 +591,9 @@ LIMIT 10
 			<h3>How to use this service</h3>
 			<p>You enjoy playing with data and would like to dive deeper into it. The OpenDataHub comes with full <a href="https://docs.opendatahub.bz.it/en/latest/howto/generic/sparql-endpoint.html" target="_blank" rel="noopener noreferrer">documentation</a>,
 				with separate chapters dedicated to the <a href="https://docs.opendatahub.bz.it/en/latest/howto/generic/sparql-endpoint.html" target="_blank" rel="noopener noreferrer">SPARQL endpoint</a> and on how to use it
-				from <a href="https://docs.opendatahub.bz.it/en/latest/howto/generic/sparql-endpoint.html" target="_blank" rel="noopener noreferrer">R</a>.</p>
+				from <a href="https://docs.opendatahub.bz.it/en/latest/howto/generic/r-howto.html" target="_blank" rel="noopener noreferrer">R</a>.</p>
 			<p>If you need more information on SPARQL, the web is full of tutorials and guides, in addition to the official documentation at the <a href="https://www.w3.org/TR/sparql11-query/" target="_blank" rel="noopener noreferrer">W3C</a>.</p>
-			<p>The graphical data model is available on <a href="https://github.com/noi-techpark/it.bz.opendatahub.sparql/tree/master/diagrams" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+			<p>The graphical data model is available on <a href="https://github.com/noi-techpark/it.bz.opendatahub.sparql/tree/master/diagrams" target="_blank" rel="noopener noreferrer">GitHub</a> and more queries are available on the <a href="/portal">portal</a>. </p>
 			<a class="tile-action" href="https://docs.opendatahub.bz.it/en/latest/howto/generic/sparql-endpoint.html" target="_blank" rel="noopener noreferrer">
 				See the docs
 				<svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -620,10 +601,25 @@ LIMIT 10
 				</svg>
 			</a>
         </div>
-        <div class="tile-image">
-          <img src="https://via.placeholder.com/360x280" />
-        </div>
+
       </section>
+
+<!--      <section class="tile">-->
+<!--        <div class="tile-image">-->
+<!--          <img src="https://via.placeholder.com/360x280" />-->
+<!--        </div>-->
+<!--        <div class="tile-content">-->
+<!--          <div class="tile-subtitle">Aenean Purus</div>-->
+<!--          <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit?</h3>-->
+<!--          <p>Nulla vitae elit libero, a pharetra augue. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>-->
+<!--          <a class="tile-action">-->
+<!--            Browse the data-->
+<!--            <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--              <path d="M9.0075 2.25024H0V3.75024H9.0075V6.00024L12 3.00024L9.0075 0.000244141V2.25024Z" fill="white"/>-->
+<!--            </svg>-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </section>-->
 
       <section class="cover">
         <div class="text">
@@ -670,7 +666,7 @@ LIMIT 10
         <div id="footer-support-subtitle">Support</div>
         <div id="footer-support-title">Looking for help?</div>
         <div id="footer-support-text">Do you have any questions or any suggestions on this site? Please contact us...</div>
-        <a id="footer-support-link" href="#">
+        <a id="footer-support-link" href="https://opendatahub.bz.it/help/">
           Contact
           <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.00751 2.24969H0V3.74982H9.00751V6L12 2.99976L9.00751 -0.000488281V2.24969Z" fill="black"/>
@@ -679,7 +675,7 @@ LIMIT 10
       </div>
 
       <div id="footer-contents">
-        <a id="footer-logo" href="#">
+        <a id="footer-logo" href="https://opendatahub.bz.it/">
           <img src="./images/logo-open-data-hub_white.png"/>
         </a>
         <div id="footer-navigation">
@@ -688,10 +684,10 @@ LIMIT 10
             <div class="footer-navigation-section-links">
               <ul>
                 <li>
-                  <a href="#">Datasets</a>
+                  <a href="https://opendatahub.bz.it/datasets/">Datasets</a>
                 </li>
                 <li>
-                  <a href="#">Web components</a>
+                  <a href="https://webcomponents.opendatahub.bz.it/">Web components</a>
                 </li>
               </ul>
             </div>
@@ -701,8 +697,11 @@ LIMIT 10
             <div class="footer-navigation-section-heading">Community</div>
             <div class="footer-navigation-section-links">
               <ul>
+				  <li>
+					  <a href="https://opendatahub.bz.it/community/">Community</a>
+				  </li>
                 <li>
-                  <a href="#">Events</a>
+                  <a href="https://opendatahub.bz.it/events/">Events</a>
                 </li>
               </ul>
             </div>
@@ -713,13 +712,13 @@ LIMIT 10
             <div class="footer-navigation-section-links">
               <ul>
                 <li>
-                  <a href="#">Data Access</a>
+                  <a href="https://opendatahub.bz.it/data-access/">Data Access</a>
                 </li>
                 <li>
-                  <a href="#">Data Sharing</a>
+                  <a href="https://opendatahub.bz.it/data-sharing/">Data Sharing</a>
                 </li>
                 <li>
-                  <a href="#">Data Visualization</a>
+                  <a href="https://opendatahub.bz.it/services/#app-dev">Data Visualization</a>
                 </li>
               </ul>
             </div>
@@ -727,7 +726,7 @@ LIMIT 10
         </div>
 
         <div id="footer-social">
-          <a id="facebook" href="#">
+          <a id="facebook" href="https://www.facebook.com/opendatahub/">
             <svg viewBox="0 0 72 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Social-Icons---Rounded-Black" transform="translate(-152.000000, -43.000000)">
@@ -739,7 +738,7 @@ LIMIT 10
                 </g>
             </svg>
           </a>
-          <a href="#">
+          <a href="https://github.com/noi-techpark/">
             <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
               <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="#000000">
@@ -750,7 +749,7 @@ LIMIT 10
               </g>
           </svg>
           </a>
-          <a href="#">
+          <a href="https://t.me/OpenDataHub">
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M0 24C0 37.2548 10.7452 48 24 48C37.2548 48 48 37.2548 48 24C48 10.7452 37.2548 0 24 0C10.7452 0 0 10.7452 0 24ZM19.6 35L20.0083 28.8823L20.008 28.882L31.1369 18.839C31.6253 18.4055 31.0303 18.1941 30.3819 18.5873L16.6473 27.2523L10.7147 25.4007C9.4335 25.0084 9.4243 24.128 11.0023 23.4951L34.1203 14.5809C35.1762 14.1015 36.1953 14.8345 35.7922 16.4505L31.8552 35.0031C31.5803 36.3215 30.7837 36.6368 29.68 36.0278L23.6827 31.5969L20.8 34.4C20.7909 34.4088 20.7819 34.4176 20.7729 34.4264C20.4505 34.7403 20.1837 35 19.6 35Z" fill="black"/>
             </svg>
@@ -758,7 +757,7 @@ LIMIT 10
         </div>
       </div>
       <div id="footer-copyright">
-        &copy; 2021 Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+		  NOI AG - Via Volta 13/A, I-39100 Bolzano - VAT No.: 02595720216 - Endowment capital 110.740.000 € - Privacy
       </div>
     </footer>
 
@@ -771,7 +770,11 @@ LIMIT 10
 
         copyEndpointOnNewTab: false,
       });
+
+      document.getElementsByTagName("kg-widget")[0].setAttribute("endpoint", endpointUrl);
     </script>
 
+    <script src="./graph.js"></script>
+	<script src="https://cdn.webcomponents.opendatahub.bz.it/dist/567cb2e2-3e5d-421a-bf85-b8ecc500aab9/v0.6.0/webcomp-kg.js"></script>
   </body>
 </html>

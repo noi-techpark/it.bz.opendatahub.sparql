@@ -1847,6 +1847,9 @@ geo:asWKT rdf:type owl:DatatypeProperty .
 ###  http://noi.example.org/ontology/odh#Activity
 :Activity rdf:type owl:Class .
 
+###  http://noi.example.org/ontology/odh#AirTemperature
+:AirTemperature rdf:type owl:Class ;
+                   rdfs:subClassOf :Temperature .
 
 ###  http://noi.example.org/ontology/odh#AprèsSki
 :AprèsSki rdf:type owl:Class ;
@@ -1935,6 +1938,9 @@ geo:asWKT rdf:type owl:DatatypeProperty .
                                    sosa:Platform ,
                                    sosa:Sensor .
 
+###  http://noi.example.org/ontology/odh#Concentration
+:Concentration rdf:type owl:Class ;
+             rdfs:subClassOf sosa:ObservableProperty .
 
 ###  http://noi.example.org/ontology/odh#CreativeIndustry
 :CreativeIndustry rdf:type owl:Class ;
@@ -2005,9 +2011,15 @@ geo:asWKT rdf:type owl:DatatypeProperty .
               rdfs:subClassOf schema:AdministrativeArea .
 
 
+###  http://noi.example.org/ontology/odh#NitrogenDioxideConcentration
+:NitrogenDioxideConcentration rdf:type owl:Class ;
+              rdfs:subClassOf :PollutantConcentration .
+
+
 ###  http://noi.example.org/ontology/odh#NOI-Place
 :NOI-Place rdf:type owl:Class ;
            rdfs:subClassOf :Station .
+
 
 ###  http://noi.example.org/ontology/odh#OutdoorAir
 :OutdoorAir rdf:type owl:Class ;
@@ -2039,6 +2051,11 @@ geo:asWKT rdf:type owl:DatatypeProperty .
 ###  http://noi.example.org/ontology/odh#Pizzeria
 :Pizzeria rdf:type owl:Class ;
           rdfs:subClassOf schema:Restaurant .
+
+
+###  http://noi.example.org/ontology/odh#PollutantConcentration
+:PollutantConcentration rdf:type owl:Class ;
+                   rdfs:subClassOf :Concentration .
 
 
 ###  http://noi.example.org/ontology/odh#RWISstation
@@ -2117,7 +2134,6 @@ geo:asWKT rdf:type owl:DatatypeProperty .
 ###  http://noi.example.org/ontology/odh#WaterTemperature
 :WaterTemperature rdf:type owl:Class ;
                   rdfs:subClassOf :Temperature .
-
 
 ###  http://noi.example.org/ontology/odh#WeatherStation
 :WeatherStation rdf:type owl:Class ;

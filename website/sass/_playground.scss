@@ -12,6 +12,7 @@ section#playground {
     p, h2 {
     color: $colors--white;
      }
+
   }
 
   #playground-editor {
@@ -144,6 +145,105 @@ section#playground {
           }
         }
       }
+    }
+  }
+
+  .tile {
+    @include vflex();
+    padding: 24px;
+
+    @include breakpoint($bp-medium) {
+      @include hflex();
+
+      padding: 96px;
+    }
+
+    .tile-image {
+      flex: 1;
+      text-align: center;
+
+      canvas {
+        max-width: 100%;
+      }
+    }
+
+    .tile-content {
+      flex: 1;
+
+      .tile-subtitle {
+        @include regular-font(12px, 14px);
+
+        color: $colors--green;
+      }
+
+      h3 {
+        @include semibold-font(24px, 26px);
+
+        color: $colors--white;
+        margin: 16px 0;
+      }
+
+      p {
+        @include regular-font(17px, 25px);
+
+        color: $colors--white;
+
+        a {
+          color: $colors--white;
+          text-decoration: underline;
+          transition: color 0.25s ease-in-out;
+
+          &:hover {
+            color: $colors--green;
+          }
+        }
+      }
+
+      .tile-action {
+        @include semibold-font(12px, 18px);
+
+        background-color: $colors--green;
+        box-sizing: border-box;
+        color: $colors--white;
+        cursor: pointer;
+        display: inline-block;
+        margin-top: 8px;
+        padding: 12px 16px;
+
+        svg {
+          display: inline-block;
+          margin-left: 8px;
+          position: relative;
+          left: 0;
+          transition: left 0.25s ease-in-out;
+        }
+
+        &:hover {
+          svg {
+            left: 3px;
+          }
+        }
+      }
+    }
+
+    .tile-image + .tile-content,
+    .tile-content + .tile-image {
+      margin-top: 32px;
+      margin-left: 0;
+
+      @include breakpoint($bp-medium) {
+        margin-top: 0;
+        margin-left: 48px;
+      }
+
+      @include breakpoint($bp-regular) {
+        margin-top: 0;
+        margin-left: 96px;
+      }
+    }
+
+    &.is-alternate {
+      background-color: $colors--greyish;
     }
   }
 }
