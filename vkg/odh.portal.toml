@@ -5,14 +5,15 @@ logout_endpoint="ontop/logout"
 userinfo_endpoint="ontop/userinfo"
 
 [defaultTab]
-query = "
+query = """
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX : <http://noi.example.org/ontology/odh#>
 SELECT * WHERE {
   ?sub ?pred ?obj .
 }
-LIMIT 100"
+LIMIT 100
+"""
 
 [[tabGroups]]
 
