@@ -52,6 +52,7 @@ services:
       - "${SERVER_PORT}:80"
   oauth2:
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.0.1
+    restart: unless-stopped
     env_file: .env
     command:
       [

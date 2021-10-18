@@ -88,6 +88,7 @@ services:
   oauth2:
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.0.1
     env_file: .env
+    restart: unless-stopped
     command: [
         "--provider=oidc",
         "--oidc-issuer-url=${KEYCLOAK_REALM_URL}",
@@ -123,6 +124,7 @@ services:
       context: ./
       dockerfile: infrastructure/docker/nginx/Dockerfile
     env_file: .env
+    restart: unless-stopped
     ports:
       - "${SERVER_PORT}:80"
   tourism-master-db:
