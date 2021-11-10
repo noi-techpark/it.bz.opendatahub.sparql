@@ -7,7 +7,7 @@ HOSTVKG="prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
 DBVKG="test"
 USERVKG="vkguser"
 
-PSQLVKG="psql -h $HOSTVKG -p 5432 -U $USERVKG $DBVKG --csv -v ON_ERROR_STOP=on -t -1 "
+PSQLVKG="psql -h $HOSTVKG -p 5432 -U $USERVKG $DBVKG --csv -v ON_ERROR_STOP=on -t -1 -c "
 
 OUT="DUMP"
 mkdir -p $OUT/DONE
@@ -15,44 +15,44 @@ mkdir -p $OUT/DONE
 function upsert() {
     TBL=$1
     shift
-    GLOB=$@
-    ls $GLOB &>/dev/null || {
-        echo "..... UPSERT: Skipping... No file found for table $TBL with glob $GLOB"
+    ls "$@"  &>/dev/null || {
+        echo "..... UPSERT: Skipping... No file found for table $TBL with glob $*"
         return
     }
-    $PSQLVKG -c "create table if not exists intimev2.${TBL}_tmp as table intimev2.${TBL} with no data"    
-    for FILE in $(ls $GLOB); do
+    GLOB=$*
+    $PSQLVKG "create table if not exists intimev2.${TBL}_tmp as table intimev2.${TBL} with no data"
+    for FILE in $GLOB; do
         echo "..... UPSERT: Processing $FILE..."
-        $PSQLVKG -c "truncate intimev2.${TBL}_tmp;"
-        cat $FILE | $PSQLVKG -c "copy intimev2.${TBL}_tmp from stdin with delimiter ',' csv;"
-        QRY=$(while read data; do echo "$data"; done)
-        $PSQLVKG -c "$QRY"
-        mv $FILE $OUT/DONE
+        $PSQLVKG "truncate intimev2.${TBL}_tmp;"
+        $PSQLVKG "copy intimev2.${TBL}_tmp from stdin with delimiter ',' csv;" < "$FILE"
+        QRY=$(while read -r data; do echo "$data"; done)
+        $PSQLVKG "$QRY"
+        mv "$FILE" $OUT/DONE
         echo "..... UPSERT: READY."
     done
-    $PSQLVKG -c "drop table intimev2.${TBL}_tmp"
+    $PSQLVKG "drop table intimev2.${TBL}_tmp"
 }
 
 #
 # type_metadata
 #
 upsert "type_metadata" $OUT/type_metadata-*.csv << EOF
-    insert into intimev2.type_metadata 
-    table intimev2.type_metadata_tmp 
+    insert into intimev2.type_metadata
+    table intimev2.type_metadata_tmp
     on conflict do nothing
 EOF
 
 #
 # type
 #
-upsert "type" $PWD/$OUT/type.csv << EOF
-    update intimev2.type 
+upsert "type" $OUT/type.csv << EOF
+    update intimev2.type
     set
-        cname = type_tmp.cname, 
-        created_on = type_tmp.created_on, 
-        cunit = type_tmp.cunit, 
-        description = type_tmp.description, 
-        rtype = type_tmp.rtype, 
+        cname = type_tmp.cname,
+        created_on = type_tmp.created_on,
+        cunit = type_tmp.cunit,
+        description = type_tmp.description,
+        rtype = type_tmp.rtype,
         meta_data_id = type_tmp.meta_data_id
     from intimev2.type_tmp
     where type.id = type_tmp.id
@@ -71,16 +71,16 @@ EOF
 #
 # station
 #
-upsert "station" $PWD/$OUT/station.csv << EOF
-    update intimev2.station 
+upsert "station" $OUT/station.csv << EOF
+    update intimev2.station
     set
         active = tmp.active,
         available = tmp.available,
-        name = tmp.name, 
-        origin = tmp.origin, 
-        pointprojection = tmp.pointprojection, 
-        stationcode = tmp.stationcode, 
-        stationtype = tmp.stationtype, 
+        name = tmp.name,
+        origin = tmp.origin,
+        pointprojection = tmp.pointprojection,
+        stationcode = tmp.stationcode,
+        stationtype = tmp.stationtype,
         meta_data_id = tmp.meta_data_id,
         parent_id = tmp.parent_id
     from intimev2.station_tmp tmp
@@ -97,8 +97,8 @@ EOF
 function copy_delete_insert() {
 	TBL=$1
     shift
-    upsert "$TBL" $@ << EOF
-	    delete from intimev2.$TBL; 
+    upsert "$TBL" "$@" << EOF
+	    delete from intimev2.$TBL;
         insert into intimev2.$TBL table intimev2.${TBL}_tmp
 EOF
 }
@@ -106,7 +106,7 @@ EOF
 function copy_insert() {
 	TBL=$1
     shift
-	upsert "$TBL" $@ << EOF
+	upsert "$TBL" "$@" << EOF
         insert into intimev2.$TBL table intimev2.${TBL}_tmp on conflict do nothing
 EOF
 }
