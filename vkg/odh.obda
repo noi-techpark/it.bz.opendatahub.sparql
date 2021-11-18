@@ -15,6 +15,7 @@ qudt:	     	http://qudt.org/schema/qudt#
 qudt-1-1:   	http://qudt.org/1.1/schema/qudt#
 qudt-unit:   	http://qudt.org/vocab/unit#
 qudt-1-1-unit:	http://qudt.org/1.1/vocab/unit#
+sioc: 			http://rdfs.org/sioc/ns#
 
 [MappingDeclaration] @collection [[
 mappingId	Campground
@@ -24,7 +25,7 @@ source		SELECT "Id"
 			WHERE "AccoTypeId" = 'Camping'
 
 mappingId	LodgingBusiness
-target		data:accommodation/{id} a schema:LodgingBusiness ; schema:email {de_email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{id}/{rating} .
+target		data:accommodation/{id} a schema:LodgingBusiness ; schema:email {de_email} ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{id}/{rating} ; sioc:has_container <https://kg.opendatahub.bz.it/lodging-businesses/> .
 source		SELECT "Id" AS id, NULLIF("AccoDetail-de-Email", '') AS de_email, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone,
 			"AccoDetail-de-Fax" AS  de_fax, "AccoDetail-it-Shortdesc" AS it_desc,  "AccoDetail-de-Shortdesc" AS de_desc,  "AccoDetail-en-Shortdesc" AS en_desc, "AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name, "AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
 			FROM "v_accommodationsopen"
@@ -103,7 +104,7 @@ source		SELECT "Id", "Roommin", "Roommax"
 			FROM v_accommodationroomsopen
 
 mappingId	Event EURAC NOI
-target		data:event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location data:location/euracnoi/{EventLocation}/{AnchorVenue} ; schema:organizer data:organization/event/euracnoi/{Id} , data:contact/event/euracnoi/{Id} .
+target		data:event/euracnoi/{Id} a schema:Event ; schema:startDate {StartDate}^^xsd:dateTime ; schema:endDate {EndDate}^^xsd:dateTime ; schema:description {EventDescriptionIT}@it , {EventDescriptionDE}@de , {EventDescriptionEN}@en ; schema:location data:location/euracnoi/{EventLocation}/{AnchorVenue} ; schema:organizer data:organization/event/euracnoi/{Id} , data:contact/event/euracnoi/{Id} ; sioc:has_container <https://kg.opendatahub.bz.it/events/> .
 source		SELECT "Id", "StartDate", "EndDate", "EventDescriptionIT", "EventDescriptionEN", "AnchorVenue", "EventLocation", "EventDescriptionDE"
 			FROM v_eventeuracnoi
 
@@ -133,7 +134,7 @@ source		SELECT "Id" FROM v_accommodationroomsopen
 			WHERE "Roomtype" = 'caravan'
 
 mappingId	SkiResort
-target		data:skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string  ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf data:skiRegion/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} ; geo:defaultGeometry data:geo/skiResort/{Id} .
+target		data:skiResort/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string  ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf data:skiRegion/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} ; geo:defaultGeometry data:geo/skiResort/{Id} ; sioc:has_container <https://kg.opendatahub.bz.it/ski-resorts/> .
 source		SELECT "Id", "Shortname", "Detail-en-Header", ST_AsText("Geometry") AS wkt, "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
 
 mappingId	SkiResort - geo
@@ -181,7 +182,7 @@ source		select "EventLocation"
 			from v_eventeuracnoi
 
 mappingId	Food establishments
-target		data:gastronomy/{Id} a schema:FoodEstablishment ; schema:name {Detail-de-Title}@de , {Detail-it-Title}@it , {Detail-en-Title}@en ; schema:description {Detail-de-BaseText}@de , {Detail-it-BaseText}@it , {Detail-en-BaseText}@en ; schema:geo data:geo/gastronomy/{Id} ; geo:defaultGeometry data:geo/gastronomy/{Id} ; schema:address data:address/gastronomy/{Id} ; schema:telephone {ContactInfos-de-Phonenumber} ; schema:hasMenu data:menu/gastronomy/{Id} .
+target		data:gastronomy/{Id} a schema:FoodEstablishment ; schema:name {Detail-de-Title}@de , {Detail-it-Title}@it , {Detail-en-Title}@en ; schema:description {Detail-de-BaseText}@de , {Detail-it-BaseText}@it , {Detail-en-BaseText}@en ; schema:geo data:geo/gastronomy/{Id} ; geo:defaultGeometry data:geo/gastronomy/{Id} ; schema:address data:address/gastronomy/{Id} ; schema:telephone {ContactInfos-de-Phonenumber} ; schema:hasMenu data:menu/gastronomy/{Id} ; sioc:has_container <https://kg.opendatahub.bz.it/food-establishments/> .
 source		SELECT * FROM v_gastronomiesopen
 
 mappingId	Food establishments - geo
@@ -193,7 +194,7 @@ target		data:address/gastronomy/{Id} a schema:PostalAddress ; schema:streetAddre
 source		SELECT * FROM v_gastronomiesopen
 
 mappingId	Food establishment-municipality
-target		data:gastronomy/{Id} schema:containedInPlace data:municipality/{IstatNumber} . 
+target		data:gastronomy/{Id} schema:containedInPlace data:municipality/{IstatNumber} ; sioc:has_container <https://kg.opendatahub.bz.it/municipalities/> . 
 source		SELECT a."Id", m."IstatNumber" FROM "v_gastronomiesopen" a, "v_municipalitiesopen" m WHERE a."LocationInfo-MunicipalityInfo-Id" = m."Id"
 
 mappingId	Restaurants
