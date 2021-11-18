@@ -68,7 +68,7 @@ target		data:poi/{Id} a schema:Place ; rdfs:label {Shortname}^^xsd:string ; sche
 source		SELECT "Id", "Shortname" FROM v_poisopen
 
 mappingId	Area
-target		data:area/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string .
+target		data:area/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string ; sioc:has_container <https://kg.opendatahub.bz.it/areas/> .
 source		SELECT "Id", "Shortname" FROM v_areas
 
 mappingId	POI_Area
