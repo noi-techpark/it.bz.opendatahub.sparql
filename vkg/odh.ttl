@@ -1366,6 +1366,9 @@ geo:wktLiteral rdf:type rdfs:Datatype .
 #    Object Properties
 #################################################################
 
+###  http://noi.example.org/ontology/odh#hasNOICategory
+:hasNOICategory rdf:type owl:ObjectProperty .
+
 ###  http://noi.example.org/ontology/odh#hasDestinationStation
 :hasDestinationStation rdf:type owl:ObjectProperty .
 
@@ -2153,6 +2156,9 @@ geo:asWKT rdf:type owl:DatatypeProperty .
 ###  http://noi.example.org/ontology/odh#traffic
 :traffic rdf:type owl:Class ;
          rdfs:subClassOf :Station .
+
+###  http://noi.example.org/ontology/odh#NOIStationCategory
+:NOIStationCategory rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/dcmitype/Dataset

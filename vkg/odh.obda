@@ -723,7 +723,11 @@ target		data:road_segment/{id} a :RoadSegment ; :hasOriginStation data:station/{
 source		SELECT * FROM intimev2.edge
 
 mappingId	station_hosts
-target		data:station/{id} a sosa:Platform , :Station ; sosa:isHostedBy data:station/{parent_id} .
+target		data:station/{id} a sosa:Platform , :Station ; sosa:isHostedBy data:station/{parent_id} ; :hasNOICategory odh:noi-station-categories/{stationtype} .
+source		SELECT * FROM intimev2.station
+
+mappingId	station_categories
+target		odh:noi-station-categories/{stationtype} a :NOIStationCategory ; schema:name {stationtype} .
 source		SELECT * FROM intimev2.station
 
 mappingId	station-CarpoolingUser
