@@ -67,6 +67,10 @@
         <stop stop-opacity="1" stop-color="rgb(232,238,247)" offset="0%"/>
         <stop stop-opacity="1" stop-color="rgb(183,201,227)" offset="100%"/>
       </linearGradient>
+      <linearGradient x1="273.9404" gradientUnits="userSpaceOnUse" x2="426.0596" y1="519.3287" y2="541.86" id="linearGradient17" spreadMethod="reflect">
+        <stop stop-opacity="1" stop-color="rgb(232,238,247)" offset="0%"/>
+        <stop stop-opacity="1" stop-color="rgb(183,201,227)" offset="100%"/>
+      </linearGradient>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath1">
         <path d="M0 0 L1030 0 L1030 523 L0 523 L0 0 Z"/>
       </clipPath>
@@ -150,6 +154,15 @@
       </clipPath>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath28">
         <path d="M-143.3 -40.5 L886.7 -40.5 L886.7 482.5 L-143.3 482.5 L-143.3 -40.5 Z"/>
+      </clipPath>
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath29">
+        <path d="M-466.9404 -433.36 L563.0596 -433.36 L563.0596 89.64 L-466.9404 89.64 L-466.9404 -433.36 Z"/>
+      </clipPath>
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath30">
+        <path d="M-201 519.3287 L-201 575 L829 575 L829 519.3287 Z"/>
+      </clipPath>
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath31">
+        <path d="M-201 52 L-201 519.3287 L829 519.3287 L829 52 Z"/>
       </clipPath>
     </defs>
     <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="translate(201,-52)" stroke="white">
@@ -306,6 +319,17 @@
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,201,-52)" stroke-linecap="butt">
       <text x="-32.841" xml:space="preserve" y="124.6543" clip-path="url(#clipPath2)" stroke="none">:WindSpeed</text>
     </g>
+    <g text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,466.9404,433.36)" image-rendering="optimizeQuality">
+      <image x="0" y="0" clip-path="url(#clipPath29)" width="173" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK0AAABFCAYAAAA4uGasAAADQ0lEQVR4Xu3dZ2sV&#10;bRCA4bHEEjWxghJL7GLvvcTY9f//H+dmXAwSwd2zQgbugevj2fXDfcbn+PLyRDiO&#10;4ziO4ziO4ziO48w9u9LuLfZII23th57+2/BwXrg3LaV9aX86II1AM6AfOqInupo1&#10;3mGz8nBetpyOpNV0NB2TRqAZ0A8d0RNd0RedzTI8iG/EwbSSTqTTaS2dS+elkeiG&#10;fuiInuiKvmYJly3Lg3gg3w5esp6upZvpTrorjXQ7qh86Wo/qir44PtDbQkcFqmd1&#10;r0Q9+HJUqI/T8/RKmuBlVD90RE90RV90xll38rYdtixnDlb4etQLeNm79CF9TJ+k&#10;EWgGm+ltehbV1XpUZ/ytzg+zSUO0S+lw1LeAVc43g2A/p2/puzQB7XyNiphwn6Tr&#10;UZ3RG91NOiKwolnVrOy1dCtqy7JheekPaUGEy8Z9EdXX2fh9RJgcLedZDsj82mOF&#10;cxbh28G35c8/gDQWy4+jAudcfqDxLwv0RncLR8vDeCgPN1rNZYj2dbqXLoTRaocz&#10;WrVjtGrHaNWO0aodo1U7Rqt2jFbtGK3aMVq1Y7Rqx2jVjtGqHaNVO0ardraLlv/N&#10;3Gi1Yxmt2jFatWO0asdo1Y7Rqh2jVTtGq3aMVu0YrdrZLlr/M652NKNVO0ardoxW&#10;7Rit2jFatWO0asdo1Y7Rqh2jVTtGq3b+a7TD7TZGqzkN0dIVS5HlOEu0q1H3O92K&#10;uu/Je8Q0F+4Royeu+uK+XDqjt4XuEePDXG9+Jt1IT9NG+hIVLhtXmoJ+uPlzI6or&#10;+qIzeluKidHyob3pUDoVdenu/ahvxWbUMYGXErA0Bt3Qz/uonuiKvuhsOaq7ycPF&#10;ulxnzjljLer+0odRx4Q3Uffkbkgj0Azoh44eRHXF0WA4z+6OBYYPs6rZttwQzQ8y&#10;LnbmRxkvexR1ybM0Bt3QD+dYeqIr+hq27KSjwTB8mHA52xLu8aibovmVdyld+eWq&#10;9I/ohaPAxaiO6Imu6IvOFtqywxAux4SldDDqoMwa55txMuocIo1BN/RDR/REV/RF&#10;sAtt2a0zbNwhXs4dvAisdGkMuuG3Eh3RE13NsmH/NkPAQ8TSFENDs21Wx3Ecx3Ec&#10;x3Ecx3Gcmp8sD6cfHqlkSgAAAABJRU5ErkJggg==" height="69" preserveAspectRatio="none"/>
+      <rect x="273.9404" y="493.36" transform="matrix(1,0,0,1,-265.9404,-485.36)" clip-path="url(#clipPath30)" fill="url(#linearGradient17)" width="152.1193" image-rendering="auto" rx="4" ry="4" height="48.5" stroke="none"/>
+      <rect x="273.9404" y="493.36" transform="matrix(1,0,0,1,-265.9404,-485.36)" clip-path="url(#clipPath31)" fill="rgb(183,201,227)" width="152.1193" image-rendering="auto" rx="4" ry="4" height="48.5" stroke="none"/>
+      <rect stroke-linecap="butt" x="273.9404" y="493.36" transform="matrix(1,0,0,1,-265.9404,-485.36)" clip-path="url(#clipPath2)" fill="none" width="152.1193" image-rendering="auto" rx="4" ry="4" height="48.5" stroke-miterlimit="1.45"/>
+      <line stroke-linecap="butt" transform="matrix(1,0,0,1,-265.9404,-485.36)" clip-path="url(#clipPath2)" fill="none" x1="273.9404" x2="426.0596" y1="519.3288" image-rendering="auto" y2="519.3288" stroke-miterlimit="1.45"/>
+    </g>
+    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,201,-52)" stroke-linecap="butt">
+      <text x="288.2598" xml:space="preserve" y="510.4987" clip-path="url(#clipPath2)" stroke="none">:NOIStationCategory</text>
+      <text x="277.9404" xml:space="preserve" y="536.4674" clip-path="url(#clipPath2)" stroke="none">schema:name</text>
+    </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,201,-52)" stroke-linecap="butt">
       <path fill="none" d="M350 212.7614 L350 181.25" clip-path="url(#clipPath2)"/>
     </g>
@@ -314,8 +338,8 @@
       <text x="358.9385" xml:space="preserve" y="197.1793" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">sosa:observedProperty</text>
       <path fill="none" d="M411.0513 423.08 L447 423.08 L447 438.08 L419.0513 438.08" clip-path="url(#clipPath2)"/>
       <path d="M411.0513 438.08 L423.0513 443.08 L420.0513 438.08 L423.0513 433.08 Z" clip-path="url(#clipPath2)" stroke="none"/>
-      <text x="457.7727" xml:space="preserve" y="428.2499" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">sosa:isHostedBy</text>
-      <text x="470.2883" xml:space="preserve" y="442.2187" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">sosa:hosts^</text>
+      <text x="457.7727" xml:space="preserve" y="420.2499" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">sosa:isHostedBy</text>
+      <text x="470.2883" xml:space="preserve" y="434.2187" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">sosa:hosts^</text>
       <path fill="none" d="M350 275.3 L350 316.0024" clip-path="url(#clipPath2)"/>
       <path d="M350 324.0024 L355 312.0024 L350 315.0024 L345 312.0024 Z" clip-path="url(#clipPath2)" stroke="none"/>
       <text x="386.124" xml:space="preserve" y="296.8449" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">sosa:madeBySensor</text>
@@ -363,6 +387,9 @@
       <path fill="none" d="M56.1287 120.5 L93.1785 120.5" clip-path="url(#clipPath2)"/>
       <path fill="white" d="M108.1785 120.5 L92.1785 114.5 L92.1785 126.5 Z" clip-path="url(#clipPath2)" stroke="none"/>
       <path fill="none" d="M108.1785 120.5 L92.1785 114.5 L92.1785 126.5 Z" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M354 463.3882 L354 485.3722" clip-path="url(#clipPath2)"/>
+      <path d="M354 493.3722 L359 481.3722 L354 484.3722 L349 481.3722 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <text x="365.9914" xml:space="preserve" y="481.4987" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">:hasNOICategory</text>
     </g>
   </g>
 </svg>
