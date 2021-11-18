@@ -1,6 +1,6 @@
 [accommodation]
 query="""
-BASE <https://kg.opendatahub.bz.it/data/accommodation/>
+BASE <https://kg.opendatahub.bz.it/lodging-businesses/>
 PREFIX schema: <http://schema.org/>
 PREFIX : <http://noi.example.org/ontology/odh#>
  CONSTRUCT {
