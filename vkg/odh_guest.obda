@@ -327,7 +327,7 @@ target		data:road_segment/{id} geo:defaultGeometry data:road_segment/geometry/{i
 source		SELECT id, ST_ASTEXT(linegeometry) AS wkt FROM intimev2.edge
 
 mappingId	station
-target		data:station/{id} a :Station ; :isActive {active} ; :isAvailable {available} ; rdfs:label {name}^^xsd:string ; schema:name {name}^^xsd:string ; :hasOrigin {origin} ; :hasStationCode {stationcode} ; :hasStationType {stationtype}^^xsd:string .
+target		data:station/{id} a :Station ; :isActive {active} ; :isAvailable {available} ; rdfs:label {name}^^xsd:string ; schema:name {name}^^xsd:string ; :hasProvider {origin} ; :hasStationCode {stationcode} ; :hasStationType {stationtype}^^xsd:string .
 source		SELECT * FROM intimev2.station WHERE active='t'
 
 mappingId	station_geom
@@ -827,7 +827,7 @@ source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type
 			WHERE m.type_id = t.id and t.cunit IN ('°', '[°]')
 
 mappingId	road_segment
-target		data:road_segment/{id} a :RoadSegment ; :hasOriginStation data:station/{origin_id} ; :hasDestinationStation data:station/{destination_id} .
+target		data:road_segment/{id} a :RoadSegment ; :hasOrigin data:station/{origin_id} ; :hasDestination data:station/{destination_id} .
 source		SELECT * FROM intimev2.edge
 
 mappingId	station_hosts

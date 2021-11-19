@@ -582,11 +582,10 @@ name="Road segments"
 query="""
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 
 SELECT * {
-?rs a :RoadSegment ; :hasOriginStation ?ss ; :hasDestinationStation ?ds .
+?rs a :RoadSegment ; :hasOrigin ?ss ; :hasDestination ?ds .
 #?rs geo:defaultGeometry ?g .
 #?g geo:asWKT ?wkt .
   ?ss geo:defaultGeometry [geo:asWKT ?oWKT] .
@@ -680,8 +679,8 @@ PREFIX qudt: <http://qudt.org/schema/qudt#>
 PREFIX schema: <http://schema.org/>
 
 SELECT * WHERE {
-  ?s a :WeatherStation ; :hasOrigin ?origin .
-  FILTER (?origin !='SIAG' && ?origin != 'meteotrentino')
+  ?s a :WeatherStation ; :hasProvider ?provider .
+  FILTER (?provider NOT IN ('SIAG', 'meteotrentino'))
   ?s sosa:hosts/sosa:madeObservation ?o .
   ?o sosa:hasResult ?r .
   ?o sosa:resultTime ?t .
