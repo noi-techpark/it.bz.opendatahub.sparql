@@ -1369,12 +1369,12 @@ geo:wktLiteral rdf:type rdfs:Datatype .
 ###  http://noi.example.org/ontology/odh#hasNOICategory
 :hasNOICategory rdf:type owl:ObjectProperty .
 
-###  http://noi.example.org/ontology/odh#hasDestinationStation
-:hasDestinationStation rdf:type owl:ObjectProperty .
+###  http://noi.example.org/ontology/odh#hasDestination
+:hasDestination rdf:type owl:ObjectProperty .
 
 
-###  http://noi.example.org/ontology/odh#hasOriginStation
-:hasOriginStation rdf:type owl:ObjectProperty .
+###  http://noi.example.org/ontology/odh#hasOrigin
+:hasOrigin rdf:type owl:ObjectProperty .
 
 
 ###  http://qudt.org/schema/qudt#unit
@@ -1554,8 +1554,8 @@ schema:worksFor rdf:type owl:ObjectProperty .
 :hasIStatCode rdf:type owl:DatatypeProperty .
 
 
-###  http://noi.example.org/ontology/odh#hasOrigin
-:hasOrigin rdf:type owl:DatatypeProperty .
+###  http://noi.example.org/ontology/odh#hasProvider
+:hasProvider rdf:type owl:DatatypeProperty .
 
 
 ###  http://noi.example.org/ontology/odh#hasPostcode
