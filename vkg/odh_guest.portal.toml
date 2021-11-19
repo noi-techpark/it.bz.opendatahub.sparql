@@ -339,6 +339,7 @@ WHERE {
   FILTER (?h != ?f)
   FILTER (?distance < 100)
 }
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
@@ -426,7 +427,6 @@ WHERE {
 name="Lodging businesses with a non-South Tyrolean postal code"
 query="""
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
@@ -443,7 +443,6 @@ SELECT ?h ?pos ?posLabel ?zip WHERE {
 name="Lodging businesses outside the South-Tyrolean regions' bounding box"
 query="""
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
@@ -461,8 +460,6 @@ BIND("jet,0.8" AS ?boxColor) .
 
 name="Lodging businesses in Bolzano with the wrong German or Italian name"
 query="""
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 
@@ -482,7 +479,6 @@ name="Lodging businesses with too low Aggregate rating value (possible normaliza
 query="""
 PREFIX schema: <http://schema.org/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT * WHERE {
     ?accomodation schema:name ?name ; schema:aggregateRating [ a schema:AggregateRating ; schema:ratingValue ?value  ] .
@@ -495,15 +491,15 @@ SELECT * WHERE {
 
 name="Mobility"
 [[tabGroups.tabs]]
-name="Stations"
+name="Platforms"
 query="""
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
 
 SELECT * {
-?s a :Station .
-?s rdfs:label ?l .
+?s a sosa:Platform .
+?s schema:name ?l .
 OPTIONAL {?s geo:defaultGeometry ?g .
 ?g geo:asWKT ?wkt .}
 }
@@ -511,14 +507,16 @@ OPTIONAL {?s geo:defaultGeometry ?g .
 
 
 [[tabGroups.tabs]]
-name="Stations per type"
+name="NOI station categories"
 query="""
 PREFIX : <http://noi.example.org/ontology/odh#>
+PREFIX schema: <http://schema.org/>
 
-SELECT ?st (COUNT(?s) AS ?count)   WHERE {
-  ?s :hasStationType ?st .
+SELECT ?cat (COUNT(?s) AS ?count)   WHERE {
+  ?s :hasNOICategory ?c .
+  ?c a :NOIStationCategory ; schema:name ?cat .
 }
-GROUP BY ?st
+GROUP BY ?cat
 ORDER BY DESC(?count)
 """
 
@@ -527,29 +525,27 @@ name="isHostedBy"
 query="""
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX schema: <http://schema.org/>
 
 
 SELECT DISTINCT ?t1 ?t2 {
-?s1 sosa:isHostedBy ?s2 .
-?s1 rdfs:label ?ll ; :hasStationType ?t1.
-#?s1 geo:defaultGeometry [geo:asWKT ?wkt1] .
-?s2 rdfs:label ?l2 ; :hasStationType ?t2 .
-#?s2 geo:defaultGeometry [geo:asWKT ?wkt2] .
+?p1 a sosa:Platform ; sosa:isHostedBy ?p2 .
+?p1 :hasNOICategory/schema:name ?t1.
+?p2 :hasNOICategory/schema:name ?t2 .
 }
 """
 
 [[tabGroups.tabs]]
 name="ObservableProperties"
 query="""
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX schema: <http://schema.org/>
 
 SELECT * WHERE {
 ?p a sosa:ObservableProperty .
-?p rdfs:label ?l .
-?p rdfs:comment ?c.
+?p schema:name ?l .
+?p schema:description ?c.
 }
 """
 
@@ -558,9 +554,9 @@ name="Observations"
 query="""
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX qudt: <http://qudt.org/schema/qudt#>
+PREFIX schema: <http://schema.org/>
 
 SELECT * WHERE {
 ?s a sosa:Sensor .
@@ -570,7 +566,7 @@ SELECT * WHERE {
 ?o sosa:hasResult ?r .
 ?o sosa:resultTime ?t .
 ?o sosa:observedProperty ?prop .
-?prop rdfs:comment ?pc .
+?prop schema:description ?pc .
 ?r qudt:numericValue ?v .
 BIND(CONCAT( ?pc, ": ", str(?v)) AS ?wktLabel)
 }
@@ -578,25 +574,7 @@ LIMIT 1000
 """
 
 [[tabGroups.tabs]]
-name="Sensors"
-query="""
-PREFIX : <http://noi.example.org/ontology/odh#>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX sosa: <http://www.w3.org/ns/sosa/>
-
-SELECT DISTINCT ?st WHERE {
-?s a sosa:Sensor .
-?s sosa:isHostedBy ?p . 
-?p geo:defaultGeometry/geo:asWKT ?wkt .
-?p :hasStationType ?st .
-#?s sosa:madeObservation ?o .
-}
-LIMIT 100
-"""
-
-[[tabGroups.tabs]]
-name="Road"
+name="Road segments"
 query="""
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -615,13 +593,13 @@ SELECT * {
 [[tabGroups.tabs]]
 name="Traffic Sensors"
 query="""
+PREFIX schema: <http://schema.org/>
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT * {
-?s a :TrafficSensor .
-?s rdfs:label ?wktLabel .
+  ?s :hasNOICategory [ schema:name "TrafficSensor" ] .
+?s schema:name ?wktLabel .
 OPTIONAL {?s geo:defaultGeometry ?g .
 ?g geo:asWKT ?wkt .}
 }
@@ -632,54 +610,41 @@ OPTIONAL {?s geo:defaultGeometry ?g .
 name="Sensor/ObservableProperty/Observation statistics"
 query="""
 PREFIX : <http://noi.example.org/ontology/odh#>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX qudt: <http://qudt.org/schema/qudt#>
+PREFIX schema: <http://schema.org/>
 
 SELECT ?st ?pc ?unit (COUNT(*) AS ?count)  (MIN(?t) AS ?min_t) (MAX(?t) AS ?max_t) (MIN(?v) AS ?min_v) (AVG(?v) AS ?avg_v) (MAX(?v) AS ?max_v)   WHERE {
-#?s a sosa:Sensor .
-?s sosa:isHostedBy ?p.
-#  ?s a :TrafficSensor .
-?p :hasStationType ?st .
-?p geo:defaultGeometry ?g . ?g geo:asWKT ?wkt .
+?s a sosa:Sensor ; sosa:isHostedBy ?p.
+?p :hasNOICategory/schema:name ?st .
 ?s sosa:madeObservation ?o .
 ?o sosa:hasResult ?r .
 ?o sosa:resultTime ?t .
 ?o sosa:observedProperty ?prop .
 ?r qudt:numericValue ?v .
-?prop rdfs:label ?pc .
+?prop schema:name ?pc .
   ?prop :hasUnit ?unit .
-#BIND(CONCAT(?st, "/", ?pc, "/",  str(?v), "/", ?unit) AS ?wktLabel)
 }
 GROUP BY ?st ?prop ?pc ?unit
 ORDER BY DESC(?count)
 """
 
 [[tabGroups.tabs]]
-name="Observation of a station (siemens->Galilei_Palermo)"
+name="Observation of a plaftorm (siemens->Galilei_Palermo)"
 query="""
-PREFIX : <http://noi.example.org/ontology/odh#>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT ?t ?v {
-  FILTER (?s = <https://kg.opendatahub.bz.it/data/station/342142>) # siemens->Galilei_Palermo
-  ?s a :Station .
-  ?s rdfs:label ?wktLabel .
-  OPTIONAL {  ?s sosa:hosts/sosa:madeObservation ?o . ?o sosa:hasResult ?r .
-  ?r qudt:numericValue ?v .
-  ?o sosa:resultTime ?t .
+  BIND (<https://kg.opendatahub.bz.it/data/station/342142> AS ?s) # siemens->Galilei_Palermo
+  BIND (<https://kg.opendatahub.bz.it/data/property/54> AS ?prop) # Velocita media dei veicoli
+  ?s a sosa:Platform .
+  ?s sosa:hosts/sosa:madeObservation ?o . 
   ?o sosa:observedProperty ?prop .
-  FILTER (?prop = <https://kg.opendatahub.bz.it/data/property/54>) # Velocita media dei veicoli
-  ?prop rdfs:comment ?pc .
-  ?prop :hasUnit ?unit .
-  }
-  OPTIONAL {?s geo:defaultGeometry ?g .
-  ?g geo:asWKT ?wkt .}
+  ?o sosa:hasResult/qudt:numericValue ?v .
+  ?o sosa:resultTime ?t .
 }
+LIMIT 100
 """
 
 [[tabGroups.tabs]]
@@ -687,12 +652,12 @@ name="Municipality"
 query="""
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX schema: <http://schema.org/>
 
 SELECT * {
     ?s a :Municipality .
-    ?s rdfs:label ?wktLabel .
+    ?s schema:name ?wktLabel .
     FILTER(LANG(?wktLabel)='it') .
     OPTIONAL {
         ?s geo:defaultGeometry ?g .
@@ -705,11 +670,10 @@ SELECT * {
 
 name="Non-public weather observations"
 query="""
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX qudt: <http://qudt.org/schema/qudt#>
+PREFIX schema: <http://schema.org/>
 
 SELECT * WHERE {
   ?s a :WeatherStation ; :hasOrigin ?origin .
@@ -718,7 +682,7 @@ SELECT * WHERE {
   ?o sosa:hasResult ?r .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
-  ?prop rdfs:comment ?pc .
+  ?prop schema:description ?pc .
   ?r qudt:numericValue ?v .
 }
 LIMIT 10
@@ -758,8 +722,6 @@ WHERE {
 [[tabGroups.tabs]]
 name="Nearby Restaurants and Weather Stations, and observations"
 query="""
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX schema: <http://schema.org/>
@@ -787,7 +749,7 @@ WHERE {
   ?o sosa:hasResult ?r .
   ?o sosa:resultTime ?t .
   ?o sosa:observedProperty ?prop .
-  ?prop rdfs:comment ?pc ; a :WaterTemperature .
+  ?prop schema:description ?pc ; a :WaterTemperature .
   ?r qudt:numericValue ?v .
 }
 """
@@ -795,8 +757,6 @@ WHERE {
 [[tabGroups.tabs]]
 name="Restaurants nearby water above 18°C"
 query="""
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX schema: <http://schema.org/>
