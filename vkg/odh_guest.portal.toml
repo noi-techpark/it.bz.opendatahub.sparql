@@ -552,6 +552,7 @@ SELECT * WHERE {
 [[tabGroups.tabs]]
 name="Observations"
 query="""
+PREFIX time: <http://www.w3.org/2006/time#>
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX sosa: <http://www.w3.org/ns/sosa/>
@@ -559,18 +560,15 @@ PREFIX qudt: <http://qudt.org/schema/qudt#>
 PREFIX schema: <http://schema.org/>
 
 SELECT * WHERE {
-?s a sosa:Sensor .
-?s sosa:isHostedBy ?p.
-?p geo:defaultGeometry/geo:asWKT ?wkt .
 ?s sosa:madeObservation ?o .
-?o sosa:hasResult ?r .
+?o sosa:hasResult/qudt:numericValue ?v .
 ?o sosa:resultTime ?t .
 ?o sosa:observedProperty ?prop .
 ?prop schema:description ?pc .
-?r qudt:numericValue ?v .
-BIND(CONCAT( ?pc, ": ", str(?v)) AS ?wktLabel)
+?o sosa:phenomenonTime [ time:hasBeginning/time:inXSDDateTime ?beginning ; time:hasEnd/time:inXSDDateTime ?end  ] .
+?o :hasDurationInSeconds ?duration .  
 }
-LIMIT 1000
+LIMIT 100
 """
 
 [[tabGroups.tabs]]

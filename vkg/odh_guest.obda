@@ -17,6 +17,7 @@ qudt-1-1:   	http://qudt.org/1.1/schema/qudt#
 qudt-unit:   	http://qudt.org/vocab/unit#
 qudt-1-1-unit:	http://qudt.org/1.1/vocab/unit#
 sioc: 			http://rdfs.org/sioc/ns#
+time:			http://www.w3.org/2006/time#
 
 [MappingDeclaration] @collection [[
 mappingId	Campground
@@ -343,8 +344,39 @@ target		data:sensor/{type_id}/{station_id} a sosa:Sensor ; sosa:isHostedBy data:
 source		SELECT * FROM intimev2.measurement
 
 mappingId	measurement_observation
-target		data:latest_observation/{me_id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{me_id}; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} .
-source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurement me
+target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} ; sosa:phenomenonTime  data:phenomenonTime/latest_observation/{id} ; :hasDurationInSeconds {period} .
+source		SELECT me.id AS id, timestamp, double_value, type_id, station_id, period FROM intimev2.station s, intimev2.measurement me
+            WHERE s.id = me.station_id AND
+                  (
+                    -- station types that are always open, regardless of the origin
+                            s.stationtype in (
+                                              'NOI-Place',
+                                              'CreativeIndustry',
+                                              'BluetoothStation',
+                                              'CarpoolingHub',
+                                              'CarpoolingService',
+                                              'CarpoolingUser',
+                                              'CarsharingCar',
+                                              'CarsharingStation',
+                                              'EChargingPlug',
+                                              'EChargingStation',
+                                              'Streetstation',
+                                              'Culture')
+                        -- station types that are only partly open, constrained by the origin
+                        or (s.stationtype = 'Bicycle' and s.origin in ('ALGORAB', 'BIKE_SHARING_MERANO'))
+                        or (s.stationtype = 'BikesharingStation' and s.origin = 'ALGORAB')
+                        or (s.stationtype = 'EnvironmentStation' and s.origin = 'APPATN-open')
+                        or (s.stationtype = 'LinkStation' and (s.origin is null or s.origin = 'NOI'))
+                        or (s.stationtype = 'MeteoStation' and s.origin in ('meteotrentino', 'SIAG'))
+                        or (s.stationtype = 'ParkingStation' and s.origin in ('FAMAS', 'FBK', 'Municipality Merano'))
+                        or (s.stationtype = 'RWISstation' and s.origin = 'InfoMobility')
+                        -- special rules
+                        or (s.origin = 'APPABZ' and me.period = 3600)
+                    )
+
+mappingId	latest_measurement_phenomenon
+target		data:phenomenonTime/latest_observation/{id} a time:Interval ; time:hasBeginning data:beginning/latest_observation/{id} ; time:hasEnd data:end/latest_observation/{id} . data:beginning/latest_observation/{id} a time:Instant ; time:inXSDDateTime {beginning_ts} . data:end/latest_observation/{id} a time:Instant ; time:inXSDDateTime {timestamp} .
+source		SELECT me.id AS id, timestamp, (timestamp - concat("period", ' seconds')::interval)::timestamp as beginning_ts FROM intimev2.station s, intimev2.measurement me
             WHERE s.id = me.station_id AND
                   (
                     -- station types that are always open, regardless of the origin
@@ -374,10 +406,41 @@ source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM
                     )
 
 mappingId	measurement_history_observation
-target		data:observation/{me_id} a :HistoricalObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:observation/result/{me_id}; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} .
-source		SELECT me.id AS me_id, timestamp, double_value, type_id, station_id FROM intimev2.station s, intimev2.measurementhistory me
+target		data:observation/{id} a :HistoricalObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} ; ; sosa:phenomenonTime  data:phenomenonTime/observation/{id} ; :hasDurationInSeconds {period} .
+source		SELECT me.id AS id, timestamp, double_value, type_id, station_id, period FROM intimev2.station s, intimev2.measurementhistory me
             WHERE s.id = me.station_id AND
                 (
+                    -- station types that are always open, regardless of the origin
+                            s.stationtype in (
+                                              'NOI-Place',
+                                              'CreativeIndustry',
+                                              'BluetoothStation',
+                                              'CarpoolingHub',
+                                              'CarpoolingService',
+                                              'CarpoolingUser',
+                                              'CarsharingCar',
+                                              'CarsharingStation',
+                                              'EChargingPlug',
+                                              'EChargingStation',
+                                              'Streetstation',
+                                              'Culture')
+                        -- station types that are only partly open, constrained by the origin
+                        or (s.stationtype = 'Bicycle' and s.origin in ('ALGORAB', 'BIKE_SHARING_MERANO'))
+                        or (s.stationtype = 'BikesharingStation' and s.origin = 'ALGORAB')
+                        or (s.stationtype = 'EnvironmentStation' and s.origin = 'APPATN-open')
+                        or (s.stationtype = 'LinkStation' and (s.origin is null or s.origin = 'NOI'))
+                        or (s.stationtype = 'MeteoStation' and s.origin in ('meteotrentino', 'SIAG'))
+                        or (s.stationtype = 'ParkingStation' and s.origin in ('FAMAS', 'FBK', 'Municipality Merano'))
+                        or (s.stationtype = 'RWISstation' and s.origin = 'InfoMobility')
+                        -- special rules
+                        or (s.origin = 'APPABZ' and me.period = 3600)
+                    )
+
+mappingId	hist_measurement_phenomenon
+target		data:phenomenonTime/observation/{id} a time:Interval ; time:hasBeginning data:beginning/observation/{id} ; time:hasEnd data:end/observation/{id} . data:beginning/observation/{id} a time:Instant ; time:inXSDDateTime {beginning_ts} . data:end/observation/{id} a time:Instant ; time:inXSDDateTime {timestamp} .
+source		SELECT me.id AS id, timestamp, (timestamp - concat("period", ' seconds')::interval)::timestamp as beginning_ts FROM intimev2.station s, intimev2.measurementhistory me
+            WHERE s.id = me.station_id AND
+                  (
                     -- station types that are always open, regardless of the origin
                             s.stationtype in (
                                               'NOI-Place',
