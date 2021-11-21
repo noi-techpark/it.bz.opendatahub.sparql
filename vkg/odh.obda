@@ -344,20 +344,24 @@ target		data:sensor/{type_id}/{station_id} a sosa:Sensor ; sosa:isHostedBy data:
 source		SELECT * FROM intimev2.measurement
 
 mappingId	measurement_observation
-target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} ; sosa:phenomenonTime  data:phenomenonTime/latest_observation/{id} ; :hasDurationInSeconds {period} .
+target		data:latest_observation/{id} a :LatestObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:latest_observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} ; :hasPeriodInSeconds {period} .
 source		SELECT * FROM intimev2.measurement
 
-mappingId	latest_measurement_phenomenon
-target		data:phenomenonTime/latest_observation/{id} a time:Interval ; time:hasBeginning data:beginning/latest_observation/{id} ; time:hasEnd data:end/latest_observation/{id} . data:beginning/latest_observation/{id} a time:Instant ; time:inXSDDateTime {beginning_ts} . data:end/latest_observation/{id} a time:Instant ; time:inXSDDateTime {timestamp} .
-source		SELECT id, timestamp, (timestamp - concat("period", ' seconds')::interval)::timestamp as beginning_ts FROM intimev2.measurement
+mappingId	latest_measurement_phenomenon_mean
+target		data:latest_observation/{id} sosa:phenomenonTime  data:phenomenonTime/latest_observation/{id} . data:phenomenonTime/latest_observation/{id} a time:Interval ; time:hasBeginning data:beginning/latest_observation/{id} ; time:hasEnd data:end/latest_observation/{id} . data:beginning/latest_observation/{id} a time:Instant ; time:inXSDDateTime {beginning_ts} . data:end/latest_observation/{id} a time:Instant ; time:inXSDDateTime {timestamp} .
+source		SELECT me.id AS id, timestamp, (timestamp - concat("period", ' seconds')::interval)::timestamp as beginning_ts 
+            FROM intimev2.measurement me, intimev2.type t 
+			WHERE me.type_id=t.id AND t.rtype IN ('Mean', 'Mittelwerte')
 
 mappingId	measurement_history_observation
-target		data:observation/{id} a :HistoricalObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} ; ; sosa:phenomenonTime  data:phenomenonTime/observation/{id} ; :hasDurationInSeconds {period} .
+target		data:observation/{id} a :HistoricalObservation ; sosa:resultTime {timestamp} ; sosa:hasResult data:observation/result/{id} ; sosa:observedProperty data:property/{type_id} ; sosa:madeBySensor data:sensor/{type_id}/{station_id} ; :hasPeriodInSeconds {period} .
 source		SELECT * FROM intimev2.measurementhistory
 
-mappingId	hist_measurement_phenomenon
-target		data:phenomenonTime/observation/{id} a time:Interval ; time:hasBeginning data:beginning/observation/{id} ; time:hasEnd data:end/observation/{id} . data:beginning/observation/{id} a time:Instant ; time:inXSDDateTime {beginning_ts} . data:end/observation/{id} a time:Instant ; time:inXSDDateTime {timestamp} .
-source		SELECT id, timestamp, (timestamp - concat("period", ' seconds')::interval)::timestamp as beginning_ts FROM intimev2.measurementhistory
+mappingId	hist_measurement_phenomenon_mean
+target		data:observation/{id} sosa:phenomenonTime data:phenomenonTime/observation/{id} . data:phenomenonTime/observation/{id} a time:Interval ; time:hasBeginning data:beginning/observation/{id} ; time:hasEnd data:end/observation/{id} . data:beginning/observation/{id} a time:Instant ; time:inXSDDateTime {beginning_ts} . data:end/observation/{id} a time:Instant ; time:inXSDDateTime {timestamp} .
+source		SELECT me.id AS id, timestamp, (timestamp - concat("period", ' seconds')::interval)::timestamp as beginning_ts 
+            FROM intimev2.measurementhistory me, intimev2.type t 
+			WHERE me.type_id=t.id AND t.rtype IN ('Mean', 'Mittelwerte')
 
 mappingId	result_observation
 target		data:latest_observation/result/{id} a sosa:Result ; qudt:numericValue {double_value}^^xsd:double . 
