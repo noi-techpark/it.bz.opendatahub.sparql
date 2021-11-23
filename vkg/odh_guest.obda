@@ -196,7 +196,7 @@ target		data:address/gastronomy/{Id} a schema:PostalAddress ; schema:streetAddre
 source		SELECT * FROM v_gastronomiesopen
 
 mappingId	Food establishment-municipality
-target		odh:food-establishments/{Id} schema:containedInPlace odh:municipalities/{IstatNumber} ; sioc:has_container <https://kg.opendatahub.bz.it/municipalities/> . 
+target		odh:food-establishments/{Id} schema:containedInPlace odh:municipalities/{IstatNumber} . 
 source		SELECT a."Id", m."IstatNumber" FROM "v_gastronomiesopen" a, "v_municipalitiesopen" m WHERE a."LocationInfo-MunicipalityInfo-Id" = m."Id"
 
 mappingId	Restaurants
@@ -1020,7 +1020,7 @@ target		odh:lodging-businesses/{Id} schema:containedInPlace odh:municipalities/{
 source		SELECT a."Id", m."IstatNumber" FROM "v_accommodationsopen" a, "v_municipalitiesopen" m WHERE a."LocationInfo-MunicipalityInfo-Id" = m."Id" 
 
 mappingId	v_municipalitiesopen
-target		odh:municipalities/{IstatNumber} a :Municipality ; schema:name {Detail-en-Title}@en , {Detail-it-Title}@it , {Detail-de-Title}@de ; rdfs:label {Detail-en-Title}@en , {Detail-it-Title}@it , {Detail-de-Title}@de ; :hasIStatCode {IstatNumber}^^xsd:integer ; :populationCount {Inhabitants}^^xsd:integer ; schema:postalCode {Plz} .
+target		odh:municipalities/{IstatNumber} a :Municipality ; schema:name {Detail-en-Title}@en , {Detail-it-Title}@it , {Detail-de-Title}@de ; rdfs:label {Detail-en-Title}@en , {Detail-it-Title}@it , {Detail-de-Title}@de ; :hasIStatCode {IstatNumber}^^xsd:integer ; :populationCount {Inhabitants}^^xsd:integer ; schema:postalCode {Plz} ; sioc:has_container <https://kg.opendatahub.bz.it/municipalities/> .
 source		SELECT * FROM "v_municipalitiesopen"
 
 mappingId	Feature of Interest
