@@ -46,7 +46,7 @@ services:
       ]
     #entrypoint: "tail -f /dev/null"
   ontop-guest:
-    image: ontop/ontop-endpoint:4.1.0
+    image: ontop/ontop-endpoint:4.2-SNAPSHOT
     env_file: .env
     restart: unless-stopped
     environment:
@@ -86,8 +86,6 @@ services:
         "--",
         "/opt/ontop/entrypoint.sh",
       ]
-    ports:
-      - "8081:8080"
   nginx:
     build:
       context: ./
