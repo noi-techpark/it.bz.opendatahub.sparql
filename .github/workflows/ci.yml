@@ -2,11 +2,11 @@ name: ci it.bz.opendatahub.sparql
 
 on:
   push:
-    branches: [ master, development ]
+    branches: [ master, development, splitting ]
     paths:
       - "!README.md"
   pull_request:
-    branches: [ master, development ]
+    branches: [ master, development, splitting ]
     paths:
       - "!README.md"
       
