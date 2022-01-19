@@ -1,6 +1,7 @@
 # odh-vkg
 
-Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH).
+Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH) powered by [Ontop](https://ontop-vkg.org) and curated by [Ontopic](https://ontopic.ai).
+
 
 **Table of contents**
 - [odh-vkg](#odh-vkg)
