@@ -2,6 +2,8 @@
 
 Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH).
 
+[![ci it.bz.opendatahub.sparql](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/ci.yml/badge.svg)](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/ci.yml)
+
 **Table of contents**
 - [odh-vkg](#odh-vkg)
 	- [Getting started](#getting-started)
