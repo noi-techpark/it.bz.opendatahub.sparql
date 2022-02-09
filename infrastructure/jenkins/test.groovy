@@ -49,6 +49,8 @@ pipeline {
         KEYCLOAK_CLIENT_SECRET = credentials('eu.testingmachine.opendatahub.sparql.KEYCLOAK_CLIENT_SECRET')
         KEYCLOAK_ALLOWED_GROUPS = "/VKG Full Access"
         AUTH_PROXY_COOKIE_SECRET = credentials('eu.testingmachine.opendatahub.sparql.OAUTH2_COOKIE_SECRET')
+
+		GOOGLE_ANALYTICS_ID = "G-16GJYCR5YT"
     }
 
     stages {
@@ -100,6 +102,9 @@ pipeline {
                     sed -i -e "s%\\(jdbc.user\\s*=\\).*\\$%\\1${VKG_POSTGRES_USER_READONLY}%" vkg/odh.docker.properties
                     sed -i -e "s%\\(jdbc.password\\s*=\\).*\\$%\\1${VKG_POSTGRES_PASSWORD_READONLY}%" vkg/odh.docker.properties
                     sed -i -e "s%\\(ontop.query.defaultTimeout\\s*=\\).*\\$%\\1${ONTOP_QUERY_TIMEOUT}%" vkg/odh.docker.properties
+
+					echo "GOOGLE_ANALYTICS_ID=${GOOGLE_ANALYTICS_ID}" > website/.env
+					(cd website/utils && ./dotenv-sed.sh)
                 '''
             }
         }
