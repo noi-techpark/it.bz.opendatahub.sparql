@@ -1,6 +1,7 @@
 # odh-vkg
 
-Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH).
+Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH) powered by [Ontop](https://ontop-vkg.org) and curated by [Ontopic](https://ontopic.ai).
+
 
 [![CI](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/ci.yml/badge.svg)](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/ci.yml)
 
@@ -59,8 +60,11 @@ cd odh-vkg/
 1. Create the `.env` file in which, amongst all, the SPARQL endpoint port and
    the PG external port (for debugging purposes) are specified
    * `cp .env.example .env`
-2. Start the Docker container (see [the dedicated section](#Start-and-stop-the-containers))
-3. Visit the SPARQL endpoint
+2. Create the `.env` file for the website
+    * `cp ./website/.env.example ./website/.env`
+    * Run the script `cd ./website/utils && .dotenv-sed.sh` to introduce the environment variables in javascript
+3. Start the Docker container (see [the dedicated section](#Start-and-stop-the-containers))
+4. Visit the SPARQL endpoint
    * Now we can open the link <http://localhost:8080/portal/> in the browser and test
      some SPARQL queries
    * Note that synchronisation between the master and the slave takes some time.

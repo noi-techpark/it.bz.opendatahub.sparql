@@ -46,7 +46,7 @@ services:
       ]
     #entrypoint: "tail -f /dev/null"
   ontop-guest:
-    image: ontop/ontop-endpoint:4.2-SNAPSHOT
+    image: ontop/ontop-endpoint:4.2.0
     env_file: .env
     restart: unless-stopped
     environment:

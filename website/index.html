@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,6 +15,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./css/index.css" />
+	  <!-- Google Analytics integration -->
+  	<script async src="https://www.googletagmanager.com/gtag/js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
@@ -21,18 +24,29 @@
 
     <link href="yasgui/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="yasgui/yasgui.min.js"></script>
+	  <script src="./js/dotenv.js"></script>
 
     <!-- new version of yasgui, cdn -->
     <!-- <link href="https://unpkg.com/@triply/yasgui/build/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@triply/yasgui/build/yasgui.min.js"></script> -->
 
-	  <script src="queries.js"></script>
-    <script src="./index.js"></script>
+	  <script src="./js/queries.js"></script>
+    <script src="./js/index.js"></script>
   </head>
   <body>
 
     <header>
       <div id="header-contents">
+		  <div class="alert alert-cookie" style="display: none;">
+			  <p>
+				  <b>Cookies</b>
+			  </p>
+			  <p>
+				  This site or third-party tools used by this make use of cookies necessary for the operation and useful for the purposes described in the cookie policy. If you want to learn more or opt out of all or some cookies, consult the cookie policy. By closing
+				  this banner, scrolling this page, clicking on a link or continuing navigation in any other way, you consent to the use of cookies.
+			  </p>
+			  <a class="button">Accept</a>
+		  </div>
         <a id="header-logo" href="https://opendatahub.bz.it/" target="_blank" rel="noopener noreferrer">
           <img src="./images/logo-open-data-hub-black.png" alt="OpenDataHub" />
         </a>
@@ -57,6 +71,7 @@
 
 		  </div>
       </div>
+
     </header>
 
     <main>
@@ -669,6 +684,7 @@ LIMIT 10
     </main>
 
     <footer>
+
       <div id="footer-support">
         <div id="footer-support-subtitle">Support</div>
         <div id="footer-support-title">Looking for help?</div>
@@ -764,7 +780,8 @@ LIMIT 10
         </div>
       </div>
       <div id="footer-copyright">
-		  NOI AG - Via Volta 13/A, I-39100 Bolzano - VAT No.: 02595720216 - Endowment capital 110.740.000 € - Privacy
+      <span>NOI AG - Via Volta 13/A, I-39100 Bolzano - VAT No.: 02595720216 - Endowment capital 110.740.000 € - Privacy</span>
+      <span style="float:right" >Virtual Knowledge Graph powered by <a style="text-decoration: none; font-weight:  bold; color: #fff" href="https://ontop-vkg.org">Ontop</a> and curated by <a href="https://ontopic.ai"><img style="height: 0.7em" src="./images/ontopic-lungo01-white.svg" alt="Ontopic" /></a></span>
       </div>
     </footer>
 
@@ -781,7 +798,8 @@ LIMIT 10
       document.getElementsByTagName("kg-widget")[0].setAttribute("endpoint", endpointUrl);
     </script>
 
-    <script src="./graph.js"></script>
+    <script src="./js/graph.js"></script>
+	<script src="./js/cookie.js"></script>
 	<script src="https://cdn.webcomponents.opendatahub.bz.it/dist/567cb2e2-3e5d-421a-bf85-b8ecc500aab9/v0.7.0/webcomp-kg.js"></script>
   </body>
 </html>

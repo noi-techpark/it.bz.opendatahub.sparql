@@ -220,3 +220,4 @@ infrastructure/utils/*.sql
 dbeaver/
 infrastructure/utils/flyway-*.conf
 infrastructure/utils/sql-scripts/*.sql
+security/
