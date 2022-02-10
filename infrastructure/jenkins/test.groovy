@@ -103,8 +103,8 @@ pipeline {
                     sed -i -e "s%\\(jdbc.password\\s*=\\).*\\$%\\1${VKG_POSTGRES_PASSWORD_READONLY}%" vkg/odh.docker.properties
                     sed -i -e "s%\\(ontop.query.defaultTimeout\\s*=\\).*\\$%\\1${ONTOP_QUERY_TIMEOUT}%" vkg/odh.docker.properties
 
-					echo "GOOGLE_ANALYTICS_ID=${GOOGLE_ANALYTICS_ID}" > website/.env
-					(cd website/utils && ./dotenv-sed.sh)
+                    echo "GOOGLE_ANALYTICS_ID=${GOOGLE_ANALYTICS_ID}" > website/.env
+                    (cd website/utils && ./dotenv-sed.sh)
                 '''
             }
         }
