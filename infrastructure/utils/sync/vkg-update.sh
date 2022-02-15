@@ -4,10 +4,10 @@ set -euo pipefail
 export LC_ALL=en_US.UTF-8
 
 HOSTVKG="prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-DBVKG="test"
+DBVKG="prod"
 USERVKG="vkguser"
 
-PSQLVKG="psql -h $HOSTVKG -p 5432 -U $USERVKG $DBVKG --csv -v ON_ERROR_STOP=on -t -1 -c "
+PSQLVKG="psql -h $HOSTVKG -p 5432 -U $USERVKG $DBVKG --csv -v ON_ERROR_STOP=on -t -1 "
 
 OUT="DUMP"
 mkdir -p $OUT/DONE
@@ -15,26 +15,26 @@ mkdir -p $OUT/DONE
 function upsert() {
     TBL=$1
     shift
-    ls "$@"  &>/dev/null || {
-        echo "..... UPSERT: Skipping... No file found for table $TBL with glob $*"
+    GLOB=$@
+    ls $GLOB &>/dev/null || {
+        echo "..... UPSERT: Skipping... No file found for table $TBL with glob $GLOB"
         return
     }
-    GLOB=$*
-    $PSQLVKG "create table if not exists intimev2.${TBL}_tmp as table intimev2.${TBL} with no data"
-    for FILE in $GLOB; do
+    $PSQLVKG -c "create table if not exists intimev2.${TBL}_tmp as table intimev2.${TBL} with no data"
+    for FILE in $(ls $GLOB); do
         echo "..... UPSERT: Processing $FILE..."
-        $PSQLVKG "truncate intimev2.${TBL}_tmp;"
-        $PSQLVKG "copy intimev2.${TBL}_tmp from stdin with delimiter ',' csv;" < "$FILE"
-        QRY=$(while read -r data; do echo "$data"; done)
-        $PSQLVKG "$QRY"
-        mv "$FILE" $OUT/DONE
+        $PSQLVKG -c "truncate intimev2.${TBL}_tmp;"
+        cat $FILE | $PSQLVKG -c "copy intimev2.${TBL}_tmp from stdin with delimiter ',' csv;"
+        QRY=$(while read data; do echo "$data"; done)
+        $PSQLVKG -c "$QRY"
+        mv $FILE $OUT/DONE
         echo "..... UPSERT: READY."
     done
-    $PSQLVKG "drop table intimev2.${TBL}_tmp"
+    $PSQLVKG -c "drop table intimev2.${TBL}_tmp"
 }
 
 #
-# type_metadata
+# type_metadata; FIXME: it is possible that the foreign key to station is not yet present and vice-versa
 #
 upsert "type_metadata" $OUT/type_metadata-*.csv << EOF
     insert into intimev2.type_metadata
@@ -45,7 +45,7 @@ EOF
 #
 # type
 #
-upsert "type" $OUT/type.csv << EOF
+upsert "type" $PWD/$OUT/type.csv << EOF
     update intimev2.type
     set
         cname = type_tmp.cname,
@@ -62,7 +62,9 @@ upsert "type" $OUT/type.csv << EOF
 EOF
 
 #
-# metadata
+# metadata; FIXME: it is possible that the foreign key to station is not yet present and vice-versa
+# Example error: ERROR:  insert or update on table "metadata" violates foreign key constraint "fk_metadata_station_id_station_pk"
+#                DETAIL:  Key (station_id)=(345678) is not present in table "station".
 #
 upsert "metadata" $OUT/metadata-*.csv << EOF
     insert into intimev2.metadata table intimev2.metadata_tmp on conflict do nothing;
@@ -71,7 +73,7 @@ EOF
 #
 # station
 #
-upsert "station" $OUT/station.csv << EOF
+upsert "station" $PWD/$OUT/station.csv << EOF
     update intimev2.station
     set
         active = tmp.active,
@@ -97,7 +99,7 @@ EOF
 function copy_delete_insert() {
 	TBL=$1
     shift
-    upsert "$TBL" "$@" << EOF
+    upsert "$TBL" $@ << EOF
 	    delete from intimev2.$TBL;
         insert into intimev2.$TBL table intimev2.${TBL}_tmp
 EOF
@@ -106,7 +108,7 @@ EOF
 function copy_insert() {
 	TBL=$1
     shift
-	upsert "$TBL" "$@" << EOF
+	upsert "$TBL" $@ << EOF
         insert into intimev2.$TBL table intimev2.${TBL}_tmp on conflict do nothing
 EOF
 }

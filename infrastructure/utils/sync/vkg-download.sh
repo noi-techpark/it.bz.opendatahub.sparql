@@ -9,7 +9,7 @@ USER="vkgreplicate"
 PSQL="psql -h $HOST -p 5432 -U $USER $DB --csv -v ON_ERROR_STOP=on -t -1 "
 
 HOSTVKG="prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-DBVKG="test"
+DBVKG="prod"
 USERVKG="vkguser"
 PSQLVKG="psql -h $HOSTVKG -p 5432 -U $USERVKG $DBVKG --csv -v ON_ERROR_STOP=on -t -1 "
 
@@ -87,7 +87,7 @@ function download() {
     echo "START = $START; END = $END"
     while ((i < END)); do
         FROM=$i
-        if ((i+STEP-1 > END)); then 
+        if ((i+STEP-1 > END)); then
             TO=$END
         else
             TO=$((i+STEP))
@@ -97,7 +97,7 @@ function download() {
             echo Skipping "$OUTFILE"
         else
             echo "select $TABLE FROM $FROM TO $TO --> $OUTFILE"
-            $PSQL > "$OUTFILE" -c "select * from $TABLE where id > $FROM and id <= $TO" 
+            $PSQL > "$OUTFILE" -c "select * from $TABLE where id > $FROM and id <= $TO"
             echo "$TO" > "$OUT/${TABLE}_latest.csv"
         fi
         ((i += STEP))
@@ -113,4 +113,3 @@ rm -f "$OUTLINK"
 ln -s "$OUT" "$OUTLINK"
 
 exit 0
-
