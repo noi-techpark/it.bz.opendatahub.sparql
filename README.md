@@ -3,7 +3,7 @@
 Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH) powered by [Ontop](https://ontop-vkg.org) and curated by [Ontopic](https://ontopic.ai).
 
 
-[![CI](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/ci.yml/badge.svg)](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/ci.yml)
+[![CI](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/main.yml/badge.svg)](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/main.yml)
 
 **Table of contents**
 - [odh-vkg](#odh-vkg)
@@ -19,6 +19,7 @@ Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH) powered by [Ontop](ht
 			- [Authentication](#authentication)
 	- [Deployment at NOI](#deployment-at-noi)
 			- [Database synchronization](#database-synchronization)
+	- [Endpoints](#endpoints)
 	- [Maintenance](#maintenance)
 		- [Schema evolution](#schema-evolution)
 		- [Test database images](#test-database-images)
