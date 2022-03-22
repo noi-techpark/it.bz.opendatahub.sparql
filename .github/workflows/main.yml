@@ -45,6 +45,9 @@ jobs:
         env:
           X_COMPOSE_PROJECT_NAME: ${{ env.PROJECT_NAME }}
           X_SERVER_PORT: "1008"
+          X_DOCKER_IMAGE_NGINX: ${{ env.DOCKER_IMAGE_NGINX }}
+          X_DOCKER_IMAGE_ONTOP: ${{ env.DOCKER_IMAGE_ONTOP }}
+          X_DOCKER_TAG: ${{ env.DOCKER_TAG }}
 
           # TOURISM TEST DB
           X_FLYWAY_PLACEHOLDERS_TOURISM_DB: "tourism"

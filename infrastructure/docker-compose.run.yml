@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   ontop:
-    image: ${DOCKER_IMAGE_ONTOP}:${DOCKER_TAG}-ontop
+    image: ${DOCKER_IMAGE_ONTOP}:${DOCKER_TAG}
     restart: unless-stopped
     env_file:
       - .env
@@ -17,7 +17,7 @@ services:
       ONTOP_CONTEXTS: /opt/ontop/input/predefined/contexts.json
       ONTOP_CORS_ALLOWED_ORIGINS: "*"
   ontop-guest:
-    image: ${DOCKER_IMAGE_ONTOP}:${DOCKER_TAG}-ontop
+    image: ${DOCKER_IMAGE_ONTOP}:${DOCKER_TAG}
     restart: unless-stopped
     env_file:
       - .env
@@ -38,7 +38,7 @@ services:
       retries: 5
       start_period: 30s
   nginx:
-    image: ${DOCKER_IMAGE_NGINX}:${DOCKER_TAG}-nginx
+    image: ${DOCKER_IMAGE_NGINX}:${DOCKER_TAG}
     restart: unless-stopped
     env_file:
       - .env
