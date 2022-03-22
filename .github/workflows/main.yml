@@ -1,11 +1,18 @@
-name: CI
+name: CI/CD
 
 on:
   push:
   pull_request:
 
+env:
+  PROJECT_NAME: odh-vkg
+  DOCKER_REGISTRY_HOST: ghcr.io
+  DOCKER_IMAGE_ONTOP:  ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}-ontop
+  DOCKER_IMAGE_NGINX:  ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}-nginx
+  DOCKER_TAG: ${{ github.sha }}
+
 jobs:
-  build:
+  test:
     runs-on: ubuntu-20.04
 
     steps:
@@ -17,3 +24,128 @@ jobs:
       - name: Test
         run: docker-compose --no-ansi build --pull
 
+  deploy-test:
+    runs-on: ubuntu-20.04
+    if: github.ref == 'refs/heads/main'
+    needs: test
+    concurrency: deploy-test
+    env:
+      VKG_POSTGRES_USER_READONLY: "vkguser_readonly"
+      ONTOP_QUERY_TIMEOUT: 15
+      VKG_POSTGRES_HOST: "prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+      VKG_POSTGRES_DB: "test"
+      GOOGLE_ANALYTICS_ID: "G-16GJYCR5YT"
+      
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Create .env file
+        uses: noi-techpark/github-actions/env-file@v2
+        env:
+          X_COMPOSE_PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          X_SERVER_PORT: "1008"
+
+          # TOURISM TEST DB
+          X_FLYWAY_PLACEHOLDERS_TOURISM_DB: "tourism"
+          X_FLYWAY_PLACEHOLDERS_TOURISM_HOST: "prod-postgres-tourism-2.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+          X_FLYWAY_PLACEHOLDERS_TOURISM_USER: "vkgreplicate"
+          X_FLYWAY_PLACEHOLDERS_TOURISM_PASSWORD: ${{ secrets.FLYWAY_PLACEHOLDERS_TOURISM_PASSWORD }}
+          X_FLYWAY_PLACEHOLDERS_TOURISM_PUBLICATION_NAME: "vkgpublication"
+          X_FLYWAY_PLACEHOLDERS_TOURISM_SUBSCRIPTION_NAME: "vkg1_tourism_test_subscription"
+          X_FLYWAY_PLACEHOLDERS_TOURISM_SCHEMA_VKG: "public"
+
+          # MOBILITY TEST DB
+          X_FLYWAY_PLACEHOLDERS_MOBILITY_DB: "bdp"
+          X_FLYWAY_PLACEHOLDERS_MOBILITY_HOST: "test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+          X_FLYWAY_PLACEHOLDERS_MOBILITY_USER: "vkgreplicate"
+          X_FLYWAY_PLACEHOLDERS_MOBILITY_PASSWORD: ${{ secrets.FLYWAY_PLACEHOLDERS_MOBILITY_PASSWORD }}
+          X_FLYWAY_PLACEHOLDERS_MOBILITY_PUBLICATION_NAME: "vkgpublication"
+          X_FLYWAY_PLACEHOLDERS_MOBILITY_SUBSCRIPTION_NAME: "vkg1_mobility_test_subscription"
+          X_FLYWAY_PLACEHOLDERS_MOBILITY_SCHEMA_VKG: "intimev2"
+
+          # VIRTUAL KNOWLEDGE GRAPH DB
+          X_VKG_POSTGRES_HOST: ${{ env.VKG_POSTGRES_HOST }}
+          X_VKG_POSTGRES_DB: ${{ env.VKG_POSTGRES_DB }}
+          X_VKG_POSTGRES_USER: "vkguser"
+          X_VKG_POSTGRES_PASSWORD: ${{ secrets.VKG_POSTGRES_PASSWORD }}
+          X_VKG_POSTGRES_USER_READONLY: ${{ env.VKG_POSTGRES_USER_READONLY }}
+
+          X_FLYWAY_URL: "jdbc:postgresql://${{ env.VKG_POSTGRES_HOST }}/${{ env.VKG_POSTGRES_DB }}"
+          X_FLYWAY_USER: "${{ secrets.VKG_POSTGRES_USER }}"
+          X_FLYWAY_PASSWORD: "${{ secrets.VKG_POSTGRES_PASSWORD }}"
+          X_FLYWAY_PLACEHOLDERS_VKG_USER_READONLY: ${{ env.VKG_POSTGRES_USER_READONLY }}
+
+          # Authentication proxy
+          X_KEYCLOAK_REALM_URL: "https://auth.opendatahub.testingmachine.eu/auth/realms/noi"
+          X_KEYCLOAK_DOMAIN_NAME: "auth.opendatahub.testingmachine.eu"
+          X_KEYCLOAK_CLIENT_ID: "eu.testingmachine.opendatahub.sparql"
+          X_KEYCLOAK_CLIENT_SECRET: ${{ secrets.KEYCLOAK_CLIENT_SECRET }}
+          X_KEYCLOAK_ALLOWED_GROUPS: "/VKG Full Access"
+          X_AUTH_PROXY_COOKIE_SECRET: ${{ secrets.AUTH_PROXY_COOKIE_SECRET }}
+
+      - name: Configure odh.docker.properties
+        run: |
+            sed -i -e 's%\\(jdbc.url\\s*=\\).*\\$%\\1jdbc\\\\\\\\:postgresql\\\\\\\\://${{ env.VKG_POSTGRES_HOST }}/${{ env.VKG_POSTGRES_DB }}%' vkg/odh.docker.properties
+            sed -i -e 's%\\(jdbc.user\\s*=\\).*\\$%\\1${{ env.VKG_POSTGRES_USER_READONLY }}%' vkg/odh.docker.properties
+            sed -i -e 's%\\(jdbc.password\\s*=\\).*\\$%\\1${{ secrets.VKG_POSTGRES_PASSWORD_READONLY }}%' vkg/odh.docker.properties
+            sed -i -e 's%\\(ontop.query.defaultTimeout\\s*=\\).*\\$%\\1${{ env.ONTOP_QUERY_TIMEOUT }}%' vkg/odh.docker.properties
+
+      - name: Configure Google Analytics ID
+        run: |
+            echo 'GOOGLE_ANALYTICS_ID=${{ env.GOOGLE_ANALYTICS_ID }}'' > website/.env
+            cd website/utils && ./dotenv-sed.sh
+
+      - name: Build and push 
+        uses: noi-techpark/github-actions/docker-build-and-push@v2
+        with:
+          docker-host: ${{ env.DOCKER_REGISTRY_HOST }}
+          docker-username: ${{ github.actor }}
+          docker-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy application
+        uses: noi-techpark/github-actions/docker-deploy@v2
+        with:
+          hosts: 'test'
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          docker-host: ${{ env.DOCKER_REGISTRY_HOST }}
+          docker-username: 'noi-techpark-bot'
+          docker-password: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          project-name: ${{ env.PROJECT_NAME }}
+
+  deploy-prod:
+    runs-on: ubuntu-20.04
+    if: github.ref == 'refs/heads/prod'
+    needs: test
+    concurrency: deploy-prod
+    env:
+      VKG_POSTGRES_USER_READONLY: "vkguser_readonly"
+      ONTOP_QUERY_TIMEOUT: 15
+      VKG_POSTGRES_HOST: "prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+      VKG_POSTGRES_DB: "test"
+      GOOGLE_ANALYTICS_ID: "G-16GJYCR5YT"
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Create .env file
+        uses: noi-techpark/github-actions/env-file@v2
+        env:
+          X_COMPOSE_PROJECT_NAME: ${{ env.PROJECT_NAME }}
+
+      - name: Build and push 
+        uses: noi-techpark/github-actions/docker-build-and-push@v2
+        with:
+          docker-host: ${{ env.DOCKER_REGISTRY_HOST }}
+          docker-username: ${{ github.actor }}
+          docker-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy application
+        uses: noi-techpark/github-actions/docker-deploy@v2
+        with:
+          hosts: 'prod'
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          docker-host: ${{ env.DOCKER_REGISTRY_HOST }}
+          docker-username: 'noi-techpark-bot'
+          docker-password: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          project-name: ${{ env.PROJECT_NAME }}
