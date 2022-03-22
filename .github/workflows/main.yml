@@ -93,7 +93,7 @@ jobs:
 
       - name: Configure Google Analytics ID
         run: |
-            echo 'GOOGLE_ANALYTICS_ID=${{ env.GOOGLE_ANALYTICS_ID }}'' > website/.env
+            echo 'GOOGLE_ANALYTICS_ID=${{ env.GOOGLE_ANALYTICS_ID }}' > website/.env
             cd website/utils && ./dotenv-sed.sh
 
       - name: Build and push 
