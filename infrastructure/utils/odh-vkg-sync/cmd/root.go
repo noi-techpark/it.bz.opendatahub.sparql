@@ -49,7 +49,7 @@ by dumping and restoring data.`,
 		}
 
 		if err != nil {
-			fmt.Sprintf(
+			fmt.Printf(
 				"{%q:%q,%q:%q,%q:%q,%q:%f,%q:%q,%q:%q}",
 				"application", "odh-vkg-sync",
 				"version", version,
@@ -235,6 +235,6 @@ func openDatabase(dsn, network, addr, user, password, database, sslMode string) 
 			tlsConfig,
 		))
 
-		return bun.NewDB(sqldb, pgdialect.New), nil
+		return bun.NewDB(sqldb, pgdialect.New()), nil
 	}
 }
