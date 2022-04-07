@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/utils/odh-vkg-sync/internal/cmd/root"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -73,6 +74,8 @@ by dumping and restoring data.`,
 			)
 		}
 
+		log.Info("connecting to mobility database")
+
 		mobilityDB, err := openDatabase(mobilityDSN, mobilityNetwork, mobilityAddr, mobilityUser, mobilityPassword, mobilityDatabase, mobilitySSLMode)
 
 		if err != nil {
@@ -96,6 +99,8 @@ by dumping and restoring data.`,
 			)
 		}
 
+		log.Info("connecting to replica database")
+
 		replicaDB, err := openDatabase(replicaDSN, replicaNetwork, replicaAddr, replicaUser, replicaPassword, replicaDatabase, replicaSSLMode)
 
 		if err != nil {
@@ -107,6 +112,13 @@ by dumping and restoring data.`,
 		if err != nil {
 			log.Fatal("error connecting to the replica databases", zap.Error(err))
 		}
+
+		app := root.NewApplication(log, root.Options{
+			MobilityDB: mobilityDB,
+			ReplicaDB:  replicaDB,
+		})
+
+		app.Main(cmd.Context())
 	},
 }
 
