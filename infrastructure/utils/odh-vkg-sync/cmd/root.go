@@ -3,6 +3,7 @@ package cmd
 import (
 	"crypto/tls"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -156,7 +157,7 @@ func init() {
 	rootCmd.Flags().StringVar(&mobilityPasswordStr, "mobility.password", "", "mobility user password")
 	rootCmd.Flags().StringVar(&mobilityPasswordFile, "mobility.password-file", "", "mobility user password file")
 	rootCmd.Flags().StringVar(&mobilityDatabase, "mobility.database", "", "mobility database name")
-	rootCmd.Flags().StringVar(&mobilitySSLMode, "mobility.ssl-mode", "verify-full", "mobility database ssl mode (verify-full|require|disable)")
+	rootCmd.Flags().StringVar(&mobilitySSLMode, "mobility.ssl-mode", "require", "mobility database ssl mode (verify-full|require|disable)")
 
 	rootCmd.Flags().StringVar(&replicaDSN, "replica.dsn", "", "replica database DSN")
 	rootCmd.Flags().StringVar(&replicaNetwork, "replica.network", "tcp", "replica database network")
@@ -165,7 +166,7 @@ func init() {
 	rootCmd.Flags().StringVar(&replicaPasswordStr, "replica.password", "", "replica user password")
 	rootCmd.Flags().StringVar(&replicaPasswordFile, "replica.password-file", "", "replica user password file")
 	rootCmd.Flags().StringVar(&replicaDatabase, "replica.database", "", "replica database name")
-	rootCmd.Flags().StringVar(&replicaSSLMode, "replica.ssl-mode", "verify-full", "replica database ssl mode (verify-full|require|disable)")
+	rootCmd.Flags().StringVar(&replicaSSLMode, "replica.ssl-mode", "require", "replica database ssl mode (verify-full|require|disable)")
 }
 
 func initConfig() {
@@ -178,7 +179,7 @@ func initConfig() {
 	}
 
 	viper.AutomaticEnv()
-	viper.SetEnvPrefix("ODH_REPLICA_SYNC")
+	viper.SetEnvPrefix("ODH_VKG_SYNC")
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_", ".", "_"))
 
 	if err := viper.ReadInConfig(); err != nil {
@@ -224,6 +225,15 @@ func openDatabase(dsn, network, addr, user, password, database, sslMode string) 
 
 		if err != nil {
 			return nil, err
+		}
+
+		switch {
+		case addr == "":
+			return nil, errors.New("address is empty")
+		case user == "":
+			return nil, errors.New("user is empty")
+		case database == "":
+			return nil, errors.New("database is empty")
 		}
 
 		sqldb := sql.OpenDB(pgdriver.NewConnector(
