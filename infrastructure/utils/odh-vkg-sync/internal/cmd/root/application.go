@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/uptrace/bun"
@@ -93,16 +94,14 @@ func (app *Application) Main(ctx context.Context) {
 
 	app.log.Debug("mobility append-only tables max ids", zap.Int64s("ids", mobilityIDs))
 
-	// replicaIDs, err := app.queryIDs(app.replicaDB, app.appendTables)
+	replicaIDs, err := app.queryIDs(app.replicaDB, app.appendTables)
 
-	// if err != nil {
-	// 	app.log.Error("error querying append-only tables max ids from the replica database", zap.Error(err))
-	// 	return
-	// }
+	if err != nil {
+		app.log.Error("error querying append-only tables max ids from the replica database", zap.Error(err))
+		return
+	}
 
-	// app.log.Debug("replica append-only tables max ids", zap.Int64s("ids", replicaIDs))
-
-	replicaIDs := []int64{3974606463, 13237792054, 531, 1719811}
+	app.log.Debug("replica append-only tables max ids", zap.Int64s("ids", replicaIDs))
 
 	app.log.Info("downloading tables from the mobility database", zap.Strings("tables", app.truncateTables))
 
@@ -125,7 +124,7 @@ func (app *Application) Main(ctx context.Context) {
 		}
 
 		defer file.Close()
-		numRows, err := app.downloadTable(ctx, conn, file, table)
+		numRows, err := app.dumpTable(ctx, conn, file, table)
 
 		if err != nil {
 			app.log.Error("error dumping table", zap.Error(err), zap.String("table", table))
@@ -159,7 +158,7 @@ func (app *Application) Main(ctx context.Context) {
 			}
 
 			defer file.Close()
-			numRows, err := app.downloadTableSlice(ctx, conn, file, table, start, end)
+			numRows, err := app.dumpTableSlice(ctx, conn, file, table, start, end)
 
 			if err != nil {
 				app.log.Error("error dumping segment", zap.Error(err), zap.String("table", table), zap.Int64("from", start), zap.Int64("to", end))
@@ -169,9 +168,95 @@ func (app *Application) Main(ctx context.Context) {
 			app.log.Debug("segment dumped", zap.String("table", table), zap.Int64("from", start), zap.Int64("to", end), zap.Int64("rows", numRows))
 		}
 	}
+
+	// ! DO NOT CHANGE THE ORDER OF TABLE INSERTIONS, OR INCUR THE WRATH OF FOREIGN KEY CONSTRAINTS !
+
+	restoreWholeTable := func(table string) bool {
+		app.log.Info("restoring table", zap.String("table", table))
+
+		filename := fmt.Sprintf("dump/%s.csv", table)
+		file, err := os.Open(filename)
+
+		if err != nil {
+			app.log.Error("error opening dump file", zap.Error(err), zap.String("file", filename))
+			return false
+		}
+
+		defer file.Close()
+		err = app.restoreTable(ctx, conn, file, table)
+
+		if err != nil {
+			app.log.Error("error restoring table", zap.Error(err))
+			return false
+		}
+
+		return true
+	}
+
+	restoreTableSegments := func(table string) bool {
+		app.log.Info("restoring table", zap.String("table", table))
+
+		segments, err := filepath.Glob(fmt.Sprintf("dump/%s-*-*", table))
+
+		app.log.Debug("table segments", zap.Strings("segments", segments))
+
+		if err != nil {
+			app.log.Error("error listing segment files", zap.Error(err), zap.String("table", table))
+			return false
+		}
+
+		var rs []io.Reader
+
+		for _, segment := range segments {
+			file, err := os.Open(segment)
+
+			if err != nil {
+				app.log.Error("error opening segment file", zap.Error(err), zap.String("file", segment), zap.String("table", table))
+				return false
+			}
+
+			defer file.Close()
+			rs = append(rs, file)
+		}
+
+		err = app.restoreTableSlices(ctx, conn, rs, table)
+
+		if err != nil {
+			app.log.Error("error restoring table", zap.Error(err), zap.String("table", table))
+			return false
+		}
+
+		app.log.Debug("restored table", zap.String("table", table))
+
+		return true
+	}
+
+	if !restoreTableSegments("type_metadata") {
+		return
+	}
+
+	if !restoreWholeTable("type") {
+		return
+	}
+
+	if !restoreTableSegments("metadata") {
+		return
+	}
+
+	for _, table := range []string{"station", "edge", "measurement", "measurementstring"} {
+		if !restoreWholeTable(table) {
+			return
+		}
+	}
+
+	for _, table := range []string{"measurementhistory", "measurementstringhistory"} {
+		if !restoreTableSegments(table) {
+			return
+		}
+	}
 }
 
-func (a *Application) downloadTable(ctx context.Context, conn bun.Conn, w io.Writer, table string) (int64, error) {
+func (a *Application) dumpTable(ctx context.Context, conn bun.Conn, w io.Writer, table string) (int64, error) {
 	result, err := pgdriver.CopyTo(ctx, conn, w, fmt.Sprintf("COPY %s TO STDOUT WITH CSV", table))
 
 	if err != nil {
@@ -181,7 +266,7 @@ func (a *Application) downloadTable(ctx context.Context, conn bun.Conn, w io.Wri
 	return result.RowsAffected()
 }
 
-func (a *Application) downloadTableSlice(ctx context.Context, conn bun.Conn, w io.Writer, table string, from, to int64) (int64, error) {
+func (a *Application) dumpTableSlice(ctx context.Context, conn bun.Conn, w io.Writer, table string, from, to int64) (int64, error) {
 	result, err := pgdriver.CopyTo(ctx, conn, w, fmt.Sprintf("COPY (SELECT * FROM %s WHERE id > %d AND id <= %d) TO STDOUT WITH CSV", table, from, to))
 
 	if err != nil {
@@ -189,4 +274,90 @@ func (a *Application) downloadTableSlice(ctx context.Context, conn bun.Conn, w i
 	}
 
 	return result.RowsAffected()
+}
+
+func (a *Application) restoreTable(ctx context.Context, conn bun.Conn, r io.Reader, table string) error {
+	tempTable, targetTable := fmt.Sprintf("intimev2.%s_tmp", table), fmt.Sprintf("intimev2.%s", table)
+	_, err := conn.ExecContext(ctx, fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s AS TABLE %s WITH NO DATA", tempTable, targetTable))
+
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.ExecContext(ctx, fmt.Sprintf("TRUNCATE %s", tempTable))
+
+	if err != nil {
+		return err
+	}
+
+	_, err = pgdriver.CopyFrom(ctx, conn, r, fmt.Sprintf("COPY %s FROM STDIN", tempTable))
+
+	if err != nil {
+		return err
+	}
+
+	tx, err := conn.BeginTx(ctx, nil)
+
+	_, err = tx.Exec(fmt.Sprintf("TRUNCATE %s", targetTable))
+
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(fmt.Sprintf("INSERT INTO %s TABLE %s ON CONFLICT DO NOTHING", targetTable, tempTable))
+
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(fmt.Sprintf("DROP %s", tempTable))
+
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *Application) restoreTableSlices(ctx context.Context, conn bun.Conn, rs []io.Reader, table string) error {
+	tempTable, targetTable := fmt.Sprintf("intimev2.%s_tmp", table), fmt.Sprintf("intimev2.%s", table)
+	_, err := conn.ExecContext(ctx, fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s AS TABLE %s WITH NO DATA", tempTable, targetTable))
+
+	if err != nil {
+		return err
+	}
+
+	for _, r := range rs {
+		_, err = conn.ExecContext(ctx, fmt.Sprintf("TRUNCATE %s", tempTable))
+
+		if err != nil {
+			return err
+		}
+
+		_, err = pgdriver.CopyFrom(ctx, conn, r, fmt.Sprintf("COPY %s FROM STDIN", tempTable))
+
+		if err != nil {
+			return err
+		}
+
+		_, err = conn.ExecContext(ctx, fmt.Sprintf("INSERT INTO %s TABLE %s ON CONFLICT DO NOTHING", targetTable, tempTable))
+
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err = conn.ExecContext(ctx, fmt.Sprintf("DROP %s", tempTable))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
