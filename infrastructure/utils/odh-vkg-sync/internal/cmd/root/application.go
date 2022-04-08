@@ -1,12 +1,10 @@
 package root
 
 import (
+	"bytes"
 	"context"
+	"database/sql"
 	"fmt"
-	"io"
-	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/driver/pgdriver"
@@ -19,343 +17,308 @@ type Options struct {
 }
 
 type Application struct {
-	log            *zap.Logger
-	mobilityDB     *bun.DB
-	replicaDB      *bun.DB
-	appendTables   []string
-	truncateTables []string
+	log        *zap.Logger
+	mobilityDB *bun.DB
+	replicaDB  *bun.DB
 }
 
 func NewApplication(log *zap.Logger, opts Options) *Application {
 	return &Application{
-		log:            log,
-		mobilityDB:     opts.MobilityDB,
-		replicaDB:      opts.ReplicaDB,
-		appendTables:   []string{"measurementhistory", "measurementstringhistory", "type_metadata", "metadata"},
-		truncateTables: []string{"measurement", "measurementstring", "edge", "type", "station"},
+		log:        log,
+		mobilityDB: opts.MobilityDB,
+		replicaDB:  opts.ReplicaDB,
 	}
-}
-
-func (a *Application) queryIDs(db *bun.DB, tables []string) ([]int64, error) {
-	var stmt []string
-
-	for _, table := range tables {
-		stmt = append(stmt, fmt.Sprintf("SELECT max(id) FROM %s", table))
-	}
-
-	rows, err := db.Query(strings.Join(stmt, " UNION ALL "))
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer rows.Close()
-	ids := make([]int64, 0, len(tables))
-
-	for rows.Next() {
-		var id int64
-
-		err = rows.Scan(&id)
-
-		if err != nil {
-			return nil, err
-		}
-
-		ids = append(ids, id)
-	}
-
-	return ids, nil
 }
 
 func (app *Application) Main(ctx context.Context) {
-	app.log.Info("cleaning up dump directory")
-
-	err := os.RemoveAll("dump")
-
-	if err != nil {
-		app.log.Warn("error cleaning up dump directory", zap.Error(err))
+	// ! DON'T CHANGE THE INSERTION ORDER, OR INCUR THE WRATH OF FOREIGN KEY CONSTRAINTS!
+	tables := []struct {
+		Name    string
+		IsDelta bool
+	}{
+		{Name: "type_metadata", IsDelta: true},
+		{Name: "type", IsDelta: false},
+		{Name: "metadata", IsDelta: true},
+		{Name: "station", IsDelta: false},
+		{Name: "edge", IsDelta: false},
+		{Name: "measurement", IsDelta: false},
+		{Name: "measurementstring", IsDelta: false},
+		{Name: "measurementhistory", IsDelta: true},
+		{Name: "measurementhistorystring", IsDelta: true},
 	}
 
-	err = os.MkdirAll("dump", 0700)
+	for _, table := range tables {
+		if table.IsDelta {
+			app.log.Info("querying last record id from replica database", zap.String("table", table.Name))
 
-	if err != nil {
-		app.log.Error("error creating dump directory", zap.Error(err))
-		return
-	}
-
-	app.log.Info("querying append-only tables max ids", zap.Strings("tables", app.appendTables))
-
-	mobilityIDs, err := app.queryIDs(app.mobilityDB, app.appendTables)
-
-	if err != nil {
-		app.log.Error("error querying append-only tables max ids from the mobility database", zap.Error(err))
-		return
-	}
-
-	app.log.Debug("mobility append-only tables max ids", zap.Int64s("ids", mobilityIDs))
-
-	replicaIDs, err := app.queryIDs(app.replicaDB, app.appendTables)
-
-	if err != nil {
-		app.log.Error("error querying append-only tables max ids from the replica database", zap.Error(err))
-		return
-	}
-
-	app.log.Debug("replica append-only tables max ids", zap.Int64s("ids", replicaIDs))
-
-	app.log.Info("downloading tables from the mobility database", zap.Strings("tables", app.truncateTables))
-
-	conn, err := app.mobilityDB.Conn(ctx)
-
-	if err != nil {
-		app.log.Error("error establishing a connection to the mobility database", zap.Error(err))
-		return
-	}
-
-	for _, table := range app.truncateTables {
-		app.log.Info("dumping table", zap.String("table", table))
-
-		filename := fmt.Sprintf("dump/%s.csv", table)
-		file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-
-		if err != nil {
-			app.log.Error("error opening dump file", zap.Error(err), zap.String("file", filename))
-			return
-		}
-
-		defer file.Close()
-		numRows, err := app.dumpTable(ctx, conn, file, table)
-
-		if err != nil {
-			app.log.Error("error dumping table", zap.Error(err), zap.String("table", table))
-			return
-		}
-
-		app.log.Debug("table dumped", zap.String("table", table), zap.Int64("rows", numRows))
-	}
-
-	app.log.Info("downloading append-only tables delta from the mobility database", zap.Strings("tables", app.appendTables))
-
-	for i, table := range app.appendTables {
-		from, to := replicaIDs[i], mobilityIDs[i]
-		app.log.Info("dumping delta", zap.String("table", table), zap.Int64("from", from), zap.Int64("to", to))
-
-		for start := from; start < to; start += 1_000_00 {
-			end := start + 1_000_00
-
-			if end-1 > to {
-				end = to
-			}
-
-			app.log.Info("dumping segment", zap.String("table", table), zap.Int64("from", start), zap.Int64("to", end))
-
-			filename := fmt.Sprintf("dump/%s-%d-%d.csv", table, start, end)
-			file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+			from, err := app.lastRecordID(app.replicaDB, table.Name)
 
 			if err != nil {
-				app.log.Error("error opening segment file", zap.Error(err), zap.String("file", filename))
+				app.log.Error("error querying last record id from replica database", zap.String("table", table.Name))
 				return
 			}
 
-			defer file.Close()
-			numRows, err := app.dumpTableSlice(ctx, conn, file, table, start, end)
+			app.log.Debug("finished querying last record id from replica database", zap.String("table", table.Name), zap.Int64("id", from))
+
+			app.log.Info("querying last record id from mobility database", zap.String("table", table.Name))
+
+			to, err := app.lastRecordID(app.mobilityDB, table.Name)
 
 			if err != nil {
-				app.log.Error("error dumping segment", zap.Error(err), zap.String("table", table), zap.Int64("from", start), zap.Int64("to", end))
+				app.log.Error("error querying last record id from mobility database", zap.String("table", table.Name))
 				return
 			}
 
-			app.log.Debug("segment dumped", zap.String("table", table), zap.Int64("from", start), zap.Int64("to", end), zap.Int64("rows", numRows))
-		}
-	}
+			app.log.Debug("finished querying last record id from mobility database", zap.String("table", table.Name), zap.Int64("id", to))
 
-	// ! DO NOT CHANGE THE ORDER OF TABLE INSERTIONS, OR INCUR THE WRATH OF FOREIGN KEY CONSTRAINTS !
+			app.log.Info("transfering delta for table", zap.String("table", table.Name), zap.Int64("from", from), zap.Int64("to", to))
 
-	restoreWholeTable := func(table string) bool {
-		app.log.Info("restoring table", zap.String("table", table))
-
-		filename := fmt.Sprintf("dump/%s.csv", table)
-		file, err := os.Open(filename)
-
-		if err != nil {
-			app.log.Error("error opening dump file", zap.Error(err), zap.String("file", filename))
-			return false
-		}
-
-		defer file.Close()
-		err = app.restoreTable(ctx, conn, file, table)
-
-		if err != nil {
-			app.log.Error("error restoring table", zap.Error(err))
-			return false
-		}
-
-		return true
-	}
-
-	restoreTableSegments := func(table string) bool {
-		app.log.Info("restoring table", zap.String("table", table))
-
-		segments, err := filepath.Glob(fmt.Sprintf("dump/%s-*-*", table))
-
-		app.log.Debug("table segments", zap.Strings("segments", segments))
-
-		if err != nil {
-			app.log.Error("error listing segment files", zap.Error(err), zap.String("table", table))
-			return false
-		}
-
-		var rs []io.Reader
-
-		for _, segment := range segments {
-			file, err := os.Open(segment)
-
-			if err != nil {
-				app.log.Error("error opening segment file", zap.Error(err), zap.String("file", segment), zap.String("table", table))
-				return false
+			if err := app.transferDelta(ctx, table.Name, from, to); err != nil {
+				return
 			}
+		} else {
+			app.log.Info("transfering table", zap.String("table", table.Name))
 
-			defer file.Close()
-			rs = append(rs, file)
-		}
-
-		err = app.restoreTableSlices(ctx, conn, rs, table)
-
-		if err != nil {
-			app.log.Error("error restoring table", zap.Error(err), zap.String("table", table))
-			return false
-		}
-
-		app.log.Debug("restored table", zap.String("table", table))
-
-		return true
-	}
-
-	if !restoreTableSegments("type_metadata") {
-		return
-	}
-
-	if !restoreWholeTable("type") {
-		return
-	}
-
-	if !restoreTableSegments("metadata") {
-		return
-	}
-
-	for _, table := range []string{"station", "edge", "measurement", "measurementstring"} {
-		if !restoreWholeTable(table) {
-			return
-		}
-	}
-
-	for _, table := range []string{"measurementhistory", "measurementstringhistory"} {
-		if !restoreTableSegments(table) {
-			return
+			if err := app.transferTable(ctx, table.Name); err != nil {
+				return
+			}
 		}
 	}
 }
 
-func (a *Application) dumpTable(ctx context.Context, conn bun.Conn, w io.Writer, table string) (int64, error) {
-	result, err := pgdriver.CopyTo(ctx, conn, w, fmt.Sprintf("COPY %s TO STDOUT WITH CSV", table))
+func (app *Application) lastRecordID(db *bun.DB, table string) (int64, error) {
+	var id sql.NullInt64
+	err := db.QueryRow(fmt.Sprintf("SELECT max(id) FROM intimev2.%s", table)).Scan(&id)
 
 	if err != nil {
-		return 0, nil
+		return -1, err
 	}
 
-	return result.RowsAffected()
+	return id.Int64, nil
 }
 
-func (a *Application) dumpTableSlice(ctx context.Context, conn bun.Conn, w io.Writer, table string, from, to int64) (int64, error) {
-	result, err := pgdriver.CopyTo(ctx, conn, w, fmt.Sprintf("COPY (SELECT * FROM %s WHERE id > %d AND id <= %d) TO STDOUT WITH CSV", table, from, to))
+func (app *Application) transferTable(parent context.Context, table string) error {
+	ctx, cancel := context.WithCancel(parent)
+	defer cancel()
+
+	mobilityConn, err := app.mobilityDB.Conn(ctx)
 
 	if err != nil {
-		return 0, nil
-	}
-
-	return result.RowsAffected()
-}
-
-func (a *Application) restoreTable(ctx context.Context, conn bun.Conn, r io.Reader, table string) error {
-	tempTable, targetTable := fmt.Sprintf("intimev2.%s_tmp", table), fmt.Sprintf("intimev2.%s", table)
-	_, err := conn.ExecContext(ctx, fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s AS TABLE %s WITH NO DATA", tempTable, targetTable))
-
-	if err != nil {
+		app.log.Error("error establishing a connection to the mobility database")
 		return err
 	}
 
-	_, err = conn.ExecContext(ctx, fmt.Sprintf("TRUNCATE %s", tempTable))
+	defer func() {
+		cancel()
+		if err := mobilityConn.Close(); err != nil {
+			app.log.Error("error closing connection with mobility database", zap.Error(err))
+		}
+	}()
+
+	app.log.Info("copying table from mobility database to memory", zap.String("table", table))
+
+	var data bytes.Buffer
+	result, err := pgdriver.CopyTo(ctx, mobilityConn, &data, fmt.Sprintf("COPY %s TO STDOUT WITH CSV", table))
 
 	if err != nil {
+		app.log.Error("error copying table from mobility database to memory", zap.Error(err), zap.String("table", table))
 		return err
 	}
 
-	_, err = pgdriver.CopyFrom(ctx, conn, r, fmt.Sprintf("COPY %s FROM STDIN", tempTable))
+	numRows, err := result.RowsAffected()
 
 	if err != nil {
+		app.log.Error("error reading number of affected row from mobility database", zap.Error(err), zap.String("table", table))
 		return err
 	}
 
-	tx, err := conn.BeginTx(ctx, nil)
+	app.log.Debug("finished copying table from mobility database to memory", zap.String("table", table), zap.Int64("rows", numRows), zap.Int("bytes", data.Len()))
+
+	replicaConn, err := app.replicaDB.Conn(ctx)
+
+	if err != nil {
+		app.log.Error("error establishing a connection to the replica database")
+		return err
+	}
+
+	defer func() {
+		cancel()
+		if err := replicaConn.Close(); err != nil {
+			app.log.Error("error closing connection with replica database", zap.Error(err))
+		}
+	}()
+
+	app.log.Info("copying table from memory to replica database", zap.String("table", table))
+
+	tx, err := replicaConn.BeginTx(ctx, nil)
+
+	if err != nil {
+		app.log.Error("error beginning transaction in the replica database", zap.String("table", table))
+		return err
+	}
+
+	tempTable, targetTable := fmt.Sprintf("%s_tmp", table), fmt.Sprintf("intimev2.%s", table)
+	_, err = tx.Exec(fmt.Sprintf("CREATE TEMPORARY TABLE %s (LIKE %s) ON COMMIT DROP", tempTable, targetTable))
+
+	if err != nil {
+		app.log.Error("error creating temporary table to copy data into", zap.Error(err), zap.String("table", table))
+		return err
+	}
+
+	_, err = pgdriver.CopyFrom(ctx, replicaConn, &data, fmt.Sprintf("COPY %s FROM STDIN WITH CSV", tempTable))
+
+	if err != nil {
+		app.log.Error("error copying table from memory to replica database", zap.Error(err), zap.String("table", table))
+		return err
+	}
 
 	_, err = tx.Exec(fmt.Sprintf("TRUNCATE %s", targetTable))
 
 	if err != nil {
+		app.log.Error("error truncating destination table in replica database", zap.Error(err), zap.String("table", table))
 		return err
 	}
 
-	_, err = tx.Exec(fmt.Sprintf("INSERT INTO %s TABLE %s ON CONFLICT DO NOTHING", targetTable, tempTable))
+	_, err = tx.Exec(fmt.Sprintf("INSERT INTO %s (SELECT * FROM %s)", targetTable, tempTable))
 
 	if err != nil {
-		return err
-	}
-
-	_, err = tx.Exec(fmt.Sprintf("DROP %s", tempTable))
-
-	if err != nil {
+		app.log.Error("error inserting values into destination table in replica database", zap.Error(err), zap.String("table", table))
 		return err
 	}
 
 	err = tx.Commit()
 
 	if err != nil {
+		app.log.Error("error committing transaction", zap.Error(err), zap.String("table", table))
 		return err
 	}
 
 	return nil
 }
 
-func (a *Application) restoreTableSlices(ctx context.Context, conn bun.Conn, rs []io.Reader, table string) error {
-	tempTable, targetTable := fmt.Sprintf("intimev2.%s_tmp", table), fmt.Sprintf("intimev2.%s", table)
-	_, err := conn.ExecContext(ctx, fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s AS TABLE %s WITH NO DATA", tempTable, targetTable))
+func (app *Application) transferDelta(parent context.Context, table string, from, to int64) error {
+	ctx, cancel := context.WithCancel(parent)
+	defer cancel()
+
+	replicaConn, err := app.replicaDB.Conn(ctx)
 
 	if err != nil {
+		app.log.Error("error establishing a connection to the replica database")
 		return err
 	}
 
-	for _, r := range rs {
-		_, err = conn.ExecContext(ctx, fmt.Sprintf("TRUNCATE %s", tempTable))
+	defer func() {
+		cancel()
+		if err := replicaConn.Close(); err != nil {
+			app.log.Error("error closing connection with replica database", zap.Error(err))
+		}
+	}()
+
+	tx, err := replicaConn.BeginTx(ctx, nil)
+
+	if err != nil {
+		app.log.Error("error beginning transaction in the replica database", zap.String("table", table))
+		return err
+	}
+
+	tempTable, targetTable := fmt.Sprintf("%s_tmp", table), fmt.Sprintf("intimev2.%s", table)
+	_, err = tx.Exec(fmt.Sprintf("CREATE TEMPORARY TABLE %s (LIKE %s) ON COMMIT DROP", tempTable, targetTable))
+
+	if err != nil {
+		app.log.Error("error creating temporary table to copy data into", zap.Error(err), zap.String("table", table))
+		return err
+	}
+
+	mobilityConn, err := app.mobilityDB.Conn(ctx)
+
+	if err != nil {
+		app.log.Error("error establishing a connection to the mobility database")
+		return err
+	}
+
+	defer func() {
+		cancel()
+		if err := mobilityConn.Close(); err != nil {
+			app.log.Error("error closing connection with mobility database", zap.Error(err))
+		}
+	}()
+
+	for start := from; start < to; start += 1_000_00 {
+		end := start + 1_000_00
+
+		if end-1 > to {
+			end = to
+		}
+
+		app.log.Info(
+			"copying delta segment from mobility database to memory",
+			zap.String("table", table),
+			zap.Int64("from", from), zap.Int64("to", to), zap.Int("step", 1_000_00),
+			zap.Int64("start", start), zap.Int64("end", end),
+		)
+
+		var data bytes.Buffer
+		result, err := pgdriver.CopyTo(ctx, mobilityConn, &data, fmt.Sprintf("COPY (SELECT * FROM %s WHERE id > %d AND id <= %d) TO STDOUT WITH CSV", table, start, end))
 
 		if err != nil {
+			app.log.Error(
+				"error copying delta segment from mobility database to memory",
+				zap.Error(err), zap.String("table", table),
+				zap.Int64("from", from), zap.Int64("to", to), zap.Int("step", 1_000_00),
+				zap.Int64("start", start), zap.Int64("end", end),
+			)
 			return err
 		}
 
-		_, err = pgdriver.CopyFrom(ctx, conn, r, fmt.Sprintf("COPY %s FROM STDIN", tempTable))
+		numRows, err := result.RowsAffected()
 
 		if err != nil {
+			app.log.Error(
+				"error reading number of affected row from mobility database",
+				zap.Error(err), zap.String("table", table),
+				zap.Int64("from", from), zap.Int64("to", to), zap.Int("step", 1_000_00),
+				zap.Int64("start", start), zap.Int64("end", end),
+			)
 			return err
 		}
 
-		_, err = conn.ExecContext(ctx, fmt.Sprintf("INSERT INTO %s TABLE %s ON CONFLICT DO NOTHING", targetTable, tempTable))
+		app.log.Debug(
+			"finished copying delta segment from mobility database to memory",
+			zap.String("table", table), zap.Int64("rows", numRows), zap.Int("bytes", data.Len()),
+			zap.Int64("from", from), zap.Int64("to", to), zap.Int("step", 1_000_00),
+			zap.Int64("start", start), zap.Int64("end", end),
+		)
+
+		app.log.Info(
+			"copying delta segment from memory to replica database",
+			zap.String("table", table),
+			zap.Int64("from", from), zap.Int64("to", to), zap.Int("step", 1_000_00),
+			zap.Int64("start", start), zap.Int64("end", end),
+		)
+		_, err = pgdriver.CopyFrom(ctx, replicaConn, &data, fmt.Sprintf("COPY %s FROM STDIN WITH CSV", tempTable))
 
 		if err != nil {
+			app.log.Error(
+				"error delta segment from memory to replica database",
+				zap.Error(err), zap.String("table", table),
+				zap.Int64("from", from), zap.Int64("to", to), zap.Int("step", 1_000_00),
+				zap.Int64("start", start), zap.Int64("end", end),
+			)
 			return err
 		}
 	}
 
-	_, err = conn.ExecContext(ctx, fmt.Sprintf("DROP %s", tempTable))
+	_, err = tx.Exec(fmt.Sprintf("INSERT INTO %s (SELECT * FROM %s)", targetTable, tempTable))
 
 	if err != nil {
+		app.log.Error("error inserting values into destination table in replica database", zap.Error(err), zap.String("table", table))
+		return err
+	}
+
+	err = tx.Commit()
+
+	if err != nil {
+		app.log.Error("error committing transaction", zap.Error(err), zap.String("table", table))
 		return err
 	}
 
