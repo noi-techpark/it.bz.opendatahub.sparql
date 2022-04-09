@@ -76,7 +76,13 @@ by dumping and restoring data.`,
 
 		log.Info("connecting to mobility database")
 
-		mobilityDB, err := openDatabase(mobilityDSN, mobilityNetwork, mobilityAddr, mobilityUser, mobilityPassword, mobilityDatabase, mobilitySSLMode)
+		mobilityDB, err := openDatabase(
+			mobilityDSN,
+			mobilityNetwork, mobilityAddr,
+			mobilityUser, mobilityPassword, mobilityDatabase,
+			mobilitySSLMode,
+			mobilityDialTimeout, mobilityReadTimeout, mobilityWriteTimeout,
+		)
 
 		if err != nil {
 			log.Fatal("error opening mobility database", zap.Error(err))
@@ -101,7 +107,13 @@ by dumping and restoring data.`,
 
 		log.Info("connecting to replica database")
 
-		replicaDB, err := openDatabase(replicaDSN, replicaNetwork, replicaAddr, replicaUser, replicaPassword, replicaDatabase, replicaSSLMode)
+		replicaDB, err := openDatabase(
+			replicaDSN,
+			replicaNetwork, replicaAddr,
+			replicaUser, replicaPassword, replicaDatabase,
+			replicaSSLMode,
+			replicaDialTimeout, replicaReadTimeout, replicaWriteTimeout,
+		)
 
 		if err != nil {
 			log.Fatal("error opening replica database", zap.Error(err))
@@ -144,6 +156,9 @@ var (
 	mobilityPasswordFile string
 	mobilityDatabase     string
 	mobilitySSLMode      string
+	mobilityDialTimeout  time.Duration
+	mobilityReadTimeout  time.Duration
+	mobilityWriteTimeout time.Duration
 
 	replicaDSN          string
 	replicaNetwork      string
@@ -153,6 +168,9 @@ var (
 	replicaPasswordFile string
 	replicaDatabase     string
 	replicaSSLMode      string
+	replicaDialTimeout  time.Duration
+	replicaReadTimeout  time.Duration
+	replicaWriteTimeout time.Duration
 )
 
 func init() {
@@ -170,6 +188,9 @@ func init() {
 	rootCmd.Flags().StringVar(&mobilityPasswordFile, "mobility.password-file", "", "mobility user password file")
 	rootCmd.Flags().StringVar(&mobilityDatabase, "mobility.database", "", "mobility database name")
 	rootCmd.Flags().StringVar(&mobilitySSLMode, "mobility.ssl-mode", "require", "mobility database ssl mode (verify-full|require|disable)")
+	rootCmd.Flags().DurationVar(&mobilityDialTimeout, "mobility.timeout.dial", 5*time.Second, "mobility timeout for establishing new connections")
+	rootCmd.Flags().DurationVar(&mobilityReadTimeout, "mobility.timeout.read", 10*time.Second, "mobility timeout for socket reads")
+	rootCmd.Flags().DurationVar(&mobilityWriteTimeout, "mobility.timeout.write", 5*time.Second, "mobility timeout for socket writes")
 
 	rootCmd.Flags().StringVar(&replicaDSN, "replica.dsn", "", "replica database DSN")
 	rootCmd.Flags().StringVar(&replicaNetwork, "replica.network", "tcp", "replica database network")
@@ -179,6 +200,9 @@ func init() {
 	rootCmd.Flags().StringVar(&replicaPasswordFile, "replica.password-file", "", "replica user password file")
 	rootCmd.Flags().StringVar(&replicaDatabase, "replica.database", "", "replica database name")
 	rootCmd.Flags().StringVar(&replicaSSLMode, "replica.ssl-mode", "require", "replica database ssl mode (verify-full|require|disable)")
+	rootCmd.Flags().DurationVar(&replicaDialTimeout, "replica.timeout.dial", 5*time.Second, "replica timeout for establishing new connections")
+	rootCmd.Flags().DurationVar(&replicaReadTimeout, "replica.timeout.read", 10*time.Second, "replica timeout for socket reads")
+	rootCmd.Flags().DurationVar(&replicaWriteTimeout, "replica.timeout.write", 5*time.Second, "replica timeout for socket writes")
 }
 
 func initConfig() {
@@ -228,7 +252,7 @@ func parseSecret(plaintext, file string) (string, error) {
 	return strings.TrimSpace(string(contents)), nil
 }
 
-func openDatabase(dsn, network, addr, user, password, database, sslMode string) (*bun.DB, error) {
+func openDatabase(dsn, network, addr, user, password, database, sslMode string, dialTimeout, readTimeout, writeTimeout time.Duration) (*bun.DB, error) {
 	if dsn != "" {
 		sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 		return bun.NewDB(sqldb, pgdialect.New()), nil
@@ -255,6 +279,9 @@ func openDatabase(dsn, network, addr, user, password, database, sslMode string) 
 			pgdriver.WithPassword(password),
 			pgdriver.WithDatabase(database),
 			tlsConfig,
+			pgdriver.WithDialTimeout(dialTimeout),
+			pgdriver.WithReadTimeout(readTimeout),
+			pgdriver.WithWriteTimeout(writeTimeout),
 		))
 
 		return bun.NewDB(sqldb, pgdialect.New()), nil
