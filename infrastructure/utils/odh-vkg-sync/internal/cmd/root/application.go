@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/uptrace/bun"
@@ -40,7 +41,7 @@ type transaction struct {
 	Tables []table
 }
 
-func (app *Application) Main(parent context.Context) {
+func (app *Application) Synchronize(parent context.Context) {
 	transactions := []transaction{
 		{
 			Name: "type & type_metadata",
@@ -101,7 +102,7 @@ func (app *Application) Main(parent context.Context) {
 
 		defer func() {
 			cancel()
-			if err := mobilityConn.Close(); err != nil {
+			if err := mobilityConn.Close(); !errors.Is(err, sql.ErrConnDone) && err != nil {
 				app.log.Error("error closing connection with mobility database", zap.Error(err))
 			}
 		}()
@@ -115,7 +116,7 @@ func (app *Application) Main(parent context.Context) {
 
 		defer func() {
 			cancel()
-			if err := replicaConn.Close(); err != nil {
+			if err := replicaConn.Close(); !errors.Is(err, sql.ErrConnDone) && err != nil {
 				app.log.Error("error closing connection with replica database", zap.Error(err))
 			}
 		}()
@@ -153,7 +154,7 @@ func (app *Application) Main(parent context.Context) {
 				app.log.Info("transfering delta for table", zap.String("table", table.Name), zap.Int64("from", from), zap.Int64("to", to))
 
 				if err := app.transferDelta(ctx, mobilityConn, replicaConn, tx, table.Name, from, to); err != nil {
-					if err = tx.Rollback(); err != nil {
+					if err = tx.Rollback(); !errors.Is(err, sql.ErrTxDone) && err != nil {
 						app.log.Error("error rolling back transaction", zap.Error(err), zap.String("transaction", transaction.Name))
 					}
 
@@ -163,7 +164,7 @@ func (app *Application) Main(parent context.Context) {
 				app.log.Info("transfering table", zap.String("table", table.Name))
 
 				if err := app.transferTable(ctx, mobilityConn, replicaConn, tx, table.Name); err != nil {
-					if err = tx.Rollback(); err != nil {
+					if err = tx.Rollback(); !errors.Is(err, sql.ErrTxDone) && err != nil {
 						app.log.Error("error rolling back transaction", zap.Error(err), zap.String("transaction", transaction.Name))
 					}
 
@@ -171,6 +172,8 @@ func (app *Application) Main(parent context.Context) {
 				}
 			}
 		}
+
+		app.log.Info("committing transaction", zap.String("transaction", transaction.Name))
 
 		err = tx.Commit()
 

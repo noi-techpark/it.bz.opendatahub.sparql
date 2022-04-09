@@ -1,13 +1,16 @@
 package cmd
 
 import (
+	"context"
 	"crypto/tls"
 	"database/sql"
 	"errors"
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/utils/odh-vkg-sync/internal/cmd/root"
@@ -130,7 +133,17 @@ by dumping and restoring data.`,
 			ReplicaDB:  replicaDB,
 		})
 
-		app.Main(cmd.Context())
+		ctx, cancel := context.WithCancel(cmd.Context())
+
+		go func() {
+			exit := make(chan os.Signal, 1)
+			signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM)
+
+			<-exit
+			cancel()
+		}()
+
+		app.Synchronize(ctx)
 	},
 }
 
