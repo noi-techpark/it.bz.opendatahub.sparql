@@ -224,7 +224,7 @@ func initConfig() {
 	} else {
 		viper.AddConfigPath(".")
 		viper.SetConfigType("yaml")
-		viper.SetConfigName("odh-vkg-sync")
+		viper.SetConfigName(".odh-vkg-sync")
 	}
 
 	viper.AutomaticEnv()

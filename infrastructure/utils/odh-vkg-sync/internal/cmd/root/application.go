@@ -134,7 +134,7 @@ func (app *Application) Synchronize(parent context.Context) {
 				from, err := app.lastRecordID(app.replicaDB, table.Name)
 
 				if err != nil {
-					app.log.Error("error querying last record id from replica database", zap.String("table", table.Name))
+					app.log.Error("error querying last record id from replica database", zap.Error(err), zap.String("table", table.Name))
 					return
 				}
 
@@ -145,7 +145,7 @@ func (app *Application) Synchronize(parent context.Context) {
 				to, err := app.lastRecordID(app.mobilityDB, table.Name)
 
 				if err != nil {
-					app.log.Error("error querying last record id from mobility database", zap.String("table", table.Name))
+					app.log.Error("error querying last record id from mobility database", zap.Error(err), zap.String("table", table.Name))
 					return
 				}
 
@@ -332,6 +332,8 @@ func (app *Application) transferDelta(ctx context.Context, mobilityConn bun.Conn
 			return err
 		}
 	}
+
+	app.log.Info("inserting values into destination table in replica database", zap.String("table", table))
 
 	_, err = tx.ExecContext(ctx, fmt.Sprintf("INSERT INTO %s (SELECT * FROM %s)", targetTable, tempTable))
 
