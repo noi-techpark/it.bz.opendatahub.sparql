@@ -75,18 +75,6 @@ func (app *Application) Synchronize(parent context.Context) {
 				{Name: "measurementstring", AppendOnly: false},
 			},
 		},
-		{
-			Name: "measurementhistory",
-			Tables: []table{
-				{Name: "measurementhistory", AppendOnly: true},
-			},
-		},
-		{
-			Name: "measurementstringhistory",
-			Tables: []table{
-				{Name: "measurementstringhistory", AppendOnly: true},
-			},
-		},
 	}
 
 	for _, transaction := range transactions {
@@ -180,6 +168,97 @@ func (app *Application) Synchronize(parent context.Context) {
 		if err != nil {
 			app.log.Error("error committing transaction", zap.Error(err), zap.String("transaction", transaction.Name))
 			return
+		}
+	}
+
+	bigTables := []string{"measurementhistory", "measurementstringhistory"}
+
+	for _, table := range bigTables {
+		ctx, cancel := context.WithCancel(parent)
+		defer cancel()
+
+		mobilityConn, err := app.mobilityDB.Conn(ctx)
+
+		if err != nil {
+			app.log.Error("error establishing a connection to the mobility database", zap.Error(err))
+			return
+		}
+
+		defer func() {
+			cancel()
+			if err := mobilityConn.Close(); !errors.Is(err, sql.ErrConnDone) && err != nil {
+				app.log.Error("error closing connection with mobility database", zap.Error(err))
+			}
+		}()
+
+		replicaConn, err := app.replicaDB.Conn(ctx)
+
+		if err != nil {
+			app.log.Error("error establishing a connection to the replica database", zap.Error(err))
+			return
+		}
+
+		defer func() {
+			cancel()
+			if err := replicaConn.Close(); !errors.Is(err, sql.ErrConnDone) && err != nil {
+				app.log.Error("error closing connection with replica database", zap.Error(err))
+			}
+		}()
+
+		app.log.Info("querying last record id from replica database", zap.String("table", table))
+
+		from, err := app.lastRecordID(app.replicaDB, table)
+
+		if err != nil {
+			app.log.Error("error querying last record id from replica database", zap.Error(err), zap.String("table", table))
+			return
+		}
+
+		app.log.Debug("finished querying last record id from replica database", zap.String("table", table), zap.Int64("id", from))
+
+		app.log.Info("querying last record id from mobility database", zap.String("table", table))
+
+		to, err := app.lastRecordID(app.mobilityDB, table)
+
+		if err != nil {
+			app.log.Error("error querying last record id from mobility database", zap.Error(err), zap.String("table", table))
+			return
+		}
+
+		app.log.Debug("finished querying last record id from mobility database", zap.String("table", table), zap.Int64("id", to))
+
+		app.log.Info("transfering delta for big table", zap.String("table", table), zap.Int64("from", from), zap.Int64("to", to))
+
+		step := int64(1_000_000)
+		for start := from; start < to; start += step {
+			end := start + step
+
+			if end-1 > to {
+				end = to
+			}
+
+			tx, err := replicaConn.BeginTx(ctx, nil)
+
+			if err != nil {
+				app.log.Error("error beginning transaction in the replica database for big table", zap.Error(err), zap.String("table", table), zap.Int64("start", start), zap.Int64("end", end))
+			}
+
+			if err := app.transferDelta(ctx, mobilityConn, replicaConn, tx, table, start, end); err != nil {
+				if err = tx.Rollback(); !errors.Is(err, sql.ErrTxDone) && err != nil {
+					app.log.Error("error rolling back transaction for big table", zap.Error(err), zap.String("table", table), zap.Int64("start", start), zap.Int64("end", end))
+				}
+
+				return
+			}
+
+			app.log.Info("committing transaction for big table", zap.String("table", table), zap.Int64("start", start), zap.Int64("end", end))
+
+			err = tx.Commit()
+
+			if err != nil {
+				app.log.Error("error committing transaction for big table", zap.Error(err), zap.String("table", table), zap.Int64("start", start), zap.Int64("end", end))
+				return
+			}
 		}
 	}
 }
