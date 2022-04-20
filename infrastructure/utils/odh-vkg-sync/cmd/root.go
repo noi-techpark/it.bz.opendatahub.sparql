@@ -140,10 +140,26 @@ by dumping and restoring data.`,
 			signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM)
 
 			<-exit
+			log.Info("received shutdown signal, cancelling application context")
+
 			cancel()
 		}()
 
+		log.Info("synchronizing database")
 		app.Synchronize(ctx)
+		log.Info("synchronization finished, waiting for interval before next run", zap.Duration("interval", interval))
+
+		for {
+			select {
+			case <-time.After(interval):
+				log.Info("synchronizing database")
+				app.Synchronize(ctx)
+				log.Info("synchronization finished, waiting for interval before next run", zap.Duration("interval", interval))
+			case <-ctx.Done():
+				log.Info("application is quitting")
+				break
+			}
+		}
 	},
 }
 
@@ -159,7 +175,8 @@ func Execute() {
 var cfgFile string
 
 var (
-	debug bool
+	debug    bool
+	interval time.Duration
 
 	mobilityDSN          string
 	mobilityNetwork      string
@@ -192,6 +209,7 @@ func init() {
 	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is ./odh-vkg-sync.yaml)")
 
 	rootCmd.Flags().BoolVar(&debug, "debug", false, "enable debug mode with enhanced logs")
+	rootCmd.Flags().DurationVar(&interval, "internal", 5*time.Minute, "duration to wait between synchronization runs")
 
 	rootCmd.Flags().StringVar(&mobilityDSN, "mobility.dsn", "", "mobility database DSN")
 	rootCmd.Flags().StringVar(&mobilityNetwork, "mobility.network", "tcp", "mobility database network")
