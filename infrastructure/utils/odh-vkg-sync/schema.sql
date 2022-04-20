@@ -58,7 +58,7 @@ CREATE TABLE measurementstring (
     created_on timestamp without time zone NOT NULL,
     period integer NOT NULL,
     "timestamp" timestamp without time zone NOT NULL,
-    string_value character varying(255) NOT NULL,
+    string_value text NOT NULL,
     provenance_id bigint,
     station_id bigint NOT NULL,
     type_id bigint NOT NULL
@@ -74,7 +74,7 @@ CREATE TABLE measurementstringhistory (
     created_on timestamp without time zone NOT NULL,
     period integer NOT NULL,
     "timestamp" timestamp without time zone NOT NULL,
-    string_value character varying(255) NOT NULL,
+    string_value text NOT NULL,
     provenance_id bigint,
     station_id bigint NOT NULL,
     type_id bigint NOT NULL
