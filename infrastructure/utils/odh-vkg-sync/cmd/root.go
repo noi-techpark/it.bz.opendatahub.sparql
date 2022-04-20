@@ -149,6 +149,7 @@ by dumping and restoring data.`,
 		app.Synchronize(ctx)
 		log.Info("synchronization finished, waiting for interval before next run", zap.Duration("interval", interval))
 
+	main_loop:
 		for {
 			select {
 			case <-time.After(interval):
@@ -157,7 +158,7 @@ by dumping and restoring data.`,
 				log.Info("synchronization finished, waiting for interval before next run", zap.Duration("interval", interval))
 			case <-ctx.Done():
 				log.Info("application is quitting")
-				break
+				break main_loop
 			}
 		}
 	},
