@@ -186,7 +186,7 @@ def extract_model_from_table(cursor, table_name: str):
     cursor.execute("SELECT data FROM \"{}\" TABLESAMPLE BERNOULLI(50) LIMIT 100".format(table_name))
     samples = cursor.fetchall()
     models = [extract_model(r[0], TablePath.root()) for r in samples]
-    return reduce(merge_models, models)
+    return reduce(merge_models, models, {})
 
 
 def merge_models(m1, m2):
@@ -331,7 +331,7 @@ DROP TABLE IF EXISTS "{view_name}";
 CREATE TABLE  "{view_name}" (
 "Id" varchar,
 "data" varchar
-); 
+);
 
 DROP FUNCTION IF EXISTS {view_name}_fn CASCADE;
 
@@ -340,7 +340,7 @@ RETURNS TRIGGER
 AS $$
 BEGIN
 INSERT INTO public."{view_name}"
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text(NEW."data" -> '{col_name}') AS "data"
         WHERE NEW."data" -> '{col_name}' != 'null';
 RETURN NEW;
@@ -355,7 +355,7 @@ CREATE TRIGGER t_{view_name}
     EXECUTE PROCEDURE {view_name}_fn();
 
 ALTER TABLE {table_name}
-    ENABLE ALWAYS TRIGGER t_{view_name};        
+    ENABLE ALWAYS TRIGGER t_{view_name};
  """
 
 nested_create_trigger_sql_template = """
@@ -374,7 +374,7 @@ AS $$
 BEGIN
 INSERT INTO public."{view_name}"
 WITH t ("Id", "data") AS (
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements(NEW."data" -> '{col_name}') AS "data"
         WHERE NEW."data" -> '{col_name}' != 'null')
     SELECT "Id" AS "{parent_Id}", {projections}
@@ -391,8 +391,8 @@ CREATE TRIGGER t_{view_name}
     EXECUTE PROCEDURE {view_name}_fn();
 
 ALTER TABLE {table_name}
-    ENABLE ALWAYS TRIGGER t_{view_name};        
-    
+    ENABLE ALWAYS TRIGGER t_{view_name};
+
 """
 
 
@@ -512,7 +512,7 @@ FROM {table_name};
 
 array_repopulate_sql_template = """
 INSERT INTO "{view_name}"
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text("data" -> '{col_name}') AS "data"
         FROM {table_name}
         WHERE "data" -> '{col_name}' != 'null';
@@ -521,7 +521,7 @@ INSERT INTO "{view_name}"
 nested_repopulate_sql_template = """
 INSERT INTO "{view_name}"
 WITH t ("Id", "data") AS (
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements("data" -> '{col_name}') AS "data"
         FROM {table_name}
         WHERE "data" -> '{col_name}' != 'null')
