@@ -479,7 +479,7 @@ def generate(cursor, table_name, ft):
     # DEBUG ONLY
     # if table_name != 'accommodationroomsopen':
     #     continue
-    if table_name.startswith("v_"):
+    if table_name.startswith("v_") or table_name == "spatial_ref_sys":
         return
     model = extract_model_from_table(cursor, table_name)
     for table_path, attrs in model.items():
