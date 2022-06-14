@@ -12,17 +12,10 @@ pipeline {
         ONTOP_QUERY_TIMEOUT = 15
 
         // VIRTUAL KNOWLEDGE GRAPH DB
-        VKG_POSTGRES_HOST = "prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-        VKG_POSTGRES_DB = "test"
-        VKG_POSTGRES_USER = "vkguser"
-        VKG_POSTGRES_PASSWORD = credentials('it.bz.opendatahub.sparql.db.vkg.password')
-        VKG_POSTGRES_USER_READONLY = "vkguser_readonly"
+        VKG_POSTGRES_HOST = "virtual-knowledge-graph.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+        VKG_POSTGRES_DB = "vkg"
+        VKG_POSTGRES_USER_READONLY = "ontopicreadonly"
         VKG_POSTGRES_PASSWORD_READONLY = credentials('it.bz.opendatahub.sparql.db.vkg.password.readonly')
-
-        FLYWAY_URL = "jdbc:postgresql://${VKG_POSTGRES_HOST}/${VKG_POSTGRES_DB}"
-        FLYWAY_USER = "${VKG_POSTGRES_USER}"
-        FLYWAY_PASSWORD = "${VKG_POSTGRES_PASSWORD}"
-        FLYWAY_PLACEHOLDERS_VKG_USER_READONLY = "${VKG_POSTGRES_USER_READONLY}"
 
         // Authentication proxy
         KEYCLOAK_REALM_URL = "https://auth.opendatahub.testingmachine.eu/auth/realms/noi"
