@@ -13,7 +13,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/utils/odh-vkg-sync/internal/cmd/root"
+	"github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/utils/mobility-sync/internal/cmd/root"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -25,7 +25,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "odh-vkg-sync",
+	Use:   "mobility-sync",
 	Short: "Synchronize the replica of the ODH database",
 	Long: `Synchronize the replica with the ODH mobility database,
 by dumping and restoring data.`,
@@ -38,7 +38,7 @@ by dumping and restoring data.`,
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		fields := zap.Fields(
-			zap.String("application", "odh-vkg-sync"),
+			zap.String("application", "mobility-sync"),
 			zap.String("version", version),
 		)
 
@@ -56,7 +56,7 @@ by dumping and restoring data.`,
 		if err != nil {
 			fmt.Printf(
 				"{%q:%q,%q:%q,%q:%q,%q:%f,%q:%q,%q:%q}",
-				"application", "odh-vkg-sync",
+				"application", "mobility-sync",
 				"version", version,
 				"level", "fatal",
 				"ts", float64(time.Now().UnixMilli())/1000,
@@ -207,7 +207,7 @@ var (
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is ./odh-vkg-sync.yaml)")
+	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is ./mobility-sync.yaml)")
 
 	rootCmd.Flags().BoolVar(&debug, "debug", false, "enable debug mode with enhanced logs")
 	rootCmd.Flags().DurationVar(&interval, "internal", 5*time.Minute, "duration to wait between synchronization runs")
@@ -243,7 +243,7 @@ func initConfig() {
 	} else {
 		viper.AddConfigPath(".")
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".odh-vkg-sync")
+		viper.SetConfigName(".mobility-sync")
 	}
 
 	viper.AutomaticEnv()
