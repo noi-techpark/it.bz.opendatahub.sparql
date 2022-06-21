@@ -247,7 +247,7 @@ func initConfig() {
 	}
 
 	viper.AutomaticEnv()
-	viper.SetEnvPrefix("ODH_VKG_SYNC")
+	viper.SetEnvPrefix("MOBILITY_SYNC")
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_", ".", "_"))
 
 	if err := viper.ReadInConfig(); err != nil {
