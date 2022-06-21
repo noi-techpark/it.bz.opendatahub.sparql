@@ -210,7 +210,7 @@ func init() {
 	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is ./mobility-sync.yaml)")
 
 	rootCmd.Flags().BoolVar(&debug, "debug", false, "enable debug mode with enhanced logs")
-	rootCmd.Flags().DurationVar(&interval, "internal", 5*time.Minute, "duration to wait between synchronization runs")
+	rootCmd.Flags().DurationVar(&interval, "interval", 5*time.Minute, "duration to wait between synchronization runs")
 
 	rootCmd.Flags().StringVar(&mobilityDSN, "mobility.dsn", "", "mobility database DSN")
 	rootCmd.Flags().StringVar(&mobilityNetwork, "mobility.network", "tcp", "mobility database network")
