@@ -13,7 +13,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/utils/mobility-sync/internal/cmd/root"
+	"github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/docker/mobility-sync/internal/cmd/root"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-MODULE=github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/utils/mobility-sync
+MODULE=github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/docker/mobility-sync
 IMAGE=mobility-sync
 GIT_DESCRIPTION=$(git describe --always --dirty --tags --long)
 
