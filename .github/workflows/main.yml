@@ -22,7 +22,7 @@ jobs:
 
   deploy-test:
     runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/citest'
     needs: test
     concurrency: deploy-test
     env:
