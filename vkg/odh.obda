@@ -701,11 +701,6 @@ target		data:observation/result/{m_id} qudt:unit :GridNorth.
 source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
 			WHERE m.type_id = t.id and t.cunit IN ('gN')
 
-mappingId	result_history_observation_unit  Milligram per millic
-target		data:observation/result/{m_id} qudt:unit :MiliGM-PER-MilliC. 
-source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
-			WHERE m.type_id = t.id and t.cunit IN ('mg/mc')
-
 mappingId	result_history_observation_unit  Nanogram per millic
 target		data:observation/result/{m_id} qudt:unit :NanoGM-PER-MilliC. 
 source		SELECT *, m.id AS m_id FROM intimev2.measurementhistory m, intimev2.type t
