@@ -11,19 +11,19 @@ env:
   DOCKER_TAG: ${{ github.sha }}
 
 jobs:
-  test:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Configure
-        run: cp .env.example .env
-      - name: Test
-        run: docker-compose --no-ansi build --pull
+  # test:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Configure
+  #       run: cp .env.example .env
+  #     - name: Test
+  #       run: docker-compose --no-ansi build --pull
 
   deploy-test:
     runs-on: ubuntu-20.04
     if: github.ref == 'refs/heads/citest'
-    needs: test
+    # needs: test
     concurrency: deploy-test
     env:
       VKG_POSTGRES_USER: "ontopic"
@@ -67,10 +67,10 @@ jobs:
 
       - name: Configure odh.docker.properties
         run: |
-            sed -i -e 's%\\(jdbc.url\\s*=\\).*\\$%\\1jdbc\\\\\\\\:postgresql\\\\\\\\://${{ env.VKG_POSTGRES_HOST }}/${{ env.VKG_POSTGRES_DB }}%' vkg/odh.docker.properties
-            sed -i -e 's%\\(jdbc.user\\s*=\\).*\\$%\\1${{ env.VKG_POSTGRES_USER_READONLY }}%' vkg/odh.docker.properties
-            sed -i -e 's%\\(jdbc.password\\s*=\\).*\\$%\\1${{ secrets.VKG_POSTGRES_PASSWORD_READONLY }}%' vkg/odh.docker.properties
-            sed -i -e 's%\\(ontop.query.defaultTimeout\\s*=\\).*\\$%\\1${{ env.ONTOP_QUERY_TIMEOUT }}%' vkg/odh.docker.properties
+            sed -i -e 's%\(jdbc.url\s*=\).*\$%\1jdbc:postgresql://${{ env.VKG_POSTGRES_HOST }}/${{ env.VKG_POSTGRES_DB }}%' vkg/odh.docker.properties
+            sed -i -e 's%\(jdbc.user\s*=\).*\$%\1${{ env.VKG_POSTGRES_USER_READONLY }}%' vkg/odh.docker.properties
+            sed -i -e 's%\(jdbc.password\s*=\).*\$%\1${{ secrets.VKG_POSTGRES_PASSWORD_READONLY }}%' vkg/odh.docker.properties
+            sed -i -e 's%\(ontop.query.defaultTimeout\s*=\).*\$%\1${{ env.ONTOP_QUERY_TIMEOUT }}%' vkg/odh.docker.properties
 
       - name: Configure Google Analytics ID
         run: |
