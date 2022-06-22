@@ -13,13 +13,10 @@ env:
 jobs:
   test:
     runs-on: ubuntu-20.04
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Configure
         run: cp .env.example .env
-
       - name: Test
         run: docker-compose --no-ansi build --pull
 
@@ -29,9 +26,10 @@ jobs:
     needs: test
     concurrency: deploy-test
     env:
-      VKG_POSTGRES_USER_READONLY: "vkguser_readonly"
+      VKG_POSTGRES_USER: "ontopic"
+      VKG_POSTGRES_USER_READONLY: "ontopicreadonly"
       ONTOP_QUERY_TIMEOUT: 15
-      VKG_POSTGRES_HOST: "prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+      VKG_POSTGRES_HOST: "virtual-knowledge-graph.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
       VKG_POSTGRES_DB: "test"
       GOOGLE_ANALYTICS_ID: "G-16GJYCR5YT"
 
@@ -48,35 +46,16 @@ jobs:
           X_DOCKER_IMAGE_ONTOP: ${{ env.DOCKER_IMAGE_ONTOP }}
           X_DOCKER_TAG: ${{ env.DOCKER_TAG }}
 
-          # TOURISM TEST DB
-          X_FLYWAY_PLACEHOLDERS_TOURISM_DB: "tourism"
-          X_FLYWAY_PLACEHOLDERS_TOURISM_HOST: "prod-postgres-tourism-2.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-          X_FLYWAY_PLACEHOLDERS_TOURISM_USER: "vkgreplicate"
-          X_FLYWAY_PLACEHOLDERS_TOURISM_PASSWORD: ${{ secrets.FLYWAY_PLACEHOLDERS_TOURISM_PASSWORD }}
-          X_FLYWAY_PLACEHOLDERS_TOURISM_PUBLICATION_NAME: "vkgpublication"
-          X_FLYWAY_PLACEHOLDERS_TOURISM_SUBSCRIPTION_NAME: "vkg1_tourism_test_subscription"
-          X_FLYWAY_PLACEHOLDERS_TOURISM_SCHEMA_VKG: "public"
-
-          # MOBILITY TEST DB
-          X_FLYWAY_PLACEHOLDERS_MOBILITY_DB: "bdp"
-          X_FLYWAY_PLACEHOLDERS_MOBILITY_HOST: "test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-          X_FLYWAY_PLACEHOLDERS_MOBILITY_USER: "vkgreplicate"
-          X_FLYWAY_PLACEHOLDERS_MOBILITY_PASSWORD: ${{ secrets.FLYWAY_PLACEHOLDERS_MOBILITY_PASSWORD }}
-          X_FLYWAY_PLACEHOLDERS_MOBILITY_PUBLICATION_NAME: "vkgpublication"
-          X_FLYWAY_PLACEHOLDERS_MOBILITY_SUBSCRIPTION_NAME: "vkg1_mobility_test_subscription"
-          X_FLYWAY_PLACEHOLDERS_MOBILITY_SCHEMA_VKG: "intimev2"
-
           # VIRTUAL KNOWLEDGE GRAPH DB
           X_VKG_POSTGRES_HOST: ${{ env.VKG_POSTGRES_HOST }}
           X_VKG_POSTGRES_DB: ${{ env.VKG_POSTGRES_DB }}
-          X_VKG_POSTGRES_USER: "vkguser"
+          X_VKG_POSTGRES_USER: ${{ env.VKG_POSTGRES_USER }}
           X_VKG_POSTGRES_PASSWORD: ${{ secrets.VKG_POSTGRES_PASSWORD }}
           X_VKG_POSTGRES_USER_READONLY: ${{ env.VKG_POSTGRES_USER_READONLY }}
 
           X_FLYWAY_URL: "jdbc:postgresql://${{ env.VKG_POSTGRES_HOST }}/${{ env.VKG_POSTGRES_DB }}"
           X_FLYWAY_USER: "${{ secrets.VKG_POSTGRES_USER }}"
           X_FLYWAY_PASSWORD: "${{ secrets.VKG_POSTGRES_PASSWORD }}"
-          X_FLYWAY_PLACEHOLDERS_VKG_USER_READONLY: ${{ env.VKG_POSTGRES_USER_READONLY }}
 
           # Authentication proxy
           X_KEYCLOAK_REALM_URL: "https://auth.opendatahub.testingmachine.eu/auth/realms/noi"
