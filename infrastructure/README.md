@@ -1,12 +1,9 @@
 # Infrastructure
 
-The Virtual Knowledge Graph is composed of a single VKG Postgres DB, from where
-we subscribe to various source databases via logical replication. Then, we
+The Virtual Knowledge Graph is composed of a single VKG Postgres DB, which
+aggregates the tourism and mobility datasets into a single database. Then, we
 create a `SparQL endpoint` and `SparQL querying web application` with two docker
 containers, namely `Ontop` and `Nginx`.
-
-If you want to know how to setup logical replication, have a look at our
-[Flight Rules].
 
 - [Infrastructure](#infrastructure)
 	- [Endpoints](#endpoints)
@@ -14,71 +11,73 @@ If you want to know how to setup logical replication, have a look at our
 	- [Credentials](#credentials)
 	- [Security](#security)
 	- [Databases](#databases)
-		- [Tourism Postgres DB (publisher)](#tourism-postgres-db-publisher)
-		- [Virtual Knowledge Graph Postgres DB (subscriber)](#virtual-knowledge-graph-postgres-db-subscriber)
+		- [Tourism Postgres DB](#tourism-postgres-db)
+		- [Virtual Knowledge Graph Postgres DB](#virtual-knowledge-graph-postgres-db)
 			- [Users](#users)
-			- [Databases](#databases-1)
 	- [Docker containers](#docker-containers)
-	- [Flight Rules](#flight-rules)
 		- [I want to update the tourism DB dump](#i-want-to-update-the-tourism-db-dump)
-		- [I have a Flyway schema error, which I want to repair](#i-have-a-flyway-schema-error-which-i-want-to-repair)
 		- [I want to login into the Ontop container](#i-want-to-login-into-the-ontop-container)
-		- [I want to migrate to a new VKG database instance](#i-want-to-migrate-to-a-new-vkg-database-instance)
 
 ## Endpoints
 
 Current deployments:
- * Production: https://sparql.opendatahub.bz.it
- * Testing: https://sparql.opendatahub.testingmachine.eu
+
+- Production: <https://sparql.opendatahub.bz.it>
+- Testing: <https://sparql.opendatahub.testingmachine.eu>
 
 On these servers, one can find:
-* Front-end portal:  `/`
-* SPARQL endpoint: `/sparql`
-* Predefined queries: `/predefined/{queryId}?{param1=value1}*`
-  * Example: https://sparql.opendatahub.testingmachine.eu/predefined/accommodation?Id=86673280ABD13ADC4D521DF459C75474
-* Clone of the existing ODH API `/api/JsonLD/DetailInLD?type={value1}&{param2=value2}*`
-  * Example: https://sparql.opendatahub.testingmachine.eu/api/JsonLD/DetailInLD?type=accommodation&Id=32E7BE648E7B11D181AB006097B896BA&showid=false
-* `/restricted` to enter a restricted area which needs a login. From here you
+
+- Front-end portal:  `/`
+- SPARQL endpoint: `/sparql`
+- Predefined queries: `/predefined/{queryId}?{param1=value1}*`
+  - Example: <https://sparql.opendatahub.testingmachine.eu/predefined/accommodation?Id=86673280ABD13ADC4D521DF459C75474>
+- Clone of the existing ODH API `/api/JsonLD/DetailInLD?type={value1}&{param2=value2}*`
+  - Example: <https://sparql.opendatahub.testingmachine.eu/api/JsonLD/DetailInLD?type=accommodation&Id=32E7BE648E7B11D181AB006097B896BA&showid=false>
+- `/restricted` to enter a restricted area which needs a login. From here you
   can access also closed data. See [docs/authentication.md](docs/authentication.md)
   for details.
 
 ## Deployment
 
 Deployment in these environments is achieved through Jenkins scripts:
+
 - CI: `jenkins/ci.groovy`
 - CD for the testing enviroment: `jenkins/test.groovy`
 - CD for the production environment: `jenkins/prod.groovy`
 
 ...and docker-compose scripts:
+
 - Build docker: `docker-compose.build.yml`
 - Run docker: `docker-compose.run.yml`
 
 Jenkins
-- CI: https://ci.opendatahub.bz.it/job/it.bz.opendatahub.sparql
-- CD: https://jenkins.testingmachine.eu/job/it.bz.opendatahub.sparql
+
+- CI: <https://ci.opendatahub.bz.it/job/it.bz.opendatahub.sparql>
+- CD: <https://jenkins.testingmachine.eu/job/it.bz.opendatahub.sparql>
 
 ## Credentials
 
 Prefix is `it.bz.opendatahub.sparql`.
 
 Jenkins:
-- `it.bz.opendatahub.sparql.db.vkg.password`
+
 - `it.bz.opendatahub.sparql.db.vkg.password.readonly`
-- `it.bz.opendatahub.sparql.db.tourism.password`
 
 Passbolt:
+
 - Resource = `it.bz.opendatahub.sparql.db.tourism`; Username = `vkgreplicate`
-- Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `vkguser`
-- Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `vkguser_readonly`
+- Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `ontopic`
+- Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `ontopicreadonly`
 - Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `postgres`
 
 ## Security
 
 Open ports (Postgres' default is `5432`)
-- The VKG database must have access to the tourism db for the subscription
+
 - The Docker server must have access to the VKG database
 
 Create DB roles
+
 - See both database sections for further details
 
 ## Databases
@@ -86,54 +85,43 @@ Create DB roles
 The databases used in the test and production environments of NOI are not
 managed by Docker, but are instead AWS RDS services.
 
-### Tourism Postgres DB (publisher)
-This is the original source of tourism data. We access it through logical
-replication as described in our [Flight Rules].
+### Tourism Postgres DB
 
-### Virtual Knowledge Graph Postgres DB (subscriber)
+This is the original source of tourism data.
+
+### Virtual Knowledge Graph Postgres DB
 
 #### Users
 
-We need a superuser `vkguser`, that will run all our Flyway scripts. This
-example is about the `tourism_test` replication, but it will be similar for all
-other replications.
+We need a superuser `ontopic`, that will run all our Flyway scripts.
 
 ```sql
-CREATE ROLE vkguser WITH LOGIN PASSWORD 's3cret';
-COMMENT ON ROLE vkguser IS 'Admin account to access the virtual knowledge graph';
-GRANT CONNECT ON DATABASE tourism_test TO vkguser;
-GRANT CREATE ON SCHEMA public TO vkguser;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO vkguser;
-GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO vkguser;
-ALTER ROLE vkguser SET statement_timeout TO '360s';
+CREATE ROLE ontopic WITH LOGIN PASSWORD 's3cret';
+COMMENT ON ROLE ontopic IS 'Admin account to access the virtual knowledge graph';
+GRANT CONNECT ON DATABASE tourism_test TO ontopic;
+GRANT CREATE ON SCHEMA public TO ontopic;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO ontopic;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO ontopic;
+ALTER ROLE ontopic SET statement_timeout TO '360s';
 ```
 
-In addition we need a read only user `vkguser_readonly`, to access the data.
+In addition we need a read only user `ontopicreadonly`, to access the data.
 
 ```sql
-CREATE ROLE vkguser_readonly WITH LOGIN PASSWORD 's3cret';
-COMMENT ON ROLE vkguser_readonly IS 'Read-only account to access the virtual knowledge graph';
-GRANT CONNECT ON DATABASE tourism_test TO vkguser_readonly;
-GRANT USAGE ON SCHEMA public TO vkguser_readonly;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO vkguser_readonly;
-GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO vkguser_readonly;
-ALTER ROLE vkguser_readonly SET statement_timeout TO '360s';
-```
-
-#### Databases
-
-```sql
-CREATE DATABASE tourism_test;
-CREATE DATABASE tourism_prod;
+CREATE ROLE ontopicreadonly WITH LOGIN PASSWORD 's3cret';
+COMMENT ON ROLE ontopicreadonly IS 'Read-only account to access the virtual knowledge graph';
+GRANT CONNECT ON DATABASE tourism_test TO ontopicreadonly;
+GRANT USAGE ON SCHEMA public TO ontopicreadonly;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO ontopicreadonly;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO ontopicreadonly;
+ALTER ROLE ontopicreadonly SET statement_timeout TO '360s';
 ```
 
 ## Docker containers
-First, we start an `Ontop` container, which initially executes
-[Flyway](https://flywaydb.org) to update the schema of the replication database.
+
+First, we start an `Ontop` container.
 
 Second, we start an `Nginx` container to serve the web frontend of the SparQL endpoint.
-
-## Flight Rules
 
 ### I want to update the tourism DB dump
 
@@ -142,17 +130,6 @@ The current dump is inside `sql/V1__initial_setup.sql`.
 ```sh
 cd infrastructure/utils
 ./tourism-dump-schema.sh
-```
-
-### I have a Flyway schema error, which I want to repair
-
-Assume that the docker of Ontop runs on `dockertest2` and all commands are
-executed as `root`.
-
-```sh
-ssh dockertest2
-cd /var/docker/odh-vkg/current
-docker-compose run --entrypoint="flyway -X repair" ontop
 ```
 
 ### I want to login into the Ontop container
@@ -165,9 +142,3 @@ ssh dockertest2
 cd /var/docker/odh-vkg/current
 docker-compose run --entrypoint=/bin/bash ontop
 ```
-
-### I want to migrate to a new VKG database instance
-Follow instruction inside [utils/README_MIGRATION.md](utils/README_MIGRATION.md).
-
-
-[Flight Rules]: https://github.com/noi-techpark/documentation/blob/master/README.md#i-want-to-enable-logical-replication-on-an-awsrds-or-regular-postgres-instance

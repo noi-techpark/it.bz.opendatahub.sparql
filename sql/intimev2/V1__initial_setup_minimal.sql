@@ -1,17 +1,17 @@
-------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --
 -- Database Schema Dump of 'test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com/bdp/intimev2'
 --
 -- Created with the script infrastructure/utils/originaldb-dump-schema.sh and then manually cleaned
 --
 --
--- Due to floating point precision accuracy issues, this constraint might have different results on different 
+-- Due to floating point precision accuracy issues, this constraint might have different results on different
 -- machines, hence not applicable for logical replication
 -- ALTER TABLE ONLY measurementhistory
 --    ADD CONSTRAINT uc_measurementhistory_station_i__timestamp_period_double_value_ UNIQUE (station_id, type_id, "timestamp", period, double_value);
 -- ALTER TABLE ONLY measurementhistory ADD CONSTRAINT uc_measurementhistory_station_id_type_id_timestamp_period UNIQUE (station_id, type_id, "timestamp", period);
 --   ^-- also not possible, duplicates exist
-------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 SELECT pg_catalog.set_config('search_path', 'intimev2', false);
 CREATE SEQUENCE measurementhistory_seq
@@ -71,7 +71,7 @@ CREATE TABLE measurementstring (
     created_on timestamp without time zone NOT NULL,
     period integer NOT NULL,
     "timestamp" timestamp without time zone NOT NULL,
-    string_value character varying(255) NOT NULL,
+    string_value text NOT NULL,
     provenance_id bigint,
     station_id bigint NOT NULL,
     type_id bigint NOT NULL
@@ -87,7 +87,7 @@ CREATE TABLE measurementstringhistory (
     created_on timestamp without time zone NOT NULL,
     period integer NOT NULL,
     "timestamp" timestamp without time zone NOT NULL,
-    string_value character varying(255) NOT NULL,
+    string_value text NOT NULL,
     provenance_id bigint,
     station_id bigint NOT NULL,
     type_id bigint NOT NULL
@@ -190,3 +190,20 @@ ALTER TABLE ONLY station ADD CONSTRAINT fk_station_meta_data_id_metadata_pk FORE
 ALTER TABLE ONLY station ADD CONSTRAINT fk_station_parent_id_station_pk FOREIGN KEY (parent_id) REFERENCES station(id);
 ALTER TABLE ONLY type ADD CONSTRAINT fk_type_meta_data_id_type_metadata_pk FOREIGN KEY (meta_data_id) REFERENCES type_metadata(id);
 ALTER TABLE ONLY type_metadata ADD CONSTRAINT type_metadata_type_id_fkey FOREIGN KEY (type_id) REFERENCES type(id);
+
+ALTER TABLE ONLY edge ALTER CONSTRAINT fk_edge_destination_id_station_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY edge ALTER CONSTRAINT fk_edge_edge_data_id_station_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY edge ALTER CONSTRAINT fk_edge_origin_id_station_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY measurement ALTER CONSTRAINT fk_measurement_station_id_station_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY measurement ALTER CONSTRAINT fk_measurement_type_id_type_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY measurementhistory ALTER CONSTRAINT fk_measurementhistory_station_id_station_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY measurementhistory ALTER CONSTRAINT fk_measurementhistory_type_id_type_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY measurementstring ALTER CONSTRAINT fk_measurementstring_station_id_station_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY measurementstring ALTER CONSTRAINT fk_measurementstring_type_id_type_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY measurementstringhistory ALTER CONSTRAINT fk_measurementstringhistory_station_id_station_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY measurementstringhistory ALTER CONSTRAINT fk_measurementstringhistory_type_id_type_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY metadata ALTER CONSTRAINT fk_metadata_station_id_station_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY station ALTER CONSTRAINT fk_station_meta_data_id_metadata_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY station ALTER CONSTRAINT fk_station_parent_id_station_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY type ALTER CONSTRAINT fk_type_meta_data_id_type_metadata_pk DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY type_metadata ALTER CONSTRAINT type_metadata_type_id_fkey DEFERRABLE INITIALLY DEFERRED;
