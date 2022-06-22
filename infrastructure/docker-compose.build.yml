@@ -12,3 +12,10 @@ services:
     build:
       context: ../
       dockerfile: infrastructure/docker/nginx/Dockerfile
+  mobility-sync:
+    image: ${DOCKER_IMAGE_MOBILITY_SYNC}:${DOCKER_TAG}
+    build:
+      context: docker/mobility-sync
+      args:
+        module: github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/docker/mobility-sync
+        version: ${DOCKER_TAG}
