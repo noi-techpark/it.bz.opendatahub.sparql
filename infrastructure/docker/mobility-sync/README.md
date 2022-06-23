@@ -85,7 +85,7 @@ Available Commands:
   version     Display version and build time
 
 Flags:
-      --config string                     config file (default is ./mobility-sync.yaml)
+      --config string                     config file (default is ./.mobility-sync.yaml)
       --debug                             enable debug mode with enhanced logs
   -h, --help                              help for mobility-sync
       --interval duration                 duration to wait between synchronization runs (default 5m0s)

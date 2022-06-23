@@ -210,7 +210,7 @@ var (
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is ./mobility-sync.yaml)")
+	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is ./.mobility-sync.yaml)")
 
 	rootCmd.Flags().BoolVar(&debug, "debug", false, "enable debug mode with enhanced logs")
 	rootCmd.Flags().BoolVar(&testing, "test", false, "enable testing mode, which synchronizes only a subset of the data")
