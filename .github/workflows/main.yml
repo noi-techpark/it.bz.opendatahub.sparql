@@ -75,6 +75,9 @@ jobs:
         with:
           path: vkg/odh.docker.properties
 
+      - run: cat vkg/odh.docker.properties
+        shell: bash
+
 
  # ${{ secrets.VKG_POSTGRES_PASSWORD_READONLY }}
       # - name: Configure Google Analytics ID
