@@ -13,12 +13,14 @@ import (
 )
 
 type Options struct {
+	Testing    bool
 	MobilityDB *bun.DB
 	ReplicaDB  *bun.DB
 }
 
 type Application struct {
 	log        *zap.Logger
+	testing    bool
 	mobilityDB *bun.DB
 	replicaDB  *bun.DB
 }
@@ -26,6 +28,7 @@ type Application struct {
 func NewApplication(log *zap.Logger, opts Options) *Application {
 	return &Application{
 		log:        log,
+		testing:    opts.Testing,
 		mobilityDB: opts.MobilityDB,
 		replicaDB:  opts.ReplicaDB,
 	}
@@ -296,11 +299,6 @@ func (app *Application) transferTable(ctx context.Context, mobilityConn bun.Conn
 
 	app.log.Info("copying table from memory to replica database", zap.String("table", table))
 
-	if err != nil {
-		app.log.Error("error beginning transaction in the replica database", zap.String("table", table))
-		return err
-	}
-
 	tempTable, targetTable := fmt.Sprintf("%s_tmp", table), fmt.Sprintf("intimev2.%s", table)
 	_, err = tx.ExecContext(ctx, fmt.Sprintf("CREATE TEMPORARY TABLE %s (LIKE %s) ON COMMIT DROP", tempTable, targetTable))
 
@@ -420,6 +418,247 @@ func (app *Application) transferDelta(ctx context.Context, mobilityConn bun.Conn
 		app.log.Error("error inserting values into destination table in replica database", zap.Error(err), zap.String("table", table))
 		return err
 	}
+
+	return nil
+}
+
+// ---
+
+func (app *Application) replaceTable(ctx context.Context, mobilityConn bun.Conn, replicaConn bun.Conn, tx *sql.Tx, srcTable string, destTable string) error {
+	app.log.Info(
+		"REPLACE: source table (mobility) -> destination table (replica) | started",
+		zap.String("src", srcTable), zap.String("dest", destTable),
+	)
+
+	app.log.Info("COPY TO: source table (mobility) -> in-memory buffer | started", zap.String("table", srcTable))
+
+	var buf bytes.Buffer
+	res, err := pgdriver.CopyTo(ctx, mobilityConn, &buf, fmt.Sprintf("COPY %s TO STDOUT WITH CSV", srcTable))
+
+	if err != nil {
+		app.log.Error("COPY TO: source table (mobility) -x> in-memory buffer | error", zap.Error(err), zap.String("table", srcTable))
+		return err
+	}
+
+	nRows, err := res.RowsAffected()
+
+	if err != nil {
+		app.log.Error(
+			"COPY TO: source table (mobility) -x> in-memory buffer | cannot determine number of affected rows",
+			zap.Error(err), zap.String("table", srcTable),
+		)
+		return err
+	}
+
+	app.log.Info(
+		"COPY TO: source table (mobility) -> in-memory buffer | completed",
+		zap.String("table", srcTable), zap.Int64("rows", nRows), zap.Int("bytes", buf.Len()),
+	)
+
+	tmpTable := fmt.Sprintf("%s_tmp", destTable)
+
+	app.log.Info("CREATE TEMPORARY TABLE (replica) | started", zap.String("temp", tmpTable), zap.String("template", destTable))
+
+	_, err = tx.ExecContext(ctx, fmt.Sprintf("CREATE TEMPORARY TABLE IF NOT EXISTS %s (LIKE intimev2.%s) ON COMMIT DROP", tmpTable, destTable))
+	if err != nil {
+		app.log.Error("CREATE TEMPORARY TABLE (replica) | error", zap.Error(err), zap.String("temp", tmpTable), zap.String("template", destTable))
+		return err
+	}
+
+	app.log.Info("CREATE TEMPORARY TABLE (replica) | completed", zap.String("temp", tmpTable), zap.String("template", destTable))
+
+	app.log.Info("TRUNCATE TEMPORARY TABLE (replica) | started", zap.String("table", tmpTable))
+
+	_, err = tx.ExecContext(ctx, fmt.Sprintf("TRUNCATE %s", tmpTable))
+	if err != nil {
+		app.log.Error("TRUNCATE TEMPORARY TABLE (replica) | error", zap.Error(err), zap.String("table", tmpTable))
+		return err
+	}
+
+	app.log.Info("TRUNCATE TEMPORARY TABLE (replica) | completed", zap.String("table", tmpTable))
+
+	app.log.Info("COPY FROM: temporary table (replica) <- in-memory buffer | started", zap.String("table", tmpTable))
+
+	_, err = pgdriver.CopyFrom(ctx, replicaConn, &buf, fmt.Sprintf("COPY %s FROM STDIN WITH CSV", tmpTable))
+	if err != nil {
+		app.log.Error("COPY FROM: temporary table (replica) <x- in-memory buffer | error",
+			zap.Error(err), zap.String("table", tmpTable),
+		)
+		return err
+	}
+
+	app.log.Info("COPY FROM: temporary table (replica) <- in-memory buffer | completed", zap.String("table", tmpTable))
+
+	app.log.Info("DELETE FROM: destination table (replica) | started", zap.String("table", destTable))
+
+	_, err = tx.ExecContext(ctx, fmt.Sprintf("DELETE FROM intimev2.%s", destTable))
+	if err != nil {
+		app.log.Error("DELETE FROM: destination table (replica) | error", zap.Error(err), zap.String("table", destTable))
+		return err
+	}
+
+	app.log.Info("DELETE FROM: destination table (replica) | completed", zap.String("table", destTable))
+
+	app.log.Info(
+		"INSERT INTO: temporary table (replica) -> destination table (replica) | started",
+		zap.String("temp", tmpTable), zap.String("destination", destTable),
+	)
+
+	_, err = tx.ExecContext(ctx, fmt.Sprintf("INSERT INTO intimev2.%s (SELECT * FROM %s)", destTable, tmpTable))
+	if err != nil {
+		app.log.Info(
+			"INSERT INTO: temporary table (replica) -x> destination table (replica) | error",
+			zap.Error(err), zap.String("temp", tmpTable), zap.String("destination", destTable),
+		)
+		return err
+	}
+
+	app.log.Info(
+		"INSERT INTO: temporary table (replica) -> destination table (replica) | completed",
+		zap.String("temp", tmpTable), zap.String("destination", destTable),
+	)
+
+	app.log.Info(
+		"REPLACE: source table (mobility) -> destination table (replica) | completed",
+		zap.String("src", srcTable), zap.String("dest", destTable),
+	)
+
+	return nil
+}
+
+func (app *Application) updateTable(
+	ctx context.Context,
+	mobilityConn bun.Conn, replicaConn bun.Conn, tx *sql.Tx,
+	srcTable string, destTable string,
+	srcLastId int64, destLastId int64, maxDelta int64,
+) error {
+	if srcLastId == destLastId {
+		app.log.Info(
+			"UPDATE: source table (mobility) -> destination table (replica) | skipped",
+			zap.String("source", srcTable), zap.String("dest", destTable),
+			zap.Int64("sourceLastId", srcLastId), zap.Int64("destLastId", destLastId), zap.Int64("maxDelta", maxDelta),
+		)
+		return nil
+	}
+
+	app.log.Info(
+		"UPDATE: source table (mobility) -> destination table (replica) | started",
+		zap.String("source", srcTable), zap.String("dest", destTable),
+		zap.Int64("sourceLastId", srcLastId), zap.Int64("destLastId", destLastId), zap.Int64("maxDelta", maxDelta),
+	)
+
+	from, to := destLastId, destLastId+maxDelta
+	if to > srcLastId {
+		to = srcLastId
+	}
+
+	app.log.Info(
+		"COPY TO: source table (mobility) -> in-memory buffer | started",
+		zap.String("table", srcTable), zap.Int64("from", from), zap.Int64("to", to),
+	)
+
+	var buf bytes.Buffer
+	res, err := pgdriver.CopyTo(
+		ctx, mobilityConn, &buf,
+		fmt.Sprintf(
+			"COPY (SELECT * FROM %s WHERE id > %d AND id <= %d) TO STDOUT WITH CSV",
+			srcTable, from, to,
+		),
+	)
+
+	if err != nil {
+		app.log.Error(
+			"COPY TO: source table (mobility) -x> in-memory buffer | error",
+			zap.Error(err),
+			zap.String("table", srcTable), zap.Int64("from", from), zap.Int64("to", to),
+		)
+		return err
+	}
+
+	nRows, err := res.RowsAffected()
+
+	if err != nil {
+		app.log.Error(
+			"COPY TO: source table (mobility) -x> in-memory buffer | cannot determine number of affected rows",
+			zap.Error(err),
+			zap.String("table", srcTable), zap.Int64("from", from), zap.Int64("to", to),
+		)
+		return err
+	}
+
+	app.log.Info(
+		"COPY TO: source table (mobility) -> in-memory buffer | completed",
+		zap.String("table", srcTable), zap.Int64("from", from), zap.Int64("to", to),
+		zap.Int64("rows", nRows), zap.Int("bytes", buf.Len()),
+	)
+
+	tmpTable := fmt.Sprintf("%s_tmp", destTable)
+
+	app.log.Info("CREATE TEMPORARY TABLE (replica) | started", zap.String("temp", tmpTable), zap.String("template", destTable))
+
+	_, err = tx.ExecContext(ctx, fmt.Sprintf("CREATE TEMPORARY TABLE IF NOT EXISTS %s (LIKE intimev2.%s) ON COMMIT DROP", tmpTable, destTable))
+	if err != nil {
+		app.log.Info("CREATE TEMPORARY TABLE (replica) | error", zap.Error(err), zap.String("temp", tmpTable), zap.String("template", destTable))
+		return err
+	}
+
+	app.log.Info("CREATE TEMPORARY TABLE (replica) | completed", zap.String("temp", tmpTable), zap.String("template", destTable))
+
+	app.log.Info("TRUNCATE TEMPORARY TABLE (replica) | started", zap.String("table", tmpTable))
+
+	_, err = tx.ExecContext(ctx, fmt.Sprintf("TRUNCATE %s", tmpTable))
+	if err != nil {
+		app.log.Error("TRUNCATE TEMPORARY TABLE (replica) | error", zap.Error(err), zap.String("table", tmpTable))
+		return err
+	}
+
+	app.log.Info("TRUNCATE TEMPORARY TABLE (replica) | completed", zap.String("table", tmpTable))
+
+	app.log.Info(
+		"COPY FROM: temporary table (replica) <- in-memory buffer | started",
+		zap.String("table", tmpTable), zap.Int64("from", from), zap.Int64("to", to),
+	)
+
+	_, err = pgdriver.CopyFrom(ctx, replicaConn, &buf, fmt.Sprintf("COPY %s FROM STDIN WITH CSV", tmpTable))
+	if err != nil {
+		app.log.Error(
+			"COPY FROM: temporary table (replica) <x- in-memory buffer | error",
+			zap.Error(err),
+			zap.String("table", tmpTable), zap.Int64("from", from), zap.Int64("to", to),
+		)
+		return err
+	}
+
+	app.log.Info(
+		"COPY FROM: temporary table (replica) <- in-memory buffer | completed",
+		zap.String("table", tmpTable), zap.Int64("from", from), zap.Int64("to", to),
+	)
+
+	app.log.Info(
+		"INSERT INTO: temporary table (replica) -> destination table (replica) | started",
+		zap.String("temp", tmpTable), zap.String("destination", destTable), zap.Int64("from", from), zap.Int64("to", to),
+	)
+
+	_, err = tx.ExecContext(ctx, fmt.Sprintf("INSERT INTO intimev2.%s (SELECT * FROM %s)", destTable, tmpTable))
+	if err != nil {
+		app.log.Info(
+			"INSERT INTO: temporary table (replica) -x> destination table (replica) | error",
+			zap.Error(err),
+			zap.String("temp", tmpTable), zap.String("destination", destTable), zap.Int64("from", from), zap.Int64("to", to),
+		)
+		return err
+	}
+
+	app.log.Info(
+		"INSERT INTO: temporary table (replica) -> destination table (replica) | completed",
+		zap.String("temp", tmpTable), zap.String("destination", destTable), zap.Int64("from", from), zap.Int64("to", to),
+	)
+
+	app.log.Info(
+		"UPDATE: source table (mobility) -> destination table (replica) | completed",
+		zap.String("source", srcTable), zap.String("dest", destTable),
+		zap.Int64("sourceLastId", srcLastId), zap.Int64("destLastId", destLastId), zap.Int64("maxDelta", maxDelta),
+	)
 
 	return nil
 }

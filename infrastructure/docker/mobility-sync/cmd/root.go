@@ -129,6 +129,7 @@ by dumping and restoring data.`,
 		}
 
 		app := root.NewApplication(log, root.Options{
+			Testing:    testing,
 			MobilityDB: mobilityDB,
 			ReplicaDB:  replicaDB,
 		})
@@ -176,7 +177,9 @@ func Execute() {
 var cfgFile string
 
 var (
-	debug    bool
+	debug   bool
+	testing bool
+
 	interval time.Duration
 
 	mobilityDSN          string
@@ -210,6 +213,8 @@ func init() {
 	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is ./mobility-sync.yaml)")
 
 	rootCmd.Flags().BoolVar(&debug, "debug", false, "enable debug mode with enhanced logs")
+	rootCmd.Flags().BoolVar(&testing, "test", false, "enable testing mode, which synchronizes only a subset of the data")
+
 	rootCmd.Flags().DurationVar(&interval, "interval", 5*time.Minute, "duration to wait between synchronization runs")
 
 	rootCmd.Flags().StringVar(&mobilityDSN, "mobility.dsn", "", "mobility database DSN")
