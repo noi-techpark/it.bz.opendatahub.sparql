@@ -34,236 +34,482 @@ func NewApplication(log *zap.Logger, opts Options) *Application {
 	}
 }
 
-type table struct {
-	Name       string
-	AppendOnly bool
+type taskType int
+
+const (
+	replace taskType = iota + 1
+	update
+)
+
+func (t taskType) String() string {
+	switch t {
+	case replace:
+		return "R"
+	case update:
+		return "U"
+	default:
+		return "?"
+	}
 }
 
-type transaction struct {
-	Name   string
-	Tables []table
+type task struct {
+	Src  string
+	Dest string
+	Type taskType
 }
 
-func (app *Application) Synchronize(parent context.Context) {
-	transactions := []transaction{
-		{
-			Name: "type & type_metadata",
-			Tables: []table{
-				{Name: "type", AppendOnly: false},
-				{Name: "type_metadata", AppendOnly: true},
-			},
+func (t task) String() string {
+	return fmt.Sprintf("%s -> %s (%s)", t.Src, t.Dest, t.Type)
+}
+
+type tasks []task
+
+func (t tasks) StringSlice() []string {
+	ss := make([]string, 0, len(t))
+	for _, task := range t {
+		ss = append(ss, task.String())
+	}
+	return ss
+}
+
+type jobType int
+
+const (
+	singleTx jobType = iota + 1
+	multiTx
+)
+
+func (t jobType) String() string {
+	switch t {
+	case singleTx:
+		return "single"
+	case multiTx:
+		return "multi"
+	default:
+		return "unknown"
+	}
+}
+
+type job struct {
+	Type  jobType
+	Tasks tasks
+}
+
+var testJobs = []job{
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "type", Dest: "type", Type: replace},
+			{Src: "type_metadata", Dest: "type_metadata", Type: update},
 		},
-		{
-			Name: "metadata & station",
-			Tables: []table{
-				{Name: "metadata", AppendOnly: true},
-				{Name: "station", AppendOnly: false},
-			},
+	},
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "metadata", Dest: "metadata", Type: update},
+			{Src: "station", Dest: "station", Type: replace},
 		},
-		{
-			Name: "edge",
-			Tables: []table{
-				{Name: "edge", AppendOnly: false},
-			},
+	},
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "edge", Dest: "edge", Type: replace},
 		},
-		{
-			Name: "measurement",
-			Tables: []table{
-				{Name: "measurement", AppendOnly: false},
-			},
+	},
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "measurement", Dest: "measurement", Type: replace},
 		},
-		{
-			Name: "measurementstring",
-			Tables: []table{
-				{Name: "measurementstring", AppendOnly: false},
-			},
+	},
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "measurementstring", Dest: "measurementstring", Type: replace},
 		},
+	},
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "measurement", Dest: "measurementhistory", Type: replace},
+		},
+	},
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "measurementstring", Dest: "measurementstringhistory", Type: replace},
+		},
+	},
+}
+
+var prodJobs = []job{
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "type", Dest: "type", Type: replace},
+			{Src: "type_metadata", Dest: "type_metadata", Type: update},
+		},
+	},
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "metadata", Dest: "metadata", Type: update},
+			{Src: "station", Dest: "station", Type: replace},
+		},
+	},
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "edge", Dest: "edge", Type: replace},
+		},
+	},
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "measurement", Dest: "measurement", Type: replace},
+		},
+	},
+	{
+		Type: singleTx,
+		Tasks: tasks{
+			{Src: "measurementstring", Dest: "measurementstring", Type: replace},
+		},
+	},
+	{
+		Type: multiTx,
+		Tasks: tasks{
+			{Src: "measurementhistory", Dest: "measurementhistory", Type: update},
+		},
+	},
+	{
+		Type: multiTx,
+		Tasks: tasks{
+			{Src: "measurementstringhistory", Dest: "measurementstringhistory", Type: update},
+		},
+	},
+}
+
+func (app *Application) Synchronize(parentCtx context.Context) {
+	jobs := prodJobs
+
+	if app.testing {
+		jobs = testJobs
 	}
 
-	for _, transaction := range transactions {
-		ctx, cancel := context.WithCancel(parent)
-		defer cancel()
-
-		mobilityConn, err := app.mobilityDB.Conn(ctx)
-
-		if err != nil {
-			app.log.Error("error establishing a connection to the mobility database", zap.Error(err))
-			return
-		}
-
-		defer func() {
-			cancel()
-			if err := mobilityConn.Close(); !errors.Is(err, sql.ErrConnDone) && err != nil {
-				app.log.Error("error closing connection with mobility database", zap.Error(err))
-			}
-		}()
-
-		replicaConn, err := app.replicaDB.Conn(ctx)
-
-		if err != nil {
-			app.log.Error("error establishing a connection to the replica database", zap.Error(err))
-			return
-		}
-
-		defer func() {
-			cancel()
-			if err := replicaConn.Close(); !errors.Is(err, sql.ErrConnDone) && err != nil {
-				app.log.Error("error closing connection with replica database", zap.Error(err))
-			}
-		}()
-
-		tx, err := replicaConn.BeginTx(ctx, nil)
-
-		if err != nil {
-			app.log.Error("error beginning transaction in the replica database", zap.Error(err), zap.String("transaction", transaction.Name))
-		}
-
-		for _, table := range transaction.Tables {
-			if table.AppendOnly {
-				app.log.Info("querying last record id from replica database", zap.String("table", table.Name))
-
-				from, err := app.lastRecordID(app.replicaDB, table.Name)
-
-				if err != nil {
-					app.log.Error("error querying last record id from replica database", zap.Error(err), zap.String("table", table.Name))
-					return
-				}
-
-				app.log.Debug("finished querying last record id from replica database", zap.String("table", table.Name), zap.Int64("id", from))
-
-				app.log.Info("querying last record id from mobility database", zap.String("table", table.Name))
-
-				to, err := app.lastRecordID(app.mobilityDB, table.Name)
-
-				if err != nil {
-					app.log.Error("error querying last record id from mobility database", zap.Error(err), zap.String("table", table.Name))
-					return
-				}
-
-				app.log.Debug("finished querying last record id from mobility database", zap.String("table", table.Name), zap.Int64("id", to))
-
-				app.log.Info("transfering delta for table", zap.String("table", table.Name), zap.Int64("from", from), zap.Int64("to", to))
-
-				if err := app.transferDelta(ctx, mobilityConn, replicaConn, tx, table.Name, from, to); err != nil {
-					if err = tx.Rollback(); !errors.Is(err, sql.ErrTxDone) && err != nil {
-						app.log.Error("error rolling back transaction", zap.Error(err), zap.String("transaction", transaction.Name))
-					}
-
-					return
-				}
-			} else {
-				app.log.Info("transfering table", zap.String("table", table.Name))
-
-				if err := app.transferTable(ctx, mobilityConn, replicaConn, tx, table.Name); err != nil {
-					if err = tx.Rollback(); !errors.Is(err, sql.ErrTxDone) && err != nil {
-						app.log.Error("error rolling back transaction", zap.Error(err), zap.String("transaction", transaction.Name))
-					}
-
-					return
-				}
-			}
-		}
-
-		app.log.Info("committing transaction", zap.String("transaction", transaction.Name))
-
-		err = tx.Commit()
-
-		if err != nil {
-			app.log.Error("error committing transaction", zap.Error(err), zap.String("transaction", transaction.Name))
-			return
+	for _, job := range jobs {
+		if err := app.execJob(parentCtx, job); err != nil {
+			break
 		}
 	}
+}
 
-	bigTables := []string{"measurementhistory", "measurementstringhistory"}
+func (app *Application) execJob(parentCtx context.Context, job job) error {
+	jobCtx, cancelJobCtx := context.WithCancel(parentCtx)
+	defer cancelJobCtx()
 
-	for _, table := range bigTables {
-		ctx, cancel := context.WithCancel(parent)
-		defer cancel()
+	app.log.Info(
+		"JOB | started",
+		zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+	)
 
-		mobilityConn, err := app.mobilityDB.Conn(ctx)
+	app.log.Info(
+		"CONNECT: mobility database | started",
+		zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+	)
 
+	mobilityConn, err := app.mobilityDB.Conn(jobCtx)
+	if err != nil {
+		app.log.Info(
+			"CONNECT: mobility database | error",
+			zap.Error(err),
+			zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+		)
+		return err
+	}
+
+	app.log.Info(
+		"CONNECT: mobility database | completed",
+		zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+	)
+
+	defer func() {
+		cancelJobCtx()
+		if err := mobilityConn.Close(); !errors.Is(err, sql.ErrConnDone) && err != nil {
+			app.log.Error(
+				"CLOSE: mobility database | error",
+				zap.Error(err),
+				zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+			)
+		}
+	}()
+
+	app.log.Info(
+		"CONNECT: replica database | started",
+		zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+	)
+
+	replicaConn, err := app.replicaDB.Conn(jobCtx)
+	if err != nil {
+		app.log.Info(
+			"CONNECT: replica database | error",
+			zap.Error(err),
+			zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+		)
+		return err
+	}
+
+	app.log.Info(
+		"CONNECT: replica database | completed",
+		zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+	)
+
+	defer func() {
+		cancelJobCtx()
+		if err := replicaConn.Close(); !errors.Is(err, sql.ErrConnDone) && err != nil {
+			app.log.Error(
+				"CLOSE: replica database | error",
+				zap.Error(err),
+				zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+			)
+		}
+	}()
+
+	switch job.Type {
+	case singleTx:
+		app.log.Info(
+			"BEGIN TRANSACTION (replica) | started",
+			zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+		)
+
+		tx, err := replicaConn.BeginTx(jobCtx, nil)
 		if err != nil {
-			app.log.Error("error establishing a connection to the mobility database", zap.Error(err))
-			return
+			app.log.Error(
+				"BEGIN TRANSACTION (replica) | error",
+				zap.Error(err),
+				zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+			)
 		}
 
+		app.log.Info(
+			"BEGIN TRANSACTION (replica) | completed",
+			zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+		)
+
 		defer func() {
-			cancel()
-			if err := mobilityConn.Close(); !errors.Is(err, sql.ErrConnDone) && err != nil {
-				app.log.Error("error closing connection with mobility database", zap.Error(err))
+			if err := tx.Rollback(); !errors.Is(err, sql.ErrTxDone) && err != nil {
+				app.log.Error(
+					"ROLLBACK TRANSACTION (replica) | error",
+					zap.Error(err),
+					zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+				)
 			}
 		}()
 
-		replicaConn, err := app.replicaDB.Conn(ctx)
+		for _, task := range job.Tasks {
+			app.log.Info(
+				"TASK | started",
+				zap.Stringer("type", task.Type), zap.String("src", task.Src), zap.String("dest", task.Dest),
+			)
 
-		if err != nil {
-			app.log.Error("error establishing a connection to the replica database", zap.Error(err))
-			return
-		}
+			switch task.Type {
+			case replace:
+				if err = app.replaceTable(jobCtx, mobilityConn, replicaConn, tx, task.Src, task.Dest); err != nil {
+					return err
+				}
+			case update:
+				app.log.Info(
+					"QUERY LAST RECORD ID (mobility) | started",
+					zap.String("table", task.Src),
+				)
 
-		defer func() {
-			cancel()
-			if err := replicaConn.Close(); !errors.Is(err, sql.ErrConnDone) && err != nil {
-				app.log.Error("error closing connection with replica database", zap.Error(err))
+				srcLastId, err := app.lastRecordID(app.mobilityDB, task.Src)
+				if err != nil {
+					app.log.Info(
+						"QUERY LAST RECORD ID (mobility) | error",
+						zap.Error(err),
+						zap.String("table", task.Src),
+					)
+					return err
+				}
+
+				app.log.Info(
+					"QUERY LAST RECORD ID (mobility) | completed",
+					zap.String("table", task.Src), zap.Int64("id", srcLastId),
+				)
+
+				app.log.Info(
+					"QUERY LAST RECORD ID (replica) | started",
+					zap.String("table", task.Dest),
+				)
+
+				destLastId, err := app.lastRecordID(app.replicaDB, task.Dest)
+				if err != nil {
+					app.log.Info(
+						"QUERY LAST RECORD ID (replica) | error",
+						zap.Error(err),
+						zap.String("table", task.Dest),
+					)
+					return err
+				}
+
+				app.log.Info(
+					"QUERY LAST RECORD ID (replica) | completed",
+					zap.String("table", task.Dest), zap.Int64("id", destLastId),
+				)
+
+				for from := destLastId; from < srcLastId; from += 1_000_000 {
+					if err = app.updateTable(jobCtx, mobilityConn, replicaConn, tx, task.Src, task.Dest, srcLastId, from, 1_000_000); err != nil {
+						return err
+					}
+				}
 			}
-		}()
 
-		app.log.Info("querying last record id from replica database", zap.String("table", table))
-
-		from, err := app.lastRecordID(app.replicaDB, table)
-
-		if err != nil {
-			app.log.Error("error querying last record id from replica database", zap.Error(err), zap.String("table", table))
-			return
+			app.log.Info(
+				"TASK | completed",
+				zap.Stringer("type", task.Type), zap.String("src", task.Src), zap.String("dest", task.Dest),
+			)
 		}
 
-		app.log.Debug("finished querying last record id from replica database", zap.String("table", table), zap.Int64("id", from))
+		app.log.Info(
+			"COMMIT TRANSACTION (replica) | started",
+			zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+		)
 
-		app.log.Info("querying last record id from mobility database", zap.String("table", table))
-
-		to, err := app.lastRecordID(app.mobilityDB, table)
-
-		if err != nil {
-			app.log.Error("error querying last record id from mobility database", zap.Error(err), zap.String("table", table))
-			return
+		if err = tx.Commit(); err != nil {
+			app.log.Error(
+				"COMMIT TRANSACTION (replica) | error",
+				zap.Error(err),
+				zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+			)
+			return err
 		}
 
-		app.log.Debug("finished querying last record id from mobility database", zap.String("table", table), zap.Int64("id", to))
+		app.log.Info(
+			"COMMIT TRANSACTION (replica) | completed",
+			zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+		)
 
-		app.log.Info("transfering delta for big table", zap.String("table", table), zap.Int64("from", from), zap.Int64("to", to))
+	case multiTx:
+		if len(job.Tasks) != 1 && job.Tasks[0].Type != update {
+			err = errors.New("multi tx only supports a single update task")
+			app.log.Error(
+				"JOB | error",
+				zap.Error(err),
+				zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+			)
+			return err
+		}
 
-		step := int64(1_000_000)
-		for start := from; start < to; start += step {
-			end := start + step
+		app.log.Info(
+			"QUERY LAST RECORD ID (mobility) | started",
+			zap.String("table", job.Tasks[0].Src),
+		)
 
-			if end-1 > to {
-				end = to
-			}
+		srcLastId, err := app.lastRecordID(app.mobilityDB, job.Tasks[0].Src)
+		if err != nil {
+			app.log.Info(
+				"QUERY LAST RECORD ID (mobility) | error",
+				zap.Error(err),
+				zap.String("table", job.Tasks[0].Src),
+			)
+			return err
+		}
 
-			tx, err := replicaConn.BeginTx(ctx, nil)
+		app.log.Info(
+			"QUERY LAST RECORD ID (mobility) | completed",
+			zap.String("table", job.Tasks[0].Src), zap.Int64("id", srcLastId),
+		)
+
+		app.log.Info(
+			"QUERY LAST RECORD ID (replica) | started",
+			zap.String("table", job.Tasks[0].Dest),
+		)
+
+		destLastId, err := app.lastRecordID(app.replicaDB, job.Tasks[0].Dest)
+		if err != nil {
+			app.log.Info(
+				"QUERY LAST RECORD ID (replica) | error",
+				zap.Error(err),
+				zap.String("table", job.Tasks[0].Dest),
+			)
+			return err
+		}
+
+		app.log.Info(
+			"QUERY LAST RECORD ID (replica) | completed",
+			zap.String("table", job.Tasks[0].Dest), zap.Int64("id", destLastId),
+		)
+
+		for from := destLastId; from < srcLastId; from += 1_000_000 {
+			// isolate inside anonymous function to have single defer per for loop
+			err = func() error {
+				app.log.Info(
+					"BEGIN TRANSACTION (replica) | started",
+					zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+				)
+
+				tx, err := replicaConn.BeginTx(jobCtx, nil)
+				if err != nil {
+					app.log.Error(
+						"BEGIN TRANSACTION (replica) | error",
+						zap.Error(err),
+						zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+					)
+				}
+
+				app.log.Info(
+					"BEGIN TRANSACTION (replica) | completed",
+					zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+				)
+
+				defer func() {
+					if err := tx.Rollback(); !errors.Is(err, sql.ErrTxDone) && err != nil {
+						app.log.Error(
+							"ROLLBACK TRANSACTION (replica) | error",
+							zap.Error(err),
+							zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+						)
+					}
+				}()
+
+				if err = app.updateTable(jobCtx, mobilityConn, replicaConn, tx, job.Tasks[0].Src, job.Tasks[0].Dest, srcLastId, from, 1_000_000); err != nil {
+					return err
+				}
+
+				app.log.Info(
+					"COMMIT TRANSACTION (replica) | started",
+					zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+				)
+
+				if err = tx.Commit(); err != nil {
+					app.log.Error(
+						"COMMIT TRANSACTION (replica) | error",
+						zap.Error(err),
+						zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+					)
+					return err
+				}
+
+				app.log.Info(
+					"COMMIT TRANSACTION (replica) | completed",
+					zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+				)
+
+				return nil
+			}()
 
 			if err != nil {
-				app.log.Error("error beginning transaction in the replica database for big table", zap.Error(err), zap.String("table", table), zap.Int64("start", start), zap.Int64("end", end))
-			}
-
-			if err := app.transferDelta(ctx, mobilityConn, replicaConn, tx, table, start, end); err != nil {
-				if err = tx.Rollback(); !errors.Is(err, sql.ErrTxDone) && err != nil {
-					app.log.Error("error rolling back transaction for big table", zap.Error(err), zap.String("table", table), zap.Int64("start", start), zap.Int64("end", end))
-				}
-
-				return
-			}
-
-			app.log.Info("committing transaction for big table", zap.String("table", table), zap.Int64("start", start), zap.Int64("end", end))
-
-			err = tx.Commit()
-
-			if err != nil {
-				app.log.Error("error committing transaction for big table", zap.Error(err), zap.String("table", table), zap.Int64("start", start), zap.Int64("end", end))
-				return
+				return err
 			}
 		}
 	}
+
+	app.log.Info(
+		"JOB | completed",
+		zap.Stringer("type", job.Type), zap.Strings("tasks", job.Tasks.StringSlice()),
+	)
+
+	return nil
 }
 
 func (app *Application) lastRecordID(db *bun.DB, table string) (int64, error) {
@@ -276,153 +522,6 @@ func (app *Application) lastRecordID(db *bun.DB, table string) (int64, error) {
 
 	return id.Int64, nil
 }
-
-func (app *Application) transferTable(ctx context.Context, mobilityConn bun.Conn, replicaConn bun.Conn, tx *sql.Tx, table string) error {
-	app.log.Info("copying table from mobility database to memory", zap.String("table", table))
-
-	var data bytes.Buffer
-	result, err := pgdriver.CopyTo(ctx, mobilityConn, &data, fmt.Sprintf("COPY %s TO STDOUT WITH CSV", table))
-
-	if err != nil {
-		app.log.Error("error copying table from mobility database to memory", zap.Error(err), zap.String("table", table))
-		return err
-	}
-
-	numRows, err := result.RowsAffected()
-
-	if err != nil {
-		app.log.Error("error reading number of affected row from mobility database", zap.Error(err), zap.String("table", table))
-		return err
-	}
-
-	app.log.Debug("finished copying table from mobility database to memory", zap.String("table", table), zap.Int64("rows", numRows), zap.Int("bytes", data.Len()))
-
-	app.log.Info("copying table from memory to replica database", zap.String("table", table))
-
-	tempTable, targetTable := fmt.Sprintf("%s_tmp", table), fmt.Sprintf("intimev2.%s", table)
-	_, err = tx.ExecContext(ctx, fmt.Sprintf("CREATE TEMPORARY TABLE %s (LIKE %s) ON COMMIT DROP", tempTable, targetTable))
-
-	if err != nil {
-		app.log.Error("error creating temporary table to copy data into", zap.Error(err), zap.String("table", table))
-		return err
-	}
-
-	_, err = pgdriver.CopyFrom(ctx, replicaConn, &data, fmt.Sprintf("COPY %s FROM STDIN WITH CSV", tempTable))
-
-	if err != nil {
-		app.log.Error("error copying table from memory to replica database", zap.Error(err), zap.String("table", table))
-		return err
-	}
-
-	app.log.Info("truncating destination table in replica database", zap.String("table", targetTable))
-
-	_, err = tx.ExecContext(ctx, fmt.Sprintf("DELETE FROM %s", targetTable))
-
-	if err != nil {
-		app.log.Error("error truncating destination table in replica database", zap.Error(err), zap.String("table", table))
-		return err
-	}
-
-	app.log.Info("inserting value into destination table in replica database", zap.String("table", targetTable))
-
-	_, err = tx.ExecContext(ctx, fmt.Sprintf("INSERT INTO %s (SELECT * FROM %s)", targetTable, tempTable))
-
-	if err != nil {
-		app.log.Error("error inserting values into destination table in replica database", zap.Error(err), zap.String("table", table))
-		return err
-	}
-
-	return nil
-}
-
-func (app *Application) transferDelta(ctx context.Context, mobilityConn bun.Conn, replicaConn bun.Conn, tx *sql.Tx, table string, from, to int64) error {
-	tempTable, targetTable := fmt.Sprintf("%s_tmp", table), fmt.Sprintf("intimev2.%s", table)
-	_, err := tx.ExecContext(ctx, fmt.Sprintf("CREATE TEMPORARY TABLE %s (LIKE %s) ON COMMIT DROP", tempTable, targetTable))
-
-	if err != nil {
-		app.log.Error("error creating temporary table to copy data into", zap.Error(err), zap.String("table", table))
-		return err
-	}
-
-	step := int64(1_000_000)
-	for start := from; start < to; start += step {
-		end := start + step
-
-		if end-1 > to {
-			end = to
-		}
-
-		app.log.Info(
-			"copying delta segment from mobility database to memory",
-			zap.String("table", table),
-			zap.Int64("from", from), zap.Int64("to", to), zap.Int64("step", step),
-			zap.Int64("start", start), zap.Int64("end", end),
-		)
-
-		var data bytes.Buffer
-		result, err := pgdriver.CopyTo(ctx, mobilityConn, &data, fmt.Sprintf("COPY (SELECT * FROM %s WHERE id > %d AND id <= %d) TO STDOUT WITH CSV", table, start, end))
-
-		if err != nil {
-			app.log.Error(
-				"error copying delta segment from mobility database to memory",
-				zap.Error(err), zap.String("table", table),
-				zap.Int64("from", from), zap.Int64("to", to), zap.Int64("step", step),
-				zap.Int64("start", start), zap.Int64("end", end),
-			)
-			return err
-		}
-
-		numRows, err := result.RowsAffected()
-
-		if err != nil {
-			app.log.Error(
-				"error reading number of affected row from mobility database",
-				zap.Error(err), zap.String("table", table),
-				zap.Int64("from", from), zap.Int64("to", to), zap.Int64("step", step),
-				zap.Int64("start", start), zap.Int64("end", end),
-			)
-			return err
-		}
-
-		app.log.Debug(
-			"finished copying delta segment from mobility database to memory",
-			zap.String("table", table), zap.Int64("rows", numRows), zap.Int("bytes", data.Len()),
-			zap.Int64("from", from), zap.Int64("to", to), zap.Int64("step", step),
-			zap.Int64("start", start), zap.Int64("end", end),
-		)
-
-		app.log.Info(
-			"copying delta segment from memory to replica database",
-			zap.String("table", table),
-			zap.Int64("from", from), zap.Int64("to", to), zap.Int64("step", step),
-			zap.Int64("start", start), zap.Int64("end", end),
-		)
-		_, err = pgdriver.CopyFrom(ctx, replicaConn, &data, fmt.Sprintf("COPY %s FROM STDIN WITH CSV", tempTable))
-
-		if err != nil {
-			app.log.Error(
-				"error delta segment from memory to replica database",
-				zap.Error(err), zap.String("table", table),
-				zap.Int64("from", from), zap.Int64("to", to), zap.Int64("step", step),
-				zap.Int64("start", start), zap.Int64("end", end),
-			)
-			return err
-		}
-	}
-
-	app.log.Info("inserting values into destination table in replica database", zap.String("table", table))
-
-	_, err = tx.ExecContext(ctx, fmt.Sprintf("INSERT INTO %s (SELECT * FROM %s)", targetTable, tempTable))
-
-	if err != nil {
-		app.log.Error("error inserting values into destination table in replica database", zap.Error(err), zap.String("table", table))
-		return err
-	}
-
-	return nil
-}
-
-// ---
 
 func (app *Application) replaceTable(ctx context.Context, mobilityConn bun.Conn, replicaConn bun.Conn, tx *sql.Tx, srcTable string, destTable string) error {
 	app.log.Info(
@@ -532,7 +631,12 @@ func (app *Application) updateTable(
 	srcTable string, destTable string,
 	srcLastId int64, destLastId int64, maxDelta int64,
 ) error {
-	if srcLastId == destLastId {
+	from, to := destLastId, destLastId+maxDelta
+	if to > srcLastId {
+		to = srcLastId
+	}
+
+	if from == to || srcLastId < 0 || destLastId < 0 {
 		app.log.Info(
 			"UPDATE: source table (mobility) -> destination table (replica) | skipped",
 			zap.String("source", srcTable), zap.String("dest", destTable),
@@ -546,11 +650,6 @@ func (app *Application) updateTable(
 		zap.String("source", srcTable), zap.String("dest", destTable),
 		zap.Int64("sourceLastId", srcLastId), zap.Int64("destLastId", destLastId), zap.Int64("maxDelta", maxDelta),
 	)
-
-	from, to := destLastId, destLastId+maxDelta
-	if to > srcLastId {
-		to = srcLastId
-	}
 
 	app.log.Info(
 		"COPY TO: source table (mobility) -> in-memory buffer | started",

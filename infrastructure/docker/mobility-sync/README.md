@@ -58,6 +58,17 @@ This is the list of the transactions run by the tool, which reflects the underly
 
 - measurementstring
 
+### Testing mode
+
+In testing mode, the synchronization of the big tables is disabled, to reduce the total size of the database.
+
+Instead, the big tables are truncated, and the data from the equivalent append-only table is copied into them.
+
+| Big table | Append-only table |
+| :- | :- |
+| measurementhistory | measurement |
+| measurementstringhistory | measurementstring |
+
 ## CLI interface
 
 ```text
@@ -100,6 +111,7 @@ Flags:
       --replica.timeout.read duration     replica timeout for socket reads (default 10s)
       --replica.timeout.write duration    replica timeout for socket writes (default 5s)
       --replica.user string               replica database user
+      --test                              enable testing mode, which synchronizes only a subset of the data
 ```
 
 Either provide a DNS for a database or build one via the provided flags.
