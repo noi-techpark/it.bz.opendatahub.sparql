@@ -29,7 +29,7 @@ source		SELECT "Id"
 mappingId	LodgingBusiness
 target		odh:lodging-businesses/{id} a schema:LodgingBusiness ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{id}/{rating} ; sioc:has_container <https://kg.opendatahub.bz.it/lodging-businesses/> .
 source		SELECT "Id" AS id, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone,
-			"AccoDetail-it-Shortdesc" AS it_desc,  "AccoDetail-de-Shortdesc" AS de_desc,  "AccoDetail-en-Shortdesc" AS en_desc, "AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
+			"AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
 			FROM "v_accommodationsopen"
 
 mappingId	Lodging business - geo
