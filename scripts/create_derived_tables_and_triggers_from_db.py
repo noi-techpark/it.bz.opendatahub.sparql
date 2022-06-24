@@ -581,9 +581,9 @@ if __name__ == '__main__':
         usage()
         exit(2)
 
-        if len(opts) == 0:
-            usage()
-            exit(2)
+    if len(opts) == 0:
+        usage()
+        exit(2)
 
     source_table = None
     user = None

@@ -29,7 +29,7 @@ source		SELECT "Id"
 mappingId	LodgingBusiness
 target		odh:lodging-businesses/{id} a schema:LodgingBusiness ; schema:name {de_name}@de , {it_name}@it , {en_name}@en ; schema:telephone {de_phone} ; schema:faxNumber {de_fax} ; schema:description {it_desc}@it , {de_desc}@de , {en_desc}@en ; schema:alternateName {de_add_name}@de , {en_add_name}@en , {it_add_name}@it ; schema:url <{url}> ; schema:starRating data:category/accommodation/{id}/{rating} ; sioc:has_container <https://kg.opendatahub.bz.it/lodging-businesses/> .
 source		SELECT "Id" AS id, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS de_phone,
-			"AccoDetail-de-Fax" AS  de_fax, "AccoDetail-it-Shortdesc" AS it_desc,  "AccoDetail-de-Shortdesc" AS de_desc,  "AccoDetail-en-Shortdesc" AS en_desc, "AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name, "AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
+			"AccoDetail-it-Shortdesc" AS it_desc,  "AccoDetail-de-Shortdesc" AS de_desc,  "AccoDetail-en-Shortdesc" AS en_desc, "AccoCategoryId" as rating, "AccoDetail-de-Website" AS url
 			FROM "v_accommodationsopen"
 
 mappingId	Lodging business - geo
@@ -43,8 +43,7 @@ source		SELECT "Id" AS id,
 			"AccoDetail-de-City" AS de_city, "AccoDetail-de-Zip" AS de_zip, "AccoDetail-de-Street" AS de_street,
 			"AccoDetail-it-City" AS it_city, "AccoDetail-it-Street" AS it_street,
 			"AccoDetail-en-City" AS en_city, "AccoDetail-en-Street" AS en_street,
-			"AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS phone, "AccoDetail-de-Mobile"  AS mobile, "AccoDetail-de-Fax" AS fax,
-			"AccoDetail-de-NameAddition" AS de_add_name, "AccoDetail-en-NameAddition" as en_add_name,  "AccoDetail-it-NameAddition" as it_add_name
+			"AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name" AS en_name, "AccoDetail-it-Name" AS it_name, "AccoDetail-de-Phone" AS phone,
 			FROM "v_accommodationsopen"
 
 mappingId	PensionHotel
