@@ -33,8 +33,8 @@ source		SELECT "Id" AS id, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name
 			FROM "v_accommodationsopen"
 
 mappingId	Lodging business - geo
-target		data:geo/accommodation/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} ; geo:asWKT {wkt}^^geo:wktLiteral . odh:lodging-businesses/{id} schema:geo data:geo/accommodation/{id} ; geo:defaultGeometry data:geo/accommodation/{id} .
-source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude, ST_AsText("Geometry") AS wkt
+target		data:geo/accommodation/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} . odh:lodging-businesses/{id} schema:geo data:geo/accommodation/{id} ; geo:defaultGeometry data:geo/accommodation/{id} .
+source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude
 			FROM "v_accommodationsopen"
 
 mappingId	LodgingBusiness - address
@@ -77,8 +77,8 @@ target		data:poi/{Id} schema:isPartOf odh:areas/{data} .
 source		SELECT "Id", "data" FROM "v_poisopen_AreaId";
 
 mappingId	POI-geo
-target		data:poi/{Id} schema:geo data:geo/poi/{Id} ; geo:defaultGeometry data:geo/poi/{Id} . data:geo/poi/{Id} a schema:GeoCoordinates, geo:Geometry ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} ; geo:asWKT {wkt}^^geo:wktLiteral.
-source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude", ST_AsText("Geometry") AS wkt FROM v_poisopen
+target		data:poi/{Id} schema:geo data:geo/poi/{Id} ; geo:defaultGeometry data:geo/poi/{Id} . data:geo/poi/{Id} a schema:GeoCoordinates, geo:Geometry ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} .
+source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen
 
 mappingId	Accommodation
 target		data:room/{Id} a schema:Accommodation ; schema:containedInPlace odh:lodging-businesses/{A0RID} ; schema:name {AccoRoomDetail-it-Name}@it , {AccoRoomDetail-en-Name}@en , {AccoRoomDetail-de-Name}@de ; :numberOfUnits {RoomQuantity} ; schema:occupancy data:occupancy/room/{Id} .
@@ -136,20 +136,20 @@ source		SELECT "Id" FROM v_accommodationroomsopen
 
 mappingId	SkiResort
 target		odh:ski-resorts/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^^xsd:string ; schema:name {Detail-en-Header}^^xsd:string  ; schema:image <{SkiAreaMapURL}> ; schema:isPartOf odh:ski-regions/{SkiRegionId} ; schema:geo data:geo/skiResort/{Id} ; geo:defaultGeometry data:geo/skiResort/{Id} ; sioc:has_container <https://kg.opendatahub.bz.it/ski-resorts/> .
-source		SELECT "Id", "Shortname", "Detail-en-Header", ST_AsText("Geometry") AS wkt, "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
+source		SELECT "Id", "Shortname", "Detail-en-Header", "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
 
 mappingId	SkiResort - geo
-target		data:geo/skiResort/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:longitude {longitude} ; schema:elevation {AltitudeTo}; geo:asWKT {wkt}^^geo:wktLiteral . odh:ski-resorts/{id} schema:geo data:geo/skiResort/{id} ; geo:defaultGeometry data:geo/skiResort/{id} .
-source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "AltitudeTo" AS AltitudeTo, ST_AsText("Geometry") AS wkt
+target		data:geo/skiResort/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:longitude {longitude} ; schema:elevation {AltitudeTo} . odh:ski-resorts/{id} schema:geo data:geo/skiResort/{id} ; geo:defaultGeometry data:geo/skiResort/{id} .
+source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "AltitudeTo" AS AltitudeTo
 			FROM "v_skiareasopen"
 
 mappingId	SkiRegion
 target		odh:ski-regions/{Id} a :SkiRegion ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string  ; schema:elevation {Altitude}^^xsd:decimal .
-source		SELECT "Id", "Shortname", ST_AsText("Geometry") AS wkt, "Altitude" FROM v_skiregionsopen
+source		SELECT "Id", "Shortname", "Altitude" FROM v_skiregionsopen
 
 mappingId	SkiRegion - geo
-target		data:geo/skiRegion/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:longitude {longitude} ; geo:asWKT {wkt}^^geo:wktLiteral . odh:ski-regions/{id} schema:geo data:geo/skiRegion/{id} ; geo:defaultGeometry data:geo/skiResort/{id} .
-source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude, ST_AsText("Geometry") AS wkt
+target		data:geo/skiRegion/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:longitude {longitude} . odh:ski-regions/{id} schema:geo data:geo/skiRegion/{id} ; geo:defaultGeometry data:geo/skiResort/{id} .
+source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude
 			FROM "v_skiregionsopen"
 
 mappingId	SkiResort_Area
@@ -187,8 +187,8 @@ target		odh:food-establishments/{Id} a schema:FoodEstablishment ; schema:name {D
 source		SELECT * FROM v_gastronomiesopen
 
 mappingId	Food establishments - geo
-target		data:geo/gastronomy/{Id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {Latitude} ; schema:elevation {Altitude} ; schema:longitude {Longitude} ; geo:asWKT {wkt}^^geo:wktLiteral .
-source		SELECT *, ST_AsText("Geometry") AS wkt FROM v_gastronomiesopen
+target		data:geo/gastronomy/{Id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {Latitude} ; schema:elevation {Altitude} ; schema:longitude {Longitude} .
+source		SELECT * FROM v_gastronomiesopen
 
 mappingId	Food establishments - address
 target		data:address/gastronomy/{Id} a schema:PostalAddress ; schema:streetAddress {ContactInfos-de-Address}@de , {ContactInfos-it-Address}@it , {ContactInfos-en-Address}@en ; schema:postalCode {ContactInfos-de-ZipCode} ; schema:addressLocality {ContactInfos-de-City}@de , {ContactInfos-it-City}@it , {ContactInfos-en-City}@en .
