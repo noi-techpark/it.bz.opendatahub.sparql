@@ -9,7 +9,7 @@ PREFIX : <http://noi.example.org/ontology/odh#>
    schema:url ?url ; schema:telephone ?telephone ;
    schema:priceRange ?priceRange ;
    schema:address [
-        a schema:PostalAddress ; schema:name ?aNameStr ; schema:alternateName ?alternateStr;
+        a schema:PostalAddress ; schema:name ?aNameStr ;
         schema:addressRegion ?province; schema:addressCountry ?country; schema:addressLocality ?aLocalityStr ;
         schema:streetAddress ?aStreetStr ;  schema:postalCode ?aZip ; schema:telephone ?telephone;
         schema:email ?email ;  schema:faxNumber ?fax  ] ;
@@ -164,16 +164,6 @@ PREFIX : <http://noi.example.org/ontology/odh#>
         ?a schema:addressLocality ?aLocality .
         FILTER ("en" = lang(?aLocality))
 
-   }
-
-   OPTIONAL {
-     ?a schema:alternateName ?alternate .
-     FILTER (?language  = lang(?alternate) )
-   }
-
-   OPTIONAL {
-       ?a schema:alternateName ?alternate .
-       FILTER ("en" = lang(?alternate))
    }
 
    OPTIONAL {

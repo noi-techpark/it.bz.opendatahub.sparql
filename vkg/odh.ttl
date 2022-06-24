@@ -1665,14 +1665,6 @@ schema:addressLocality rdf:type owl:DatatypeProperty ;
                        rdfs:label "addressLocality"@en .
 
 
-###  http://schema.org/alternateName
-schema:alternateName rdf:type owl:DatatypeProperty ;
-                     schema:domainIncludes schema:Thing ;
-                     schema:rangeIncludes schema:Text ;
-                     rdfs:comment "An alias for the item."@en ;
-                     rdfs:label "alternateName"@en .
-
-
 ###  http://schema.org/bestRating
 schema:bestRating rdf:type owl:DatatypeProperty ;
                   schema:domainIncludes schema:Rating ;
@@ -4443,7 +4435,7 @@ schema:LandmarksOrHistoricalBuildings rdf:type owl:Class ;
 ###  http://schema.org/Language
 schema:Language rdf:type owl:Class ;
                 rdfs:subClassOf schema:Intangible ;
-                rdfs:comment "Natural languages such as Spanish, Tamil, Hindi, English, etc. Formal language code tags expressed in [BCP 47](https://en.wikipedia.org/wiki/IETF_language_tag) can be used via the [[alternateName]] property. The Language type previously also covered programming languages such as Scheme and Lisp, which are now best represented using [[ComputerLanguage]]."@en ;
+                rdfs:comment "Natural languages such as Spanish, Tamil, Hindi, English, etc. The Language type previously also covered programming languages such as Scheme and Lisp, which are now best represented using [[ComputerLanguage]]."@en ;
                 rdfs:label "Language"@en .
 
 
