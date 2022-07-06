@@ -7,13 +7,13 @@ CREATE INDEX v_accommodationsopen_geom_idx
     ON v_accommodationsopen
         USING GIST ("Geometry");
 
-ALTER TABLE v_poisopen
+ALTER TABLE "v_poisopen_Gpsinfo"
     add "Geometry" geometry GENERATED ALWAYS AS (
-        ST_SetSRID(ST_MakePoint("GpsPoints-position-Longitude", "GpsPoints-position-Latitude"),4326))
+        ST_SetSRID(ST_MakePoint("Longitude", "Latitude"),4326))
         STORED ;
 
 CREATE INDEX v_poisopen_geom_idx
-    ON v_poisopen
+    ON "v_poisopen_Gpsinfo"
         USING GIST ("Geometry");
 
 ALTER TABLE v_skiareasopen
