@@ -3089,27 +3089,6 @@ CREATE TABLE  "v_activitiesopen_AreaId" (
                                             "data" varchar
 );
 
-DROP FUNCTION IF EXISTS v_activitiesopen_AreaId_fn CASCADE;
-
-CREATE FUNCTION v_activitiesopen_AreaId_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO public."v_activitiesopen_AreaId"
-    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-           jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
-    WHERE NEW."data" -> 'AreaId' != 'null';
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_activitiesopen_AreaId
-    BEFORE INSERT
-    ON activitiesopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_activitiesopen_AreaId_fn();
-
 ALTER TABLE activitiesopen
     ENABLE ALWAYS TRIGGER t_v_activitiesopen_AreaId;
 
@@ -4792,21 +4771,6 @@ CREATE TABLE  "v_skiareasopen_AreaId" (
                                           "data" varchar
 );
 
-DROP FUNCTION IF EXISTS v_skiareasopen_AreaId_fn CASCADE;
-
-CREATE FUNCTION v_skiareasopen_AreaId_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO public."v_skiareasopen_AreaId"
-    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-           jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
-    WHERE NEW."data" -> 'AreaId' != 'null';
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
 CREATE TRIGGER t_v_skiareasopen_AreaId
     BEFORE INSERT
     ON skiareasopen
@@ -6431,37 +6395,6 @@ EXECUTE PROCEDURE v_poisopen_fn();
 
 ALTER TABLE poisopen
     ENABLE ALWAYS TRIGGER t_v_poisopen;
-
-DROP TABLE IF EXISTS "v_poisopen_AreaId";
-
-CREATE TABLE  "v_poisopen_AreaId" (
-                                      "Id" varchar,
-                                      "data" varchar
-);
-
-DROP FUNCTION IF EXISTS v_poisopen_AreaId_fn CASCADE;
-
-CREATE FUNCTION v_poisopen_AreaId_fn()
-    RETURNS TRIGGER
-AS $$
-BEGIN
-    INSERT INTO public."v_poisopen_AreaId"
-    SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-           jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
-    WHERE NEW."data" -> 'AreaId' != 'null';
-    RETURN NEW;
-END;
-$$
-    LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_poisopen_AreaId
-    BEFORE INSERT
-    ON poisopen
-    FOR EACH ROW
-EXECUTE PROCEDURE v_poisopen_AreaId_fn();
-
-ALTER TABLE poisopen
-    ENABLE ALWAYS TRIGGER t_v_poisopen_AreaId;
 
 DROP TABLE IF EXISTS "v_poisopen_SmgTags";
 

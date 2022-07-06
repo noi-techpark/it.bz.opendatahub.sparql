@@ -72,10 +72,6 @@ mappingId	Area
 target		odh:areas/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd:string ; schema:name {Shortname}^^xsd:string ; sioc:has_container <https://kg.opendatahub.bz.it/areas/> .
 source		SELECT "Id", "Shortname" FROM v_areas
 
-mappingId	POI_Area
-target		data:poi/{Id} schema:isPartOf odh:areas/{data} .
-source		SELECT "Id", "data" FROM "v_poisopen_AreaId";
-
 mappingId	POI-geo
 target		data:poi/{Id} schema:geo data:geo/poi/{Id} ; geo:defaultGeometry data:geo/poi/{Id} . data:geo/poi/{Id} a schema:GeoCoordinates, geo:Geometry ; schema:longitude {GpsPoints-position-Longitude} ; schema:latitude {GpsPoints-position-Latitude} ; schema:elevation {GpsPoints-position-Altitude} .
 source		SELECT "Id", "Shortname", "GpsPoints-position-Latitude", "GpsPoints-position-Longitude", "GpsPoints-position-Altitude" FROM v_poisopen

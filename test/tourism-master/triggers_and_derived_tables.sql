@@ -3864,37 +3864,6 @@ CREATE TRIGGER t_v_poisopen
 ALTER TABLE poisopen
     ENABLE ALWAYS TRIGGER t_v_poisopen;
 
-DROP TABLE IF EXISTS "v_poisopen_AreaId";
-
-CREATE TABLE  "v_poisopen_AreaId" (
-"Id" varchar,
-"data" varchar
-);
-
-DROP FUNCTION IF EXISTS v_poisopen_AreaId_fn CASCADE;
-
-CREATE FUNCTION v_poisopen_AreaId_fn()
-RETURNS TRIGGER
-AS $$
-BEGIN
-INSERT INTO "v_poisopen_AreaId"
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
-            jsonb_array_elements_text(NEW."data" -> 'AreaId') AS "data"
-        WHERE NEW."data" -> 'AreaId' != 'null';
-RETURN NEW;
-END;
-$$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER t_v_poisopen_AreaId
-    BEFORE INSERT
-    ON poisopen
-    FOR EACH ROW
-    EXECUTE PROCEDURE v_poisopen_AreaId_fn();
-
-ALTER TABLE poisopen
-    ENABLE ALWAYS TRIGGER t_v_poisopen_AreaId;
-
 DROP TABLE IF EXISTS "v_poisopen_SmgTags";
 
 CREATE TABLE  "v_poisopen_SmgTags" (
