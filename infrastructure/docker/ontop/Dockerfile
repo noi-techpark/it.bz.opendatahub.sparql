@@ -1,5 +1,9 @@
 FROM ontop/ontop-endpoint:4.2.0 as base
-RUN apt-get update && apt-get install -y curl postgresql-client
+COPY --from=flyway/flyway:8-alpine /flyway /flyway
+COPY infrastructure/docker/ontop/entrypoint.sh /entrypoint.sh
+COPY infrastructure/utils/flyway/migration /opt/ontop/sql
+RUN apt-get update && apt-get install -y curl postgresql-client && \
+    ln -s /flyway/flyway /usr/local/bin/flyway
 
 # Dev
 FROM base as dev
@@ -10,3 +14,4 @@ RUN chmod u+x /wait-for-it.sh
 FROM base as build
 COPY vkg /opt/ontop/input
 COPY jdbc /opt/ontop/jdbc
+ENTRYPOINT /entrypoint.sh
