@@ -398,7 +398,6 @@ ALTER TABLE {table_name}
 
 def sql_trigger(table_name: str, table_path: TablePath, attr_paths: Dict[AttrPath, Any]):
     if table_path.is_empty():
-        view_name = "v_" + table_name
         columns = ",\n".join([
             "\"{0}\" {1}".format(c.as_column_name(), sql_type_of(v))
             for c, v in attr_paths.items()

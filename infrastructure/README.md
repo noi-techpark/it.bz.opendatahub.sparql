@@ -39,29 +39,16 @@ On these servers, one can find:
 
 ## Deployment
 
-Deployment in these environments is achieved through Jenkins scripts:
+We deploy to these environments with a Github Action script:
 
-- CI: `jenkins/ci.groovy`
-- CD for the testing enviroment: `jenkins/test.groovy`
-- CD for the production environment: `jenkins/prod.groovy`
 
 ...and docker-compose scripts:
 
 - Build docker: `docker-compose.build.yml`
 - Run docker: `docker-compose.run.yml`
 
-Jenkins
-
-- CI: <https://ci.opendatahub.bz.it/job/it.bz.opendatahub.sparql>
-- CD: <https://jenkins.testingmachine.eu/job/it.bz.opendatahub.sparql>
 
 ## Credentials
-
-Prefix is `it.bz.opendatahub.sparql`.
-
-Jenkins:
-
-- `it.bz.opendatahub.sparql.db.vkg.password.readonly`
 
 Passbolt:
 
