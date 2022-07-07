@@ -30,7 +30,7 @@ jobs:
       VKG_POSTGRES_USER_READONLY: "ontopicreadonly"
       ONTOP_QUERY_TIMEOUT: 15
       VKG_POSTGRES_HOST: "virtual-knowledge-graph.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-      VKG_POSTGRES_DB: "vkg"
+      VKG_POSTGRES_DB: "test"
       GOOGLE_ANALYTICS_ID: "G-16GJYCR5YT"
 
     steps:
