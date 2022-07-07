@@ -1,0 +1,9 @@
+version: "3.4"
+services:
+  flyway:
+    image: flyway/flyway:8-alpine
+    volumes:
+      - ./:/code
+    working_dir: /code
+    env_file:
+      - .env

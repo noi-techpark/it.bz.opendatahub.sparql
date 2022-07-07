@@ -1,7 +1,4 @@
 
-ALTER SUBSCRIPTION ${tourism_subscription_name} DISABLE;
-
-
 DROP TABLE IF EXISTS "v_accommodationsopen";
 
 CREATE TABLE "v_accommodationsopen" (
@@ -270,7 +267,7 @@ DROP TABLE IF EXISTS "v_accommodationsopen_SmgTags";
 CREATE TABLE  "v_accommodationsopen_SmgTags" (
 "Id" varchar,
 "data" varchar
-); 
+);
 
 DROP FUNCTION IF EXISTS v_accommodationsopen_SmgTags_fn CASCADE;
 
@@ -279,7 +276,7 @@ RETURNS TRIGGER
 AS $$
 BEGIN
 INSERT INTO public."v_accommodationsopen_SmgTags"
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text(NEW."data" -> 'SmgTags') AS "data"
         WHERE NEW."data" -> 'SmgTags' != 'null';
 RETURN NEW;
@@ -294,14 +291,14 @@ CREATE TRIGGER t_v_accommodationsopen_SmgTags
     EXECUTE PROCEDURE v_accommodationsopen_SmgTags_fn();
 
 ALTER TABLE accommodationsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_SmgTags;        
- 
+    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_SmgTags;
+
 DROP TABLE IF EXISTS "v_accommodationsopen_ThemeIds";
 
 CREATE TABLE  "v_accommodationsopen_ThemeIds" (
 "Id" varchar,
 "data" varchar
-); 
+);
 
 DROP FUNCTION IF EXISTS v_accommodationsopen_ThemeIds_fn CASCADE;
 
@@ -310,7 +307,7 @@ RETURNS TRIGGER
 AS $$
 BEGIN
 INSERT INTO public."v_accommodationsopen_ThemeIds"
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text(NEW."data" -> 'ThemeIds') AS "data"
         WHERE NEW."data" -> 'ThemeIds' != 'null';
 RETURN NEW;
@@ -325,14 +322,14 @@ CREATE TRIGGER t_v_accommodationsopen_ThemeIds
     EXECUTE PROCEDURE v_accommodationsopen_ThemeIds_fn();
 
 ALTER TABLE accommodationsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_ThemeIds;        
- 
+    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_ThemeIds;
+
 DROP TABLE IF EXISTS "v_accommodationsopen_HasLanguage";
 
 CREATE TABLE  "v_accommodationsopen_HasLanguage" (
 "Id" varchar,
 "data" varchar
-); 
+);
 
 DROP FUNCTION IF EXISTS v_accommodationsopen_HasLanguage_fn CASCADE;
 
@@ -341,7 +338,7 @@ RETURNS TRIGGER
 AS $$
 BEGIN
 INSERT INTO public."v_accommodationsopen_HasLanguage"
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text(NEW."data" -> 'HasLanguage') AS "data"
         WHERE NEW."data" -> 'HasLanguage' != 'null';
 RETURN NEW;
@@ -356,14 +353,14 @@ CREATE TRIGGER t_v_accommodationsopen_HasLanguage
     EXECUTE PROCEDURE v_accommodationsopen_HasLanguage_fn();
 
 ALTER TABLE accommodationsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_HasLanguage;        
- 
+    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_HasLanguage;
+
 DROP TABLE IF EXISTS "v_accommodationsopen_SpecialFeaturesIds";
 
 CREATE TABLE  "v_accommodationsopen_SpecialFeaturesIds" (
 "Id" varchar,
 "data" varchar
-); 
+);
 
 DROP FUNCTION IF EXISTS v_accommodationsopen_SpecialFeaturesIds_fn CASCADE;
 
@@ -372,7 +369,7 @@ RETURNS TRIGGER
 AS $$
 BEGIN
 INSERT INTO public."v_accommodationsopen_SpecialFeaturesIds"
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text(NEW."data" -> 'SpecialFeaturesIds') AS "data"
         WHERE NEW."data" -> 'SpecialFeaturesIds' != 'null';
 RETURN NEW;
@@ -387,8 +384,8 @@ CREATE TRIGGER t_v_accommodationsopen_SpecialFeaturesIds
     EXECUTE PROCEDURE v_accommodationsopen_SpecialFeaturesIds_fn();
 
 ALTER TABLE accommodationsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_SpecialFeaturesIds;        
- 
+    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_SpecialFeaturesIds;
+
 DROP TABLE IF EXISTS "v_accommodationsopen_Features";
 
 CREATE TABLE "v_accommodationsopen_Features" (
@@ -406,7 +403,7 @@ AS $$
 BEGIN
 INSERT INTO public."v_accommodationsopen_Features"
 WITH t ("Id", "data") AS (
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements(NEW."data" -> 'Features') AS "data"
         WHERE NEW."data" -> 'Features' != 'null')
     SELECT "Id" AS "accommodationsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
@@ -425,15 +422,15 @@ CREATE TRIGGER t_v_accommodationsopen_Features
     EXECUTE PROCEDURE v_accommodationsopen_Features_fn();
 
 ALTER TABLE accommodationsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_Features;        
-    
+    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_Features;
+
 
 DROP TABLE IF EXISTS "v_accommodationsopen_BoardIds";
 
 CREATE TABLE  "v_accommodationsopen_BoardIds" (
 "Id" varchar,
 "data" varchar
-); 
+);
 
 DROP FUNCTION IF EXISTS v_accommodationsopen_BoardIds_fn CASCADE;
 
@@ -442,7 +439,7 @@ RETURNS TRIGGER
 AS $$
 BEGIN
 INSERT INTO public."v_accommodationsopen_BoardIds"
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text(NEW."data" -> 'BoardIds') AS "data"
         WHERE NEW."data" -> 'BoardIds' != 'null';
 RETURN NEW;
@@ -457,14 +454,14 @@ CREATE TRIGGER t_v_accommodationsopen_BoardIds
     EXECUTE PROCEDURE v_accommodationsopen_BoardIds_fn();
 
 ALTER TABLE accommodationsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_BoardIds;        
- 
+    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_BoardIds;
+
 DROP TABLE IF EXISTS "v_accommodationsopen_BadgeIds";
 
 CREATE TABLE  "v_accommodationsopen_BadgeIds" (
 "Id" varchar,
 "data" varchar
-); 
+);
 
 DROP FUNCTION IF EXISTS v_accommodationsopen_BadgeIds_fn CASCADE;
 
@@ -473,7 +470,7 @@ RETURNS TRIGGER
 AS $$
 BEGIN
 INSERT INTO public."v_accommodationsopen_BadgeIds"
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text(NEW."data" -> 'BadgeIds') AS "data"
         WHERE NEW."data" -> 'BadgeIds' != 'null';
 RETURN NEW;
@@ -488,14 +485,14 @@ CREATE TRIGGER t_v_accommodationsopen_BadgeIds
     EXECUTE PROCEDURE v_accommodationsopen_BadgeIds_fn();
 
 ALTER TABLE accommodationsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_BadgeIds;        
- 
+    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_BadgeIds;
+
 DROP TABLE IF EXISTS "v_accommodationsopen_MarketingGroupIds";
 
 CREATE TABLE  "v_accommodationsopen_MarketingGroupIds" (
 "Id" varchar,
 "data" varchar
-); 
+);
 
 DROP FUNCTION IF EXISTS v_accommodationsopen_MarketingGroupIds_fn CASCADE;
 
@@ -504,7 +501,7 @@ RETURNS TRIGGER
 AS $$
 BEGIN
 INSERT INTO public."v_accommodationsopen_MarketingGroupIds"
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text(NEW."data" -> 'MarketingGroupIds') AS "data"
         WHERE NEW."data" -> 'MarketingGroupIds' != 'null';
 RETURN NEW;
@@ -519,8 +516,8 @@ CREATE TRIGGER t_v_accommodationsopen_MarketingGroupIds
     EXECUTE PROCEDURE v_accommodationsopen_MarketingGroupIds_fn();
 
 ALTER TABLE accommodationsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_MarketingGroupIds;        
- 
+    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_MarketingGroupIds;
+
 DROP TABLE IF EXISTS "v_accommodationsopen_AccoBookingChannel";
 
 CREATE TABLE "v_accommodationsopen_AccoBookingChannel" (
@@ -539,7 +536,7 @@ AS $$
 BEGIN
 INSERT INTO public."v_accommodationsopen_AccoBookingChannel"
 WITH t ("Id", "data") AS (
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements(NEW."data" -> 'AccoBookingChannel') AS "data"
         WHERE NEW."data" -> 'AccoBookingChannel' != 'null')
     SELECT "Id" AS "accommodationsopen_Id", CAST("data"->>'Id' As varchar) AS "Id",
@@ -559,8 +556,8 @@ CREATE TRIGGER t_v_accommodationsopen_AccoBookingChannel
     EXECUTE PROCEDURE v_accommodationsopen_AccoBookingChannel_fn();
 
 ALTER TABLE accommodationsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_AccoBookingChannel;        
-    
+    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_AccoBookingChannel;
+
 
 DROP TABLE IF EXISTS "v_accommodationsopen_ImageGallery";
 
@@ -588,7 +585,7 @@ AS $$
 BEGIN
 INSERT INTO public."v_accommodationsopen_ImageGallery"
 WITH t ("Id", "data") AS (
-        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST(NEW."data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements(NEW."data" -> 'ImageGallery') AS "data"
         WHERE NEW."data" -> 'ImageGallery' != 'null')
     SELECT "Id" AS "accommodationsopen_Id", CAST("data"->>'Width' As integer) AS "Width",
@@ -616,8 +613,8 @@ CREATE TRIGGER t_v_accommodationsopen_ImageGallery
     EXECUTE PROCEDURE v_accommodationsopen_ImageGallery_fn();
 
 ALTER TABLE accommodationsopen
-    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_ImageGallery;        
-    
+    ENABLE ALWAYS TRIGGER t_v_accommodationsopen_ImageGallery;
+
 
 INSERT INTO v_accommodationsopen
 SELECT
@@ -741,50 +738,50 @@ CAST("data"->>'HgvId' As varchar) AS "HgvId"
 FROM accommodationsopen;
 
 INSERT INTO "v_accommodationsopen_SmgTags"
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text("data" -> 'SmgTags') AS "data"
         FROM accommodationsopen
         WHERE "data" -> 'SmgTags' != 'null';
 
 INSERT INTO "v_accommodationsopen_BadgeIds"
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text("data" -> 'BadgeIds') AS "data"
         FROM accommodationsopen
         WHERE "data" -> 'BadgeIds' != 'null';
 
 INSERT INTO "v_accommodationsopen_BoardIds"
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text("data" -> 'BoardIds') AS "data"
         FROM accommodationsopen
         WHERE "data" -> 'BoardIds' != 'null';
 
 INSERT INTO "v_accommodationsopen_ThemeIds"
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text("data" -> 'ThemeIds') AS "data"
         FROM accommodationsopen
         WHERE "data" -> 'ThemeIds' != 'null';
 
 INSERT INTO "v_accommodationsopen_HasLanguage"
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text("data" -> 'HasLanguage') AS "data"
         FROM accommodationsopen
         WHERE "data" -> 'HasLanguage' != 'null';
 
 INSERT INTO "v_accommodationsopen_MarketingGroupIds"
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text("data" -> 'MarketingGroupIds') AS "data"
         FROM accommodationsopen
         WHERE "data" -> 'MarketingGroupIds' != 'null';
 
 INSERT INTO "v_accommodationsopen_SpecialFeaturesIds"
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements_text("data" -> 'SpecialFeaturesIds') AS "data"
         FROM accommodationsopen
         WHERE "data" -> 'SpecialFeaturesIds' != 'null';
 
 INSERT INTO "v_accommodationsopen_Features"
 WITH t ("Id", "data") AS (
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements("data" -> 'Features') AS "data"
         FROM accommodationsopen
         WHERE "data" -> 'Features' != 'null')
@@ -795,7 +792,7 @@ CAST("data"->>'HgvId' As varchar) AS "HgvId"
 
 INSERT INTO "v_accommodationsopen_AccoBookingChannel"
 WITH t ("Id", "data") AS (
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements("data" -> 'AccoBookingChannel') AS "data"
         FROM accommodationsopen
         WHERE "data" -> 'AccoBookingChannel' != 'null')
@@ -807,7 +804,7 @@ CAST("data"->>'Portalname' As varchar) AS "Portalname"
 
 INSERT INTO "v_accommodationsopen_ImageGallery"
 WITH t ("Id", "data") AS (
-        SELECT CAST("data"->>'Id' As varchar) AS "Id", 
+        SELECT CAST("data"->>'Id' As varchar) AS "Id",
             jsonb_array_elements("data" -> 'ImageGallery') AS "data"
         FROM accommodationsopen
         WHERE "data" -> 'ImageGallery' != 'null')
@@ -824,6 +821,3 @@ CAST("data"->'ImageDesc'->>'de' As varchar) AS "ImageDesc-de",
 CAST("data"->'ImageDesc'->>'en' As varchar) AS "ImageDesc-en",
 CAST("data"->'ImageDesc'->>'it' As varchar) AS "ImageDesc-it"
     FROM t;
-
-ALTER SUBSCRIPTION ${tourism_subscription_name} ENABLE;
-

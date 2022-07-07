@@ -5,7 +5,7 @@
 -- Please use the script infrastructure/utils/originaldb-dump-schema.sh to update this dump
 --
 
-SELECT pg_catalog.set_config('search_path', '${tourism_schema_vkg}', false);
+SELECT pg_catalog.set_config('search_path', '${flyway:defaultSchema}', false);
 CREATE TABLE accommodationfeatures (
     id character varying(50) NOT NULL,
     data jsonb

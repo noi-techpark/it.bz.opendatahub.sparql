@@ -6,14 +6,14 @@
 --
 --
 -- Due to floating point precision accuracy issues, this constraint might have different results on different
--- machines, hence not applicable for logical replication
+-- machines, hence not applicable for logical replication (please note: newer versions of our VKG no longer use logical replication, nevertheless we do not need it)
 -- ALTER TABLE ONLY measurementhistory
 --    ADD CONSTRAINT uc_measurementhistory_station_i__timestamp_period_double_value_ UNIQUE (station_id, type_id, "timestamp", period, double_value);
 -- ALTER TABLE ONLY measurementhistory ADD CONSTRAINT uc_measurementhistory_station_id_type_id_timestamp_period UNIQUE (station_id, type_id, "timestamp", period);
 --   ^-- also not possible, duplicates exist
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-SELECT pg_catalog.set_config('search_path', 'intimev2', false);
+SELECT pg_catalog.set_config('search_path', '${flyway:defaultSchema}', false);
 CREATE SEQUENCE measurementhistory_seq
     START WITH 1
     INCREMENT BY 1

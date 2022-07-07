@@ -111,7 +111,9 @@ docker-compose down
 A second Docker-compose file (`docker-compose.auth.yml`) can be used for testing
 access control policies. It requires a running and configurable instance of
 Keycloak. See https://github.com/noi-techpark/authentication-server for
-instructions on how to install it locally. Refer to [docs/authentication.md](docs/authentication.md) for instruction on how to configure Keycloak and the authentication proxy.
+instructions on how to install it locally. Refer to
+[docs/authentication.md](docs/authentication.md) for instruction on how to
+configure Keycloak and the authentication proxy.
 
 ## Deployment at NOI
 
@@ -121,9 +123,12 @@ the `infrastructure` folder. See
 
 #### Database synchronization
 The SPARQL endpoints do not query directly the production database but slave
-read-only instances, which are synchronized with the master database through
-logical replication. For more details, see [the dedicated
-page](https://github.com/noi-techpark/documentation/blob/master/logical-replication.md).
+read-only instances, which are synchronized with the master database through two
+sync-script with scheduled regular executions. The `mobility` sync can be found
+under
+[infrastructure/utils/mobility-sync/](infrastructure/utils/mobility-sync/),
+whereas the `tourism` sync is an external program handled directly from the
+Tourism servers.
 
 ## Endpoints
 
@@ -159,13 +164,13 @@ For support, please contact
 ### Contributing
 If you'd like to contribute, please follow the following instructions:
 - Fork the repository.
-- Checkout a topic branch from the `development` branch.
+- Checkout a topic branch from the `main` branch.
 - Make sure the tests are passing.
-- Create a pull request against the `development` branch.
+- Create a pull request against the `main` branch.
 
 ### Documentation
 More documentation can be found at
-[https://opendatahub.readthedocs.io/en/latest/index.html](https://opendatahub.readthedocs.io/en/latest/index.html).
+[https://docs.opendatahub.com](https://docs.opendatahub.com).
 
 ### License
 The code in this project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE

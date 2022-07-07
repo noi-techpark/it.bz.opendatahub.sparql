@@ -7,16 +7,16 @@
 -- DO
 -- $$
 --     BEGIN
---         CREATE ROLE ${vkg_user_readonly};
+--         CREATE ROLE ${READONLY_USER};
 --     EXCEPTION WHEN DUPLICATE_OBJECT THEN
---         RAISE NOTICE 'role ${vkg_user_readonly} exists, skipping...';
+--         RAISE NOTICE 'role ${READONLY_USER} exists, skipping...';
 --     END
 -- $$;
 --
 -- Simple alternative:
--- CREATE ROLE ${vkg_user_readonly};
+-- CREATE ROLE ${READONLY_USER};
 --
 
-GRANT USAGE ON SCHEMA ${mobility_schema_vkg} TO ${vkg_user_readonly};
-GRANT SELECT ON ALL TABLES IN SCHEMA ${mobility_schema_vkg} TO ${vkg_user_readonly};
-GRANT SELECT ON ALL SEQUENCES IN SCHEMA ${mobility_schema_vkg} TO ${vkg_user_readonly};
+GRANT USAGE ON SCHEMA ${flyway:defaultSchema} TO ${READONLY_USER};
+GRANT SELECT ON ALL TABLES IN SCHEMA ${flyway:defaultSchema} TO ${READONLY_USER};
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA ${flyway:defaultSchema} TO ${READONLY_USER};

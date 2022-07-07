@@ -488,19 +488,11 @@ def generate(cursor, table_name, ft):
             ft.write(trigger)
 
 
-def pause_resume_subscription(enable, ft):
-    action = "ENABLE" if enable else "DISABLE"
-
-    ft.write("ALTER SUBSCRIPTION ${subscription_name} " + action + ";")
-
-
 def regenerate(cursor, source_table):
     regen_file = "regen-" + source_table + ".sql"
     with open(regen_file, "w+") as ft:
-        pause_resume_subscription(False, ft)
         generate(cursor, source_table, ft)
         repopulate(cursor, source_table, ft)
-        pause_resume_subscription(True, ft)
 
 
 simple_repopulate_sql_template = """
@@ -576,14 +568,14 @@ if __name__ == '__main__':
     command = argv[1]
 
     try:
-        opts, args = getopt.getopt(argv[2:], "t:u:p:h:d:", ["port=", "subscription="])
+        opts, args = getopt.getopt(argv[2:], "t:u:p:h:d:", ["port="])
     except getopt.GetoptError:
         usage()
         exit(2)
 
-        if len(opts) == 0:
-            usage()
-            exit(2)
+    if len(opts) == 0:
+        usage()
+        exit(2)
 
     source_table = None
     user = None

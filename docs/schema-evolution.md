@@ -1,8 +1,6 @@
 # Schema evolution
 
-Logical replication is in use on the NOI's production and test servers.
-
-This documentation provides recommendations on how to proceed when the schema of the source changes. 
+This documentation provides recommendations on how to proceed when the schema of the source changes.
 
 ## Possible changes
 ### JSON level
@@ -11,7 +9,7 @@ This documentation provides recommendations on how to proceed when the schema of
 A new JSON key is first safely ignored. One [can regenerate the corresponding derived table and trigger](#regenerating-a-derived-table-and-a-trigger) for creating the corresponding column.
 
 #### Key removed
-However, one should plan to remove soon the mapping entries using that key. 
+However, one should plan to remove soon the mapping entries using that key.
 Indeed, they may break once the derived tables and triggers are regenerated, as the corresponding column won't appear anymore.
 
 In case of an array, the derived table for the old array is now useless. Please write by hand a SQL script for cleaning the derived table and its trigger.
@@ -35,30 +33,19 @@ However, removing an additional column may break the replication. See [the dedic
 ### Table level
 
 #### New table
-Given that the subscription has been created for all the tables, it should stop the replication until the corresponding table is added on the slave after the first row is inserted.
+We no longer use logical replication, so we do not have issues here.
 
 #### Table removed
 It does not seems to complain.
 
 ## Actions
 
-### Pausing and resuming the replication
-From https://pgdash.io/blog/postgres-replication-gotchas.html
-```sql
--- pause replication (destination side)
-ALTER SUBSCRIPTION ${subscription_name} DISABLE;
-
--- resume replication
-ALTER SUBSCRIPTION ${subscription_name} ENABLE;
-```
-
 ### Regenerating the derived tables of a mirror table
 
 This SQL script performs the following actions:
-1. It pauses the replication.
-2. It regenerates all the derived tables and triggers of a mirror table.
-3. It populates the derived tables from the mirror table.
-4. It resumes the replication.
+1. It regenerates all the derived tables and triggers of a mirror table.
+2. It populates the derived tables from the mirror table.
+3. It resumes the replication.
 
 Steps:
  1. Generate the script (change the parameter values)
@@ -80,3 +67,7 @@ Steps:
  2. Commit the new file and push it on Github.
 
  The CI runner should recreate the Ontop Docker image. When starting this new image, the container should run the new script (through Flyway) on the slave DB instance.
+
+ See
+ [infrastructure/utils/flyway/README.md](../infrastructure/utils/flyway/README.md)
+ for further information about Flyway, and its manual execution.

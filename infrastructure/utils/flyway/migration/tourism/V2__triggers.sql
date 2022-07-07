@@ -1,7 +1,4 @@
--- Triggers must be in place before the replication starts, otherwise we will
--- have race-conditions, where some data will not be ported to the v_* tables
-
-SELECT pg_catalog.set_config('search_path', '${tourism_schema_vkg}', false);
+SELECT pg_catalog.set_config('search_path', '${flyway:defaultSchema}', false);
 
 DROP TABLE IF EXISTS "v_accommodationsopen";
 
