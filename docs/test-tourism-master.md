@@ -6,12 +6,12 @@ Note this image is intended to be used for development and tests purposes, on yo
 
 It has 2 main versions:
   - Standalone: contains the original dump, the triggers and the derived views
-  - Master: contains the original dump and a publication (for logical replication) has been created.
+  - Master: contains the original dump
 
 
 ## How to start manually
 
-Standalone version: 
+Standalone version:
 ```sh
 docker run --name odh_db_running -p 7777:5432 -e POSTGRES_USER=tourismuser -e POSTGRES_PASSWORD=postgres2 -d ontopicvkg/odh-tourism-db:standalone
 ```

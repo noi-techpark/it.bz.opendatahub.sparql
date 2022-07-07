@@ -2,7 +2,15 @@ name: CI/CD
 
 on:
   push:
+    paths-ignore:
+      - '.editorconfig'
+      - '*.md'
+      - 'test/**'
   pull_request:
+    paths-ignore:
+      - '.editorconfig'
+      - '*.md'
+      - 'test/**'
 
 env:
   PROJECT_NAME: odh-vkg

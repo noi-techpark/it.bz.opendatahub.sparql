@@ -11,7 +11,7 @@ guidelines about how to handle schema changes.
 We use the command line version of [Flyway](https://flywaydb.org/) to execute
 database migration scripts.
 
-## Executing Flyway manually
+## Run Flyway manually
 
 These manual steps should not be necessary in our setup, since we will run
 Flyway during Continuous Deployment Pipelines automatically. However, if we get
@@ -19,13 +19,35 @@ a timeout, because some changes are too demanding on the database side, we might
 need to redo some parts manually, or to cleanup wrong migration scripts
 afterwards.
 
-Create a `.env` file:
-```sh
-cp .env.example .env
+### Prepare the database
+
+#### Create users
+
+We need a privileged user `ontopic`, that will run all our Flyway scripts.
+
+```sql
+CREATE ROLE ontopic WITH LOGIN PASSWORD 's3cret';
+COMMENT ON ROLE ontopic IS 'Admin account to access the virtual knowledge graph';
+GRANT CONNECT ON DATABASE vkg TO ontopic;
+GRANT CREATE ON SCHEMA public TO ontopic;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO ontopic;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO ontopic;
+ALTER ROLE ontopic SET statement_timeout TO '360s';
 ```
 
-Open it, and add the `ontopic` user's password. Uncomment either the **Tourism**
-or **Mobility** section (not both, the second would overwrite the first).
+In addition we need a read only user `ontopicreadonly`, to access the data.
+
+```sql
+CREATE ROLE ontopicreadonly WITH LOGIN PASSWORD 's3cret';
+COMMENT ON ROLE ontopicreadonly IS 'Read-only account to access the virtual knowledge graph';
+GRANT CONNECT ON DATABASE vkg TO ontopicreadonly;
+GRANT USAGE ON SCHEMA public TO ontopicreadonly;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO ontopicreadonly;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO ontopicreadonly;
+ALTER ROLE ontopicreadonly SET statement_timeout TO '360s';
+```
+
+#### Create schemas
 
 The schemas must already exist and their owner should be `ontopic`. On your VKG
 database execute the following as privileged user:
@@ -42,12 +64,26 @@ alter schema public owner to ontopic;
 grant all on schema public to ontopic;
 ```
 
+#### Install Postgis extension
+
 In addition, we need a Postgres extension called `postgis`. If you get errors
 like `type "public.geometry" does not exist`, you miss that extension. So, lets
 install it with:
 ```sql
 create extension postgis;
 ```
+
+Install it into the `public` schema.
+
+### Execute database migrations
+
+Create a `.env` file:
+```sh
+cp .env.example .env
+```
+
+Open it, and add the `ontopic` user's password. Uncomment either the **Tourism**
+or **Mobility** section (not both, the second would overwrite the first).
 
 Then call `flyway`. These are some example calls to gather information about
 actual migration installations, migrate all present migration scripts inside

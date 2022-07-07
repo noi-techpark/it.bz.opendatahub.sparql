@@ -7,13 +7,11 @@ containers, namely `Ontop` and `Nginx`.
 
 - [Infrastructure](#infrastructure)
 	- [Endpoints](#endpoints)
-	- [Deployment](#deployment)
 	- [Credentials](#credentials)
 	- [Security](#security)
 	- [Databases](#databases)
 		- [Tourism Postgres DB](#tourism-postgres-db)
 		- [Virtual Knowledge Graph Postgres DB](#virtual-knowledge-graph-postgres-db)
-			- [Users](#users)
 	- [Docker containers](#docker-containers)
 		- [I want to update the tourism DB dump](#i-want-to-update-the-tourism-db-dump)
 		- [I want to login into the Ontop container](#i-want-to-login-into-the-ontop-container)
@@ -37,22 +35,10 @@ On these servers, one can find:
   can access also closed data. See [docs/authentication.md](docs/authentication.md)
   for details.
 
-## Deployment
-
-We deploy to these environments with a Github Action script:
-
-
-...and docker-compose scripts:
-
-- Build docker: `docker-compose.build.yml`
-- Run docker: `docker-compose.run.yml`
-
-
 ## Credentials
 
 Passbolt:
 
-- Resource = `it.bz.opendatahub.sparql.db.tourism`; Username = `vkgreplicate`
 - Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `ontopic`
 - Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `ontopicreadonly`
 - Resource = `it.bz.opendatahub.sparql.db.vkg`; Username = `postgres`
@@ -78,31 +64,7 @@ This is the original source of tourism data.
 
 ### Virtual Knowledge Graph Postgres DB
 
-#### Users
-
-We need a superuser `ontopic`, that will run all our Flyway scripts.
-
-```sql
-CREATE ROLE ontopic WITH LOGIN PASSWORD 's3cret';
-COMMENT ON ROLE ontopic IS 'Admin account to access the virtual knowledge graph';
-GRANT CONNECT ON DATABASE tourism_test TO ontopic;
-GRANT CREATE ON SCHEMA public TO ontopic;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO ontopic;
-GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO ontopic;
-ALTER ROLE ontopic SET statement_timeout TO '360s';
-```
-
-In addition we need a read only user `ontopicreadonly`, to access the data.
-
-```sql
-CREATE ROLE ontopicreadonly WITH LOGIN PASSWORD 's3cret';
-COMMENT ON ROLE ontopicreadonly IS 'Read-only account to access the virtual knowledge graph';
-GRANT CONNECT ON DATABASE tourism_test TO ontopicreadonly;
-GRANT USAGE ON SCHEMA public TO ontopicreadonly;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO ontopicreadonly;
-GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO ontopicreadonly;
-ALTER ROLE ontopicreadonly SET statement_timeout TO '360s';
-```
+We use Flyway for Database Migrations. Refer to the [dedicated document](utils/flyway/README.md) for details.
 
 ## Docker containers
 
@@ -112,7 +74,7 @@ Second, we start an `Nginx` container to serve the web frontend of the SparQL en
 
 ### I want to update the tourism DB dump
 
-The current dump is inside `sql/V1__initial_setup.sql`.
+The current dump is inside `infrastructure/utils/flyway/migration/V1__initial_setup.sql`.
 
 ```sh
 cd infrastructure/utils
@@ -121,11 +83,11 @@ cd infrastructure/utils
 
 ### I want to login into the Ontop container
 
-Assume that the docker of Ontop runs on `dockertest2` and all commands are
+Assume that the docker of Ontop runs on `dockertest` and all commands are
 executed as `root`.
 
 ```sh
-ssh dockertest2
+ssh dockertest
 cd /var/docker/odh-vkg/current
 docker-compose run --entrypoint=/bin/bash ontop
 ```
