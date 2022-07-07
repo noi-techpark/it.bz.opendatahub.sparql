@@ -27,7 +27,29 @@ cp .env.example .env
 Open it, and add the `ontopic` user's password. Uncomment either the **Tourism**
 or **Mobility** section (not both, the second would overwrite the first).
 
-Then call flyway. These are some example calls to gather information about
+The schemas must already exist and their owner should be `ontopic`. On your VKG
+database execute the following as privileged user:
+
+```sql
+-- Mobility
+create schema if not exists intimev2;
+alter schema intimev2 owner to ontopic;
+grant all on schema intimev2 to ontopic;
+
+-- Tourism
+create schema if not exists public;
+alter schema public owner to ontopic;
+grant all on schema public to ontopic;
+```
+
+In addition, we need a Postgres extension called `postgis`. If you get errors
+like `type "public.geometry" does not exist`, you miss that extension. So, lets
+install it with:
+```sql
+create extension postgis;
+```
+
+Then call `flyway`. These are some example calls to gather information about
 actual migration installations, migrate all present migration scripts inside
 `migration/mobility` or `migration/tourism`, or to set a
 [baseline](https://flywaydb.org/documentation/command/baseline):
