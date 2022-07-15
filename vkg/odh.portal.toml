@@ -57,56 +57,6 @@ LIMIT 500
 """
 
 [[tabGroups.tabs]]
-
-name="Biggest lodging businesses"
-query="""
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX schema: <http://schema.org/>
-PREFIX : <http://noi.example.org/ontology/odh#>
-
-SELECT ?pos ?posColor ?bName
-      (SUM(?nb) AS ?countRoom)
-      (SUM(?maxPersons) AS ?countMaxPersons)
-      (CONCAT(?bName, ': ', str(?countRoom), ' accommodations, max ', str(?countMaxPersons), ' guests') AS ?posLabel)
-WHERE {
-  ?b a schema:LodgingBusiness ;
-     schema:name ?bName ;
-     geo:defaultGeometry/geo:asWKT ?pos .
-
-  ?r a schema:Accommodation ;
-     schema:containedInPlace ?b ;
-     :numberOfUnits ?nb ;
-     schema:occupancy/schema:maxValue ?maxOccupancyPerRoom .
-
-  # ?b schema:containedInPlace/schema:name "Bozen"@de . # Uncomment for restricting to a municipality
-
-  BIND (?nb * ?maxOccupancyPerRoom AS ?maxPersons)
-  FILTER (lang(?bName)='en')
-
-  # Colors
-  OPTIONAL {
-    ?b a schema:Campground .
-    BIND("chlorophyll,0.5" AS ?posColor) # Green
-  }
-  OPTIONAL {
-    ?b a schema:BedAndBreakfast .
-    BIND("viridis,0.1" AS ?posColor) # Purple
-  }
-  OPTIONAL {
-    ?b a schema:Hotel .
-    BIND("jet,0.3" AS ?posColor) # Light blue
-  }
-  OPTIONAL {
-    ?b a schema:Hostel .
-    BIND("jet,0.8" AS ?posColor) # Red
-  }
-}
-GROUP BY ?b ?bName ?pos ?posColor
-ORDER BY DESC(?countRoom)
-LIMIT 50
-"""
-
-[[tabGroups.tabs]]
 name="Number of lodging businesses"
 query="""
 PREFIX schema: <http://schema.org/>
@@ -231,76 +181,6 @@ WHERE {
 """
 
 [[tabGroups.tabs]]
-name="Asian cuisine (alpha)"
-query="""
-PREFIX schema: <http://schema.org/>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX : <http://noi.example.org/ontology/odh#>
-
-SELECT ?pos ?posLabel ?desc
-WHERE {
-  ?p a schema:FoodEstablishment ;
-     geo:defaultGeometry/geo:asWKT ?pos ;
-     schema:name ?name ;
-     schema:servesCuisine "asian"@en .
-     OPTIONAL {
-       ?p schema:description ?desc .
-       FILTER (lang(?desc) = 'it')
-     }
-  FILTER (lang(?name) = 'it')
-  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
-}
-"""
-
-[[tabGroups.tabs]]
-name="Mediterranean cuisine (alpha)"
-query="""
-PREFIX schema: <http://schema.org/>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX : <http://noi.example.org/ontology/odh#>
-
-SELECT ?pos ?posLabel ?desc
-WHERE {
-  ?p a schema:FoodEstablishment ;
-     geo:defaultGeometry/geo:asWKT ?pos ;
-     schema:name ?name ;
-     schema:servesCuisine "mediterranean"@en .
-     OPTIONAL {
-       ?p schema:description ?desc .
-       FILTER (lang(?desc) = 'de')
-     }
-  FILTER (lang(?name) = 'de')
-  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
-}
-"""
-
-[[tabGroups.tabs]]
-name="Apfelstrudel (alpha)"
-query="""
-PREFIX schema: <http://schema.org/>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX : <http://noi.example.org/ontology/odh#>
-
-SELECT ?pos ?posLabel ?desc
-WHERE {
-  ?p a schema:FoodEstablishment ;
-     geo:defaultGeometry/geo:asWKT ?pos ;
-     schema:name ?name ;
-     schema:hasMenu [
-      schema:hasMenuItem [
-        schema:name "Apfelstrudel"@de
-        ]
-     ] .
-     OPTIONAL {
-       ?p schema:description ?desc .
-       FILTER (lang(?desc) = 'de')
-     }
-  FILTER (lang(?name) = 'de')
-  BIND(CONCAT(?name, '<br/>', ?desc) AS ?posLabel)
-}
-"""
-
-[[tabGroups.tabs]]
 name="Theater (alpha)"
 query="""
 PREFIX schema: <http://schema.org/>
@@ -392,42 +272,6 @@ name="Data Quality Queries"
 
 [[tabGroups.tabs]]
 
-name="Lodging businesses without accommodation"
-query="""
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX schema: <http://schema.org/>
-
-SELECT ?pos ?posColor ?bName (?bName AS ?posLabel)
-WHERE {
-  ?b a schema:LodgingBusiness ; schema:name ?bName ; geo:defaultGeometry/geo:asWKT ?pos .
-  MINUS {
-     ?r schema:containedInPlace ?b .
-     ?r a schema:Accommodation
-  }
-  FILTER (lang(?bName) = 'en')
-
-  # Colors
-  OPTIONAL {
-    ?b a schema:Campground .
-    BIND("chlorophyll,0.5" AS ?posColor) # Green
-  }
-  OPTIONAL {
-    ?b a schema:BedAndBreakfast .
-    BIND("viridis,0.1" AS ?posColor) # Purple
-  }
-  OPTIONAL {
-    ?b a schema:Hotel .
-    BIND("jet,0.3" AS ?posColor) # Light blue
-  }
-  OPTIONAL {
-    ?b a schema:Hostel .
-    BIND("jet,0.8" AS ?posColor) # Red
-  }
-}
-"""
-
-[[tabGroups.tabs]]
-
 name="Lodging businesses with a non-South Tyrolean postal code"
 query="""
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -497,6 +341,7 @@ name="Mobility"
 [[tabGroups.tabs]]
 name="Platforms"
 query="""
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX schema: <http://schema.org/>
