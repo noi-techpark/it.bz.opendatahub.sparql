@@ -33,8 +33,8 @@ source		SELECT "Id" AS id, "AccoDetail-de-Name" AS de_name,  "AccoDetail-en-Name
 			FROM "v_accommodationsopen"
 
 mappingId	Lodging business - geo
-target		data:geo/accommodation/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} . odh:lodging-businesses/{id} schema:geo data:geo/accommodation/{id} ; geo:defaultGeometry data:geo/accommodation/{id} .
-source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude
+target		data:geo/accommodation/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:elevation {altitude} ; schema:longitude {longitude} ; geo:asWKT {wkt}^^geo:wktLiteral . odh:lodging-businesses/{id} schema:geo data:geo/accommodation/{id} ; geo:defaultGeometry data:geo/accommodation/{id} .
+source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude, ST_AsText("Geometry") AS wkt
 			FROM "v_accommodationsopen"
 
 mappingId	LodgingBusiness - address
@@ -73,8 +73,8 @@ target		odh:areas/{Id} a schema:AdministrativeArea ; rdfs:label {Shortname}^^xsd
 source		SELECT "Id", "Shortname" FROM v_areas
 
 mappingId	POI-geo
-target         data:poi/{poisopen_Id} schema:geo data:geo/poi/{poisopen_Id} ; geo:defaultGeometry data:geo/poi/{poisopen_Id} . data:geo/poi/{poisopen_Id} a schema:GeoCoordinates, geo:Geometry ; schema:longitude {Longitude} ; schema:latitude {Latitude} ; schema:elevation {Altitude} .
-source         SELECT * FROM "v_poisopen_GpsInfo"
+target         data:poi/{poisopen_Id} schema:geo data:geo/poi/{poisopen_Id} ; geo:defaultGeometry data:geo/poi/{poisopen_Id} . data:geo/poi/{poisopen_Id} a schema:GeoCoordinates, geo:Geometry ; schema:longitude {Longitude} ; schema:latitude {Latitude} ; schema:elevation {Altitude} ; geo:asWKT {wkt}^^geo:wktLiteral .
+source         SELECT *, ST_AsText("Geometry") AS wkt FROM "v_poisopen_GpsInfo"
 
 
 mappingId	Event EURAC NOI
@@ -107,8 +107,8 @@ target		odh:ski-resorts/{Id} a schema:SkiResort ; rdfs:label {Detail-en-Header}^
 source		SELECT "Id", "Shortname", "Detail-en-Header", "SkiAreaMapURL", "SkiRegionId" FROM v_skiareasopen
 
 mappingId	SkiResort - geo
-target		data:geo/skiResort/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:longitude {longitude} ; schema:elevation {AltitudeTo} . odh:ski-resorts/{id} schema:geo data:geo/skiResort/{id} ; geo:defaultGeometry data:geo/skiResort/{id} .
-source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "AltitudeTo" AS AltitudeTo
+target		data:geo/skiResort/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:longitude {longitude} ; schema:elevation {AltitudeTo}; geo:asWKT {wkt}^^geo:wktLiteral . odh:ski-resorts/{id} schema:geo data:geo/skiResort/{id} ; geo:defaultGeometry data:geo/skiResort/{id} .
+source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "AltitudeTo" AS AltitudeTo, ST_AsText("Geometry") AS wkt
 			FROM "v_skiareasopen"
 
 mappingId	SkiRegion
@@ -116,8 +116,8 @@ target		odh:ski-regions/{Id} a :SkiRegion ; rdfs:label {Shortname}^^xsd:string ;
 source		SELECT "Id", "Shortname", "Altitude" FROM v_skiregionsopen
 
 mappingId	SkiRegion - geo
-target		data:geo/skiRegion/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:longitude {longitude} . odh:ski-regions/{id} schema:geo data:geo/skiRegion/{id} ; geo:defaultGeometry data:geo/skiResort/{id} .
-source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude
+target		data:geo/skiRegion/{id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {latitude} ; schema:longitude {longitude} ; geo:asWKT {wkt}^^geo:wktLiteral . odh:ski-regions/{id} schema:geo data:geo/skiRegion/{id} ; geo:defaultGeometry data:geo/skiResort/{id} .
+source		SELECT "Id" AS id, "Latitude" AS latitude, "Longitude" AS longitude, "Altitude" AS altitude, ST_AsText("Geometry") AS wkt
 			FROM "v_skiregionsopen"
 
 mappingId	SkiResort_Area
@@ -155,8 +155,8 @@ target		odh:food-establishments/{Id} a schema:FoodEstablishment ; schema:name {D
 source		SELECT * FROM v_gastronomiesopen
 
 mappingId	Food establishments - geo
-target		data:geo/gastronomy/{Id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {Latitude} ; schema:elevation {Altitude} ; schema:longitude {Longitude} .
-source		SELECT * FROM v_gastronomiesopen
+target		data:geo/gastronomy/{Id} a schema:GeoCoordinates , geo:Geometry ; schema:latitude {Latitude} ; schema:elevation {Altitude} ; schema:longitude {Longitude} ; geo:asWKT {wkt}^^geo:wktLiteral .
+source		SELECT *, ST_AsText("Geometry") AS wkt FROM v_gastronomiesopen
 
 mappingId	Food establishments - address
 target		data:address/gastronomy/{Id} a schema:PostalAddress ; schema:streetAddress {ContactInfos-de-Address}@de , {ContactInfos-it-Address}@it , {ContactInfos-en-Address}@en ; schema:postalCode {ContactInfos-de-ZipCode} ; schema:addressLocality {ContactInfos-de-City}@de , {ContactInfos-it-City}@it , {ContactInfos-en-City}@en .
@@ -784,6 +784,10 @@ source		SELECT * FROM intimev2.station WHERE stationtype='ParkingStation'
 mappingId	metadata
 target		data:station/{station_id} :hasStationMetadata {json}^^xsd:string .
 source		SELECT * FROM intimev2.metadata
+
+mappingId	municipality_geom
+target		odh:municipalities/0{istat_code} geo:defaultGeometry odh:municipalities/geometry/0{istat_code} . odh:municipalities/geometry/0{istat_code} geo:asWKT {wkt}^^geo:wktLiteral .
+source		SELECT istat_code, ST_AsText(geom_4326) AS wkt FROM odp_municipalities
 
 mappingId	LodgingBusiness-municipality
 target		odh:lodging-businesses/{Id} schema:containedInPlace odh:municipalities/{IstatNumber} . 
