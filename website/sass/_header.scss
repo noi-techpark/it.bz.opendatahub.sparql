@@ -12,65 +12,6 @@ header {
     margin: 0 auto;
     max-width: $layouts--boxed;
 
-
-/* COOKIE BANNER */
-
-.alert-cookie {
-  position: fixed;
-  border: solid 1px black;
-  bottom: 0;
-  right: 0;
-  width: 300px;
-  z-index: 9999;
-  right: 20px;
-}
-@media screen and (max-width: 768px) {
-  .alert-cookie {
-    width: auto !important;
-    left: 20px;
-  }
-}
-
-.alert {
-  color: #2e3131;
-  background-color: white;
-  max-width: 580px;
-  width: 50vw;
-  color: #2e3131 !important;
-  padding: 30px;
-}
-
-.alert-cookie p {
-  margin-bottom: 10px;
-}
-
-.alert-cookie .button {
-  margin-top: 20px;
-  color: white;
-  clear: both;
-  display: block;
-  padding: 10px 20px;
-  border: 1px solid #2e3131;
-  width: fit-content;
-  width: -moz-fit-content;
-  background-color: black;
-}
-
-.alert-cookie:hover {
-  color: #2e3131;
-  cursor: pointer;
-}
-
-.alert-cookie .negative {
-  border: 1px solid var(--color-background);
-  color: var(--color-background);
-}
-.alert-cookie .negative:hover {
-  background: var(--color-background);
-  color: var(--color-primary);
-}
-
-
     #header-logo {
       img {
         height: 56px;
