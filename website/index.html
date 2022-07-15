@@ -15,8 +15,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./css/index.css" />
-	  <!-- Google Analytics integration -->
-  	<script async src="https://www.googletagmanager.com/gtag/js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
@@ -24,7 +22,6 @@
 
     <link href="yasgui/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="yasgui/yasgui.min.js"></script>
-	  <script src="./js/dotenv.js"></script>
 
     <!-- new version of yasgui, cdn -->
     <!-- <link href="https://unpkg.com/@triply/yasgui/build/yasgui.min.css" rel="stylesheet" type="text/css" />
@@ -37,16 +34,6 @@
 
     <header>
       <div id="header-contents">
-		  <div class="alert alert-cookie" style="display: none;">
-			  <p>
-				  <b>Cookies</b>
-			  </p>
-			  <p>
-				  This site or third-party tools used by this make use of cookies necessary for the operation and useful for the purposes described in the cookie policy. If you want to learn more or opt out of all or some cookies, consult the cookie policy. By closing
-				  this banner, scrolling this page, clicking on a link or continuing navigation in any other way, you consent to the use of cookies.
-			  </p>
-			  <a class="button">Accept</a>
-		  </div>
         <a id="header-logo" href="https://opendatahub.bz.it/" target="_blank" rel="noopener noreferrer">
           <img src="./images/logo-open-data-hub-black.png" alt="OpenDataHub" />
         </a>
@@ -58,7 +45,7 @@
             </a>
             </li>
             <li>
-              <a id="header-text" href="https://kg.opendatahub.bz.it/" target="_blank" rel="noopener noreferrer">
+              <a id="header-external-text" href="https://kg.opendatahub.bz.it/" target="_blank" rel="noopener noreferrer">
             Knowledge Graph Browser
             </a>
           </li>
@@ -799,7 +786,7 @@ LIMIT 10
     </script>
 
     <script src="./js/graph.js"></script>
-	<script src="./js/cookie.js"></script>
+
 	<script src="https://cdn.webcomponents.opendatahub.bz.it/dist/567cb2e2-3e5d-421a-bf85-b8ecc500aab9/v0.7.0/webcomp-kg.js"></script>
   </body>
 </html>

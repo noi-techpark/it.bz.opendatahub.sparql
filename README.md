@@ -61,9 +61,6 @@ cd odh-vkg/
 1. Create the `.env` file in which, amongst all, the SPARQL endpoint port and
    the PG external port (for debugging purposes) are specified
    * `cp .env.example .env`
-2. Create the `.env` file for the website
-    * `cp ./website/.env.example ./website/.env`
-    * Run the script `cd ./website/utils && .dotenv-sed.sh` to introduce the environment variables in javascript
 3. Start the Docker container (see [the dedicated section](#Start-and-stop-the-containers))
 4. Visit the SPARQL endpoint
    * Now we can open the link <http://localhost:8080/portal/> in the browser and test
