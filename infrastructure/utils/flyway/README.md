@@ -96,3 +96,8 @@ docker-compose run --rm flyway baseline -baselineVersion=2
 ```
 
 See https://flywaydb.org/documentation for more information about these commands.
+
+
+### First import of data from Mobility Databases
+
+See this [README.md](../mobility-initial-import/README.md).

@@ -78,7 +78,7 @@ The current dump is inside `infrastructure/utils/flyway/migration/V1__initial_se
 
 ```sh
 cd infrastructure/utils
-./tourism-dump-schema.sh
+./dump-tourism.sh
 ```
 
 ### I want to login into the Ontop container
