@@ -22,7 +22,7 @@ function handleGraph(temperatureData, bolzanoTemp) {
 
     // setup block
     const data = {
-    labels: ['-30°C', '-25°C', '-20°C', '-15°C', '-10°C', '-5°C', '0°C', '5°C', '10°C', '15°C', '20°C', '25°C'],
+    labels: ['-30°C', '-25°C', '-20°C', '-15°C', '-10°C', '-5°C', '0°C', '5°C', '10°C', '15°C', '20°C', '25°C', '30°C', '35°C', '40°C'],
     datasets: [{
         label: 'Frequency',
 		font: 'Open Sans, sans-serif',

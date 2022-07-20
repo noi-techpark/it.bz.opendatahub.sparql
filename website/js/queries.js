@@ -1,4 +1,4 @@
-var queryList = {
+const queryList = {
 	"Tourism": [
 		{
 			"query": "PREFIX schema: <http://schema.org/>\nPREFIX geo: <http://www.opengis.net/ont/geosparql#>\nPREFIX : <http://noi.example.org/ontology/odh#>\n \nSELECT ?h ?pos (CONCAT(?hName, ' (',str(?altitude), ' m)') AS ?posLabel)\nWHERE {\n ?h a schema:LodgingBusiness ;\n      schema:name ?hName ;    \n      geo:defaultGeometry/geo:asWKT ?pos ;\n      schema:geo/schema:elevation ?altitude ;\n      schema:containedInPlace/schema:name \"Kastelruth\"@de .\n \n FILTER (lang(?hName) = 'de')\n FILTER (?altitude > 1800)\n}"
@@ -112,8 +112,10 @@ var queryList = {
 				sosa:observedProperty [a :AirTemperature ] ;
 				sosa:madeBySensor/sosa:isHostedBy ?station ;
 				sosa:resultTime ?resultTime ;
-				sosa:hasResult/qudt:numericValue ?resultValue .
+				sosa:hasResult/qudt:numericValue ?resultValue ;
+				:hasPeriodInSeconds ?period .
 			?station schema:name ?stationLabel .
+			FILTER (?period = 600)
 		}`,
 		`PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX : <http://noi.example.org/ontology/odh#>
@@ -124,9 +126,11 @@ SELECT DISTINCT ?sensor ?sensorLabel ?resultValue WHERE {
   ?observation a :LatestObservation ;
     sosa:observedProperty [a :AirTemperature ] ;
       sosa:madeBySensor/sosa:isHostedBy ?station ;
-      sosa:hasResult/qudt:numericValue ?resultValue .
+      sosa:hasResult/qudt:numericValue ?resultValue ;
+      :hasPeriodInSeconds ?period .
   ?station schema:name ?stationLabel .
   FILTER (?stationLabel = "Bolzano")
+  FILTER (?period = 600)
 }`
 
 	]
