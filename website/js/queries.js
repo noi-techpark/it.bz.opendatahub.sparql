@@ -15,13 +15,6 @@ const queryList = {
 			"output": "leaflet",
 		},
 		{
-			"query": "PREFIX geo: <http://www.opengis.net/ont/geosparql#>\nPREFIX schema: <http://schema.org/>\nPREFIX : <http://noi.example.org/ontology/odh#>\n \nSELECT ?pos\n    (SUM(?numberUnits) AS ?accommodationCount) #Sums all the accommodation units\n    (SUM(?maxPersons) AS ?countMaxPersons) #Sum the hosting capabilities\n    (CONCAT(?lbName, ': ', str(?accommodationCount), ' accommodations, max ', str(?countMaxPersons), ' guests') AS ?posLabel)\nWHERE {\n # LodgingBusiness\n ?lb a schema:LodgingBusiness ; \n    schema:name ?lbName ; \n    geo:defaultGeometry/geo:asWKT ?pos .\n \n # Accommodation\n ?a a schema:Accommodation ;\n    schema:containedInPlace ?lb ; \n    :numberOfUnits ?numberUnits ;\n    schema:occupancy/schema:maxValue ?maxOccupancyPerRoom .\n \n # Computation of maxPersons per accommodation\n BIND (?numberUnits * ?maxOccupancyPerRoom AS ?maxPersons)\n FILTER (lang(?lbName)='en')\n}\nGROUP BY ?lb ?lbName ?pos\nORDER BY DESC(?countMaxPersons)\nLIMIT 50\n"
-			,
-			"tabName": "Accommodation facilities",
-			"tabId": "fc",
-			"output": "leaflet",
-		},
-		{
 			"query": "PREFIX schema: <http://schema.org/>\nPREFIX geo: <http://www.opengis.net/ont/geosparql#>\nPREFIX : <http://noi.example.org/ontology/odh#>\n \nSELECT ?h ?pos (CONCAT(?hName, ' (', str(?altitude), ' m)') AS ?posLabel) ?altitude\nWHERE {\n  ?h a schema:LodgingBusiness ;\n      schema:name ?hName ;      \n      geo:defaultGeometry/geo:asWKT ?pos ;\n      schema:geo/schema:elevation ?altitude ;\n  FILTER (lang(?hName) = 'de')\n  FILTER (?altitude > 2500)\n  FILTER REGEX(?hName, \"hütte\", \"i\")\n}",
 			"tabName": "Mountain shelters",
 			"tabId": "mt",
