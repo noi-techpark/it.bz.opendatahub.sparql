@@ -16,6 +16,7 @@ env:
   PROJECT_NAME: odh-vkg
   DOCKER_IMAGE_ONTOP:  ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}-ontop
   DOCKER_IMAGE_NGINX:  ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}-nginx
+  DOCKER_IMAGE_MOBILITY_SYNC:  ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}-mobility-sync
   DOCKER_TAG: ${{ github.sha }}
 
 jobs:
@@ -39,6 +40,9 @@ jobs:
       ONTOP_QUERY_TIMEOUT: 15
       VKG_POSTGRES_HOST: "virtual-knowledge-graph.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
       VKG_POSTGRES_DB: "test"
+      MOBILITY_POSTGRES_HOST: "test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+      MOBILITY_POSTGRES_DB: "bdp"
+      MOBILITY_POSTGRES_USER: "vkgreplicate"
       #GOOGLE_ANALYTICS_ID: "G-16GJYCR5YT"
 
     steps:
@@ -52,7 +56,14 @@ jobs:
           X_SERVER_PORT: "1008"
           X_DOCKER_IMAGE_NGINX: ${{ env.DOCKER_IMAGE_NGINX }}
           X_DOCKER_IMAGE_ONTOP: ${{ env.DOCKER_IMAGE_ONTOP }}
+          X_DOCKER_IMAGE_MOBILITY_SYNC: ${{ env.DOCKER_IMAGE_MOBILITY_SYNC }}
           X_DOCKER_TAG: ${{ env.DOCKER_TAG }}
+
+          # MOBILITY DB
+          X_MOBILITY_POSTGRES_HOST: ${{ env.MOBILITY_POSTGRES_HOST }}
+          X_MOBILITY_POSTGRES_DB: ${{ env.MOBILITY_POSTGRES_DB }}
+          X_MOBILITY_POSTGRES_USER: ${{ env.MOBILITY_POSTGRES_USER }}
+          X_MOBILITY_POSTGRES_PASSWORD: ${{ secrets.MOBILITY_POSTGRES_PASSWORD }}
 
           # VIRTUAL KNOWLEDGE GRAPH DB
           X_VKG_POSTGRES_HOST: ${{ env.VKG_POSTGRES_HOST }}
@@ -65,6 +76,9 @@ jobs:
           X_FLYWAY_USER: "${{ env.VKG_POSTGRES_USER }}"
           X_FLYWAY_PASSWORD: "${{ secrets.VKG_POSTGRES_PASSWORD }}"
           X_FLYWAY_PLACEHOLDERS_READONLY_USER: ${{ env.VKG_POSTGRES_USER_READONLY }}
+
+          # Mobility sync script
+          X_MOBILITY_SYNC_TEST: "1"
 
           # Authentication proxy
           X_KEYCLOAK_REALM_URL: "https://auth.opendatahub.testingmachine.eu/auth/realms/noi"
@@ -114,6 +128,9 @@ jobs:
       ONTOP_QUERY_TIMEOUT: 15
       VKG_POSTGRES_HOST: "prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
       VKG_POSTGRES_DB: "test"
+      MOBILITY_POSTGRES_HOST: "prod-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+      MOBILITY_POSTGRES_DB: "bdp"
+      MOBILITY_POSTGRES_USER: "vkgreplicate"
       #GOOGLE_ANALYTICS_ID: "G-16GJYCR5YT"
     steps:
       - name: Checkout source code

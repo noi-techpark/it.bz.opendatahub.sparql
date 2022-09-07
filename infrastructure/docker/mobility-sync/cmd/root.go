@@ -13,7 +13,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/utils/mobility-sync/internal/cmd/root"
+	"github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/docker/mobility-sync/internal/cmd/root"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -60,7 +60,7 @@ by dumping and restoring data.`,
 				"version", version,
 				"level", "fatal",
 				"ts", float64(time.Now().UnixMilli())/1000,
-				"msg", "error initializing zap logger",
+				"msg", "LOGGER | error",
 				"error", err.Error(),
 			)
 			os.Exit(1)
@@ -70,14 +70,14 @@ by dumping and restoring data.`,
 
 		if err != nil {
 			log.Warn(
-				"error reading secret file",
+				"SECRET | error reading secret",
 				zap.Error(err),
 				zap.String("key", "mobility.password-file"),
 				zap.String("path", mobilityPasswordFile),
 			)
 		}
 
-		log.Info("connecting to mobility database")
+		log.Info("OPEN: mobility database | started")
 
 		mobilityDB, err := openDatabase(
 			mobilityDSN,
@@ -88,27 +88,33 @@ by dumping and restoring data.`,
 		)
 
 		if err != nil {
-			log.Fatal("error opening mobility database", zap.Error(err))
+			log.Fatal("OPEN: mobility database | error", zap.Error(err))
 		}
+
+		log.Info("OPEN: mobility database | completed")
+
+		log.Info("PING: mobility database | started")
 
 		err = mobilityDB.Ping()
 
 		if err != nil {
-			log.Fatal("error connecting to the mobility database", zap.Error(err))
+			log.Fatal("PING: mobility database | error", zap.Error(err))
 		}
+
+		log.Info("PING: mobility database | completed")
 
 		replicaPassword, err := parseSecret(replicaPasswordStr, replicaPasswordFile)
 
 		if err != nil {
 			log.Warn(
-				"error reading secret file",
+				"SECRET | error reading secret",
 				zap.Error(err),
 				zap.String("key", "replica.password-file"),
 				zap.String("path", replicaPasswordFile),
 			)
 		}
 
-		log.Info("connecting to replica database")
+		log.Info("OPEN: replica database | started")
 
 		replicaDB, err := openDatabase(
 			replicaDSN,
@@ -119,16 +125,23 @@ by dumping and restoring data.`,
 		)
 
 		if err != nil {
-			log.Fatal("error opening replica database", zap.Error(err))
+			log.Fatal("OPEN: replica database | error", zap.Error(err))
 		}
+
+		log.Info("OPEN: replica database | completed")
+
+		log.Info("PING: replica database | started")
 
 		err = replicaDB.Ping()
 
 		if err != nil {
-			log.Fatal("error connecting to the replica databases", zap.Error(err))
+			log.Fatal("PING: replica database | error", zap.Error(err))
 		}
 
+		log.Info("PING: replica database | completed")
+
 		app := root.NewApplication(log, root.Options{
+			Testing:    testing,
 			MobilityDB: mobilityDB,
 			ReplicaDB:  replicaDB,
 		})
@@ -140,24 +153,26 @@ by dumping and restoring data.`,
 			signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM)
 
 			<-exit
-			log.Info("received shutdown signal, cancelling application context")
+			log.Info("SHUTDOWN | received signal, cancelling application context")
 
 			cancel()
 		}()
 
-		log.Info("synchronizing database")
+		log.Info("APP: synchronize changes | started")
 		app.Synchronize(ctx)
-		log.Info("synchronization finished, waiting for interval before next run", zap.Duration("interval", interval))
+		log.Info("APP: synchronize changes | completed")
+		log.Info("APP | waiting for interval before next run", zap.Duration("interval", interval))
 
 	main_loop:
 		for {
 			select {
 			case <-time.After(interval):
-				log.Info("synchronizing database")
+				log.Info("APP: synchronize changes | started")
 				app.Synchronize(ctx)
-				log.Info("synchronization finished, waiting for interval before next run", zap.Duration("interval", interval))
+				log.Info("APP: synchronize changes | completed")
+				log.Info("APP | waiting for interval before next run", zap.Duration("interval", interval))
 			case <-ctx.Done():
-				log.Info("application is quitting")
+				log.Info("SHUTDOWN | application is quitting")
 				break main_loop
 			}
 		}
@@ -176,7 +191,9 @@ func Execute() {
 var cfgFile string
 
 var (
-	debug    bool
+	debug   bool
+	testing bool
+
 	interval time.Duration
 
 	mobilityDSN          string
@@ -207,9 +224,11 @@ var (
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is ./mobility-sync.yaml)")
+	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is ./.mobility-sync.yaml)")
 
 	rootCmd.Flags().BoolVar(&debug, "debug", false, "enable debug mode with enhanced logs")
+	rootCmd.Flags().BoolVar(&testing, "test", false, "enable testing mode, which synchronizes only a subset of the data")
+
 	rootCmd.Flags().DurationVar(&interval, "interval", 5*time.Minute, "duration to wait between synchronization runs")
 
 	rootCmd.Flags().StringVar(&mobilityDSN, "mobility.dsn", "", "mobility database DSN")
