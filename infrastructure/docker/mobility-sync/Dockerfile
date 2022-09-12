@@ -4,7 +4,7 @@ ARG module
 ARG version
 
 RUN curl https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh > /wait-for-it.sh && \
-	chmod u+x /wait-for-it.sh
+	chmod a+x /wait-for-it.sh
 
 WORKDIR /scratch
 
@@ -27,7 +27,9 @@ COPY --from=builder /scratch/entrypoint /usr/bin/entrypoint
 USER 1000
 ENTRYPOINT [ "/usr/bin/entrypoint" ]
 
-FROM standalone as embedded
+FROM bash as embedded
 
 COPY --from=builder /wait-for-it.sh /wait-for-it.sh
+COPY --from=builder /scratch/entrypoint /usr/bin/entrypoint
+
 ENTRYPOINT [ "/wait-for-it.sh", "ontop:8080", "--strict", "--timeout=0", "--", "/usr/bin/entrypoint" ]
