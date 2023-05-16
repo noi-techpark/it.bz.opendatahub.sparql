@@ -156,7 +156,7 @@ Hub](https://hub.docker.com/r/ontopicvkg/odh-tourism-db).
 
 ### Support
 For support, please contact
-[help@opendatahub.bz.it](mailto:help@opendatahub.bz.it).
+[help@opendatahub.com](mailto:help@opendatahub.com).
 
 ### Contributing
 If you'd like to contribute, please follow the following instructions:
