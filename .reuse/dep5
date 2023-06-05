@@ -1,0 +1,24 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: it.bz.opendatahub.sparql
+Upstream-Contact: NOI Techpark <digital@noi.bz.it>
+Source: https://github.com/noi-techpark/it.bz.opendatahub.sparql
+
+Files: .github/* infrastructure/* .gitignore .gitattributes .env.example .editorconfig LICENSE diagrams/* docs/* jdbc/postgresql-42.2.8.jar  sparql_queries/performance.q website/images/*
+Copyright: (c) NOI Techpark <digital@noi.bz.it>
+License: CC0-1.0
+
+Files: mobility/* test/* vkg/*
+Copyright: (c) NOI Techpark <digital@noi.bz.it>
+License: AGPL-3.0-or-later
+
+Files: website/css/cookieconsent.css website/js/cookieconsent.js
+Copyright: (c) 2020-2023 Orest Bida
+License: MIT
+
+Files: website/css/index.css website/css/index.css.map website/sass/_normalize.scss
+Copyright: © Nicolas Gallagher and Jonathan Neal
+License: MIT
+
+Files: website/yasgui/*
+Copyright: 2014 jQuery Foundation and other contributors
+License: MIT
