@@ -3,7 +3,7 @@ Upstream-Name: it.bz.opendatahub.sparql
 Upstream-Contact: NOI Techpark <digital@noi.bz.it>
 Source: https://github.com/noi-techpark/it.bz.opendatahub.sparql
 
-Files: .github/* infrastructure/* .gitignore .gitattributes .env.example .editorconfig LICENSE diagrams/* docs/* jdbc/postgresql-42.2.8.jar  sparql_queries/performance.q website/images/*
+Files: .github/* infrastructure/* .gitignore .gitattributes .pre-commit-config.yaml .env.example .editorconfig LICENSE diagrams/* docs/* jdbc/postgresql-42.2.8.jar  sparql_queries/performance.q website/images/*
 Copyright: (c) NOI Techpark <digital@noi.bz.it>
 License: CC0-1.0
 
