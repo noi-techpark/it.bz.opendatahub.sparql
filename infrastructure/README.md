@@ -20,7 +20,7 @@ containers, namely `Ontop` and `Nginx`.
 
 Current deployments:
 
-- Production: <https://sparql.opendatahub.bz.it>
+- Production: <https://sparql.opendatahub.com>
 - Testing: <https://sparql.opendatahub.testingmachine.eu>
 
 On these servers, one can find:
