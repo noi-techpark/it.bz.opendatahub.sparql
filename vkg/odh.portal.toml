@@ -482,8 +482,8 @@ PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX qudt: <http://qudt.org/schema/qudt#>
 
 SELECT ?t ?v {
-  BIND (<https://kg.opendatahub.bz.it/data/station/342142> AS ?s) # siemens->Galilei_Palermo
-  BIND (<https://kg.opendatahub.bz.it/data/property/54> AS ?prop) # Velocita media dei veicoli
+  BIND (<https://kg.opendatahub.com/data/station/342142> AS ?s) # siemens->Galilei_Palermo
+  BIND (<https://kg.opendatahub.com/data/property/54> AS ?prop) # Velocita media dei veicoli
   ?s a sosa:Platform .
   ?s sosa:hosts/sosa:madeObservation ?o . 
   ?o sosa:observedProperty ?prop .
