@@ -8,7 +8,7 @@ SPDX-License-Identifier: CC0-1.0
 
 Virtual Knowledge Graph (VKG) over the Open Data Hub (ODH) powered by [Ontop](https://ontop-vkg.org) and curated by [Ontopic](https://ontopic.ai).
 
-![REUSE Compliance](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/reuse.yml/badge.svg)
+[![REUSE Compliance](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/reuse.yml/badge.svg)](https://github.com/noi-techpark/odh-docs/wiki/REUSE#badges)
 [![CI](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/main.yml/badge.svg)](https://github.com/noi-techpark/it.bz.opendatahub.sparql/actions/workflows/main.yml)
 
 **Table of contents**
