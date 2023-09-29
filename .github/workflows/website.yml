@@ -1,0 +1,55 @@
+name: CI/CD website only
+
+on: push
+
+env:
+  AWS_REGION : "eu-west-1"
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: REUSE Compliance Check
+        uses: fsfe/reuse-action@v1
+
+  deploy-test:
+    runs-on: ubuntu-22.04
+    if: github.ref == 'refs/heads/main'
+    needs: test
+    concurrency: deploy-test
+    env:
+      AWS_S3_BUCKET_NAME : 'eu.testingmachine.opendatahub.sparql'
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Sync to S3 bucket
+        uses: noi-techpark/github-actions/aws-s3-bucket-sync@v2
+        with:
+          access-key-id: ${{ secrets.AWS_S3_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
+          region: ${{ env.AWS_REGION }}
+          s3-bucket-name: ${{ env.AWS_S3_BUCKET_NAME }}
+          folder: ./website
+
+  deploy-prod:
+    runs-on: ubuntu-22.04
+    if: github.ref == 'refs/heads/prod'
+    needs: test
+    concurrency: deploy-prod
+    env:
+      AWS_S3_BUCKET_NAME : 'com.opendatahub.sparql'
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Sync to S3 bucket
+        uses: noi-techpark/github-actions/aws-s3-bucket-sync@v2
+        with:
+          access-key-id: ${{ secrets.AWS_S3_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
+          region: ${{ env.AWS_REGION }}
+          s3-bucket-name: ${{ env.AWS_S3_BUCKET_NAME }}
+          folder: ./website

@@ -21,7 +21,7 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
 
@@ -33,129 +33,129 @@ jobs:
       - name: Test
         run: docker-compose --no-ansi build --pull
 
-  deploy-test:
-    runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/main'
-    needs: test
-    concurrency: deploy-test
-    env:
-      VKG_POSTGRES_USER: "ontopic"
-      VKG_POSTGRES_USER_READONLY: "ontopicreadonly"
-      ONTOP_QUERY_TIMEOUT: 15
-      VKG_POSTGRES_HOST: "virtual-knowledge-graph.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-      VKG_POSTGRES_DB: "test"
-      MOBILITY_POSTGRES_HOST: "test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-      MOBILITY_POSTGRES_DB: "bdp"
-      MOBILITY_POSTGRES_USER: "vkgreplicate"
-      #GOOGLE_ANALYTICS_ID: "G-16GJYCR5YT"
+  # deploy-test:
+  #   runs-on: ubuntu-22.04
+  #   if: github.ref == 'refs/heads/main'
+  #   needs: test
+  #   concurrency: deploy-test
+  #   env:
+  #     VKG_POSTGRES_USER: "ontopic"
+  #     VKG_POSTGRES_USER_READONLY: "ontopicreadonly"
+  #     ONTOP_QUERY_TIMEOUT: 15
+  #     VKG_POSTGRES_HOST: "virtual-knowledge-graph.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+  #     VKG_POSTGRES_DB: "test"
+  #     MOBILITY_POSTGRES_HOST: "test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+  #     MOBILITY_POSTGRES_DB: "bdp"
+  #     MOBILITY_POSTGRES_USER: "vkgreplicate"
+  #     #GOOGLE_ANALYTICS_ID: "G-16GJYCR5YT"
 
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout source code
+  #       uses: actions/checkout@v2
 
-      - name: Create .env file
-        uses: noi-techpark/github-actions/env-file@v2
-        env:
-          X_COMPOSE_PROJECT_NAME: ${{ env.PROJECT_NAME }}
-          X_SERVER_PORT: "1008"
-          X_DOCKER_IMAGE_NGINX: ${{ env.DOCKER_IMAGE_NGINX }}
-          X_DOCKER_IMAGE_ONTOP: ${{ env.DOCKER_IMAGE_ONTOP }}
-          X_DOCKER_IMAGE_MOBILITY_SYNC: ${{ env.DOCKER_IMAGE_MOBILITY_SYNC }}
-          X_DOCKER_TAG: ${{ env.DOCKER_TAG }}
+  #     - name: Create .env file
+  #       uses: noi-techpark/github-actions/env-file@v2
+  #       env:
+  #         X_COMPOSE_PROJECT_NAME: ${{ env.PROJECT_NAME }}
+  #         X_SERVER_PORT: "1008"
+  #         X_DOCKER_IMAGE_NGINX: ${{ env.DOCKER_IMAGE_NGINX }}
+  #         X_DOCKER_IMAGE_ONTOP: ${{ env.DOCKER_IMAGE_ONTOP }}
+  #         X_DOCKER_IMAGE_MOBILITY_SYNC: ${{ env.DOCKER_IMAGE_MOBILITY_SYNC }}
+  #         X_DOCKER_TAG: ${{ env.DOCKER_TAG }}
 
-          # MOBILITY DB
-          X_MOBILITY_POSTGRES_HOST: ${{ env.MOBILITY_POSTGRES_HOST }}
-          X_MOBILITY_POSTGRES_DB: ${{ env.MOBILITY_POSTGRES_DB }}
-          X_MOBILITY_POSTGRES_USER: ${{ env.MOBILITY_POSTGRES_USER }}
-          X_MOBILITY_POSTGRES_PASSWORD: ${{ secrets.MOBILITY_POSTGRES_PASSWORD }}
+  #         # MOBILITY DB
+  #         X_MOBILITY_POSTGRES_HOST: ${{ env.MOBILITY_POSTGRES_HOST }}
+  #         X_MOBILITY_POSTGRES_DB: ${{ env.MOBILITY_POSTGRES_DB }}
+  #         X_MOBILITY_POSTGRES_USER: ${{ env.MOBILITY_POSTGRES_USER }}
+  #         X_MOBILITY_POSTGRES_PASSWORD: ${{ secrets.MOBILITY_POSTGRES_PASSWORD }}
 
-          # VIRTUAL KNOWLEDGE GRAPH DB
-          X_VKG_POSTGRES_HOST: ${{ env.VKG_POSTGRES_HOST }}
-          X_VKG_POSTGRES_DB: ${{ env.VKG_POSTGRES_DB }}
-          X_VKG_POSTGRES_USER: ${{ env.VKG_POSTGRES_USER }}
-          X_VKG_POSTGRES_PASSWORD: ${{ secrets.VKG_POSTGRES_PASSWORD }}
-          X_VKG_POSTGRES_USER_READONLY: ${{ env.VKG_POSTGRES_USER_READONLY }}
+  #         # VIRTUAL KNOWLEDGE GRAPH DB
+  #         X_VKG_POSTGRES_HOST: ${{ env.VKG_POSTGRES_HOST }}
+  #         X_VKG_POSTGRES_DB: ${{ env.VKG_POSTGRES_DB }}
+  #         X_VKG_POSTGRES_USER: ${{ env.VKG_POSTGRES_USER }}
+  #         X_VKG_POSTGRES_PASSWORD: ${{ secrets.VKG_POSTGRES_PASSWORD }}
+  #         X_VKG_POSTGRES_USER_READONLY: ${{ env.VKG_POSTGRES_USER_READONLY }}
 
-          X_FLYWAY_URL: "jdbc:postgresql://${{ env.VKG_POSTGRES_HOST }}/${{ env.VKG_POSTGRES_DB }}"
-          X_FLYWAY_USER: "${{ env.VKG_POSTGRES_USER }}"
-          X_FLYWAY_PASSWORD: "${{ secrets.VKG_POSTGRES_PASSWORD }}"
-          X_FLYWAY_PLACEHOLDERS_READONLY_USER: ${{ env.VKG_POSTGRES_USER_READONLY }}
+  #         X_FLYWAY_URL: "jdbc:postgresql://${{ env.VKG_POSTGRES_HOST }}/${{ env.VKG_POSTGRES_DB }}"
+  #         X_FLYWAY_USER: "${{ env.VKG_POSTGRES_USER }}"
+  #         X_FLYWAY_PASSWORD: "${{ secrets.VKG_POSTGRES_PASSWORD }}"
+  #         X_FLYWAY_PLACEHOLDERS_READONLY_USER: ${{ env.VKG_POSTGRES_USER_READONLY }}
 
-          # Mobility sync script
-          X_MOBILITY_SYNC_TEST: "1"
+  #         # Mobility sync script
+  #         X_MOBILITY_SYNC_TEST: "1"
 
-          # Authentication proxy
-          X_KEYCLOAK_REALM_URL: "https://auth.opendatahub.testingmachine.eu/auth/realms/noi"
-          X_KEYCLOAK_DOMAIN_NAME: "auth.opendatahub.testingmachine.eu"
-          X_KEYCLOAK_CLIENT_ID: "eu.testingmachine.opendatahub.sparql"
-          X_KEYCLOAK_CLIENT_SECRET: ${{ secrets.KEYCLOAK_CLIENT_SECRET }}
-          X_KEYCLOAK_ALLOWED_GROUPS: "/VKG Full Access"
-          X_AUTH_PROXY_COOKIE_SECRET: ${{ secrets.AUTH_PROXY_COOKIE_SECRET }}
+  #         # Authentication proxy
+  #         X_KEYCLOAK_REALM_URL: "https://auth.opendatahub.testingmachine.eu/auth/realms/noi"
+  #         X_KEYCLOAK_DOMAIN_NAME: "auth.opendatahub.testingmachine.eu"
+  #         X_KEYCLOAK_CLIENT_ID: "eu.testingmachine.opendatahub.sparql"
+  #         X_KEYCLOAK_CLIENT_SECRET: ${{ secrets.KEYCLOAK_CLIENT_SECRET }}
+  #         X_KEYCLOAK_ALLOWED_GROUPS: "/VKG Full Access"
+  #         X_AUTH_PROXY_COOKIE_SECRET: ${{ secrets.AUTH_PROXY_COOKIE_SECRET }}
 
-      - name: Update the properties file
-        uses: noi-techpark/github-actions/write-properties-file@v2
-        env:
-          PROPS_jdbc.url: jdbc:postgresql://${{ env.VKG_POSTGRES_HOST }}/${{ env.VKG_POSTGRES_DB }}
-          PROPS_jdbc.user: ${{ env.VKG_POSTGRES_USER_READONLY }}
-          PROPS_jdbc.password: ${{ secrets.VKG_POSTGRES_PASSWORD_READONLY }}
-          PROPS_ontop.query.defaultTimeout: ${{ env.ONTOP_QUERY_TIMEOUT }}
-        with:
-          path: vkg/odh.docker.properties
+  #     - name: Update the properties file
+  #       uses: noi-techpark/github-actions/write-properties-file@v2
+  #       env:
+  #         PROPS_jdbc.url: jdbc:postgresql://${{ env.VKG_POSTGRES_HOST }}/${{ env.VKG_POSTGRES_DB }}
+  #         PROPS_jdbc.user: ${{ env.VKG_POSTGRES_USER_READONLY }}
+  #         PROPS_jdbc.password: ${{ secrets.VKG_POSTGRES_PASSWORD_READONLY }}
+  #         PROPS_ontop.query.defaultTimeout: ${{ env.ONTOP_QUERY_TIMEOUT }}
+  #       with:
+  #         path: vkg/odh.docker.properties
 
-      #- name: Configure Google Analytics ID
-      #  run: |
-      #      echo 'GOOGLE_ANALYTICS_ID=${{ env.GOOGLE_ANALYTICS_ID }}' > website/.env
-      #      cd website/utils && ./dotenv-sed.sh
+  #     #- name: Configure Google Analytics ID
+  #     #  run: |
+  #     #      echo 'GOOGLE_ANALYTICS_ID=${{ env.GOOGLE_ANALYTICS_ID }}' > website/.env
+  #     #      cd website/utils && ./dotenv-sed.sh
 
-      - name: Build and push
-        uses: noi-techpark/github-actions/docker-build-and-push@v2
-        with:
-          docker-username: ${{ github.actor }}
-          docker-password: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Build and push
+  #       uses: noi-techpark/github-actions/docker-build-and-push@v2
+  #       with:
+  #         docker-username: ${{ github.actor }}
+  #         docker-password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deploy application
-        uses: noi-techpark/github-actions/docker-deploy@v2
-        with:
-          hosts: 'test'
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          docker-username: 'noi-techpark-bot'
-          docker-password: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          project-name: ${{ env.PROJECT_NAME }}
+  #     - name: Deploy application
+  #       uses: noi-techpark/github-actions/docker-deploy@v2
+  #       with:
+  #         hosts: 'test'
+  #         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+  #         docker-username: 'noi-techpark-bot'
+  #         docker-password: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+  #         project-name: ${{ env.PROJECT_NAME }}
 
-  deploy-prod:
-    runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/prod'
-    needs: test
-    concurrency: deploy-prod
-    env:
-      VKG_POSTGRES_USER_READONLY: "vkguser_readonly"
-      ONTOP_QUERY_TIMEOUT: 15
-      VKG_POSTGRES_HOST: "prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-      VKG_POSTGRES_DB: "test"
-      MOBILITY_POSTGRES_HOST: "prod-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
-      MOBILITY_POSTGRES_DB: "bdp"
-      MOBILITY_POSTGRES_USER: "vkgreplicate"
-      #GOOGLE_ANALYTICS_ID: "G-16GJYCR5YT"
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v2
+  # deploy-prod:
+  #   runs-on: ubuntu-22.04
+  #   if: github.ref == 'refs/heads/prod'
+  #   needs: test
+  #   concurrency: deploy-prod
+  #   env:
+  #     VKG_POSTGRES_USER_READONLY: "vkguser_readonly"
+  #     ONTOP_QUERY_TIMEOUT: 15
+  #     VKG_POSTGRES_HOST: "prod-postgres-vkg.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+  #     VKG_POSTGRES_DB: "test"
+  #     MOBILITY_POSTGRES_HOST: "prod-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com"
+  #     MOBILITY_POSTGRES_DB: "bdp"
+  #     MOBILITY_POSTGRES_USER: "vkgreplicate"
+  #     #GOOGLE_ANALYTICS_ID: "G-16GJYCR5YT"
+  #   steps:
+  #     - name: Checkout source code
+  #       uses: actions/checkout@v2
 
-      - name: Create .env file
-        uses: noi-techpark/github-actions/env-file@v2
-        env:
-          X_COMPOSE_PROJECT_NAME: ${{ env.PROJECT_NAME }}
+  #     - name: Create .env file
+  #       uses: noi-techpark/github-actions/env-file@v2
+  #       env:
+  #         X_COMPOSE_PROJECT_NAME: ${{ env.PROJECT_NAME }}
 
-      - name: Build and push
-        uses: noi-techpark/github-actions/docker-build-and-push@v2
-        with:
-          docker-username: ${{ github.actor }}
-          docker-password: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Build and push
+  #       uses: noi-techpark/github-actions/docker-build-and-push@v2
+  #       with:
+  #         docker-username: ${{ github.actor }}
+  #         docker-password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deploy application
-        uses: noi-techpark/github-actions/docker-deploy@v2
-        with:
-          hosts: 'prod'
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          docker-username: 'noi-techpark-bot'
-          docker-password: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          project-name: ${{ env.PROJECT_NAME }}
+  #     - name: Deploy application
+  #       uses: noi-techpark/github-actions/docker-deploy@v2
+  #       with:
+  #         hosts: 'prod'
+  #         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+  #         docker-username: 'noi-techpark-bot'
+  #         docker-password: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+  #         project-name: ${{ env.PROJECT_NAME }}
