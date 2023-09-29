@@ -1,21 +1,21 @@
 version: "3.4"
 
 services:
-  # ontop:
-  #   image: ${DOCKER_IMAGE_ONTOP}:${DOCKER_TAG}
-  #   build:
-  #     context: ../
-  #     dockerfile: infrastructure/docker/ontop/Dockerfile
-  #     target: build
+  ontop:
+    image: ${DOCKER_IMAGE_ONTOP}:${DOCKER_TAG}
+    build:
+      context: ../
+      dockerfile: infrastructure/docker/ontop/Dockerfile
+      target: build
   nginx:
     image: ${DOCKER_IMAGE_NGINX}:${DOCKER_TAG}
     build:
       context: ../
       dockerfile: infrastructure/docker/nginx/Dockerfile
-  # mobility-sync:
-  #   image: ${DOCKER_IMAGE_MOBILITY_SYNC}:${DOCKER_TAG}
-  #   build:
-  #     context: docker/mobility-sync
-  #     args:
-  #       module: github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/docker/mobility-sync
-  #       version: ${DOCKER_TAG}
+  mobility-sync:
+    image: ${DOCKER_IMAGE_MOBILITY_SYNC}:${DOCKER_TAG}
+    build:
+      context: docker/mobility-sync
+      args:
+        module: github.com/noi-techpark/it.bz.opendatahub.sparql/infrastructure/docker/mobility-sync
+        version: ${DOCKER_TAG}
